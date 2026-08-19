@@ -59,7 +59,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     root.setAttribute('data-theme', theme);
     try {
       localStorage.setItem(STORAGE_KEY, theme);
-    } catch {}
+    } catch { }
   }, [theme]);
 
   // Listen to system color scheme changes if user hasn't explicitly set preference
@@ -67,7 +67,7 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     if (typeof window === 'undefined') return;
     try {
       if (localStorage.getItem(STORAGE_KEY)) return;
-    } catch {}
+    } catch { }
 
     const mediaQuery = window.matchMedia('(prefers-color-scheme: light)');
     const handler = (e: MediaQueryListEvent) => {

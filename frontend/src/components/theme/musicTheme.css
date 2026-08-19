@@ -503,23 +503,51 @@ html.light ::-webkit-scrollbar-thumb:hover {
 
 /* Equalizer Dancing Bars */
 @keyframes eq-bounce-1 {
-  0%, 100% { height: 4px; }
-  50% { height: 16px; }
+
+  0%,
+  100% {
+    height: 4px;
+  }
+
+  50% {
+    height: 16px;
+  }
 }
 
 @keyframes eq-bounce-2 {
-  0%, 100% { height: 16px; }
-  50% { height: 6px; }
+
+  0%,
+  100% {
+    height: 16px;
+  }
+
+  50% {
+    height: 6px;
+  }
 }
 
 @keyframes eq-bounce-3 {
-  0%, 100% { height: 8px; }
-  50% { height: 18px; }
+
+  0%,
+  100% {
+    height: 8px;
+  }
+
+  50% {
+    height: 18px;
+  }
 }
 
 @keyframes eq-bounce-4 {
-  0%, 100% { height: 14px; }
-  50% { height: 4px; }
+
+  0%,
+  100% {
+    height: 14px;
+  }
+
+  50% {
+    height: 4px;
+  }
 }
 
 .animate-eq-1 {
@@ -560,9 +588,11 @@ html.light ::-webkit-scrollbar-thumb:hover {
     transform: translate(-50%, -50%) scale(0.1);
     opacity: 0.9;
   }
+
   50% {
     opacity: 0.6;
   }
+
   100% {
     transform: translate(-50%, -50%) scale(2.8);
     opacity: 0;
@@ -579,12 +609,15 @@ html.light ::-webkit-scrollbar-thumb:hover {
     transform: translate(0, 0) rotate(0deg) scale(0.8);
     opacity: 0;
   }
+
   25% {
     opacity: 1;
   }
+
   80% {
     opacity: 0.8;
   }
+
   100% {
     transform: translate(var(--note-x, 30px), var(--note-y, -60px)) rotate(var(--note-r, 20deg)) scale(1.1);
     opacity: 0;
@@ -597,8 +630,15 @@ html.light ::-webkit-scrollbar-thumb:hover {
 
 /* Subtle Beat Pulse */
 @keyframes beat-pulse-subtle {
-  0%, 100% { transform: scale(1); }
-  50% { transform: scale(1.06); }
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.06);
+  }
 }
 
 .animate-beat-pulse {
@@ -607,8 +647,13 @@ html.light ::-webkit-scrollbar-thumb:hover {
 
 /* Vinyl Spin */
 @keyframes vinyl-spin {
-  from { transform: rotate(0deg); }
-  to { transform: rotate(360deg); }
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
 }
 
 .animate-vinyl-spin {
@@ -620,6 +665,7 @@ html.light ::-webkit-scrollbar-thumb:hover {
    ========================================================================== */
 
 @media (prefers-reduced-motion: reduce) {
+
   *,
   *::before,
   *::after {
