@@ -209,7 +209,7 @@ export const FeaturedSingleBanner: React.FC = () => {
   };
 
   return (
-    <section className="relative py-16 sm:py-24 bg-[#050505] overflow-hidden border-y border-white/10 select-none">
+    <section className="cinematic-dark relative py-16 sm:py-24 bg-[#050505] overflow-hidden border-y border-white/10 select-none">
       {/* Hidden YouTube IFrame Audio Player */}
       <div
         style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', opacity: 0, pointerEvents: 'none', zIndex: -1 }}
@@ -253,78 +253,78 @@ export const FeaturedSingleBanner: React.FC = () => {
           >
             {/* Badge */}
             <div className="flex flex-wrap items-center gap-3">
-              <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-mono font-bold uppercase tracking-widest bg-vexo-red/20 text-vexo-red-bright border border-vexo-red/40 shadow-[0_0_20px_rgba(224,0,0,0.4)] backdrop-blur-md">
-                <Radio className="w-3.5 h-3.5 text-vexo-red-bright animate-pulse" />
+              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-vexo-red/10 text-vexo-red border border-vexo-red/30">
+                <Radio className="w-3.5 h-3.5 text-vexo-red animate-pulse" />
                 FEATURED OFFICIAL BANNER / OUT NOW
               </div>
             </div>
 
             {/* Editorial Main Title & Creator Subtitle */}
             <div>
-              <span className="block text-xs uppercase font-mono tracking-[0.25em] text-vexo-muted mb-1 flex items-center gap-2">
-                <Music2 className="w-3.5 h-3.5 text-vexo-red-bright" /> {videoDetails.artists} • {videoDetails.label}
+              <span className="block text-xs uppercase font-mono tracking-[0.25em] text-zinc-400 mb-1 flex items-center gap-2">
+                <Music2 className="w-3.5 h-3.5 text-vexo-red" /> {videoDetails.artists} • {videoDetails.label}
               </span>
-              <h2 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tight text-white leading-tight drop-shadow-[0_10px_30px_rgba(0,0,0,0.9)]">
-                Satane Lage <span className="text-transparent bg-clip-text bg-gradient-to-r from-vexo-red via-vexo-red-bright to-white drop-shadow-[0_0_25px_rgba(224,0,0,0.6)]">Ho</span>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tight text-white leading-tight">
+                Satane Lage <span className="text-vexo-red">Ho</span>
               </h2>
-              <p className="text-sm font-semibold text-vexo-red-bright mt-1 tracking-wide">
-                (Official Video)
+              <p className="text-sm font-semibold text-zinc-400 mt-1 tracking-wide">
+                (Official Music Video)
               </p>
             </div>
 
-            {/* Exact YouTube Metrics Pill Badges from Screenshot */}
+            {/* Exact YouTube Metrics Pill Badges */}
             <div className="grid grid-cols-3 gap-3 sm:gap-4 w-full max-w-lg">
-              <div className="flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md hover:border-vexo-red/40 transition-all">
-                <div className="flex items-center gap-1.5 text-xs text-vexo-muted mb-1 font-mono">
-                  <ThumbsUp className="w-3.5 h-3.5 text-vexo-red-bright" /> Likes
+              <div className="flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-vexo-red/40 transition-all">
+                <div className="flex items-center gap-1.5 text-xs text-zinc-400 mb-1 font-mono">
+                  <ThumbsUp className="w-3.5 h-3.5 text-vexo-red" /> Likes
                 </div>
                 <span className="text-xl sm:text-2xl font-black text-white font-mono">{videoDetails.likes}</span>
               </div>
 
-              <div className="flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md hover:border-vexo-red/40 transition-all">
-                <div className="flex items-center gap-1.5 text-xs text-vexo-muted mb-1 font-mono">
-                  <Eye className="w-3.5 h-3.5 text-vexo-red-bright" /> Views
+              <div className="flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-vexo-red/40 transition-all">
+                <div className="flex items-center gap-1.5 text-xs text-zinc-400 mb-1 font-mono">
+                  <Eye className="w-3.5 h-3.5 text-vexo-red" /> Views
                 </div>
                 <span className="text-xl sm:text-2xl font-black text-white font-mono">{videoDetails.views}</span>
               </div>
 
-              <div className="flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl bg-white/5 border border-white/10 backdrop-blur-md hover:border-vexo-red/40 transition-all">
-                <div className="flex items-center gap-1.5 text-xs text-vexo-muted mb-1 font-mono">
-                  <Calendar className="w-3.5 h-3.5 text-vexo-red-bright" /> Date
+              <div className="flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-vexo-red/40 transition-all">
+                <div className="flex items-center gap-1.5 text-xs text-zinc-400 mb-1 font-mono">
+                  <Calendar className="w-3.5 h-3.5 text-vexo-red" /> Date
                 </div>
                 <span className="text-sm sm:text-base font-extrabold text-white font-mono">{videoDetails.releaseDate}</span>
               </div>
             </div>
 
-            {/* Hashtag Badges from Screenshot */}
+            {/* Hashtag Badges */}
             <div className="flex flex-wrap items-center gap-2">
               {videoDetails.hashtags.map((tag) => (
                 <span
                   key={tag}
-                  className="px-3 py-1 rounded-full text-xs font-mono font-semibold bg-white/5 border border-white/10 text-vexo-muted hover:text-white hover:border-vexo-red/50 transition-colors"
+                  className="px-3 py-1 rounded-full text-xs font-mono font-medium bg-white/5 border border-white/10 text-zinc-400 hover:text-white hover:border-vexo-red/40 transition-colors"
                 >
                   {tag}
                 </span>
               ))}
             </div>
 
-            {/* Exact YouTube Description Box Panel from Screenshot */}
-            <div className="w-full max-w-xl p-5 sm:p-6 rounded-2xl bg-neutral-950/80 border border-white/15 backdrop-blur-xl shadow-2xl space-y-3 relative overflow-hidden group">
-              <div className="absolute top-0 left-0 w-1 h-full bg-gradient-to-b from-vexo-red via-vexo-red-bright to-red-900" />
+            {/* Exact YouTube Description Box Panel */}
+            <div className="w-full max-w-xl p-5 sm:p-6 rounded-2xl bg-[#0e0e13]/90 border border-white/10 shadow-xl space-y-3 relative overflow-hidden">
+              <div className="absolute top-0 left-0 w-1 h-full bg-vexo-red" />
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
-                  <Music2 className="w-4 h-4 text-vexo-red-bright animate-pulse" />
+                  <Music2 className="w-4 h-4 text-vexo-red animate-pulse" />
                   <h3 className="text-sm font-extrabold text-white tracking-wide">
                     Description
                   </h3>
                 </div>
-                <span className="text-[10px] font-mono text-vexo-muted uppercase tracking-widest px-2 py-0.5 rounded bg-white/5 border border-white/10">
+                <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest px-2 py-0.5 rounded bg-white/5 border border-white/10">
                   Official Details
                 </span>
               </div>
 
               <div className="space-y-2 pt-1 border-t border-white/10">
-                <p className="text-xs font-extrabold text-vexo-red-bright flex items-center gap-1.5">
+                <p className="text-xs font-bold text-vexo-red flex items-center gap-1.5">
                   {videoDetails.descriptionHeader}
                 </p>
                 <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed font-normal whitespace-pre-line">
@@ -332,13 +332,13 @@ export const FeaturedSingleBanner: React.FC = () => {
                 </p>
               </div>
 
-              <div className="pt-2 flex items-center justify-between text-[11px] font-mono text-vexo-muted border-t border-white/5">
+              <div className="pt-2 flex items-center justify-between text-[11px] font-mono text-zinc-400 border-t border-white/5">
                 <span>Vexo Entertainment Pvt. Ltd.</span>
                 <a
                   href={videoDetails.youtubeUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center gap-1 text-vexo-red-bright hover:underline font-bold"
+                  className="inline-flex items-center gap-1 text-vexo-red hover:underline font-semibold"
                 >
                   See more on YouTube <ExternalLink className="w-3 h-3" />
                 </a>

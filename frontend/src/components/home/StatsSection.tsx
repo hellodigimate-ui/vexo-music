@@ -56,14 +56,14 @@ const StatCounterItem: React.FC<StatItemProps> = ({ target, suffix = '+', label 
   return (
     <div
       ref={ref}
-      className="glass-card p-8 sm:p-10 rounded-3xl border border-white/10 flex flex-col items-center justify-center text-center hover:border-vexo-red/50 hover:shadow-[0_0_30px_rgba(224,0,0,0.3)] transition-all duration-300 group"
+      className="p-8 sm:p-10 rounded-3xl bg-white dark:bg-[#0c0c10] border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-xl flex flex-col items-center justify-center text-center hover:border-vexo-red/50 hover:shadow-md transition-all duration-300 group"
     >
-      <div className="font-mono text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white mb-2 group-hover:text-vexo-red-bright transition-colors">
-        <span className="text-gradient-red">{count}</span>
-        <span className="text-vexo-red-bright">{suffix}</span>
+      <div className="font-mono text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight text-slate-950 dark:text-white mb-2 transition-colors">
+        <span>{count}</span>
+        <span className="text-vexo-red ml-0.5">{suffix}</span>
       </div>
 
-      <p className="text-xs sm:text-sm font-extrabold uppercase tracking-[0.2em] text-vexo-muted group-hover:text-white transition-colors">
+      <p className="text-xs sm:text-sm font-extrabold uppercase tracking-[0.2em] text-slate-600 dark:text-zinc-400 group-hover:text-slate-950 dark:group-hover:text-white transition-colors">
         {label}
       </p>
     </div>

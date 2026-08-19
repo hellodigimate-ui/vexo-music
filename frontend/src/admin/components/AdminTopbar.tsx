@@ -1,6 +1,7 @@
 import React from 'react';
 import { Menu, Radio, Disc3, Music2, ExternalLink } from 'lucide-react';
 import { useAdminAuth } from '../context/AdminAuthContext';
+import { MusicThemeToggle } from '../../components/theme';
 
 interface AdminTopbarProps {
   onToggleSidebar: () => void;
@@ -16,7 +17,7 @@ export const AdminTopbar: React.FC<AdminTopbarProps> = ({
   const { user } = useAdminAuth();
 
   return (
-    <header className="h-14 px-4 lg:px-6 border-b border-zinc-800/80 bg-[#08080a]/90 backdrop-blur-md sticky top-0 z-30 flex items-center justify-between">
+    <header className="admin-topbar h-14 px-4 lg:px-6 border-b border-zinc-800/80 bg-[#08080a]/90 backdrop-blur-md sticky top-0 z-30 flex items-center justify-between">
       {/* Left: Mobile Toggle & Page Title */}
       <div className="flex items-center gap-3">
         <button
@@ -40,6 +41,9 @@ export const AdminTopbar: React.FC<AdminTopbarProps> = ({
 
       {/* Right: Studio On Air Status & Admin Profile */}
       <div className="flex items-center gap-3">
+        {/* Music-Themed Equalizer Toggle */}
+        <MusicThemeToggle variant="compact" />
+
         {/* Studio Status Indicator */}
         <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-red-950/40 border border-red-800/40 text-[10px] font-mono text-red-400">
           <Radio className="w-3 h-3 text-vexo-red animate-pulse" />

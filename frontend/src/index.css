@@ -1,14 +1,17 @@
 @import "tailwindcss";
+@import "./components/theme/musicTheme.css";
+
+@custom-variant dark (&:where(.dark, .dark *));
 
 @theme {
-  --color-vexo-bg: #050505;
-  --color-vexo-surface: #0A0A0A;
-  --color-vexo-card: #121212;
-  --color-vexo-border: #1F1F1F;
+  --color-vexo-bg: var(--theme-bg, #050505);
+  --color-vexo-surface: var(--theme-surface, #0A0A0A);
+  --color-vexo-card: var(--theme-card, #121212);
+  --color-vexo-border: var(--theme-border, #1F1F1F);
   --color-vexo-red: #E00000;
   --color-vexo-red-bright: #FF1111;
-  --color-vexo-white: #FFFFFF;
-  --color-vexo-muted: #A0A0A0;
+  --color-vexo-white: var(--theme-text-primary, #FFFFFF);
+  --color-vexo-muted: var(--theme-text-muted, #A0A0A0);
 
   --font-sans: 'Inter', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
 }
@@ -25,8 +28,8 @@
   }
 
   body {
-    background-color: #050505;
-    color: #FFFFFF;
+    background-color: var(--theme-bg, #050505);
+    color: var(--theme-text-primary, #FFFFFF);
     font-family: var(--font-sans);
     overflow-x: hidden;
     margin: 0;

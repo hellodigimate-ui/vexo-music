@@ -17,17 +17,17 @@ export const ServicePreview: React.FC<ServicePreviewProps> = ({ service, classNa
   return (
     <div
       className={cn(
-        'relative glass-panel rounded-3xl overflow-hidden border border-white/10 shadow-2xl flex flex-col justify-between h-full min-h-[480px] lg:min-h-[580px]',
+        'cinematic-dark relative rounded-3xl overflow-hidden border border-white/10 shadow-xl flex flex-col justify-between h-full min-h-[480px] lg:min-h-[580px] bg-[#050505]',
         className
       )}
     >
       <AnimatePresence mode="wait">
         <motion.div
           key={service.id}
-          initial={{ opacity: 0, scale: 1.04 }}
-          animate={{ opacity: 1, scale: 1 }}
-          exit={{ opacity: 0, scale: 0.98 }}
-          transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
           className="absolute inset-0 z-0 select-none pointer-events-none"
         >
           {/* Large Cinematic Image Background */}
@@ -40,9 +40,6 @@ export const ServicePreview: React.FC<ServicePreviewProps> = ({ service, classNa
           {/* Dark Overlay Gradients */}
           <div className="absolute inset-0 bg-gradient-to-t from-[#050505] via-[#050505]/75 to-transparent" />
           <div className="absolute inset-0 bg-gradient-to-r from-[#050505]/80 via-transparent to-[#050505]/60" />
-
-          {/* Ambient Red Glow */}
-          <div className="absolute -bottom-20 -right-20 w-80 h-80 bg-vexo-red/25 rounded-full blur-[130px] pointer-events-none" />
         </motion.div>
       </AnimatePresence>
 
@@ -53,16 +50,16 @@ export const ServicePreview: React.FC<ServicePreviewProps> = ({ service, classNa
           initial={{ opacity: 0, y: 15 }}
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
-          transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
+          transition={{ duration: 0.35, ease: [0.16, 1, 0.3, 1] }}
           className="relative z-10 p-6 sm:p-10 flex flex-col justify-between h-full"
         >
           {/* Header Badge & Number */}
           <div className="flex items-center justify-between mb-8">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-vexo-red/20 text-vexo-red-bright border border-vexo-red/30 backdrop-blur-md">
-              <Disc3 className="w-3.5 h-3.5" /> SERVICE {service.number}
+            <span className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-vexo-red/20 text-vexo-red border border-vexo-red/30">
+              <Disc3 className="w-3.5 h-3.5 text-vexo-red" /> SERVICE {service.number}
             </span>
 
-            <span className="text-xs font-mono uppercase tracking-widest text-vexo-muted bg-black/50 backdrop-blur-md px-3 py-1 rounded-full border border-white/10">
+            <span className="text-xs font-mono uppercase tracking-widest text-zinc-400 bg-black/60 px-3 py-1 rounded-full border border-white/10">
               {service.category}
             </span>
           </div>
@@ -73,7 +70,7 @@ export const ServicePreview: React.FC<ServicePreviewProps> = ({ service, classNa
               {service.title}
             </h3>
 
-            <p className="text-vexo-muted text-sm sm:text-base leading-relaxed mb-8 max-w-xl text-balance">
+            <p className="text-zinc-300 text-sm sm:text-base leading-relaxed mb-8 max-w-xl text-balance">
               {service.fullDesc}
             </p>
 
@@ -81,7 +78,7 @@ export const ServicePreview: React.FC<ServicePreviewProps> = ({ service, classNa
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
               {service.features.map((feature, idx) => (
                 <div key={idx} className="flex items-center gap-2.5 text-xs font-semibold text-white/90">
-                  <CheckCircle2 className="w-4 h-4 text-vexo-red-bright shrink-0" />
+                  <CheckCircle2 className="w-4 h-4 text-vexo-red shrink-0" />
                   <span>{feature}</span>
                 </div>
               ))}
@@ -95,7 +92,7 @@ export const ServicePreview: React.FC<ServicePreviewProps> = ({ service, classNa
               size="lg"
               onClick={() => navigate('/contact')}
               rightIcon={<ArrowRight className="w-4 h-4" />}
-              className="px-8 py-3.5 text-xs font-extrabold uppercase tracking-wider shadow-[0_0_25px_rgba(224,0,0,0.5)] hover:scale-105 transition-transform"
+              className="px-8 py-3.5 text-xs font-bold uppercase tracking-wider shadow-sm hover:scale-105 transition-transform"
             >
               BOOK THIS SERVICE
             </Button>
@@ -104,7 +101,7 @@ export const ServicePreview: React.FC<ServicePreviewProps> = ({ service, classNa
               variant="ghost"
               size="md"
               onClick={() => navigate('/services')}
-              className="text-xs font-bold text-vexo-muted hover:text-white uppercase tracking-wider hidden sm:flex"
+              className="text-xs font-bold text-zinc-400 hover:text-white uppercase tracking-wider hidden sm:flex"
             >
               Learn More
             </Button>

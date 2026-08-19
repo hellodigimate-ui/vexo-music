@@ -177,7 +177,7 @@ export interface ContactRequest {
   company?: string | null;
   service: string;
   message: string;
-  status: 'NEW' | 'IN_PROGRESS' | 'CONTACTED' | 'RESOLVED' | 'ARCHIVED';
+  status: 'NEW' | 'CONTACTED' | 'CLOSED' | 'IN_PROGRESS' | 'RESOLVED' | 'ARCHIVED';
   notes?: string | null;
   createdAt: string;
   updatedAt: string;

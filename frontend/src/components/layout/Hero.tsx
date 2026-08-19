@@ -109,7 +109,7 @@ export const Hero: React.FC = () => {
   };
 
   return (
-    <section className="relative min-h-[90vh] lg:min-h-screen flex flex-col justify-between overflow-hidden bg-[#050505] pt-32 pb-12 sm:pb-16">
+    <section className="cinematic-dark relative min-h-[90vh] lg:min-h-screen flex flex-col justify-between overflow-hidden bg-[#050505] pt-32 pb-12 sm:pb-16">
       {/* 1. Dynamic Animated Music Waves & Pulsing Ambient Glow */}
       <motion.div
         variants={bgVariants}
@@ -265,8 +265,8 @@ export const Hero: React.FC = () => {
         >
           {/* Brand Badge */}
           <motion.div variants={itemVariants} className="mb-6">
-            <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-[0.25em] bg-vexo-red/10 text-white border border-vexo-red/40 shadow-[0_0_20px_rgba(224,0,0,0.3)] backdrop-blur-md">
-              <Music className="w-3.5 h-3.5 text-vexo-red-bright animate-pulse" />
+            <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-vexo-red/10 text-vexo-red border border-vexo-red/30">
+              <Music className="w-3.5 h-3.5 text-vexo-red animate-pulse" />
               {homepageData.heroTagline}
             </span>
           </motion.div>
@@ -280,7 +280,7 @@ export const Hero: React.FC = () => {
               {homepageData.heroHeadline2 && (
                 <motion.span
                   variants={lineVariants}
-                  className="block bg-gradient-to-r from-white via-[#FF7B7B] to-[#E00000] bg-clip-text text-transparent drop-shadow-[0_10px_35px_rgba(224,0,0,0.5)] break-normal"
+                  className="block text-vexo-red break-normal"
                 >
                   {homepageData.heroHeadline2}
                 </motion.span>
@@ -291,7 +291,7 @@ export const Hero: React.FC = () => {
           {/* Subtitle Description */}
           <motion.p
             variants={itemVariants}
-            className="text-vexo-muted text-base sm:text-lg lg:text-xl max-w-2xl font-normal leading-relaxed mb-10 text-balance"
+            className="text-zinc-400 text-base sm:text-lg lg:text-xl max-w-2xl font-normal leading-relaxed mb-10 text-balance"
           >
             {homepageData.heroSubtitle}
           </motion.p>
@@ -306,7 +306,7 @@ export const Hero: React.FC = () => {
               size="lg"
               onClick={() => navigate(homepageData.heroCtaUrl)}
               leftIcon={<Play className="w-4 h-4 fill-white" />}
-              className="w-full sm:w-auto px-9 py-4 text-xs sm:text-sm font-extrabold tracking-wider uppercase rounded-xl shadow-[0_0_30px_rgba(224,0,0,0.6)] hover:scale-105 transition-all duration-300"
+              className="w-full sm:w-auto px-8 py-3.5 text-xs sm:text-sm font-bold tracking-wider uppercase rounded-xl shadow-md shadow-red-950/50 hover:scale-105 transition-all duration-300"
             >
               {homepageData.heroCtaText}
             </Button>

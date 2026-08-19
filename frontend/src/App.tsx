@@ -33,9 +33,12 @@ import { AdminSiteSettingsPage } from './admin/pages/AdminSiteSettingsPage';
 import { AdminActivityLogsPage } from './admin/pages/AdminActivityLogsPage';
 import { AdminUsersPage } from './admin/pages/AdminUsersPage';
 
+// Theme Experience System
+import { ThemeProvider, ThemeTransition } from './components/theme';
+
 function PublicLayout() {
   return (
-    <div className="min-h-screen bg-vexo-bg text-vexo-white font-sans selection:bg-vexo-red selection:text-white flex flex-col">
+    <div className="min-h-screen bg-[#f8fafc] dark:bg-[#050505] text-slate-900 dark:text-white font-sans selection:bg-vexo-red selection:text-white flex flex-col transition-colors duration-300">
       <Navbar />
       <main className="flex-1">
         <Outlet />
@@ -47,10 +50,12 @@ function PublicLayout() {
 
 export function App() {
   return (
-    <AdminAuthProvider>
-      <AdminToastProvider>
-        <BrowserRouter>
-          <ScrollToTop />
+    <ThemeProvider>
+      <ThemeTransition />
+      <AdminAuthProvider>
+        <AdminToastProvider>
+          <BrowserRouter>
+            <ScrollToTop />
           <Routes>
             {/* Public Website Routes */}
             <Route element={<PublicLayout />}>
@@ -101,6 +106,7 @@ export function App() {
         </BrowserRouter>
       </AdminToastProvider>
     </AdminAuthProvider>
+  </ThemeProvider>
   );
 }
 
