@@ -1,0 +1,48 @@
+import type { Album } from '../types';
+
+export const mockAlbums: Album[] = [
+  {
+    id: 'alb-1',
+    title: 'Satane Lage Ho',
+    artist: 'Rashmi Nishad & Sonu Charan Bhatt',
+    year: 2026,
+    coverUrl: 'https://img.youtube.com/vi/HcEcM5AtEZ8/maxresdefault.jpg',
+    genre: 'Rajasthani Traditional / Modern Folk',
+    spotifyUrl: 'https://spotify.com',
+    youtubeUrl: 'https://youtu.be/HcEcM5AtEZ8?si=cJi8p33qsdjoBI02',
+    trackCount: 1,
+  },
+  {
+    id: 'alb-2',
+    title: 'Neon Soundscapes',
+    artist: 'VEXO Collective',
+    year: 2026,
+    coverUrl: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800&q=80',
+    genre: 'Cybertronic / Synth',
+    spotifyUrl: 'https://spotify.com',
+    youtubeUrl: 'https://youtube.com',
+    trackCount: 12,
+  },
+  {
+    id: 'alb-3',
+    title: 'Crimson Midnight',
+    artist: 'Kaelen Vance',
+    year: 2026,
+    coverUrl: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80',
+    genre: 'Dark Electro R&B',
+    spotifyUrl: 'https://spotify.com',
+    youtubeUrl: 'https://youtube.com',
+    trackCount: 9,
+  },
+  {
+    id: 'alb-4',
+    title: 'Pulse of Jaipur',
+    artist: 'Sonu Charan Bhatt & VEXO Artists',
+    year: 2026,
+    coverUrl: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=800&q=80',
+    genre: 'Fusion Electronic',
+    spotifyUrl: 'https://spotify.com',
+    youtubeUrl: 'https://youtube.com',
+    trackCount: 14,
+  },
+];
