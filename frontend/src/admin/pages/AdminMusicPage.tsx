@@ -24,6 +24,7 @@ import { useAdminToast } from '../context/AdminToastContext';
 import { Modal } from '../components/Modal';
 import { AdminConfirmModal } from '../components/AdminConfirmModal';
 import { TrackModal, type TrackFormData } from '../components/tracks/TrackModal';
+import { AlbumDetailView } from '../components/music/AlbumDetailView';
 import { MediaInput } from '../components/media/MediaInput';
 import { formatTime } from '../../lib/utils';
 

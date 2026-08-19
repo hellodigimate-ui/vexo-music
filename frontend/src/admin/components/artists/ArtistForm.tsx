@@ -138,17 +138,6 @@ export const ArtistForm: React.FC<ArtistFormProps> = ({
     await onSubmit(formData);
   };
 
-  const getInitials = (name: string) => {
-    if (!name) return 'VXO';
-    return name
-      .trim()
-      .split(/\s+/)
-      .map((w) => w[0])
-      .join('')
-      .slice(0, 3)
-      .toUpperCase();
-  };
-
   return (
     <form onSubmit={handleSubmit} className="space-y-6 max-w-5xl mx-auto">
       {/* 1. Basic Identity Card */}

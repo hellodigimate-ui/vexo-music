@@ -37,18 +37,18 @@ export const LatestReleases: React.FC = () => {
     try {
       const homeData = adminMockStore.getHomepage().data;
       const rawAlbums = adminMockStore.getAlbums().data || [];
-      const allAlbums = rawAlbums.map(mapStoreAlbumToPublic);
+      const allAlbums: Album[] = rawAlbums.map(mapStoreAlbumToPublic);
       const selectedIds = homeData?.selectedAlbumIds;
       const limit = Number(homeData?.releasesLimit) || 4;
 
       if (Array.isArray(selectedIds) && selectedIds.length > 0) {
         const ordered: Album[] = [];
         selectedIds.forEach((id: string) => {
-          const found = allAlbums.find((a) => a.id === id);
+          const found = allAlbums.find((a: Album) => a.id === id);
           if (found) ordered.push(found);
         });
-        allAlbums.forEach((a) => {
-          if (!ordered.find((oa) => oa.id === a.id)) {
+        allAlbums.forEach((a: Album) => {
+          if (!ordered.find((oa: Album) => oa.id === a.id)) {
             ordered.push(a);
           }
         });
@@ -66,7 +66,7 @@ export const LatestReleases: React.FC = () => {
       if (!isMounted) return;
 
       const homeData = homeRes.data;
-      const allAlbums = albRes.data || [];
+      const allAlbums: Album[] = albRes.data || [];
 
       if (homeData) {
         setHeadingInfo({
@@ -82,13 +82,13 @@ export const LatestReleases: React.FC = () => {
 
         if (Array.isArray(selectedIds) && selectedIds.length > 0) {
           const orderedAlbums: Album[] = [];
-          selectedIds.forEach((id) => {
-            const found = allAlbums.find((a) => a.id === id);
+          selectedIds.forEach((id: string) => {
+            const found = allAlbums.find((a: Album) => a.id === id);
             if (found) orderedAlbums.push(found);
           });
           // If some selected not found, fill with remaining
-          allAlbums.forEach((a) => {
-            if (!orderedAlbums.find((oa) => oa.id === a.id)) {
+          allAlbums.forEach((a: Album) => {
+            if (!orderedAlbums.find((oa: Album) => oa.id === a.id)) {
               orderedAlbums.push(a);
             }
           });

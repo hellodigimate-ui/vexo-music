@@ -22,6 +22,19 @@ import {
 import { useAdminAuth } from '../context/AdminAuthContext';
 import { adminMockStore } from '../services/adminMockStore';
 
+interface NavItem {
+  name: string;
+  path: string;
+  icon: React.ComponentType<{ className?: string }>;
+  exact?: boolean;
+  badge?: string | number;
+}
+
+interface NavSection {
+  title: string;
+  items: NavItem[];
+}
+
 interface SidebarProps {
   isOpen: boolean;
   onClose?: () => void;
@@ -57,7 +70,7 @@ export const AdminSidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
     navigate('/admin/login');
   };
 
-  const navSections = [
+  const navSections: NavSection[] = [
     {
       title: 'DASHBOARD',
       items: [

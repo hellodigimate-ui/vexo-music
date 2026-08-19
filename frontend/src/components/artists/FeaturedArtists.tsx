@@ -42,17 +42,17 @@ export const FeaturedArtists: React.FC = () => {
     try {
       const homeData = adminMockStore.getHomepage().data;
       const rawArtists = adminMockStore.getArtists().data || [];
-      const allArtists = rawArtists.map(mapStoreArtistToPublic);
+      const allArtists: Artist[] = rawArtists.map(mapStoreArtistToPublic);
       const selectedIds = homeData?.featuredArtistIds;
 
       if (Array.isArray(selectedIds) && selectedIds.length > 0) {
         const ordered: Artist[] = [];
         selectedIds.forEach((id: string) => {
-          const found = allArtists.find((a) => a.id === id);
+          const found = allArtists.find((a: Artist) => a.id === id);
           if (found) ordered.push(found);
         });
-        allArtists.forEach((a) => {
-          if (!ordered.find((oa) => oa.id === a.id)) {
+        allArtists.forEach((a: Artist) => {
+          if (!ordered.find((oa: Artist) => oa.id === a.id)) {
             ordered.push(a);
           }
         });
@@ -70,7 +70,7 @@ export const FeaturedArtists: React.FC = () => {
       if (!isMounted) return;
 
       const homeData = homeRes.data;
-      const allArtists = artRes.data || [];
+      const allArtists: Artist[] = artRes.data || [];
 
       if (homeData) {
         setHeadingInfo({
@@ -83,12 +83,12 @@ export const FeaturedArtists: React.FC = () => {
         const selectedIds = homeData.featuredArtistIds;
         if (Array.isArray(selectedIds) && selectedIds.length > 0) {
           const orderedArtists: Artist[] = [];
-          selectedIds.forEach((id) => {
-            const found = allArtists.find((a) => a.id === id);
+          selectedIds.forEach((id: string) => {
+            const found = allArtists.find((a: Artist) => a.id === id);
             if (found) orderedArtists.push(found);
           });
-          allArtists.forEach((a) => {
-            if (!orderedArtists.find((oa) => oa.id === a.id)) {
+          allArtists.forEach((a: Artist) => {
+            if (!orderedArtists.find((oa: Artist) => oa.id === a.id)) {
               orderedArtists.push(a);
             }
           });

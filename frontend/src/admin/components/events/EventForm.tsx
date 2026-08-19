@@ -6,7 +6,6 @@ import {
   Users,
   Save,
   ArrowLeft,
-  Eye,
   Star,
   Check,
   Clock,

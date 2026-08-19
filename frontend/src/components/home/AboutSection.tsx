@@ -53,7 +53,7 @@ export const AboutSection: React.FC = () => {
     };
   }, []);
 
-  const paragraphs = aboutData.description.split('\n\n').filter(Boolean);
+  const paragraphs: string[] = aboutData.description.split('\n\n').filter(Boolean);
 
   return (
     <PageSection id="about" variant="bg" padding="lg">
@@ -95,7 +95,7 @@ export const AboutSection: React.FC = () => {
           />
 
           {paragraphs.length > 0 ? (
-            paragraphs.map((p, idx) => (
+            paragraphs.map((p: string, idx: number) => (
               <p
                 key={idx}
                 className={`text-vexo-muted text-sm sm:text-base leading-relaxed ${
