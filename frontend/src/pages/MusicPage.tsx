@@ -1,0 +1,253 @@
+import React, { useState, useEffect } from 'react';
+import { PageSection } from '../components/ui/PageSection';
+import { SectionHeading } from '../components/ui/SectionHeading';
+import { AlbumCard } from '../components/music/AlbumCard';
+import { albumsApi } from '../lib/api';
+import { adminMockStore } from '../admin/services/adminMockStore';
+import type { Album, Track } from '../types';
+import { Search, Play, X } from 'lucide-react';
+import { formatTime } from '../lib/utils';
+
+function mapStoreAlbumToPublic(a: any): Album {
+  return {
+    id: a.id,
+    title: a.title,
+    artist: a.artistName,
+    year: a.year || (a.releaseDate ? new Date(a.releaseDate).getFullYear() : 2026),
+    coverUrl: a.coverUrl,
+    genre: a.genre || 'Electronic',
+    spotifyUrl: a.spotifyUrl || '',
+    youtubeUrl: a.youtubeUrl || '',
+    trackCount: a.trackCount || a.tracks?.length || 1,
+  };
+}
+
+function mapStoreTrackToPublic(t: any): Track {
+  return {
+    id: t.id,
+    title: t.title,
+    artist: t.artistName,
+    album: t.albumId,
+    coverUrl: t.coverUrl,
+    duration: t.duration || 210,
+    audioUrl: t.audioUrl,
+    youtubeUrl: t.youtubeUrl || t.audioUrl || '',
+    spotifyUrl: t.spotifyUrl || '',
+    genre: t.genre || 'Electronic',
+    plays: t.plays || 0,
+    likes: t.likes || Math.floor((t.plays || 1000) * 0.08),
+    isPopular: Boolean(t.isPopular),
+  };
+}
+
+export const MusicPage: React.FC = () => {
+  const [albums, setAlbums] = useState<Album[]>(() => {
+    try {
+      const raw = adminMockStore.getAlbums().data || [];
+      return raw.map(mapStoreAlbumToPublic);
+    } catch {
+      return [];
+    }
+  });
+
+  const [tracks, setTracks] = useState<Track[]>(() => {
+    try {
+      const raw = adminMockStore.getTracks().data || [];
+      return raw.map(mapStoreTrackToPublic);
+    } catch {
+      return [];
+    }
+  });
+
+  const [selectedGenre, setSelectedGenre] = useState('All');
+  const [searchQuery, setSearchQuery] = useState('');
+  const [activeTrackVideo, setActiveTrackVideo] = useState<{ title: string; artist: string; id: string } | null>(null);
+
+  useEffect(() => {
+    let isMounted = true;
+    albumsApi.getAlbums().then((res) => {
+      if (isMounted && res.data) setAlbums(res.data);
+    });
+    albumsApi.getTracks().then((res) => {
+      if (isMounted && res.data) setTracks(res.data);
+    });
+    return () => {
+      isMounted = false;
+    };
+  }, []);
+
+  const genres = ['All', 'Rajasthani Folk', 'Traditional Folk', 'Electronic', 'Synthwave', 'Fusion Electronic'];
+
+  const filteredAlbums = albums.filter((album) => {
+    const matchesGenre = selectedGenre === 'All' || album.genre.toLowerCase().includes(selectedGenre.toLowerCase());
+    const matchesSearch =
+      album.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      album.artist.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesGenre && matchesSearch;
+  });
+
+  const handlePlayTrack = (track: Track) => {
+    const url = (track as any).youtubeUrl || track.audioUrl || '';
+    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+    const ytId = match
+      ? match[1]
+      : (track.title.toLowerCase().includes('bhartar') || track.id.includes('bhartar')
+        ? 'PsmXAUKjR5Y'
+        : (track.title.toLowerCase().includes('satane') || track.id === 'trk-1'
+          ? 'HcEcM5AtEZ8'
+          : 'PsmXAUKjR5Y'));
+
+    setActiveTrackVideo({
+      title: track.title,
+      artist: track.artist,
+      id: ytId,
+    });
+  };
+
+  return (
+    <div className="pt-24 min-h-screen bg-vexo-bg">
+      {/* Header Banner Section */}
+      <PageSection variant="bg" padding="md">
+        <SectionHeading
+          badge="VEXO Discography"
+          title="MUSIC CATALOG"
+          subtitle="Explore official albums, singles, EPs, and original soundscapes from VEXO Music Entertainment."
+        />
+
+        {/* Filters & Search Bar */}
+        <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-10">
+          {/* Genre Pills */}
+          <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 scrollbar-none">
+            {genres.map((genre) => (
+              <button
+                key={genre}
+                onClick={() => setSelectedGenre(genre)}
+                className={`px-4 py-2 rounded-full text-xs font-bold transition-all duration-300 whitespace-nowrap cursor-pointer ${
+                  selectedGenre === genre
+                    ? 'bg-vexo-red text-white shadow-[0_0_15px_rgba(224,0,0,0.4)]'
+                    : 'bg-vexo-surface text-vexo-muted hover:text-white hover:bg-white/5 border border-white/10'
+                }`}
+              >
+                {genre}
+              </button>
+            ))}
+          </div>
+
+          {/* Search Input */}
+          <div className="relative w-full md:w-72">
+            <Search className="w-4 h-4 text-vexo-muted absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              placeholder="Search albums or artists..."
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              className="w-full bg-vexo-surface border border-white/10 rounded-full pl-10 pr-4 py-2 text-xs text-white placeholder-vexo-muted outline-none focus:border-vexo-red/50 transition-colors"
+            />
+          </div>
+        </div>
+
+        {/* Albums Grid */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          {filteredAlbums.map((album) => (
+            <AlbumCard key={album.id} album={album} />
+          ))}
+        </div>
+      </PageSection>
+
+      {/* Featured Tracks List */}
+      <PageSection variant="surface" padding="lg">
+        <SectionHeading
+          badge="Popular Tracks"
+          title="STREAMING TOP CHARTS"
+          subtitle="Top played tracks and original productions across streaming platforms."
+        />
+
+        <div className="flex flex-col gap-3">
+          {tracks.map((track, idx) => (
+            <div
+              key={track.id}
+              onClick={() => handlePlayTrack(track)}
+              className="glass-card p-3 sm:p-4 rounded-2xl flex items-center justify-between gap-3 border border-white/10 hover:border-vexo-red/40 transition-all duration-300 overflow-hidden cursor-pointer group"
+            >
+              <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+                <span className="text-sm font-mono font-bold text-vexo-muted w-5 shrink-0 group-hover:text-vexo-red-bright">
+                  0{idx + 1}
+                </span>
+
+                <img
+                  src={track.coverUrl}
+                  alt={track.title}
+                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl object-cover shrink-0 group-hover:scale-105 transition-transform"
+                />
+
+                <div className="min-w-0">
+                  <h4 className="font-bold text-sm text-white group-hover:text-vexo-red-bright transition-colors truncate">
+                    {track.title}
+                  </h4>
+                  <p className="text-xs text-vexo-muted truncate">{track.artist}</p>
+                </div>
+              </div>
+
+              <div className="flex items-center gap-2 sm:gap-6 shrink-0">
+                <span className="hidden md:inline-block px-3 py-1 rounded-full text-[10px] font-mono uppercase bg-white/5 text-vexo-muted border border-white/10">
+                  {track.genre}
+                </span>
+
+                <span className="text-xs font-mono text-vexo-muted">
+                  {formatTime(track.duration)}
+                </span>
+
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handlePlayTrack(track);
+                  }}
+                  className="p-2.5 rounded-full bg-vexo-red/10 text-vexo-red-bright hover:bg-vexo-red hover:text-white transition-colors cursor-pointer"
+                >
+                  <Play className="w-4 h-4 fill-current" />
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
+      </PageSection>
+
+      {/* Track Player Modal */}
+      {activeTrackVideo && (
+        <div
+          className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-300"
+          onClick={() => setActiveTrackVideo(null)}
+        >
+          <div
+            className="relative w-full max-w-4xl bg-neutral-950 border border-white/10 rounded-2xl overflow-hidden shadow-2xl"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="flex items-center justify-between px-6 py-4 border-b border-white/10 bg-neutral-900/50">
+              <div>
+                <h4 className="text-sm font-bold text-white uppercase tracking-wider">{activeTrackVideo.title}</h4>
+                <p className="text-xs text-vexo-muted">{activeTrackVideo.artist}</p>
+              </div>
+              <button
+                onClick={() => setActiveTrackVideo(null)}
+                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer"
+              >
+                <X className="w-4 h-4" />
+              </button>
+            </div>
+            <div className="relative aspect-video w-full">
+              <iframe
+                src={`https://www.youtube-nocookie.com/embed/${activeTrackVideo.id}?autoplay=1&rel=0`}
+                title={activeTrackVideo.title}
+                className="w-full h-full"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                allowFullScreen
+              />
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+};
+
+export default MusicPage;

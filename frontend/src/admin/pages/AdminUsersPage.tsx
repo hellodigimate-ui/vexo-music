@@ -1,0 +1,282 @@
+import React, { useState, useEffect } from 'react';
+import { ShieldCheck, Plus } from 'lucide-react';
+import { adminUsersApi } from '../services/adminApiClient';
+import { useAdminToast } from '../context/AdminToastContext';
+import { Modal } from '../components/Modal';
+import { AdminConfirmModal } from '../components/AdminConfirmModal';
+
+export const AdminUsersPage: React.FC = () => {
+  const toast = useAdminToast();
+  const [users, setUsers] = useState<any[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Styled Confirmation Modal State
+  const [statusTarget, setStatusTarget] = useState<{ id: string; name: string; active: boolean } | null>(null);
+  const [isToggling, setIsToggling] = useState(false);
+
+  // Modal State
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [formData, setFormData] = useState({
+    email: '',
+    name: '',
+    password: '',
+    role: 'ADMIN',
+  });
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const fetchUsers = async () => {
+    try {
+      setIsLoading(true);
+      const res = await adminUsersApi.list();
+      if (res.success) setUsers(res.data);
+    } catch (err: any) {
+      toast.error('Failed to fetch admin users', err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchUsers();
+  }, []);
+
+  const handleConfirmToggle = async () => {
+    if (!statusTarget) return;
+    setIsToggling(true);
+    try {
+      await adminUsersApi.toggleStatus(statusTarget.id);
+      const action = statusTarget.active ? 'deactivated' : 'reactivated';
+      toast.info('Account status updated', `Administrator "${statusTarget.name}" has been ${action}.`);
+      setStatusTarget(null);
+      fetchUsers();
+    } catch (err: any) {
+      toast.error('Failed to modify account status', err.message);
+    } finally {
+      setIsToggling(false);
+    }
+  };
+
+  const handleCreateUser = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    try {
+      await adminUsersApi.create(formData);
+      toast.success('Admin user created', `New administrator "${formData.name}" added.`);
+      setIsModalOpen(false);
+      fetchUsers();
+    } catch (err: any) {
+      toast.error('Failed to create admin user', err.message);
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+        <div>
+          <h2 className="text-sm font-bold text-white tracking-wide flex items-center gap-2">
+            <ShieldCheck className="w-4 h-4 text-vexo-red" />
+            <span>Administrator Directory & Role-Based Access</span>
+          </h2>
+          <p className="text-xs text-zinc-500">Only Super Administrators can create or deactivate accounts</p>
+        </div>
+
+        <button
+          onClick={() => {
+            setFormData({ email: '', name: '', password: '', role: 'ADMIN' });
+            setIsModalOpen(true);
+          }}
+          className="px-4 py-2.5 rounded-xl bg-vexo-red hover:bg-red-600 text-xs font-semibold text-white shadow-lg shadow-red-950/60 flex items-center justify-center gap-2 transition-colors cursor-pointer"
+        >
+          <Plus className="w-4 h-4" />
+          <span>Add Administrator</span>
+        </button>
+      </div>
+
+      <div className="bg-[#0e0e13] border border-zinc-800/80 rounded-2xl overflow-hidden">
+        {isLoading ? (
+          <div className="py-20 text-center text-xs font-mono text-zinc-500">LOADING USERS...</div>
+        ) : (
+          <div className="overflow-x-auto">
+            <table className="w-full text-left text-xs">
+              <thead className="bg-[#121218] border-b border-zinc-800/80 text-[10px] font-mono uppercase tracking-widest text-zinc-400">
+                <tr>
+                  <th className="py-3.5 px-6">Admin Name & Email</th>
+                  <th className="py-3.5 px-6">Role</th>
+                  <th className="py-3.5 px-6">Status</th>
+                  <th className="py-3.5 px-6">Last Login</th>
+                  <th className="py-3.5 px-6 text-right">Access Control</th>
+                </tr>
+              </thead>
+              <tbody className="divide-y divide-zinc-800/60">
+                {users.map((user) => (
+                  <tr key={user.id} className="hover:bg-zinc-900/40 transition-colors">
+                    <td className="py-4 px-6">
+                      <div className="flex items-center gap-3">
+                        <div className="w-9 h-9 rounded-xl bg-zinc-800 border border-zinc-700 font-bold font-mono text-xs flex items-center justify-center text-white">
+                          {user.name?.[0] || 'A'}
+                        </div>
+                        <div>
+                          <p className="font-bold text-white text-xs">{user.name}</p>
+                          <p className="text-[11px] text-zinc-500">{user.email}</p>
+                        </div>
+                      </div>
+                    </td>
+
+                    <td className="py-4 px-6">
+                      <span
+                        className={`px-2.5 py-1 rounded-md text-[10px] font-mono font-bold uppercase ${
+                          user.role === 'SUPER_ADMIN'
+                            ? 'bg-red-950/80 border border-red-800 text-red-300'
+                            : user.role === 'ADMIN'
+                            ? 'bg-amber-950/80 border border-amber-800 text-amber-300'
+                            : 'bg-zinc-800 border border-zinc-700 text-zinc-300'
+                        }`}
+                      >
+                        {user.role}
+                      </span>
+                    </td>
+
+                    <td className="py-4 px-6">
+                      <span
+                        className={`text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded-full ${
+                          user.isActive
+                            ? 'bg-emerald-950 border border-emerald-800 text-emerald-400'
+                            : 'bg-zinc-800 border border-zinc-700 text-zinc-400'
+                        }`}
+                      >
+                        {user.isActive ? 'Active' : 'Deactivated'}
+                      </span>
+                    </td>
+
+                    <td className="py-4 px-6 font-mono text-zinc-400 text-[11px]">
+                      {user.lastLoginAt
+                        ? new Date(user.lastLoginAt).toLocaleDateString('en-GB', {
+                            day: 'numeric',
+                            month: 'short',
+                            year: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit',
+                          })
+                        : 'Never logged in'}
+                    </td>
+
+                    <td className="py-4 px-6 text-right">
+                      {user.role !== 'SUPER_ADMIN' && (
+                        <button
+                          onClick={() => setStatusTarget({ id: user.id, name: user.name, active: user.isActive })}
+                          className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
+                            user.isActive
+                              ? 'bg-red-950/60 hover:bg-red-900 border border-red-800 text-red-300'
+                              : 'bg-emerald-950/60 hover:bg-emerald-900 border border-emerald-800 text-emerald-300'
+                          }`}
+                        >
+                          {user.isActive ? 'Deactivate' : 'Reactivate'}
+                        </button>
+                      )}
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        )}
+      </div>
+
+      {/* Modal */}
+      <Modal
+        isOpen={isModalOpen}
+        onClose={() => setIsModalOpen(false)}
+        title="Create Administrative Account"
+        subtitle="Provision a team administrator with full control capabilities"
+        maxWidth="lg"
+      >
+        <form onSubmit={handleCreateUser} className="space-y-4">
+          <div className="space-y-1.5">
+            <label className="text-xs font-mono font-medium text-zinc-300">FULL NAME *</label>
+            <input
+              type="text"
+              value={formData.name}
+              onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+              placeholder="e.g. Maya Lin"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-xs text-white focus:border-vexo-red focus:outline-none"
+              required
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-mono font-medium text-zinc-300">EMAIL ADDRESS *</label>
+            <input
+              type="email"
+              value={formData.email}
+              onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+              placeholder="maya@vexomusic.com"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-xs text-white focus:border-vexo-red focus:outline-none"
+              required
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-mono font-medium text-zinc-300">TEMPORARY PASSWORD *</label>
+            <input
+              type="password"
+              value={formData.password}
+              onChange={(e) => setFormData({ ...formData, password: e.target.value })}
+              placeholder="••••••••"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-xs text-white focus:border-vexo-red focus:outline-none"
+              required
+            />
+          </div>
+
+          <div className="space-y-1.5">
+            <label className="text-xs font-mono font-medium text-zinc-300">ROLE PRIVILEGES</label>
+            <select
+              value={formData.role}
+              onChange={(e) => setFormData({ ...formData, role: e.target.value })}
+              className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-xs text-white focus:border-vexo-red focus:outline-none"
+            >
+              <option value="ADMIN">ADMIN — Full CMS Access (Artists, Music, Events, Videos, Inquiries)</option>
+              <option value="EDITOR">EDITOR — Content Authoring Only</option>
+              <option value="SUPER_ADMIN">SUPER_ADMIN — Full Access + Governance & Security</option>
+            </select>
+          </div>
+
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-zinc-800">
+            <button
+              type="button"
+              onClick={() => setIsModalOpen(false)}
+              className="px-4 py-2 rounded-xl bg-zinc-900 text-xs text-zinc-400 hover:text-white"
+            >
+              Cancel
+            </button>
+            <button
+              type="submit"
+              disabled={isSubmitting}
+              className="px-6 py-2 rounded-xl bg-vexo-red hover:bg-red-600 text-xs font-semibold text-white cursor-pointer"
+            >
+              {isSubmitting ? 'Creating...' : 'Provision Admin Account'}
+            </button>
+          </div>
+        </form>
+      </Modal>
+
+      {/* Styled Status Toggle Confirmation Modal */}
+      <AdminConfirmModal
+        isOpen={Boolean(statusTarget)}
+        title={statusTarget?.active ? 'Deactivate Administrator' : 'Reactivate Administrator'}
+        itemName={statusTarget?.name}
+        message={
+          statusTarget?.active
+            ? `Are you sure you want to deactivate administrator "${statusTarget?.name}"? They will be immediately locked out from the admin panel.`
+            : `Are you sure you want to reactivate administrator "${statusTarget?.name}"? Their administrative privileges will be restored.`
+        }
+        confirmText={statusTarget?.active ? 'Deactivate Account' : 'Reactivate Account'}
+        isDanger={statusTarget?.active}
+        isLoading={isToggling}
+        onConfirm={handleConfirmToggle}
+        onCancel={() => setStatusTarget(null)}
+      />
+    </div>
+  );
+};

@@ -1,0 +1,692 @@
+/* ==========================================================================
+   VEXO MUSIC — THEME EXPERIENCE SYSTEM (LIGHT / DARK)
+   ========================================================================== */
+
+:root {
+  color-scheme: dark;
+  --theme-bg: #050505;
+  --theme-surface: #0a0a0c;
+  --theme-surface-elevated: #14141c;
+  --theme-card: #101016;
+  --theme-card-hover: #181824;
+  --theme-border: #1f1f26;
+  --theme-border-subtle: rgba(255, 255, 255, 0.08);
+  --theme-text-primary: #ffffff;
+  --theme-text-secondary: #a1a1aa;
+  --theme-text-muted: #71717a;
+  --theme-input-bg: #0e0e13;
+  --theme-glass-bg: rgba(10, 10, 14, 0.75);
+  --theme-glass-border: rgba(255, 255, 255, 0.08);
+  --theme-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8);
+  --theme-glow-red: 0 0 25px rgba(224, 0, 0, 0.45);
+
+  /* Logo Colors Dark */
+  --logo-primary: #FFFFFF;
+  --logo-o-bg: #0A0A0A;
+  --logo-subtext: #94A3B8;
+}
+
+html.light {
+  color-scheme: light;
+  --theme-bg: #f8fafc;
+  --theme-surface: #ffffff;
+  --theme-surface-elevated: #f1f5f9;
+  --theme-card: #ffffff;
+  --theme-card-hover: #f8fafc;
+  --theme-border: #e2e8f0;
+  --theme-border-subtle: rgba(0, 0, 0, 0.08);
+  --theme-text-primary: #09090b;
+  --theme-text-secondary: #475569;
+  --theme-text-muted: #64748b;
+  --theme-input-bg: #ffffff;
+  --theme-glass-bg: rgba(255, 255, 255, 0.92);
+  --theme-glass-border: rgba(0, 0, 0, 0.08);
+  --theme-shadow: 0 12px 32px -4px rgba(0, 0, 0, 0.06);
+  --theme-glow-red: 0 0 20px rgba(224, 0, 0, 0.25);
+
+  /* Logo Colors Light (Crisp Jet Black & Slate) */
+  --logo-primary: #09090B;
+  --logo-o-bg: #FFFFFF;
+  --logo-subtext: #475569;
+}
+
+/* Base Body Transition */
+body {
+  background-color: var(--theme-bg);
+  color: var(--theme-text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* ==========================================================================
+   APPLE-GRADE FROSTED GLASS NAVIGATION THEME
+   ========================================================================== */
+
+/* Dark Mode Apple Glass Header */
+.apple-glass-header {
+  background-color: rgba(5, 5, 5, 0.72);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+}
+
+/* Light Mode Apple Glass Header */
+html.light .apple-glass-header {
+  background-color: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(20px) saturate(180%);
+  border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+  box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.03);
+}
+
+/* Apple Nav Pill */
+.apple-nav-pill {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+.apple-nav-pill a.nav-link-active {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+.apple-nav-pill a.nav-link-inactive {
+  color: #a1a1aa;
+}
+
+html.light .apple-nav-pill {
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.06);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+}
+
+html.light .apple-nav-pill a.nav-link-active {
+  color: #ffffff !important;
+  font-weight: 700 !important;
+}
+
+html.light .apple-nav-pill a.nav-link-inactive {
+  color: #475569 !important;
+}
+
+html.light .apple-nav-pill a.nav-link-inactive:hover {
+  color: #ffffff !important;
+}
+
+/* Round Controls & Action Buttons (Base) */
+.apple-control-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.22s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+  user-select: none;
+  flex-shrink: 0;
+  background-color: rgba(255, 255, 255, 0.08);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  color: #ffffff;
+}
+
+.apple-control-btn svg {
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), color 0.22s ease;
+}
+
+.apple-control-btn:hover {
+  background-color: #E00000;
+  border-color: #E00000;
+  color: #ffffff;
+  transform: translateY(-2px) scale(1.06);
+  box-shadow: 0 6px 18px rgba(224, 0, 0, 0.35);
+}
+
+.apple-control-btn:hover svg {
+  transform: scale(1.1);
+  color: #ffffff;
+}
+
+html.light .apple-control-btn {
+  background-color: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #09090b;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+}
+
+html.light .apple-control-btn svg {
+  color: #09090b;
+}
+
+html.light .apple-control-btn:hover {
+  background-color: #E00000;
+  border-color: #E00000;
+  color: #ffffff;
+  transform: translateY(-2px) scale(1.06);
+  box-shadow: 0 6px 18px rgba(224, 0, 0, 0.35);
+}
+
+html.light .apple-control-btn:hover svg {
+  color: #ffffff;
+}
+
+/* ── Platform-Specific Social Button Brand Themes ── */
+
+/* 1. Instagram: Vibrant Magenta/Pink/Orange Gradient */
+.apple-social-insta:hover,
+html.light .apple-social-insta:hover {
+  background: linear-gradient(45deg, #f09433 0%, #e6683c 25%, #dc2743 50%, #cc2366 75%, #bc1888 100%) !important;
+  border-color: #dc2743 !important;
+  color: #ffffff !important;
+  box-shadow: 0 6px 20px rgba(220, 39, 67, 0.45) !important;
+}
+
+.apple-social-insta:hover svg,
+html.light .apple-social-insta:hover svg {
+  color: #ffffff !important;
+  stroke: #ffffff !important;
+}
+
+/* 2. YouTube: Iconic Red & Pure White */
+.apple-social-yt:hover,
+html.light .apple-social-yt:hover {
+  background-color: #FF0000 !important;
+  background-image: none !important;
+  border-color: #FF0000 !important;
+  color: #ffffff !important;
+  box-shadow: 0 6px 20px rgba(255, 0, 0, 0.45) !important;
+}
+
+.apple-social-yt:hover svg,
+html.light .apple-social-yt:hover svg {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
+
+/* 3. Spotify: Iconic Green */
+.apple-social-spotify:hover,
+html.light .apple-social-spotify:hover {
+  background-color: #1DB954 !important;
+  background-image: none !important;
+  border-color: #1DB954 !important;
+  color: #ffffff !important;
+  box-shadow: 0 6px 20px rgba(29, 185, 84, 0.45) !important;
+}
+
+.apple-social-spotify:hover svg,
+html.light .apple-social-spotify:hover svg {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
+
+/* 4. X (Twitter): Crisp Obsidian Black in Light / Pure White in Dark */
+html.light .apple-social-x:hover {
+  background-color: #000000 !important;
+  background-image: none !important;
+  border-color: #000000 !important;
+  color: #ffffff !important;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4) !important;
+}
+
+html.light .apple-social-x:hover svg {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
+
+.apple-social-x:hover {
+  background-color: #ffffff !important;
+  background-image: none !important;
+  border-color: #ffffff !important;
+  color: #000000 !important;
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.45) !important;
+}
+
+.apple-social-x:hover svg {
+  color: #000000 !important;
+  fill: #000000 !important;
+}
+
+/* Round Buttons (Search & Toggle legacy fallback) */
+.apple-btn-round {
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #a1a1aa;
+}
+
+.apple-btn-round:hover {
+  background: rgba(255, 255, 255, 0.12);
+  border-color: rgba(224, 0, 0, 0.4);
+  color: #ffffff;
+}
+
+html.light .apple-btn-round {
+  background: rgba(0, 0, 0, 0.04);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+  color: #475569;
+}
+
+html.light .apple-btn-round:hover {
+  background: rgba(0, 0, 0, 0.08);
+  border-color: rgba(224, 0, 0, 0.4);
+  color: #09090b;
+}
+
+/* Apple Spotlight Search Card */
+.apple-glass-card {
+  background: rgba(14, 14, 19, 0.92);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+}
+
+html.light .apple-glass-card {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(24px) saturate(180%);
+  -webkit-backdrop-filter: blur(24px) saturate(180%);
+  border: 1px solid rgba(0, 0, 0, 0.08);
+}
+
+/* Apple Mobile Drawer */
+.apple-mobile-drawer {
+  background: rgba(5, 5, 5, 0.94);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+}
+
+html.light .apple-mobile-drawer {
+  background: rgba(255, 255, 255, 0.94);
+  backdrop-filter: blur(28px) saturate(180%);
+  -webkit-backdrop-filter: blur(28px) saturate(180%);
+}
+
+/* ==========================================================================
+   LIGHT MODE STYLING & HARMONIZATION
+   ========================================================================== */
+
+html.light body {
+  background-color: #f8fafc;
+  color: #09090b;
+}
+
+/* Glass Panels & Cards in Light Mode */
+html.light .glass-panel:not(.cinematic-dark *) {
+  background: rgba(255, 255, 255, 0.92) !important;
+  border-color: rgba(0, 0, 0, 0.08) !important;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.04);
+}
+
+html.light .glass-card:not(.cinematic-dark *) {
+  background: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #09090b !important;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04);
+}
+
+html.light .glass-card:not(.cinematic-dark *):hover {
+  border-color: rgba(224, 0, 0, 0.45) !important;
+  box-shadow: 0 10px 30px rgba(224, 0, 0, 0.12) !important;
+}
+
+/* Text & Headings in Light Mode */
+html.light h1:not(.cinematic-dark *),
+html.light h2:not(.cinematic-dark *),
+html.light h3:not(.cinematic-dark *),
+html.light h4:not(.cinematic-dark *) {
+  color: #09090b;
+}
+
+html.light p:not(.cinematic-dark *):not(.text-vexo-red):not(.text-vexo-red-bright) {
+  color: #475569;
+}
+
+/* Section Backgrounds in Light Mode */
+html.light section:not(.cinematic-dark) {
+  background-color: transparent;
+}
+
+html.light section.bg-vexo-surface:not(.cinematic-dark),
+html.light section.bg-vexo-card:not(.cinematic-dark) {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+}
+
+/* Footer in Light Mode */
+html.light footer {
+  background-color: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+  color: #09090b !important;
+}
+
+html.light footer .text-white {
+  color: #09090b !important;
+}
+
+html.light footer .text-vexo-muted {
+  color: #64748b !important;
+}
+
+/* ==========================================================================
+   CINEMATIC DARK STAGE PRESERVATION
+   (Hero Video, Featured Single Banner, YouTube Players)
+   ========================================================================== */
+
+.cinematic-dark {
+  color: #ffffff !important;
+}
+
+section.cinematic-dark,
+div.cinematic-dark-bg {
+  background-color: #050505 !important;
+}
+
+.cinematic-dark h1,
+.cinematic-dark h2,
+.cinematic-dark h3,
+.cinematic-dark h4 {
+  color: #ffffff !important;
+}
+
+.cinematic-dark .text-white {
+  color: #ffffff !important;
+}
+
+.cinematic-dark .text-neutral-300,
+.cinematic-dark .text-zinc-300 {
+  color: #d1d5db !important;
+}
+
+.cinematic-dark .text-vexo-muted {
+  color: #9ca3af !important;
+}
+
+.cinematic-dark .bg-neutral-950\/80,
+.cinematic-dark .bg-black\/60,
+.cinematic-dark .bg-black\/70 {
+  background-color: rgba(10, 10, 14, 0.85) !important;
+  border-color: rgba(255, 255, 255, 0.15) !important;
+  color: #e2e8f0 !important;
+}
+
+.cinematic-dark .bg-white\/5 {
+  background-color: rgba(255, 255, 255, 0.06) !important;
+  border-color: rgba(255, 255, 255, 0.12) !important;
+}
+
+/* ==========================================================================
+   ADMIN PANEL IN LIGHT MODE
+   ========================================================================== */
+
+html.light aside {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  box-shadow: 2px 0 16px rgba(0, 0, 0, 0.04);
+}
+
+html.light aside a.text-vexo-red {
+  background-color: rgba(224, 0, 0, 0.08) !important;
+  color: #E00000 !important;
+}
+
+html.light .admin-topbar {
+  background-color: rgba(255, 255, 255, 0.95) !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light main {
+  background-color: #f8fafc;
+}
+
+html.light table thead {
+  background-color: #f1f5f9 !important;
+  border-color: #e2e8f0 !important;
+}
+
+html.light table thead th {
+  color: #475569 !important;
+}
+
+html.light table tbody tr {
+  border-color: #f1f5f9 !important;
+}
+
+html.light table tbody tr:hover {
+  background-color: #f8fafc !important;
+}
+
+html.light input:not([type="checkbox"]):not([type="radio"]):not(.apple-search-input),
+html.light textarea,
+html.light select {
+  background-color: #ffffff !important;
+  color: #09090b !important;
+  border-color: #cbd5e1 !important;
+}
+
+html.light input.apple-search-input {
+  background-color: transparent !important;
+  background: transparent !important;
+  border-color: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  color: #09090b !important;
+}
+
+html.light input:not([type="checkbox"]):not([type="radio"]):not(.apple-search-input):focus,
+html.light textarea:focus,
+html.light select:focus {
+  border-color: #E00000 !important;
+  box-shadow: 0 0 0 2px rgba(224, 0, 0, 0.18) !important;
+}
+
+html.light input::placeholder,
+html.light textarea::placeholder {
+  color: #94a3b8 !important;
+}
+
+/* Scrollbars in Light Mode */
+html.light ::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+
+html.light ::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+}
+
+html.light ::-webkit-scrollbar-thumb:hover {
+  background: #E00000;
+}
+
+/* ==========================================================================
+   MUSIC THEME ANIMATIONS & SOUND-WAVE EFFECTS
+   ========================================================================== */
+
+/* Equalizer Dancing Bars */
+@keyframes eq-bounce-1 {
+
+  0%,
+  100% {
+    height: 4px;
+  }
+
+  50% {
+    height: 16px;
+  }
+}
+
+@keyframes eq-bounce-2 {
+
+  0%,
+  100% {
+    height: 16px;
+  }
+
+  50% {
+    height: 6px;
+  }
+}
+
+@keyframes eq-bounce-3 {
+
+  0%,
+  100% {
+    height: 8px;
+  }
+
+  50% {
+    height: 18px;
+  }
+}
+
+@keyframes eq-bounce-4 {
+
+  0%,
+  100% {
+    height: 14px;
+  }
+
+  50% {
+    height: 4px;
+  }
+}
+
+.animate-eq-1 {
+  animation: eq-bounce-1 0.75s ease-in-out infinite;
+}
+
+.animate-eq-2 {
+  animation: eq-bounce-2 0.6s ease-in-out infinite 0.15s;
+}
+
+.animate-eq-3 {
+  animation: eq-bounce-3 0.85s ease-in-out infinite 0.3s;
+}
+
+.animate-eq-4 {
+  animation: eq-bounce-4 0.7s ease-in-out infinite 0.1s;
+}
+
+.animate-eq-fast-1 {
+  animation: eq-bounce-1 0.35s ease-in-out infinite;
+}
+
+.animate-eq-fast-2 {
+  animation: eq-bounce-2 0.28s ease-in-out infinite 0.08s;
+}
+
+.animate-eq-fast-3 {
+  animation: eq-bounce-3 0.4s ease-in-out infinite 0.15s;
+}
+
+.animate-eq-fast-4 {
+  animation: eq-bounce-4 0.32s ease-in-out infinite 0.05s;
+}
+
+/* Circular Acoustic Sound Wave Ring Expansion */
+@keyframes acoustic-shockwave {
+  0% {
+    transform: translate(-50%, -50%) scale(0.1);
+    opacity: 0.9;
+  }
+
+  50% {
+    opacity: 0.6;
+  }
+
+  100% {
+    transform: translate(-50%, -50%) scale(2.8);
+    opacity: 0;
+  }
+}
+
+.animate-acoustic-shockwave {
+  animation: acoustic-shockwave 0.75s cubic-bezier(0.1, 0.7, 0.1, 1) forwards;
+}
+
+/* Floating Music Particle / Note */
+@keyframes float-music-note {
+  0% {
+    transform: translate(0, 0) rotate(0deg) scale(0.8);
+    opacity: 0;
+  }
+
+  25% {
+    opacity: 1;
+  }
+
+  80% {
+    opacity: 0.8;
+  }
+
+  100% {
+    transform: translate(var(--note-x, 30px), var(--note-y, -60px)) rotate(var(--note-r, 20deg)) scale(1.1);
+    opacity: 0;
+  }
+}
+
+.animate-float-note {
+  animation: float-music-note 0.65s ease-out forwards;
+}
+
+/* Subtle Beat Pulse */
+@keyframes beat-pulse-subtle {
+
+  0%,
+  100% {
+    transform: scale(1);
+  }
+
+  50% {
+    transform: scale(1.06);
+  }
+}
+
+.animate-beat-pulse {
+  animation: beat-pulse-subtle 0.35s ease-in-out;
+}
+
+/* Vinyl Spin */
+@keyframes vinyl-spin {
+  from {
+    transform: rotate(0deg);
+  }
+
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.animate-vinyl-spin {
+  animation: vinyl-spin 4s linear infinite;
+}
+
+/* ==========================================================================
+   ACCESSIBILITY: PREFERS-REDUCED-MOTION
+   ========================================================================== */
+
+@media (prefers-reduced-motion: reduce) {
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+
+  .animate-eq-1,
+  .animate-eq-2,
+  .animate-eq-3,
+  .animate-eq-4,
+  .animate-eq-fast-1,
+  .animate-eq-fast-2,
+  .animate-eq-fast-3,
+  .animate-eq-fast-4,
+  .animate-acoustic-shockwave,
+  .animate-float-note,
+  .animate-beat-pulse,
+  .animate-vinyl-spin {
+    animation: none !important;
+  }
+}
