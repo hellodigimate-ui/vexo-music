@@ -120,11 +120,30 @@ export const MusicPage: React.FC = () => {
         </div>
 
         {/* Albums Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {filteredAlbums.map((album) => (
-            <AlbumCard key={album.id} album={album} />
-          ))}
-        </div>
+        {isLoading ? (
+          <div className="py-20 flex flex-col items-center justify-center gap-3 text-zinc-500">
+            <Loader2 className="w-8 h-8 animate-spin text-vexo-red-bright" />
+            <p className="text-xs font-mono tracking-wider uppercase">Loading Releases...</p>
+          </div>
+        ) : filteredAlbums.length === 0 ? (
+          <div className="py-20 flex flex-col items-center justify-center gap-3 text-center border border-dashed border-white/10 rounded-2xl p-8">
+            <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400">
+              <Music2 className="w-6 h-6" />
+            </div>
+            <p className="text-sm font-bold text-white uppercase tracking-wider">No Releases Found</p>
+            <p className="text-xs text-zinc-400 max-w-sm">
+              {searchQuery
+                ? `No releases match "${searchQuery}".`
+                : 'No releases available for this selection.'}
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {filteredAlbums.map((album) => (
+              <AlbumCard key={album.id} album={album} />
+            ))}
+          </div>
+        )}
       </PageSection>
 
       {/* Featured Tracks List */}
