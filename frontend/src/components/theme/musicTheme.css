@@ -63,15 +63,15 @@ body {
 
 /* Dark Mode Apple Glass Header */
 .apple-glass-header {
-  background-color: rgba(5, 5, 5, 0.72);
+  background-color: rgba(5, 5, 5, 0.85);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 /* Light Mode Apple Glass Header */
 html.light .apple-glass-header {
-  background-color: rgba(255, 255, 255, 0.78);
+  background-color: rgba(255, 255, 255, 0.88);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border-bottom: 1px solid rgba(0, 0, 0, 0.06);
@@ -119,6 +119,8 @@ html.light .apple-nav-pill a.nav-link-inactive:hover {
 .apple-control-btn {
   width: 36px;
   height: 36px;
+  min-height: 36px;
+  max-height: 36px;
   border-radius: 9999px;
   display: inline-flex;
   align-items: center;
@@ -250,6 +252,14 @@ html.light .apple-social-x:hover svg {
 
 /* Round Buttons (Search & Toggle legacy fallback) */
 .apple-btn-round {
+  width: 36px;
+  height: 36px;
+  min-height: 36px;
+  max-height: 36px;
+  border-radius: 9999px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
   background: rgba(255, 255, 255, 0.06);
   border: 1px solid rgba(255, 255, 255, 0.08);
   color: #a1a1aa;

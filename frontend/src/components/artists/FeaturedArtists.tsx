@@ -5,64 +5,17 @@ import { SectionHeading } from '../ui/SectionHeading';
 import { Button } from '../ui/Button';
 import { ArtistCard } from './ArtistCard';
 import { artistsApi, homepageApi } from '../../lib/api';
-import { adminMockStore } from '../../admin/services/adminMockStore';
 import type { Artist } from '../../types';
 import { Users } from 'lucide-react';
 
-function mapStoreArtistToPublic(a: any): Artist {
-  return {
-    id: a.id,
-    name: a.name,
-    role: a.role,
-    avatarUrl: a.avatarUrl,
-    coverUrl: a.coverUrl,
-    bio: a.bio,
-    monthlyListeners: a.monthlyListeners,
-    followers: a.monthlyListeners,
-    genres: Array.isArray(a.genres) ? a.genres : [],
-    socialLinks: (a.socials || []).map((s: any) => ({
-      platform: s.platform,
-      url: s.url,
-    })),
-    isComingSoon: Boolean(a.isComingSoon),
-  };
-}
-
 export const FeaturedArtists: React.FC = () => {
   const navigate = useNavigate();
-  const [headingInfo, setHeadingInfo] = useState(() => {
-    const d = adminMockStore.getHomepage().data || {};
-    return {
-      title: d.artistsHeading || 'FEATURED ARTISTS',
-      subtitle: d.artistsSubtitle || 'Discover the visionary producers, vocalists, and composers driving our sonic movement.',
-    };
+  const [headingInfo, setHeadingInfo] = useState({
+    title: 'FEATURED ARTISTS',
+    subtitle: 'Discover the visionary producers, vocalists, and composers driving our sonic movement.',
   });
 
-  const [artists, setArtists] = useState<Artist[]>(() => {
-    try {
-      const homeData = adminMockStore.getHomepage().data;
-      const rawArtists = adminMockStore.getArtists().data || [];
-      const allArtists: Artist[] = rawArtists.map(mapStoreArtistToPublic);
-      const selectedIds = homeData?.featuredArtistIds;
-
-      if (Array.isArray(selectedIds) && selectedIds.length > 0) {
-        const ordered: Artist[] = [];
-        selectedIds.forEach((id: string) => {
-          const found = allArtists.find((a: Artist) => a.id === id);
-          if (found) ordered.push(found);
-        });
-        allArtists.forEach((a: Artist) => {
-          if (!ordered.find((oa: Artist) => oa.id === a.id)) {
-            ordered.push(a);
-          }
-        });
-        return ordered.slice(0, 4);
-      }
-      return allArtists.slice(0, 4);
-    } catch {
-      return [];
-    }
-  });
+  const [artists, setArtists] = useState<Artist[]>([]);
 
   useEffect(() => {
     let isMounted = true;

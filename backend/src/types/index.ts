@@ -57,6 +57,12 @@ export interface ServiceItem {
   icon?: string;
   features: string[];
   ctaText?: string;
+  pricingRange?: string;
+  plans?: any[];
+  specs?: string[];
+  processSteps?: any[];
+  deliverables?: string[];
+  faqs?: any[];
   order?: number;
   isActive?: boolean;
 }

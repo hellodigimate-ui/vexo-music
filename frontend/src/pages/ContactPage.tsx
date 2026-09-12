@@ -19,10 +19,12 @@ import {
   MessageSquare,
   Clock,
   RotateCcw,
+  Sparkles,
 } from 'lucide-react';
 
 export const ContactPage: React.FC = () => {
   const [searchParams] = useSearchParams();
+  const [selectedPlan, setSelectedPlan] = useState<string | null>(null);
 
   const [formData, setFormData] = useState<ContactFormData>({
     name: '',
@@ -38,11 +40,23 @@ export const ContactPage: React.FC = () => {
   const [submissionResult, setSubmissionResult] = useState<ContactResponse | null>(null);
   const [apiError, setApiError] = useState<string | null>(null);
 
-  // Sync service requirement from URL query string if navigated from Services or Events page
+  // Sync service requirement and plan from URL query string if navigated from Services page
   useEffect(() => {
     const serviceParam = searchParams.get('service');
+    const planParam = searchParams.get('plan');
     if (serviceParam) {
-      setFormData((prev) => ({ ...prev, service: serviceParam }));
+      setFormData((prev) => ({
+        ...prev,
+        service: serviceParam,
+        message:
+          prev.message ||
+          (planParam
+            ? `Hello, I would like to book the "${planParam}" plan for ${serviceParam}. Here are my project details:`
+            : prev.message),
+      }));
+    }
+    if (planParam) {
+      setSelectedPlan(planParam);
     }
   }, [searchParams]);
 
@@ -269,6 +283,22 @@ export const ContactPage: React.FC = () => {
                 </div>
                 <Disc3 className="w-6 h-6 text-vexo-red shrink-0" />
               </div>
+
+              {/* Selected Plan Notification Pill */}
+              {selectedPlan && (
+                <div className="mb-6 p-4 rounded-2xl bg-red-50 dark:bg-vexo-red/10 border border-red-200 dark:border-vexo-red/30 flex items-center justify-between text-xs font-mono">
+                  <div className="flex items-center gap-2.5 text-slate-900 dark:text-white">
+                    <Sparkles className="w-4 h-4 text-vexo-red shrink-0" />
+                    <span>
+                      Selected Package: <strong>{formData.service}</strong> —{' '}
+                      <span className="text-vexo-red font-bold">{selectedPlan}</span>
+                    </span>
+                  </div>
+                  <span className="text-[10px] uppercase font-bold text-slate-500 dark:text-zinc-400 hidden sm:inline">
+                    Plan Selected ✓
+                  </span>
+                </div>
+              )}
 
               {/* API Error Notification */}
               {apiError && (

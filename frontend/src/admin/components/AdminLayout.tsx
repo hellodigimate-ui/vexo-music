@@ -47,7 +47,7 @@ export const AdminLayout: React.FC = () => {
       <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 lg:pl-56 pb-16 lg:pb-0">
+      <div className="flex-1 flex flex-col min-w-0 lg:pl-60 pb-16 lg:pb-0">
         {/* Topbar Header */}
         <AdminTopbar
           onToggleSidebar={() => setSidebarOpen((prev) => !prev)}

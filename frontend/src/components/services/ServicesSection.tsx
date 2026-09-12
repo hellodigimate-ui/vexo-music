@@ -10,6 +10,7 @@ import { mockServicesList } from '../../data/services';
 import type { ServiceItem } from '../../types/service';
 import { ArrowRight, ChevronDown, CheckCircle2 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
+import { getMediaUrl } from '../../lib/utils';
 
 function mapStoreServiceToItem(s: any): ServiceItem {
   return {
@@ -19,7 +20,7 @@ function mapStoreServiceToItem(s: any): ServiceItem {
     slug: s.slug || s.title?.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, ''),
     shortDesc: s.shortDesc || '',
     fullDesc: s.fullDesc || s.shortDesc || '',
-    imageUrl: s.imageUrl || 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1200&q=80',
+    imageUrl: getMediaUrl(s.imageUrl) || 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1200&q=80',
     icon: s.icon || 'Music',
     features: Array.isArray(s.features)
       ? s.features
@@ -155,7 +156,7 @@ export const ServicesSection: React.FC = () => {
                 <div className="px-5 pb-6 pt-2 border-t border-white/5 animate-fadeIn flex flex-col gap-4">
                   <div className="relative aspect-video rounded-xl overflow-hidden my-2">
                     <img
-                      src={service.imageUrl}
+                      src={getMediaUrl(service.imageUrl)}
                       alt={service.title}
                       className="w-full h-full object-cover"
                     />

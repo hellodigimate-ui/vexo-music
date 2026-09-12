@@ -24,6 +24,7 @@ import { adminMediaApi } from '../services/adminApiClient';
 import { useAdminToast } from '../context/AdminToastContext';
 import { Modal } from '../components/Modal';
 import { AdminConfirmModal } from '../components/AdminConfirmModal';
+import { getMediaUrl } from '../../lib/utils';
 
 export const AdminMediaPage: React.FC = () => {
   const toast = useAdminToast();
@@ -385,14 +386,14 @@ export const AdminMediaPage: React.FC = () => {
                 <div className="relative aspect-video bg-black/60 overflow-hidden flex items-center justify-center">
                   {isImage ? (
                     <img
-                      src={media.url}
+                      src={getMediaUrl(media.url)}
                       alt={media.altText || media.filename}
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   ) : isVideo ? (
                     <div className="w-full h-full relative flex items-center justify-center bg-zinc-900">
                       {media.url.includes('youtube') || media.url.endsWith('.jpg') || media.url.endsWith('.png') ? (
-                        <img src={media.url} alt={media.filename} className="w-full h-full object-cover" />
+                        <img src={getMediaUrl(media.url)} alt={media.filename} className="w-full h-full object-cover" />
                       ) : (
                         <Video className="w-10 h-10 text-purple-400" />
                       )}
@@ -514,7 +515,7 @@ export const AdminMediaPage: React.FC = () => {
                         <div className="flex items-center gap-3">
                           <div className="w-10 h-10 rounded-lg overflow-hidden bg-black/60 shrink-0 border border-zinc-800 flex items-center justify-center">
                             {isImage ? (
-                              <img src={media.url} alt="" className="w-full h-full object-cover" />
+                              <img src={getMediaUrl(media.url)} alt="" className="w-full h-full object-cover" />
                             ) : isAudio ? (
                               <Music className="w-4 h-4 text-amber-400" />
                             ) : isVideo ? (
@@ -779,7 +780,7 @@ export const AdminMediaPage: React.FC = () => {
           <div className="space-y-4">
             <div className="max-h-80 rounded-xl overflow-hidden bg-black/80 flex items-center justify-center border border-zinc-800">
               {previewAsset.category === 'image' ? (
-                <img src={previewAsset.url} alt="" className="max-h-80 w-auto object-contain" />
+                <img src={getMediaUrl(previewAsset.url)} alt="" className="max-h-80 w-auto object-contain" />
               ) : previewAsset.category === 'audio' ? (
                 <div className="p-8 flex flex-col items-center gap-3">
                   <Music className="w-12 h-12 text-amber-400" />

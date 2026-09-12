@@ -3,7 +3,9 @@
  * Allows seamless admin dashboard usage when Fastify backend on port 4000 is offline.
  */
 
-const STORAGE_KEY = 'vexo_admin_mock_db_v9';
+import { mockServicesList } from '../../data/services';
+
+const STORAGE_KEY = 'vexo_admin_mock_db_v10';
 
 function getInitialMockDb() {
   const now = new Date().toISOString();
@@ -979,7 +981,26 @@ class AdminMockStore {
   }
 
   public getServices() {
-    const list = [...(this.db.services || [])].sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
+    const list = [...(this.db.services || [])]
+      .map((s: any) => {
+        if (!s.plans || s.plans.length === 0) {
+          const fallback = mockServicesList.find(
+            (m) => m.id === s.id || m.slug === s.slug || m.title?.toLowerCase() === s.title?.toLowerCase()
+          );
+          if (fallback) {
+            return {
+              ...s,
+              plans: fallback.plans || [],
+              specs: (s.specs && s.specs.length > 0) ? s.specs : (fallback.specs || []),
+              processSteps: (s.processSteps && s.processSteps.length > 0) ? s.processSteps : (fallback.processSteps || []),
+              deliverables: (s.deliverables && s.deliverables.length > 0) ? s.deliverables : (fallback.deliverables || []),
+              faqs: (s.faqs && s.faqs.length > 0) ? s.faqs : (fallback.faqs || []),
+            };
+          }
+        }
+        return s;
+      })
+      .sort((a: any, b: any) => (a.order || 0) - (b.order || 0));
     return { success: true, data: list };
   }
 

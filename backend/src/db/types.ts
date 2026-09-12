@@ -147,6 +147,11 @@ export interface Service {
   pricingRange?: string | null;
   specifications?: string[];
   equipmentList?: string[];
+  plans?: any[];
+  specs?: string[];
+  processSteps?: any[];
+  deliverables?: string[];
+  faqs?: any[];
   order: number;
   isActive: boolean;
   createdAt: string;

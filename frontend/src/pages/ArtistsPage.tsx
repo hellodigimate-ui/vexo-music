@@ -3,45 +3,33 @@ import { PageSection } from '../components/ui/PageSection';
 import { SectionHeading } from '../components/ui/SectionHeading';
 import { ArtistCard } from '../components/artists/ArtistCard';
 import { artistsApi } from '../lib/api';
-import { adminMockStore } from '../admin/services/adminMockStore';
 import type { Artist } from '../types';
-import { Search } from 'lucide-react';
-
-function mapStoreArtistToPublic(a: any): Artist {
-  return {
-    id: a.id,
-    name: a.name,
-    role: a.role,
-    avatarUrl: a.avatarUrl,
-    coverUrl: a.coverUrl,
-    bio: a.bio,
-    monthlyListeners: a.monthlyListeners,
-    followers: a.monthlyListeners,
-    genres: Array.isArray(a.genres) ? a.genres : [],
-    socialLinks: (a.socials || []).map((s: any) => ({
-      platform: s.platform,
-      url: s.url,
-    })),
-    isComingSoon: Boolean(a.isComingSoon),
-  };
-}
+import { Search, Users, Loader2 } from 'lucide-react';
 
 export const ArtistsPage: React.FC = () => {
-  const [artists, setArtists] = useState<Artist[]>(() => {
-    try {
-      const raw = adminMockStore.getArtists().data || [];
-      return raw.map(mapStoreArtistToPublic);
-    } catch {
-      return [];
-    }
-  });
+  const [artists, setArtists] = useState<Artist[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');
 
   useEffect(() => {
     let isMounted = true;
-    artistsApi.getArtists().then((res) => {
-      if (isMounted && res.data) setArtists(res.data);
-    });
+    setIsLoading(true);
+
+    artistsApi
+      .getArtists()
+      .then((res) => {
+        if (isMounted) {
+          if (res.data) setArtists(res.data);
+          setIsLoading(false);
+        }
+      })
+      .catch(() => {
+        if (isMounted) {
+          setArtists([]);
+          setIsLoading(false);
+        }
+      });
+
     return () => {
       isMounted = false;
     };
@@ -78,12 +66,31 @@ export const ArtistsPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Artists Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-          {filteredArtists.map((artist) => (
-            <ArtistCard key={artist.id} artist={artist} />
-          ))}
-        </div>
+        {/* Artists Grid or Loading / Empty States */}
+        {isLoading ? (
+          <div className="py-24 flex flex-col items-center justify-center gap-3 text-zinc-500">
+            <Loader2 className="w-8 h-8 animate-spin text-vexo-red-bright" />
+            <p className="text-xs font-mono tracking-wider uppercase">Loading Artists...</p>
+          </div>
+        ) : filteredArtists.length === 0 ? (
+          <div className="py-24 flex flex-col items-center justify-center gap-3 text-center border border-dashed border-white/10 rounded-2xl p-8">
+            <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400">
+              <Users className="w-6 h-6" />
+            </div>
+            <p className="text-sm font-bold text-white uppercase tracking-wider">No Artists Found</p>
+            <p className="text-xs text-zinc-400 max-w-sm">
+              {searchQuery
+                ? `No artists match your search query "${searchQuery}".`
+                : 'No artists have been added to the roster yet.'}
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {filteredArtists.map((artist) => (
+              <ArtistCard key={artist.id} artist={artist} />
+            ))}
+          </div>
+        )}
       </PageSection>
     </div>
   );

@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { PageSection } from '../components/ui/PageSection';
 import { Container } from '../components/ui/Container';
 import { Button } from '../components/ui/Button';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useSearchParams } from 'react-router-dom';
 import {
   ArrowRight,
   ArrowUpRight,
@@ -28,6 +28,8 @@ import {
 } from 'lucide-react';
 import { servicesApi } from '../lib/api';
 import type { ServiceItem } from '../types/service';
+import { ServiceDetailModal } from '../components/services/ServiceDetailModal';
+import { getMediaUrl } from '../lib/utils';
 
 const ICONS_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
   music: Music,
@@ -58,8 +60,14 @@ const getServiceIcon = (iconName?: string) => {
 
 export const ServicesPage: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams, setSearchParams] = useSearchParams();
+
   const [services, setServices] = useState<ServiceItem[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+
+  // Selected Service for Modal Showcase
+  const [selectedService, setSelectedService] = useState<ServiceItem | null>(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -70,6 +78,22 @@ export const ServicesPage: React.FC = () => {
           // Sort by display order
           const sorted = [...res.data].sort((a, b) => (a.order || 0) - (b.order || 0));
           setServices(sorted);
+
+          // Deep linking check via ?service=...
+          const serviceQuery = searchParams.get('service');
+          if (serviceQuery) {
+            const matched = sorted.find(
+              (s) =>
+                s.slug?.toLowerCase() === serviceQuery.toLowerCase() ||
+                s.id?.toLowerCase() === serviceQuery.toLowerCase() ||
+                s.title.toLowerCase() === serviceQuery.toLowerCase() ||
+                s.title.toLowerCase().replace(/[^a-z0-9]+/g, '-') === serviceQuery.toLowerCase()
+            );
+            if (matched) {
+              setSelectedService(matched);
+              setIsModalOpen(true);
+            }
+          }
         }
       })
       .finally(() => {
@@ -79,11 +103,41 @@ export const ServicesPage: React.FC = () => {
     return () => {
       isMounted = false;
     };
-  }, []);
+  }, [searchParams]);
+
+  const handleOpenServiceDetails = (service: ServiceItem) => {
+    setSelectedService(service);
+    setIsModalOpen(true);
+    setSearchParams({ service: service.slug || service.id });
+  };
+
+  const handleCloseModal = () => {
+    setIsModalOpen(false);
+    setSelectedService(null);
+    setSearchParams({});
+  };
+
+  const handleNavigateNext = () => {
+    if (!selectedService || services.length === 0) return;
+    const currentIndex = services.findIndex((s) => s.id === selectedService.id);
+    const nextIndex = (currentIndex + 1) % services.length;
+    const nextService = services[nextIndex];
+    setSelectedService(nextService);
+    setSearchParams({ service: nextService.slug || nextService.id });
+  };
+
+  const handleNavigatePrev = () => {
+    if (!selectedService || services.length === 0) return;
+    const currentIndex = services.findIndex((s) => s.id === selectedService.id);
+    const prevIndex = (currentIndex - 1 + services.length) % services.length;
+    const prevService = services[prevIndex];
+    setSelectedService(prevService);
+    setSearchParams({ service: prevService.slug || prevService.id });
+  };
 
   return (
     <div className="pt-20 min-h-screen bg-[#f8fafc] dark:bg-[#050505] text-slate-900 dark:text-white pb-24 transition-colors duration-300">
-      {/* 1. HERO HEADER SECTION (Adaptive for Light & Dark Mode) */}
+      {/* 1. HERO HEADER SECTION */}
       <div className="relative pt-16 pb-20 border-b border-slate-200 dark:border-white/10 overflow-hidden bg-white dark:bg-[#07070a] transition-colors duration-300">
         {/* Subtle Ambient Red Glow */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-vexo-red/5 dark:bg-vexo-red/10 rounded-full blur-[140px] pointer-events-none" />
@@ -101,7 +155,7 @@ export const ServicesPage: React.FC = () => {
 
           {/* Subtitle */}
           <p className="text-sm sm:text-base md:text-lg text-slate-600 dark:text-zinc-300 font-normal leading-relaxed max-w-2xl mx-auto tracking-wide mb-8">
-            Premium execution for visionary artists and brands. From raw audio engineering to cinematic visual storytelling, we craft immersive entertainment experiences.
+            Premium execution for visionary artists and brands. Explore our full capabilities suite below with three tailored pricing tiers and complete technical specifications for every service.
           </p>
 
           {/* Quick Capabilities Metrics Bar */}
@@ -112,7 +166,7 @@ export const ServicesPage: React.FC = () => {
             </span>
             <span className="hidden sm:inline text-slate-300 dark:text-white/20">•</span>
             <span className="flex items-center gap-2">
-              <strong className="text-slate-900 dark:text-white">ANALOG SSL CONSOLE</strong>
+              <strong className="text-slate-900 dark:text-white">3 TAILORED PLANS EACH</strong>
             </span>
             <span className="hidden sm:inline text-slate-300 dark:text-white/20">•</span>
             <span className="flex items-center gap-2">
@@ -139,7 +193,6 @@ export const ServicesPage: React.FC = () => {
               const isEven = index % 2 === 0;
               const number =
                 item.number || (index + 1 < 10 ? `0${index + 1}` : `${index + 1}`);
-              const ctaText = item.ctaText || (isEven ? 'INITIATE PROJECT' : 'BOOK SERVICE');
               const IconComponent = getServiceIcon(item.icon);
 
               return (
@@ -153,8 +206,8 @@ export const ServicesPage: React.FC = () => {
                       !isEven ? 'lg:order-2' : 'lg:order-1'
                     }`}
                   >
-                    {/* Header Row: Sequence Number + Category Badge */}
-                    <div className="flex items-center gap-3 mb-3">
+                    {/* Header Row: Sequence Number + Category Badge + 3 Plans Pill */}
+                    <div className="flex flex-wrap items-center gap-2.5 mb-3">
                       <span className="text-3xl sm:text-4xl font-mono font-black text-slate-300 dark:text-neutral-700 tracking-widest block select-none">
                         {number}
                       </span>
@@ -164,10 +217,16 @@ export const ServicesPage: React.FC = () => {
                           <span>{item.category}</span>
                         </div>
                       )}
+                      <div className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-red-50 dark:bg-vexo-red/10 border border-red-200 dark:border-vexo-red/20 text-[10px] font-mono font-bold text-vexo-red">
+                        <Sparkles className="w-3 h-3 text-vexo-red" /> 3 PLANS
+                      </div>
                     </div>
 
-                    {/* Bold Uppercase Title */}
-                    <h2 className="text-2xl sm:text-3xl md:text-4xl font-black uppercase tracking-tight text-slate-900 dark:text-white mb-4 leading-tight group-hover:text-vexo-red transition-colors duration-200">
+                    {/* Bold Uppercase Title (Clickable) */}
+                    <h2
+                      onClick={() => handleOpenServiceDetails(item)}
+                      className="text-2xl sm:text-3xl md:text-4xl font-black uppercase tracking-tight text-slate-900 dark:text-white mb-4 leading-tight hover:text-vexo-red dark:hover:text-vexo-red cursor-pointer transition-colors duration-200"
+                    >
                       {item.title}
                     </h2>
 
@@ -191,33 +250,32 @@ export const ServicesPage: React.FC = () => {
                       </div>
                     )}
 
-                    {/* CTA Button */}
+                    {/* Action Buttons: Primary "EXPLORE PLANS & DETAILS" + Secondary "QUICK INQUIRY" */}
                     <div className="flex flex-col sm:flex-row sm:items-center gap-3">
-                      {isEven ? (
-                        <Button
-                          variant="primary"
-                          size="md"
-                          onClick={() =>
-                            navigate(`/contact?service=${encodeURIComponent(item.title)}`)
-                          }
-                          rightIcon={<ArrowRight className="w-4 h-4 ml-1" />}
-                          className="font-bold text-xs uppercase tracking-wider px-7 py-3.5 bg-vexo-red text-white hover:bg-red-700 transition-colors shadow-sm rounded-xl cursor-pointer"
-                        >
-                          {ctaText}
-                        </Button>
-                      ) : (
-                        <Button
-                          variant="outline"
-                          size="md"
-                          onClick={() =>
-                            navigate(`/contact?service=${encodeURIComponent(item.title)}`)
-                          }
-                          rightIcon={<ArrowUpRight className="w-4 h-4 ml-1" />}
-                          className="font-bold text-xs uppercase tracking-wider px-7 py-3.5 border border-slate-300 dark:border-white/20 text-slate-800 dark:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors rounded-xl cursor-pointer"
-                        >
-                          {ctaText}
-                        </Button>
-                      )}
+                      {/* Primary Button: Opens the 3 Plans and Details Modal */}
+                      <Button
+                        variant="primary"
+                        size="md"
+                        onClick={() => handleOpenServiceDetails(item)}
+                        rightIcon={<ArrowRight className="w-4 h-4 ml-1" />}
+                        className="font-bold text-xs uppercase tracking-wider px-6 py-3.5 bg-vexo-red text-white hover:bg-red-700 transition-colors shadow-sm rounded-xl cursor-pointer"
+                      >
+                        EXPLORE PLANS & DETAILS
+                      </Button>
+
+                      {/* Secondary Button: Direct Quick Inquiry */}
+                      <Button
+                        variant="outline"
+                        size="md"
+                        onClick={() =>
+                          navigate(`/contact?service=${encodeURIComponent(item.title)}`)
+                        }
+                        rightIcon={<ArrowUpRight className="w-4 h-4 ml-1" />}
+                        className="font-bold text-xs uppercase tracking-wider px-5 py-3.5 border border-slate-300 dark:border-white/20 text-slate-800 dark:text-white hover:bg-slate-100 dark:hover:bg-white/10 transition-colors rounded-xl cursor-pointer"
+                      >
+                        QUICK INQUIRY
+                      </Button>
+
                       {item.pricingRange && (
                         <span className="text-xs font-mono text-slate-500 dark:text-zinc-400 sm:ml-2">
                           {item.pricingRange}
@@ -226,19 +284,33 @@ export const ServicesPage: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* Framed Image Column */}
+                  {/* Framed Image Column (Clickable to open details) */}
                   <div
                     className={`lg:col-span-6 ${
                       !isEven ? 'lg:order-1' : 'lg:order-2'
                     }`}
                   >
-                    <div className="relative aspect-[16/10] sm:aspect-[16/9] rounded-2xl overflow-hidden border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-xl group-hover:border-vexo-red/40 transition-all duration-300 bg-slate-100 dark:bg-neutral-950">
+                    <div
+                      onClick={() => handleOpenServiceDetails(item)}
+                      className="relative aspect-[16/10] sm:aspect-[16/9] rounded-2xl overflow-hidden border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-xl hover:border-vexo-red/60 transition-all duration-300 bg-slate-100 dark:bg-neutral-950 cursor-pointer group/img"
+                    >
                       <img
-                        src={item.imageUrl}
+                        src={getMediaUrl(item.imageUrl)}
                         alt={item.title}
-                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 brightness-95 contrast-105"
+                        onError={(e) => {
+                          // Prevent broken image frames by falling back gracefully
+                          (e.target as HTMLImageElement).src =
+                            'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1200&q=80';
+                        }}
+                        className="w-full h-full object-cover group-hover/img:scale-105 transition-transform duration-500 brightness-95 contrast-105"
                       />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent pointer-events-none" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent pointer-events-none" />
+
+                      {/* Floating hover pill on image */}
+                      <div className="absolute bottom-4 right-4 px-3 py-1.5 rounded-full bg-black/70 backdrop-blur-md border border-white/20 text-white text-[11px] font-mono font-bold flex items-center gap-1.5 opacity-90 group-hover/img:opacity-100 group-hover/img:bg-vexo-red group-hover/img:border-vexo-red transition-all">
+                        <span>VIEW 3 PLANS & SPECS</span>
+                        <ArrowUpRight className="w-3.5 h-3.5" />
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -247,6 +319,17 @@ export const ServicesPage: React.FC = () => {
           )}
         </Container>
       </PageSection>
+
+      {/* 3. INTERACTIVE SERVICE DETAIL & 3 PLANS MODAL */}
+      <ServiceDetailModal
+        service={selectedService}
+        isOpen={isModalOpen}
+        onClose={handleCloseModal}
+        onNavigateNext={handleNavigateNext}
+        onNavigatePrev={handleNavigatePrev}
+        hasPrev={services.length > 1}
+        hasNext={services.length > 1}
+      />
     </div>
   );
 };

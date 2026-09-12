@@ -83,6 +83,12 @@ export const Navbar: React.FC = () => {
     }
   }, [isMobileMenuOpen]);
 
+  // Close mobile menus on route change
+  useEffect(() => {
+    setIsMobileMenuOpen(false);
+    setIsMobileSearchOpen(false);
+  }, [location.pathname]);
+
   const handleSearchSubmit = (e?: React.FormEvent) => {
     if (e) e.preventDefault();
     if (searchQuery.trim()) {
@@ -259,10 +265,23 @@ export const Navbar: React.FC = () => {
               </AnimatePresence>
             </div>
 
-            {/* Music-Themed Theme Visualizer Toggle */}
-            <MusicThemeToggle variant="compact" />
+            {/* Mobile Search Button (Compact round icon on mobile) */}
+            <button
+              type="button"
+              onClick={() => {
+                setIsMobileSearchOpen(!isMobileSearchOpen);
+                if (isMobileMenuOpen) setIsMobileMenuOpen(false);
+              }}
+              className="w-9 h-9 min-h-[36px] max-h-[36px] rounded-full apple-btn-round flex items-center justify-center cursor-pointer md:hidden shrink-0 transition-transform active:scale-95"
+              aria-label="Search"
+            >
+              <Search className="w-4 h-4" />
+            </button>
 
-            {/* Social Icons (Unified Bordered Action Buttons & Brand Themes) */}
+            {/* Music-Themed Theme Visualizer Toggle */}
+            <MusicThemeToggle variant="compact" className="shrink-0" />
+
+            {/* Social Icons (Unified Bordered Action Buttons & Brand Themes - Desktop only) */}
             <div className="hidden xl:flex items-center gap-2 pl-1 shrink-0">
               <a
                 href="https://www.instagram.com/vexomusicentertainment"
@@ -304,36 +323,29 @@ export const Navbar: React.FC = () => {
               </a>
             </div>
 
-            {/* Book A Project CTA */}
+            {/* Book A Project CTA (Hidden on mobile phones to prevent navbar overflow; prominent full-width CTA inside the drawer) */}
             <Button
               variant="primary"
               size="md"
               onClick={() => navigate('/contact')}
               rightIcon={<ArrowUpRight className="w-4 h-4" />}
-              className="font-bold tracking-wider text-xs uppercase shadow-sm hover:bg-red-700 transition-colors shrink-0"
+              className="hidden sm:inline-flex font-bold tracking-wider text-xs uppercase shadow-sm hover:bg-red-700 transition-colors shrink-0"
             >
               BOOK A PROJECT
             </Button>
 
             {/* Mobile Menu Hamburger */}
-            <div className="flex lg:hidden items-center gap-1.5">
-              <button
-                type="button"
-                onClick={() => setIsMobileSearchOpen(!isMobileSearchOpen)}
-                className="w-9 h-9 rounded-full apple-btn-round flex items-center justify-center cursor-pointer md:hidden"
-                aria-label="Search"
-              >
-                <Search className="w-4 h-4" />
-              </button>
-              <button
-                type="button"
-                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="w-9 h-9 rounded-full bg-vexo-red/10 border border-vexo-red/30 text-vexo-red hover:text-white hover:bg-vexo-red transition-all flex items-center justify-center cursor-pointer"
-                aria-label="Toggle Menu"
-              >
-                {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-              </button>
-            </div>
+            <button
+              type="button"
+              onClick={() => {
+                setIsMobileMenuOpen(!isMobileMenuOpen);
+                if (isMobileSearchOpen) setIsMobileSearchOpen(false);
+              }}
+              className="w-9 h-9 min-h-[36px] max-h-[36px] rounded-full bg-vexo-red/10 border border-vexo-red/30 text-vexo-red hover:text-white hover:bg-vexo-red transition-all flex items-center justify-center cursor-pointer lg:hidden shrink-0 active:scale-95"
+              aria-label="Toggle Menu"
+            >
+              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
           </div>
         </div>
       </header>
@@ -346,7 +358,7 @@ export const Navbar: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
             transition={{ duration: 0.25, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed top-16 left-0 right-0 z-40 p-3 apple-glass-header border-b md:hidden"
+            className="fixed top-16 sm:top-20 left-0 right-0 z-40 p-3 apple-glass-header border-b md:hidden"
           >
             <form onSubmit={handleSearchSubmit} className="flex items-center gap-2 px-3.5 py-2 rounded-full border border-slate-300 dark:border-white/15 apple-glass-card shadow-sm">
               <Search className="w-4 h-4 text-vexo-red shrink-0" />
@@ -362,6 +374,7 @@ export const Navbar: React.FC = () => {
                 type="button"
                 onClick={() => setIsMobileSearchOpen(false)}
                 className="text-zinc-400 hover:text-white p-1"
+                aria-label="Close search"
               >
                 <X className="w-4 h-4" />
               </button>
@@ -378,81 +391,83 @@ export const Navbar: React.FC = () => {
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: '-100%' }}
             transition={{ duration: 0.38, ease: [0.16, 1, 0.3, 1] }}
-            className="fixed inset-0 z-40 apple-mobile-drawer flex flex-col justify-between p-6 sm:p-10 pt-24 sm:pt-28"
+            className="fixed inset-0 z-40 apple-mobile-drawer flex flex-col p-6 sm:p-10 pt-20 sm:pt-24 overflow-y-auto"
           >
             {/* Background Accent glow */}
             <div className="absolute top-1/4 -right-20 w-80 h-80 bg-vexo-red/15 rounded-full blur-3xl pointer-events-none" />
 
-            {/* Mobile Large Links */}
-            <nav className="flex flex-col gap-3 relative z-10 my-auto">
-              {navItems.map((item, idx) => (
-                <Link
-                  key={item.label}
-                  to={item.path}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                  style={{ transitionDelay: `${idx * 30}ms` }}
-                  className={cn(
-                    'text-3xl sm:text-4xl font-black tracking-tight transition-all duration-200 w-fit flex items-center gap-3',
-                    location.pathname === item.path
-                      ? 'text-vexo-red translate-x-2'
-                      : 'text-slate-800 dark:text-white/80 hover:text-black dark:hover:text-white hover:translate-x-2'
-                  )}
+            <div className="min-h-full flex flex-col justify-between gap-8 relative z-10">
+              {/* Mobile Large Links */}
+              <nav className="flex flex-col gap-3 my-auto pt-4">
+                {navItems.map((item, idx) => (
+                  <Link
+                    key={item.label}
+                    to={item.path}
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    style={{ transitionDelay: `${idx * 30}ms` }}
+                    className={cn(
+                      'text-2xl sm:text-3xl font-black tracking-tight transition-all duration-200 w-fit flex items-center gap-3',
+                      location.pathname === item.path
+                        ? 'text-vexo-red translate-x-2'
+                        : 'text-slate-800 dark:text-white/80 hover:text-black dark:hover:text-white hover:translate-x-2'
+                    )}
+                  >
+                    <span className="text-xs font-mono text-zinc-400">0{idx + 1}.</span>
+                    {item.label}
+                  </Link>
+                ))}
+              </nav>
+
+              {/* Mobile Footer CTA & Theme Switcher */}
+              <div className="pt-6 border-t border-black/10 dark:border-white/10 flex flex-col gap-4">
+                <div className="flex items-center justify-between p-3 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10">
+                  <span className="text-xs font-mono text-zinc-500 dark:text-zinc-400 uppercase tracking-wider font-bold">
+                    Studio Theme
+                  </span>
+                  <MusicThemeToggle variant="pill" />
+                </div>
+
+                <Button
+                  variant="primary"
+                  size="lg"
+                  onClick={() => {
+                    setIsMobileMenuOpen(false);
+                    navigate('/contact');
+                  }}
+                  rightIcon={<ArrowUpRight className="w-5 h-5" />}
+                  className="w-full font-bold tracking-wider uppercase text-sm py-4 shadow-sm hover:bg-red-700 transition-colors"
                 >
-                  <span className="text-xs font-mono text-zinc-400">0{idx + 1}.</span>
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
+                  BOOK A PROJECT
+                </Button>
 
-            {/* Mobile Footer CTA & Theme Switcher */}
-            <div className="relative z-10 pt-6 border-t border-black/10 dark:border-white/10 flex flex-col gap-4">
-              <div className="flex items-center justify-between p-3 rounded-2xl bg-black/5 dark:bg-white/5 border border-black/10 dark:border-white/10">
-                <span className="text-xs font-mono text-zinc-500 dark:text-zinc-400 uppercase tracking-wider font-bold">
-                  Studio Theme
-                </span>
-                <MusicThemeToggle variant="pill" />
-              </div>
-
-              <Button
-                variant="primary"
-                size="lg"
-                onClick={() => {
-                  setIsMobileMenuOpen(false);
-                  navigate('/contact');
-                }}
-                rightIcon={<ArrowUpRight className="w-5 h-5" />}
-                className="w-full font-bold tracking-wider uppercase text-sm py-4 shadow-sm hover:bg-red-700 transition-colors"
-              >
-                BOOK A PROJECT
-              </Button>
-
-              <div className="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400">
-                <span>Follow VEXO</span>
-                <div className="flex items-center gap-4">
-                  <a
-                    href="https://www.instagram.com/vexomusicentertainment"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-pink-500"
-                  >
-                    Instagram
-                  </a>
-                  <a
-                    href="https://www.youtube.com/@vexomusicentertainment"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-red-500"
-                  >
-                    YouTube
-                  </a>
-                  <a
-                    href="https://x.com/vexomusicentertainment"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="hover:text-sky-400"
-                  >
-                    X
-                  </a>
+                <div className="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400">
+                  <span>Follow VEXO</span>
+                  <div className="flex items-center gap-4">
+                    <a
+                      href="https://www.instagram.com/vexomusicentertainment"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-pink-500"
+                    >
+                      Instagram
+                    </a>
+                    <a
+                      href="https://www.youtube.com/@vexomusicentertainment"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-red-500"
+                    >
+                      YouTube
+                    </a>
+                    <a
+                      href="https://x.com/vexomusicentertainment"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="hover:text-sky-400"
+                    >
+                      X
+                    </a>
+                  </div>
                 </div>
               </div>
             </div>

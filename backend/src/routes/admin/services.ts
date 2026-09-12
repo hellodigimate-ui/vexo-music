@@ -154,6 +154,11 @@ export const adminServiceRoutes: FastifyPluginAsync = async (fastify) => {
         features,
         ctaText: body.ctaText || 'INITIATE PROJECT',
         pricingRange: body.pricingRange || null,
+        plans: (body as any).plans || [],
+        specs: (body as any).specs || specifications,
+        processSteps: (body as any).processSteps || [],
+        deliverables: (body as any).deliverables || [],
+        faqs: (body as any).faqs || [],
         specifications,
         equipmentList,
         order,
@@ -286,6 +291,12 @@ export const adminServiceRoutes: FastifyPluginAsync = async (fastify) => {
           ? (body.features as string).split('\n').map((f) => f.trim()).filter(Boolean)
           : [];
       }
+
+      if ((body as any).plans !== undefined) updates.plans = (body as any).plans;
+      if ((body as any).specs !== undefined) updates.specs = (body as any).specs;
+      if ((body as any).processSteps !== undefined) updates.processSteps = (body as any).processSteps;
+      if ((body as any).deliverables !== undefined) updates.deliverables = (body as any).deliverables;
+      if ((body as any).faqs !== undefined) updates.faqs = (body as any).faqs;
 
       const updated = db.services.update(id, updates);
 

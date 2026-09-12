@@ -1,63 +1,16 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import { PageSection } from '../components/ui/PageSection';
 import { SectionHeading } from '../components/ui/SectionHeading';
 import { AlbumCard } from '../components/music/AlbumCard';
 import { albumsApi } from '../lib/api';
-import { adminMockStore } from '../admin/services/adminMockStore';
 import type { Album, Track } from '../types';
-import { Search, Play, X } from 'lucide-react';
+import { Search, Play, X, Loader2, Music2 } from 'lucide-react';
 import { formatTime } from '../lib/utils';
 
-function mapStoreAlbumToPublic(a: any): Album {
-  return {
-    id: a.id,
-    title: a.title,
-    artist: a.artistName,
-    year: a.year || (a.releaseDate ? new Date(a.releaseDate).getFullYear() : 2026),
-    coverUrl: a.coverUrl,
-    genre: a.genre || 'Electronic',
-    spotifyUrl: a.spotifyUrl || '',
-    youtubeUrl: a.youtubeUrl || '',
-    trackCount: a.trackCount || a.tracks?.length || 1,
-  };
-}
-
-function mapStoreTrackToPublic(t: any): Track {
-  return {
-    id: t.id,
-    title: t.title,
-    artist: t.artistName,
-    album: t.albumId,
-    coverUrl: t.coverUrl,
-    duration: t.duration || 210,
-    audioUrl: t.audioUrl,
-    youtubeUrl: t.youtubeUrl || t.audioUrl || '',
-    spotifyUrl: t.spotifyUrl || '',
-    genre: t.genre || 'Electronic',
-    plays: t.plays || 0,
-    likes: t.likes || Math.floor((t.plays || 1000) * 0.08),
-    isPopular: Boolean(t.isPopular),
-  };
-}
-
 export const MusicPage: React.FC = () => {
-  const [albums, setAlbums] = useState<Album[]>(() => {
-    try {
-      const raw = adminMockStore.getAlbums().data || [];
-      return raw.map(mapStoreAlbumToPublic);
-    } catch {
-      return [];
-    }
-  });
-
-  const [tracks, setTracks] = useState<Track[]>(() => {
-    try {
-      const raw = adminMockStore.getTracks().data || [];
-      return raw.map(mapStoreTrackToPublic);
-    } catch {
-      return [];
-    }
-  });
+  const [albums, setAlbums] = useState<Album[]>([]);
+  const [tracks, setTracks] = useState<Track[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   const [selectedGenre, setSelectedGenre] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
@@ -65,18 +18,38 @@ export const MusicPage: React.FC = () => {
 
   useEffect(() => {
     let isMounted = true;
-    albumsApi.getAlbums().then((res) => {
-      if (isMounted && res.data) setAlbums(res.data);
-    });
-    albumsApi.getTracks().then((res) => {
-      if (isMounted && res.data) setTracks(res.data);
-    });
+    setIsLoading(true);
+
+    Promise.all([albumsApi.getAlbums(), albumsApi.getTracks()])
+      .then(([albumRes, trackRes]) => {
+        if (!isMounted) return;
+        if (albumRes.data) setAlbums(albumRes.data);
+        if (trackRes.data) setTracks(trackRes.data);
+      })
+      .catch((err) => {
+        console.warn('Error loading music list:', err);
+      })
+      .finally(() => {
+        if (isMounted) setIsLoading(false);
+      });
+
     return () => {
       isMounted = false;
     };
   }, []);
 
-  const genres = ['All', 'Rajasthani Folk', 'Traditional Folk', 'Electronic', 'Synthwave', 'Fusion Electronic'];
+  const genres = useMemo(() => {
+    const set = new Set<string>();
+    albums.forEach((a) => {
+      if (a.genre) {
+        a.genre.split('/').forEach((g) => {
+          const trimmed = g.trim();
+          if (trimmed) set.add(trimmed);
+        });
+      }
+    });
+    return ['All', ...Array.from(set)];
+  }, [albums]);
 
   const filteredAlbums = albums.filter((album) => {
     const matchesGenre = selectedGenre === 'All' || album.genre.toLowerCase().includes(selectedGenre.toLowerCase());

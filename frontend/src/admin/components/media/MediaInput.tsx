@@ -8,6 +8,7 @@ import {
   Pause,
 } from 'lucide-react';
 import { MediaSelectorModal } from './MediaSelectorModal';
+import { getMediaUrl } from '../../../lib/utils';
 
 export interface MediaInputProps {
   label?: string;
@@ -38,11 +39,13 @@ export const MediaInput: React.FC<MediaInputProps> = ({
     value &&
     (value.startsWith('data:image') ||
       value.includes('/image/') ||
+      value.includes('/uploads/') ||
       value.endsWith('.jpg') ||
       value.endsWith('.jpeg') ||
       value.endsWith('.png') ||
       value.endsWith('.webp') ||
       value.endsWith('.gif') ||
+      value.endsWith('.svg') ||
       value.includes('unsplash.com') ||
       value.includes('youtube.com/vi'));
 
@@ -121,7 +124,7 @@ export const MediaInput: React.FC<MediaInputProps> = ({
           {isImage ? (
             <div className="w-14 h-14 rounded-lg overflow-hidden border border-zinc-700 bg-black/60 shrink-0">
               <img
-                src={value}
+                src={getMediaUrl(value)}
                 alt="Selected preview"
                 className="w-full h-full object-cover"
                 onError={(e) => {

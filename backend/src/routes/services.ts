@@ -18,6 +18,12 @@ export const serviceRoutes: FastifyPluginAsync = async (fastify) => {
       icon: s.icon || 'Music',
       features: s.features || [],
       ctaText: s.ctaText || undefined,
+      pricingRange: s.pricingRange || undefined,
+      plans: (s as any).plans || [],
+      specs: (s as any).specs || (s as any).specifications || [],
+      processSteps: (s as any).processSteps || [],
+      deliverables: (s as any).deliverables || [],
+      faqs: (s as any).faqs || [],
       order: s.order,
       isActive: s.isActive,
     }));
@@ -51,6 +57,11 @@ export const serviceRoutes: FastifyPluginAsync = async (fastify) => {
       specifications: s.specifications,
       equipmentList: s.equipmentList,
       pricingRange: s.pricingRange || undefined,
+      plans: (s as any).plans || [],
+      specs: (s as any).specs || (s as any).specifications || [],
+      processSteps: (s as any).processSteps || [],
+      deliverables: (s as any).deliverables || [],
+      faqs: (s as any).faqs || [],
     }));
 
     const response: ApiResponse<ServiceItem[]> = {
@@ -87,6 +98,12 @@ export const serviceRoutes: FastifyPluginAsync = async (fastify) => {
       icon: s.icon || 'Music',
       features: s.features || [],
       ctaText: s.ctaText || undefined,
+      pricingRange: s.pricingRange || undefined,
+      plans: (s as any).plans || [],
+      specs: (s as any).specs || (s as any).specifications || [],
+      processSteps: (s as any).processSteps || [],
+      deliverables: (s as any).deliverables || [],
+      faqs: (s as any).faqs || [],
       order: s.order,
       isActive: s.isActive,
     };

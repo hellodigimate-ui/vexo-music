@@ -4,7 +4,7 @@ import type { ServiceItem } from '../../types/service';
 import { Button } from '../ui/Button';
 import { useNavigate } from 'react-router-dom';
 import { CheckCircle2, ArrowRight, Disc3 } from 'lucide-react';
-import { cn } from '../../lib/utils';
+import { cn, getMediaUrl } from '../../lib/utils';
 
 export interface ServicePreviewProps {
   service: ServiceItem;
@@ -32,7 +32,7 @@ export const ServicePreview: React.FC<ServicePreviewProps> = ({ service, classNa
         >
           {/* Large Cinematic Image Background */}
           <img
-            src={service.imageUrl}
+            src={getMediaUrl(service.imageUrl)}
             alt={service.title}
             className="w-full h-full object-cover filter brightness-[0.35] contrast-[1.15]"
           />

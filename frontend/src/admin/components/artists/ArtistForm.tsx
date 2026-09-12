@@ -11,8 +11,10 @@ import {
   Star,
   Check,
   Clock,
+  AlertCircle,
 } from 'lucide-react';
 import { MediaInput } from '../media/MediaInput';
+import { useAdminToast } from '../../context/AdminToastContext';
 
 export interface ArtistFormData {
   name: string;
@@ -47,6 +49,7 @@ export const ArtistForm: React.FC<ArtistFormProps> = ({
   isLoading = false,
 }) => {
   const navigate = useNavigate();
+  const toast = useAdminToast();
 
   const [formData, setFormData] = useState<ArtistFormData>({
     name: '',
@@ -112,6 +115,15 @@ export const ArtistForm: React.FC<ArtistFormProps> = ({
     if (errors.slug) setErrors((prev) => ({ ...prev, slug: '' }));
   };
 
+  const normalizeUrl = (url: string) => {
+    if (!url || !url.trim()) return '';
+    const trimmed = url.trim();
+    if (!/^https?:\/\//i.test(trimmed)) {
+      return `https://${trimmed}`;
+    }
+    return trimmed;
+  };
+
   const validate = (): boolean => {
     const newErrors: Record<string, string> = {};
 
@@ -121,21 +133,32 @@ export const ArtistForm: React.FC<ArtistFormProps> = ({
     if (!formData.role.trim()) {
       newErrors.role = 'Artist primary role is required.';
     }
-    if (formData.spotifyUrl && !formData.spotifyUrl.startsWith('http')) {
-      newErrors.spotifyUrl = 'Please provide a valid URL (starting with http/https).';
-    }
-    if (formData.youtubeUrl && !formData.youtubeUrl.startsWith('http')) {
-      newErrors.youtubeUrl = 'Please provide a valid URL (starting with http/https).';
-    }
 
     setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
+
+    if (Object.keys(newErrors).length > 0) {
+      toast.error('Required Fields Missing', 'Please provide Artist Name and Primary Role at the top of the form.');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+      return false;
+    }
+
+    return true;
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!validate()) return;
-    await onSubmit(formData);
+
+    const normalizedData: ArtistFormData = {
+      ...formData,
+      spotifyUrl: normalizeUrl(formData.spotifyUrl),
+      youtubeUrl: normalizeUrl(formData.youtubeUrl),
+      instagramUrl: normalizeUrl(formData.instagramUrl),
+      facebookUrl: normalizeUrl(formData.facebookUrl),
+      xUrl: normalizeUrl(formData.xUrl),
+    };
+
+    await onSubmit(normalizedData);
   };
 
   return (
@@ -462,6 +485,23 @@ export const ArtistForm: React.FC<ArtistFormProps> = ({
           </div>
         </div>
       </div>
+
+      {/* Visible Error Banner if Required Fields Missing */}
+      {Object.keys(errors).length > 0 && (
+        <div className="p-4 rounded-xl bg-red-500/10 border border-red-500/30 flex items-center justify-between gap-3 text-red-400">
+          <div className="flex items-center gap-2 text-xs font-mono">
+            <AlertCircle className="w-4 h-4 text-red-400 shrink-0" />
+            <span>Missing required fields: {Object.values(errors).join(' ')}</span>
+          </div>
+          <button
+            type="button"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+            className="text-[11px] font-bold underline hover:text-white cursor-pointer"
+          >
+            Go to top ↑
+          </button>
+        </div>
+      )}
 
       {/* Form Action Controls */}
       <div className="flex items-center justify-between gap-4 pt-2">

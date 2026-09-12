@@ -19,6 +19,16 @@ import type {
   ActivityLog,
   DatabaseSchema,
 } from './types.js';
+import { mockServices } from '../data/services.js';
+import {
+  initPostgresSync,
+  syncServiceToPostgres,
+  deleteServiceFromPostgres,
+  syncContactRequestToPostgres,
+  deleteContactRequestFromPostgres,
+  syncArtistToPostgres,
+  deleteArtistFromPostgres,
+} from './postgres.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -596,136 +606,31 @@ function getInitialDatabase(): DatabaseSchema {
     },
   ];
 
-  const initialServices: Service[] = [
-    {
-      id: 'srv-1',
-      number: '01',
-      title: 'Music Production',
-      slug: 'music-production',
-      category: 'STUDIO & COMPOSITION',
-      shortDesc: 'Full-cycle commercial audio production from composition to stem delivery.',
-      fullDesc: 'High-fidelity sonic architecture. We build tracks from the ground up, blending analog warmth with cutting-edge digital precision. Designed for artists who demand a signature sound that resonates in arenas and headphones alike.',
-      imageUrl: 'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1200&q=80',
-      icon: 'Music',
-      features: ['Original Beat Crafting & Composition', 'Analog Synthesizer & Modular Gear', 'Vocal Tracking & Stem Processing', 'Custom Sound Design & FX'],
-      ctaText: 'INITIATE PROJECT',
-      pricingRange: 'Starting from $1,200 / ₹95,000',
-      specifications: ['Pro Tools Ultimate HDX', 'SSL 4000E Analog Console', 'Neve 1073 Preamps', 'Telefunken U47 Tube Mic'],
-      equipmentList: ['Moog One Polyphonic Synthesizer', 'Dave Smith Prophet-6', 'Genelec 8351B SAM Monitors'],
-      order: 1,
-      isActive: true,
-      createdAt: now,
-      updatedAt: now,
-    },
-    {
-      id: 'srv-2',
-      number: '02',
-      title: 'Audio & Video Production',
-      slug: 'audio-video-production',
-      category: 'CINEMATIC VISUALS',
-      shortDesc: '4K music videos, studio visualizers, live performance shoots, and narrative films.',
-      fullDesc: 'Cinematic visual storytelling. From high-concept 4K music videos to live multi-cam concert films and studio visualizers, we craft compelling imagery that elevates your sonic identity.',
-      imageUrl: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80',
-      icon: 'Video',
-      features: ['4K Cinema Camera Rigging (RED/ARRI)', 'Lighting Choreography & Set Design', 'Audio-Reactive 3D Visualizer Sync', 'Full Post-Production Color Grading'],
-      ctaText: 'START VIDEO SHOOT',
-      pricingRange: 'Starting from $2,500 / ₹1,90,000',
-      order: 2,
-      isActive: true,
-      createdAt: now,
-      updatedAt: now,
-    },
-    {
-      id: 'srv-3',
-      number: '03',
-      title: 'Artist Management',
-      slug: 'artist-management',
-      category: 'CAREER ARCHITECTURE',
-      shortDesc: 'Strategic representation, worldwide tour logistics, and contract negotiations.',
-      fullDesc: 'Strategic career architecture. We navigate the complexities of the modern music industry, from brand positioning and contract negotiation to tour routing. We protect your vision while scaling your global reach.',
-      imageUrl: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=1200&q=80',
-      icon: 'Users',
-      features: ['360° Career Planning & Strategy', 'Tour Routing & Live Performance Logistics', 'Contract Structuring & Legal Support', 'Brand Endorsements & Media Placement'],
-      ctaText: 'JOIN ROSTER',
-      pricingRange: 'Retainer & Commission Based',
-      order: 3,
-      isActive: true,
-      createdAt: now,
-      updatedAt: now,
-    },
-    {
-      id: 'srv-4',
-      number: '04',
-      title: 'Music Distribution',
-      slug: 'music-distribution',
-      category: 'GLOBAL DSP PUBLISHING',
-      shortDesc: 'Direct-to-DSP delivery across 150+ platforms with transparent royalty reporting.',
-      fullDesc: 'Global DSP amplification. Direct publishing on Spotify, Apple Music, YouTube Music, and 150+ digital stores with fast metadata delivery, playlist pitching, and transparent royalty accounting.',
-      imageUrl: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80',
-      icon: 'Radio',
-      features: ['Direct Publishing on 150+ Streaming Stores', 'Editorial DSP Playlist Pitching', 'Global Copyright & YouTube Content ID', 'Monthly Royalty Analytics Dashboard'],
-      ctaText: 'PUBLISH MUSIC',
-      pricingRange: 'Single & Album Packages',
-      order: 4,
-      isActive: true,
-      createdAt: now,
-      updatedAt: now,
-    },
-    {
-      id: 'srv-5',
-      number: '05',
-      title: 'Digital Marketing',
-      slug: 'digital-marketing',
-      category: 'GROWTH & VIRALITY',
-      shortDesc: 'Performance advertising, short-form viral strategy, and press releases.',
-      fullDesc: 'Data-driven audience engagement. Targeted music ad campaigns, short-form viral strategy, press outreach, and commercial brand sponsorship curation engineered to scale streaming numbers.',
-      imageUrl: 'https://images.unsplash.com/photo-1508700115892-45ecd05ae2ad?auto=format&fit=crop&w=1200&q=80',
-      icon: 'TrendingUp',
-      features: ['Meta & YouTube Targeted Video Ads', 'Viral TikTok & Instagram Reels Strategy', 'Music Blog & Press Release Syndication', 'Audience Retargeting & Fan Base Funnels'],
-      ctaText: 'AMPLIFY BRAND',
-      pricingRange: 'Custom Campaign Budgets',
-      order: 5,
-      isActive: true,
-      createdAt: now,
-      updatedAt: now,
-    },
-    {
-      id: 'srv-6',
-      number: '06',
-      title: 'Brand Collaborations',
-      slug: 'brand-collaborations',
-      category: 'COMMERCIAL PARTNERSHIPS',
-      shortDesc: 'Connecting leading brands with top music talent for soundtracks and campaigns.',
-      fullDesc: 'We bridge top-tier commercial brands with original artists for high-impact commercial jingles, co-branded music videos, product placements, and live event sponsorships.',
-      imageUrl: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1200&q=80',
-      icon: 'Sparkles',
-      features: ['Commercial Soundtrack Licensing', 'Co-Branded Music Campaigns', 'Product Placement in Music Videos', 'Event Brand Sponsorships'],
-      ctaText: 'PARTNER WITH US',
-      pricingRange: 'Bespoke Brand Deals',
-      order: 6,
-      isActive: true,
-      createdAt: now,
-      updatedAt: now,
-    },
-    {
-      id: 'srv-7',
-      number: '07',
-      title: 'Pre-Wedding Shoot',
-      slug: 'pre-wedding-shoot',
-      category: 'BESPOKE NARRATIVES',
-      shortDesc: 'Cinematic music video styling for luxury pre-wedding storytelling.',
-      fullDesc: 'High fashion storytelling for your narrative. We apply our music video production standards to personal storytelling, creating moody, editorial, and unforgettable visual documents of your relationship.',
-      imageUrl: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80',
-      icon: 'Camera',
-      features: ['Cinematic 4K Drone Aerial Coverage', 'Custom Tailored Music Soundtrack', 'Editorial Mood Lighting & Direction', 'Luxury Album & Video Teaser Delivery'],
-      ctaText: 'CONSULT US',
-      pricingRange: 'Starting from ₹1,50,000',
-      order: 7,
-      isActive: true,
-      createdAt: now,
-      updatedAt: now,
-    },
-  ];
+  const initialServices: Service[] = mockServices.map((s, idx) => ({
+    id: s.id,
+    number: s.number || (idx + 1 < 10 ? `0${idx + 1}` : `${idx + 1}`),
+    title: s.title,
+    slug: s.slug || undefined,
+    category: s.category || 'Production',
+    shortDesc: s.shortDesc,
+    fullDesc: s.fullDesc,
+    imageUrl: s.imageUrl,
+    icon: (s as any).icon || 'Music',
+    features: s.features || [],
+    ctaText: s.ctaText || 'INITIATE PROJECT',
+    pricingRange: s.pricingRange || null,
+    specifications: s.specs || (s as any).specifications || [],
+    equipmentList: (s as any).equipmentList || [],
+    plans: s.plans || [],
+    specs: s.specs || [],
+    processSteps: s.processSteps || [],
+    deliverables: s.deliverables || [],
+    faqs: s.faqs || [],
+    order: s.order || idx + 1,
+    isActive: s.isActive !== undefined ? s.isActive : true,
+    createdAt: now,
+    updatedAt: now,
+  }));
 
   const initialMedia: Media[] = [
     {
@@ -957,6 +862,12 @@ class DatabaseStore {
   constructor() {
     ensureDataDirectory();
     this.data = this.load();
+    initPostgresSync(
+      this.data.services,
+      this.data.contactRequests,
+      this.data.artists,
+      this.data.artistSocials
+    ).catch(() => {});
   }
 
   private load(): DatabaseSchema {
@@ -967,40 +878,34 @@ class DatabaseStore {
         const parsed = JSON.parse(fileContent);
         // Ensure all 14 models exist in parsed data
         const loadedServices = (parsed.services && parsed.services.length > 0)
-          ? parsed.services.map((s: any, idx: number) => ({
-              ...s,
-              icon: s.icon || 'Music',
-              order: typeof s.order === 'number' ? s.order : idx + 1,
-              slug: s.slug || (s.title ? s.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') : `service-${idx + 1}`),
-              isActive: s.isActive !== undefined ? Boolean(s.isActive) : true,
-            }))
+          ? parsed.services.map((s: any, idx: number) => {
+              const fallback = initial.services.find(
+                (is) => is.id === s.id || is.slug === s.slug || is.title?.toLowerCase() === s.title?.toLowerCase()
+              );
+              return {
+                ...s,
+                icon: s.icon || fallback?.icon || 'Music',
+                order: typeof s.order === 'number' ? s.order : idx + 1,
+                slug: s.slug || fallback?.slug || (s.title ? s.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') : `service-${idx + 1}`),
+                isActive: s.isActive !== undefined ? Boolean(s.isActive) : true,
+                plans: (Array.isArray(s.plans) && s.plans.length > 0) ? s.plans : (fallback?.plans || []),
+                specs: (Array.isArray(s.specs) && s.specs.length > 0) ? s.specs : (s.specifications || fallback?.specs || []),
+                processSteps: (Array.isArray(s.processSteps) && s.processSteps.length > 0) ? s.processSteps : (fallback?.processSteps || []),
+                deliverables: (Array.isArray(s.deliverables) && s.deliverables.length > 0) ? s.deliverables : (fallback?.deliverables || []),
+                faqs: (Array.isArray(s.faqs) && s.faqs.length > 0) ? s.faqs : (fallback?.faqs || []),
+              };
+            })
           : initial.services;
 
-        const loadedArtists = (parsed.artists || []).filter(
-          (a: any) => a.id !== 'art-4' && a.name !== 'Artist Coming Soon'
-        );
-        initial.artists.forEach((art) => {
-          if (!loadedArtists.some((a: any) => a.id === art.id)) {
-            loadedArtists.push(art);
-          }
-        });
+        const loadedArtists = Array.isArray(parsed.artists)
+          ? parsed.artists.filter((a: any) => a.id !== 'art-4' && a.name !== 'Artist Coming Soon')
+          : initial.artists;
         loadedArtists.sort((a: any, b: any) => (a.order || 99) - (b.order || 99));
 
-        const loadedAlbums = [...(parsed.albums || [])];
-        initial.albums.forEach((alb) => {
-          if (!loadedAlbums.some((a: any) => a.id === alb.id)) {
-            loadedAlbums.push(alb);
-          }
-        });
-        // Sort albums by order
+        const loadedAlbums = Array.isArray(parsed.albums) ? parsed.albums : initial.albums;
         loadedAlbums.sort((a: any, b: any) => (a.order || 99) - (b.order || 99));
 
-        const loadedTracks = [...(parsed.tracks || [])];
-        initial.tracks.forEach((trk) => {
-          if (!loadedTracks.some((t: any) => t.id === trk.id)) {
-            loadedTracks.push(trk);
-          }
-        });
+        const loadedTracks = Array.isArray(parsed.tracks) ? parsed.tracks : initial.tracks;
         loadedTracks.sort((a: any, b: any) => (a.order || 99) - (b.order || 99));
 
         const loadedVideos = [...(parsed.videos || [])];
@@ -1176,7 +1081,11 @@ class DatabaseStore {
         }
 
         this.persist();
-        return this.artists.findById(id);
+        const createdArtist = this.artists.findById(id);
+        if (createdArtist) {
+          syncArtistToPostgres(createdArtist, createdArtist.socials).catch(() => {});
+        }
+        return createdArtist;
       },
       update: (id: string, updates: Partial<Artist>, socials?: Array<{ platform: string; url: string }>) => {
         const index = this.data.artists.findIndex((a) => a.id === id);
@@ -1207,7 +1116,11 @@ class DatabaseStore {
         }
 
         this.persist();
-        return this.artists.findById(id);
+        const updatedArtist = this.artists.findById(id);
+        if (updatedArtist) {
+          syncArtistToPostgres(updatedArtist, updatedArtist.socials).catch(() => {});
+        }
+        return updatedArtist;
       },
       delete: (id: string) => {
         const index = this.data.artists.findIndex((a) => a.id === id);
@@ -1216,6 +1129,7 @@ class DatabaseStore {
         this.data.artistSocials = this.data.artistSocials.filter((s) => s.artistId !== id);
         this.data.eventArtists = this.data.eventArtists.filter((ea) => ea.artistId !== id);
         this.persist();
+        deleteArtistFromPostgres(id).catch(() => {});
         return true;
       },
     };
@@ -1487,6 +1401,7 @@ class DatabaseStore {
         };
         this.data.services.push(service);
         this.persist();
+        syncServiceToPostgres(service).catch(() => {});
         return service;
       },
       update: (id: string, updates: Partial<Service>) => {
@@ -1498,6 +1413,7 @@ class DatabaseStore {
           updatedAt: new Date().toISOString(),
         };
         this.persist();
+        syncServiceToPostgres(this.data.services[index]).catch(() => {});
         return this.data.services[index];
       },
       reorder: (serviceIds: string[]) => {
@@ -1507,6 +1423,7 @@ class DatabaseStore {
             if (s) {
               s.order = idx + 1;
               s.updatedAt = new Date().toISOString();
+              syncServiceToPostgres(s).catch(() => {});
             }
           });
           this.persist();
@@ -1518,6 +1435,7 @@ class DatabaseStore {
         if (index === -1) return false;
         this.data.services.splice(index, 1);
         this.persist();
+        deleteServiceFromPostgres(id).catch(() => {});
         return true;
       },
     };
@@ -1597,6 +1515,7 @@ class DatabaseStore {
         };
         this.data.contactRequests.unshift(contact);
         this.persist();
+        syncContactRequestToPostgres(contact).catch(() => {});
         return contact;
       },
       update: (id: string, updates: Partial<ContactRequest>) => {
@@ -1608,6 +1527,7 @@ class DatabaseStore {
           updatedAt: new Date().toISOString(),
         };
         this.persist();
+        syncContactRequestToPostgres(this.data.contactRequests[index]).catch(() => {});
         return this.data.contactRequests[index];
       },
       delete: (id: string) => {
@@ -1615,6 +1535,7 @@ class DatabaseStore {
         if (index === -1) return false;
         this.data.contactRequests.splice(index, 1);
         this.persist();
+        deleteContactRequestFromPostgres(id).catch(() => {});
         return true;
       },
     };

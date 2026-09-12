@@ -15,6 +15,7 @@ import {
 } from 'lucide-react';
 import { adminMediaApi } from '../../services/adminApiClient';
 import { useAdminToast } from '../../context/AdminToastContext';
+import { getMediaUrl } from '../../../lib/utils';
 
 export interface MediaSelectorModalProps {
   isOpen: boolean;
@@ -318,7 +319,7 @@ export const MediaSelectorModal: React.FC<MediaSelectorModalProps> = ({
                       <div className="relative aspect-square w-full bg-black/60 flex items-center justify-center overflow-hidden">
                         {isImage && (
                           <img
-                            src={asset.url}
+                            src={getMediaUrl(asset.url)}
                             alt={asset.altText || asset.originalName}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                           />
@@ -327,7 +328,7 @@ export const MediaSelectorModal: React.FC<MediaSelectorModalProps> = ({
                         {isVideo && (
                           <div className="w-full h-full relative flex items-center justify-center">
                             {asset.url.includes('youtube') || asset.url.endsWith('.jpg') || asset.url.endsWith('.png') ? (
-                              <img src={asset.url} alt={asset.originalName} className="w-full h-full object-cover" />
+                              <img src={getMediaUrl(asset.url)} alt={asset.originalName} className="w-full h-full object-cover" />
                             ) : (
                               <div className="w-full h-full bg-zinc-900 flex items-center justify-center">
                                 <Video className="w-8 h-8 text-zinc-600" />
@@ -478,7 +479,7 @@ export const MediaSelectorModal: React.FC<MediaSelectorModalProps> = ({
                 <p className="text-[11px] font-mono text-zinc-400">URL PREVIEW:</p>
                 <div className="h-40 rounded-lg overflow-hidden bg-black/60 flex items-center justify-center border border-zinc-800">
                   <img
-                    src={customUrl}
+                    src={getMediaUrl(customUrl)}
                     alt="Preview"
                     className="w-full h-full object-contain"
                     onError={(e) => {
