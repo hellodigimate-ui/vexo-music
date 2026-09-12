@@ -52,10 +52,12 @@ export const MusicPage: React.FC = () => {
   }, [albums]);
 
   const filteredAlbums = albums.filter((album) => {
-    const matchesGenre = selectedGenre === 'All' || album.genre.toLowerCase().includes(selectedGenre.toLowerCase());
-    const matchesSearch =
-      album.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      album.artist.toLowerCase().includes(searchQuery.toLowerCase());
+    const genreStr = (album.genre || '').toLowerCase();
+    const matchesGenre = selectedGenre === 'All' || genreStr.includes(selectedGenre.toLowerCase());
+    const titleStr = (album.title || '').toLowerCase();
+    const artistStr = (album.artist || (album as any).artistName || '').toLowerCase();
+    const query = searchQuery.toLowerCase();
+    const matchesSearch = !query || titleStr.includes(query) || artistStr.includes(query);
     return matchesGenre && matchesSearch;
   });
 

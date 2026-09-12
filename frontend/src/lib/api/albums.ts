@@ -7,7 +7,7 @@ function mapStoreAlbumToPublic(a: any): Album {
   return {
     id: a.id,
     title: a.title,
-    artist: a.artistName,
+    artist: a.artistName || a.artist || 'VEXO Artist',
     year: a.year || (a.releaseDate ? new Date(a.releaseDate).getFullYear() : 2026),
     coverUrl: a.coverUrl,
     genre: a.genre || 'Electronic',
@@ -21,8 +21,8 @@ function mapStoreTrackToPublic(t: any): Track {
   return {
     id: t.id,
     title: t.title,
-    artist: t.artistName,
-    album: t.albumId,
+    artist: t.artistName || t.artist || 'VEXO Artist',
+    album: t.albumId || t.album || '',
     coverUrl: t.coverUrl,
     duration: t.duration || 210,
     audioUrl: t.audioUrl,
@@ -46,13 +46,23 @@ export async function getAlbums(): Promise<ApiResponse<Album[]>> {
   }
 
   try {
-    return await apiFetch<Album[]>('/albums');
-  } catch (err: any) {
-    console.warn('[API] Could not fetch albums:', err.message);
+    const res = await apiFetch<Album[]>('/albums');
+    if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+      return res;
+    }
+    // If backend returns empty or invalid, fallback to client mock store
+    const raw = adminMockStore.getAlbums().data || [];
     return {
-      success: false,
-      data: [],
-      error: err.message,
+      success: true,
+      data: raw.map(mapStoreAlbumToPublic),
+      timestamp: new Date().toISOString(),
+    };
+  } catch (err: any) {
+    console.warn('[API] Could not fetch albums from backend, using client store:', err.message);
+    const raw = adminMockStore.getAlbums().data || [];
+    return {
+      success: true,
+      data: raw.map(mapStoreAlbumToPublic),
       timestamp: new Date().toISOString(),
     };
   }
@@ -69,13 +79,23 @@ export async function getAlbumById(id: string): Promise<ApiResponse<Album | null
   }
 
   try {
-    return await apiFetch<Album>(`/albums/${id}`);
-  } catch (err: any) {
-    console.warn(`[API] Could not fetch album "${id}":`, err.message);
+    const res = await apiFetch<Album>(`/albums/${id}`);
+    if (res && res.success && res.data) {
+      return res;
+    }
+    const raw = adminMockStore.getAlbums().data || [];
+    const found = raw.find((a: any) => a.id === id || a.slug === id);
     return {
-      success: false,
-      data: null,
-      error: err.message,
+      success: true,
+      data: found ? mapStoreAlbumToPublic(found) : null,
+    };
+  } catch (err: any) {
+    console.warn(`[API] Could not fetch album "${id}" from backend, using client store:`, err.message);
+    const raw = adminMockStore.getAlbums().data || [];
+    const found = raw.find((a: any) => a.id === id || a.slug === id);
+    return {
+      success: true,
+      data: found ? mapStoreAlbumToPublic(found) : null,
     };
   }
 }
@@ -90,13 +110,23 @@ export async function getTracks(): Promise<ApiResponse<Track[]>> {
   }
 
   try {
-    return await apiFetch<Track[]>('/tracks');
-  } catch (err: any) {
-    console.warn('[API] Could not fetch tracks:', err.message);
+    const res = await apiFetch<Track[]>('/tracks');
+    if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+      return res;
+    }
+    const raw = adminMockStore.getTracks().data || [];
     return {
-      success: false,
-      data: [],
-      error: err.message,
+      success: true,
+      data: raw.map(mapStoreTrackToPublic),
+      timestamp: new Date().toISOString(),
+    };
+  } catch (err: any) {
+    console.warn('[API] Could not fetch tracks from backend, using client store:', err.message);
+    const raw = adminMockStore.getTracks().data || [];
+    return {
+      success: true,
+      data: raw.map(mapStoreTrackToPublic),
+      timestamp: new Date().toISOString(),
     };
   }
 }

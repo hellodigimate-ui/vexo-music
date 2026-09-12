@@ -5,60 +5,17 @@ import { SectionHeading } from '../ui/SectionHeading';
 import { Button } from '../ui/Button';
 import { AlbumCard } from './AlbumCard';
 import { albumsApi, homepageApi } from '../../lib/api';
-import { adminMockStore } from '../../admin/services/adminMockStore';
 import type { Album } from '../../types';
 import { ArrowRight } from 'lucide-react';
 
-function mapStoreAlbumToPublic(a: any): Album {
-  return {
-    id: a.id,
-    title: a.title,
-    artist: a.artistName,
-    year: a.year || (a.releaseDate ? new Date(a.releaseDate).getFullYear() : 2026),
-    coverUrl: a.coverUrl,
-    genre: a.genre || 'Electronic',
-    spotifyUrl: a.spotifyUrl || '',
-    youtubeUrl: a.youtubeUrl || '',
-    trackCount: a.trackCount || a.tracks?.length || 1,
-  };
-}
-
 export const LatestReleases: React.FC = () => {
   const navigate = useNavigate();
-  const [headingInfo, setHeadingInfo] = useState(() => {
-    const d = adminMockStore.getHomepage().data || {};
-    return {
-      title: d.releasesHeading || 'LATEST RELEASES',
-      subtitle: d.releasesSubtitle || 'Explore the newest original tracks, singles, and full albums from VEXO Music Entertainment.',
-    };
+  const [headingInfo, setHeadingInfo] = useState({
+    title: 'LATEST RELEASES',
+    subtitle: 'Explore the newest original tracks, singles, and full albums from VEXO Music Entertainment.',
   });
 
-  const [albums, setAlbums] = useState<Album[]>(() => {
-    try {
-      const homeData = adminMockStore.getHomepage().data;
-      const rawAlbums = adminMockStore.getAlbums().data || [];
-      const allAlbums: Album[] = rawAlbums.map(mapStoreAlbumToPublic);
-      const selectedIds = homeData?.selectedAlbumIds;
-      const limit = Number(homeData?.releasesLimit) || 4;
-
-      if (Array.isArray(selectedIds) && selectedIds.length > 0) {
-        const ordered: Album[] = [];
-        selectedIds.forEach((id: string) => {
-          const found = allAlbums.find((a: Album) => a.id === id);
-          if (found) ordered.push(found);
-        });
-        allAlbums.forEach((a: Album) => {
-          if (!ordered.find((oa: Album) => oa.id === a.id)) {
-            ordered.push(a);
-          }
-        });
-        return ordered.slice(0, limit);
-      }
-      return allAlbums.slice(0, limit);
-    } catch {
-      return [];
-    }
-  });
+  const [albums, setAlbums] = useState<Album[]>([]);
 
   useEffect(() => {
     let isMounted = true;

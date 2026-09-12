@@ -33,13 +33,22 @@ export async function getArtists(): Promise<ApiResponse<Artist[]>> {
   }
 
   try {
-    return await apiFetch<Artist[]>('/artists');
-  } catch (err: any) {
-    console.warn('[API] Could not fetch artists from backend:', err.message);
+    const res = await apiFetch<Artist[]>('/artists');
+    if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+      return res;
+    }
+    const raw = adminMockStore.getArtists().data || [];
     return {
-      success: false,
-      data: [],
-      error: err.message,
+      success: true,
+      data: raw.map(mapStoreArtistToPublic),
+      timestamp: new Date().toISOString(),
+    };
+  } catch (err: any) {
+    console.warn('[API] Could not fetch artists from backend, using client store:', err.message);
+    const raw = adminMockStore.getArtists().data || [];
+    return {
+      success: true,
+      data: raw.map(mapStoreArtistToPublic),
       timestamp: new Date().toISOString(),
     };
   }
@@ -58,13 +67,26 @@ export async function getFeaturedArtists(): Promise<ApiResponse<Artist[]>> {
   }
 
   try {
-    return await apiFetch<Artist[]>('/artists/featured');
-  } catch (err: any) {
-    console.warn('[API] Could not fetch featured artists:', err.message);
+    const res = await apiFetch<Artist[]>('/artists/featured');
+    if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+      return res;
+    }
+    const all = adminMockStore.getArtists().data || [];
+    const featured = all.filter((a: any) => a.featured);
+    const result = featured.length > 0 ? featured : all;
     return {
-      success: false,
-      data: [],
-      error: err.message,
+      success: true,
+      data: result.map(mapStoreArtistToPublic),
+      timestamp: new Date().toISOString(),
+    };
+  } catch (err: any) {
+    console.warn('[API] Could not fetch featured artists from backend, using client store:', err.message);
+    const all = adminMockStore.getArtists().data || [];
+    const featured = all.filter((a: any) => a.featured);
+    const result = featured.length > 0 ? featured : all;
+    return {
+      success: true,
+      data: result.map(mapStoreArtistToPublic),
       timestamp: new Date().toISOString(),
     };
   }
@@ -81,13 +103,23 @@ export async function getArtistById(id: string): Promise<ApiResponse<Artist | nu
   }
 
   try {
-    return await apiFetch<Artist>(`/artists/${id}`);
-  } catch (err: any) {
-    console.warn(`[API] Could not fetch artist "${id}":`, err.message);
+    const res = await apiFetch<Artist>(`/artists/${id}`);
+    if (res && res.success && res.data) {
+      return res;
+    }
+    const all = adminMockStore.getArtists().data || [];
+    const found = all.find((a: any) => a.id === id || a.slug === id);
     return {
-      success: false,
-      data: null,
-      error: err.message,
+      success: true,
+      data: found ? mapStoreArtistToPublic(found) : null,
+    };
+  } catch (err: any) {
+    console.warn(`[API] Could not fetch artist "${id}" from backend, using client store:`, err.message);
+    const all = adminMockStore.getArtists().data || [];
+    const found = all.find((a: any) => a.id === id || a.slug === id);
+    return {
+      success: true,
+      data: found ? mapStoreArtistToPublic(found) : null,
     };
   }
 }

@@ -5,7 +5,7 @@
 
 import { mockServicesList } from '../../data/services';
 
-const STORAGE_KEY = 'vexo_admin_mock_db_v10';
+const STORAGE_KEY = 'vexo_admin_mock_db_v11';
 
 function getInitialMockDb() {
   const now = new Date().toISOString();
@@ -89,68 +89,10 @@ function getInitialMockDb() {
         ],
         createdAt: now,
       },
-      {
-        id: 'art-3',
-        name: 'Cipher',
-        slug: 'cipher',
-        role: 'Electronic Producer & DJ',
-        avatarUrl: '',
-        coverUrl: '',
-        bio: 'Pioneering heavy cyber-synth aesthetics and multi-genre bass architectures for stadium festivals worldwide.',
-        monthlyListeners: 420500,
-        genres: ['Synthwave', 'Cyberpunk', 'Bass'],
-        featured: true,
-        isComingSoon: false,
-        order: 4,
-        socials: [
-          { platform: 'spotify', url: 'https://spotify.com' },
-          { platform: 'instagram', url: 'https://instagram.com' },
-          { platform: 'youtube', url: 'https://youtube.com' },
-        ],
-        createdAt: now,
-      },
-      {
-        id: 'art-5',
-        name: 'Aria Thorne',
-        slug: 'aria-thorne',
-        role: 'Vocalist & Songwriter',
-        avatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=800&q=80',
-        coverUrl: 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=1200&q=80',
-        bio: 'Ambient soul enchantress weaving haunting vocal harmonies through intricate analog soundbeds.',
-        monthlyListeners: 620000,
-        genres: ['Ambient Soul', 'Indie Electronic'],
-        featured: false,
-        isComingSoon: false,
-        order: 5,
-        socials: [
-          { platform: 'spotify', url: 'https://spotify.com' },
-          { platform: 'instagram', url: 'https://instagram.com' },
-        ],
-        createdAt: now,
-      },
-      {
-        id: 'art-6',
-        name: 'EchoPulse',
-        slug: 'echopulse',
-        role: 'Sound Architect & Mixing Engineer',
-        avatarUrl: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=800&q=80',
-        coverUrl: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=1200&q=80',
-        bio: 'Master of low frequencies and psychoacoustic spatial design.',
-        monthlyListeners: 290100,
-        genres: ['Dark Electro', 'Experimental Bass'],
-        featured: false,
-        isComingSoon: false,
-        order: 6,
-        socials: [
-          { platform: 'spotify', url: 'https://spotify.com' },
-          { platform: 'soundcloud', url: 'https://soundcloud.com' },
-        ],
-        createdAt: now,
-      },
     ],
     albums: [
       {
-        id: 'alb-1',
+        id: 'alb-2',
         title: 'Satane Lage Ho',
         slug: 'satane-lage-ho',
         artistName: 'Rashmi Nishad & Sonu Charan Bhatt',
@@ -185,60 +127,6 @@ function getInitialMockDb() {
         order: 2,
         createdAt: now,
       },
-      {
-        id: 'alb-2',
-        title: 'Neon Odyssey',
-        slug: 'neon-odyssey',
-        artistName: 'Cipher',
-        artistId: 'art-3',
-        coverUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80',
-        releaseDate: '2026-03-15',
-        year: 2026,
-        genre: 'Synthwave / Cyberpunk',
-        trackCount: 10,
-        spotifyUrl: 'https://spotify.com',
-        youtubeUrl: 'https://youtube.com',
-        appleMusicUrl: 'https://apple.com',
-        featured: true,
-        order: 3,
-        createdAt: now,
-      },
-      {
-        id: 'alb-3',
-        title: 'Pulse of Jaipur',
-        slug: 'pulse-of-jaipur',
-        artistName: 'Sonu Charan Bhatt & VEXO Artists',
-        artistId: 'art-2',
-        coverUrl: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=800&q=80',
-        releaseDate: '2026-01-20',
-        year: 2026,
-        genre: 'Fusion Electronic',
-        trackCount: 8,
-        spotifyUrl: 'https://spotify.com',
-        youtubeUrl: 'https://youtube.com',
-        appleMusicUrl: 'https://apple.com',
-        featured: true,
-        order: 4,
-        createdAt: now,
-      },
-      {
-        id: 'alb-4',
-        title: 'Velvet Horizon',
-        slug: 'velvet-horizon',
-        artistName: 'Aria Thorne',
-        artistId: 'art-4',
-        coverUrl: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?auto=format&fit=crop&w=800&q=80',
-        releaseDate: '2025-11-10',
-        year: 2025,
-        genre: 'Ambient Soul',
-        trackCount: 6,
-        spotifyUrl: 'https://spotify.com',
-        youtubeUrl: 'https://youtube.com',
-        appleMusicUrl: 'https://apple.com',
-        featured: false,
-        order: 5,
-        createdAt: now,
-      },
     ],
     tracks: [
       {
@@ -246,7 +134,7 @@ function getInitialMockDb() {
         title: 'Satane Lage Ho (Official Single)',
         artistName: 'Rashmi Nishad & Sonu Charan Bhatt',
         artistId: 'art-1',
-        albumId: 'alb-1',
+        albumId: 'alb-2',
         duration: 254,
         coverUrl: 'https://img.youtube.com/vi/HcEcM5AtEZ8/maxresdefault.jpg',
         genre: 'Rajasthani Folk / Contemporary',
@@ -271,38 +159,6 @@ function getInitialMockDb() {
         plays: 215000,
         isPopular: true,
         order: 2,
-        createdAt: now,
-      },
-      {
-        id: 'trk-2',
-        title: 'Midnight Grid Runner',
-        artistName: 'Cipher',
-        artistId: 'art-3',
-        albumId: 'alb-2',
-        duration: 218,
-        coverUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=800&q=80',
-        genre: 'Synthwave',
-        spotifyUrl: 'https://spotify.com',
-        youtubeUrl: 'https://youtube.com',
-        plays: 420000,
-        isPopular: true,
-        order: 3,
-        createdAt: now,
-      },
-      {
-        id: 'trk-3',
-        title: 'Desert Echoes (Jaipur Mix)',
-        artistName: 'Sonu Charan Bhatt',
-        artistId: 'art-2',
-        albumId: 'alb-3',
-        duration: 232,
-        coverUrl: 'https://images.unsplash.com/photo-1511379938547-c1f69419868d?auto=format&fit=crop&w=800&q=80',
-        genre: 'Rajasthani Fusion',
-        spotifyUrl: 'https://spotify.com',
-        youtubeUrl: 'https://youtube.com',
-        plays: 112000,
-        isPopular: false,
-        order: 4,
         createdAt: now,
       },
     ],
@@ -623,13 +479,13 @@ function getInitialMockDb() {
       // Latest Releases Section
       releasesHeading: 'LATEST RELEASES',
       releasesSubtitle: 'Explore the newest original tracks, singles, and full albums from VEXO Music Entertainment.',
-      selectedAlbumIds: ['alb-2', 'alb-bhartar', 'alb-1', 'alb-3'],
+      selectedAlbumIds: ['alb-2', 'alb-bhartar'],
       releasesLimit: 4,
 
       // Featured Artists Section
       artistsHeading: 'FEATURED ARTISTS',
       artistsSubtitle: 'Discover the visionary producers, vocalists, and composers driving our sonic movement.',
-      featuredArtistIds: ['art-1', 'art-rbeer', 'art-2', 'art-3'],
+      featuredArtistIds: ['art-1', 'art-rbeer', 'art-2'],
 
       // Featured Events Section
       eventsHeading: 'FEATURED EVENTS & TOUR',
@@ -705,12 +561,85 @@ class AdminMockStore {
   private load() {
     const initial = getInitialMockDb();
     try {
+      // Purge obsolete local storage versions
+      for (let i = 1; i <= 10; i++) {
+        localStorage.removeItem(`vexo_admin_mock_db_v${i}`);
+      }
+
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         this.db = JSON.parse(saved);
-        if (this.db.homepage) {
-          this.db.homepage = { ...initial.homepage, ...this.db.homepage };
+
+        const dummyTitles = new Set([
+          'neon odyssey',
+          'sub zero bass',
+          'nocturne echoes',
+          'pulse of jaipur',
+          'velvet horizon',
+          'hyperdrive vip',
+          'analog horizons',
+        ]);
+        const dummyTrackTitles = new Set([
+          'midnight grid runner',
+          'frequency lockdown',
+          'starlight dissolve',
+          'neon skyline',
+          'desert echoes',
+        ]);
+        const dummyArtistNames = new Set(['cipher', 'aria thorne', 'echopulse']);
+
+        // Filter out dummy albums
+        if (Array.isArray(this.db.albums)) {
+          this.db.albums = this.db.albums.filter(
+            (a: any) =>
+              !dummyTitles.has((a.title || '').toLowerCase().trim()) &&
+              !['alb-1', 'alb-3', 'alb-4', 'alb-5', 'alb-6'].includes(a.id)
+          );
+          if (this.db.albums.length === 0) {
+            this.db.albums = initial.albums;
+          }
+        } else {
+          this.db.albums = initial.albums;
         }
+
+        // Filter out dummy tracks
+        if (Array.isArray(this.db.tracks)) {
+          this.db.tracks = this.db.tracks.filter(
+            (t: any) =>
+              !dummyTrackTitles.has((t.title || '').toLowerCase().trim()) &&
+              !['trk-2', 'trk-3', 'trk-4', 'trk-5'].includes(t.id)
+          );
+          if (this.db.tracks.length === 0) {
+            this.db.tracks = initial.tracks;
+          }
+        } else {
+          this.db.tracks = initial.tracks;
+        }
+
+        // Filter out dummy artists
+        if (Array.isArray(this.db.artists)) {
+          this.db.artists = this.db.artists.filter(
+            (art: any) =>
+              !dummyArtistNames.has((art.name || '').toLowerCase().trim()) &&
+              !['art-3', 'art-5', 'art-6'].includes(art.id)
+          );
+          if (this.db.artists.length === 0) {
+            this.db.artists = initial.artists;
+          }
+        } else {
+          this.db.artists = initial.artists;
+        }
+
+        if (this.db.homepage) {
+          this.db.homepage = {
+            ...initial.homepage,
+            ...this.db.homepage,
+            selectedAlbumIds: ['alb-2', 'alb-bhartar'],
+            featuredArtistIds: ['art-1', 'art-rbeer', 'art-2'],
+          };
+        }
+
+        this.save();
         return;
       }
     } catch {}
