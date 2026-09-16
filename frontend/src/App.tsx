@@ -1,4 +1,5 @@
-import { BrowserRouter, Routes, Route, Outlet } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Outlet, useLocation } from 'react-router-dom';
+import { motion } from 'framer-motion';
 import { Navbar, Footer } from './components/layout';
 import { ScrollToTop } from './components/common/ScrollToTop';
 
@@ -11,6 +12,7 @@ import { EventsPage } from './pages/EventsPage';
 import { VideosPage } from './pages/VideosPage';
 import { AboutPage } from './pages/AboutPage';
 import { ContactPage } from './pages/ContactPage';
+import { PackagesPage } from './pages/PackagesPage';
 
 // Admin System Imports
 import { AdminAuthProvider } from './admin/context/AdminAuthContext';
@@ -31,6 +33,7 @@ import { AdminMediaPage } from './admin/pages/AdminMediaPage';
 import { AdminInquiriesPage } from './admin/pages/AdminInquiriesPage';
 import { AdminHomepagePage } from './admin/pages/AdminHomepagePage';
 import { AdminSiteSettingsPage } from './admin/pages/AdminSiteSettingsPage';
+import { AdminPreWeddingPage } from './admin/pages/AdminPreWeddingPage';
 import { AdminActivityLogsPage } from './admin/pages/AdminActivityLogsPage';
 import { AdminUsersPage } from './admin/pages/AdminUsersPage';
 
@@ -38,11 +41,20 @@ import { AdminUsersPage } from './admin/pages/AdminUsersPage';
 import { ThemeProvider, ThemeTransition } from './components/theme';
 
 function PublicLayout() {
+  const location = useLocation();
+
   return (
     <div className="min-h-screen bg-[#f8fafc] dark:bg-[#050505] text-slate-900 dark:text-white font-sans selection:bg-vexo-red selection:text-white flex flex-col transition-colors duration-300">
       <Navbar />
       <main className="flex-1">
-        <Outlet />
+        <motion.div
+          key={location.pathname}
+          initial={{ opacity: 0, y: 12 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <Outlet />
+        </motion.div>
       </main>
       <Footer />
     </div>
@@ -57,58 +69,61 @@ export function App() {
         <AdminToastProvider>
           <BrowserRouter>
             <ScrollToTop />
-          <Routes>
-            {/* Public Website Routes */}
-            <Route element={<PublicLayout />}>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/music" element={<MusicPage />} />
-              <Route path="/artists" element={<ArtistsPage />} />
-              <Route path="/services" element={<ServicesPage />} />
-              <Route path="/services/:slug" element={<ServiceDetailPage />} />
-              <Route path="/events" element={<EventsPage />} />
-              <Route path="/videos" element={<VideosPage />} />
-              <Route path="/about" element={<AboutPage />} />
-              <Route path="/contact" element={<ContactPage />} />
-            </Route>
+            <Routes>
+              {/* Public Website Routes */}
+              <Route element={<PublicLayout />}>
+                <Route path="/" element={<HomePage />} />
+                <Route path="/music" element={<MusicPage />} />
+                <Route path="/artists" element={<ArtistsPage />} />
+                <Route path="/services" element={<ServicesPage />} />
+                <Route path="/services/:slug" element={<ServiceDetailPage />} />
+                <Route path="/events" element={<EventsPage />} />
+                <Route path="/videos" element={<VideosPage />} />
+                <Route path="/about" element={<AboutPage />} />
+                <Route path="/contact" element={<ContactPage />} />
+                <Route path="/packages" element={<PackagesPage />} />
+                <Route path="/pre-wedding" element={<PackagesPage />} />
+              </Route>
 
-            {/* Admin Authentication Route */}
-            <Route path="/admin/login" element={<AdminLoginPage />} />
+              {/* Admin Authentication Route */}
+              <Route path="/admin/login" element={<AdminLoginPage />} />
 
-            {/* Authenticated Admin CMS Route Namespace */}
-            <Route
-              path="/admin"
-              element={
-                <AdminProtectedRoute>
-                  <AdminLayout />
-                </AdminProtectedRoute>
-              }
-            >
-              <Route index element={<AdminDashboardPage />} />
-              <Route path="artists" element={<AdminArtistsPage />} />
-              <Route path="artists/new" element={<AdminArtistFormPage />} />
-              <Route path="artists/:id/edit" element={<AdminArtistFormPage />} />
-              <Route path="music" element={<AdminMusicPage />} />
-              <Route path="albums/:id" element={<AdminMusicPage />} />
-              <Route path="videos" element={<AdminVideosPage />} />
-              <Route path="videos/new" element={<AdminVideoFormPage />} />
-              <Route path="videos/:id/edit" element={<AdminVideoFormPage />} />
-              <Route path="events" element={<AdminEventsPage />} />
-              <Route path="events/new" element={<AdminEventFormPage />} />
-              <Route path="events/:id/edit" element={<AdminEventFormPage />} />
-              <Route path="services" element={<AdminServicesPage />} />
-              <Route path="media" element={<AdminMediaPage />} />
-              <Route path="enquiries" element={<AdminInquiriesPage />} />
-              <Route path="inquiries" element={<AdminInquiriesPage />} />
-              <Route path="homepage" element={<AdminHomepagePage />} />
-              <Route path="site-settings" element={<AdminSiteSettingsPage />} />
-              <Route path="activity-logs" element={<AdminActivityLogsPage />} />
-              <Route path="users" element={<AdminUsersPage />} />
-            </Route>
-          </Routes>
-        </BrowserRouter>
-      </AdminToastProvider>
-    </AdminAuthProvider>
-  </ThemeProvider>
+              {/* Authenticated Admin CMS Route Namespace */}
+              <Route
+                path="/admin"
+                element={
+                  <AdminProtectedRoute>
+                    <AdminLayout />
+                  </AdminProtectedRoute>
+                }
+              >
+                <Route index element={<AdminDashboardPage />} />
+                <Route path="artists" element={<AdminArtistsPage />} />
+                <Route path="artists/new" element={<AdminArtistFormPage />} />
+                <Route path="artists/:id/edit" element={<AdminArtistFormPage />} />
+                <Route path="music" element={<AdminMusicPage />} />
+                <Route path="albums/:id" element={<AdminMusicPage />} />
+                <Route path="videos" element={<AdminVideosPage />} />
+                <Route path="videos/new" element={<AdminVideoFormPage />} />
+                <Route path="videos/:id/edit" element={<AdminVideoFormPage />} />
+                <Route path="events" element={<AdminEventsPage />} />
+                <Route path="events/new" element={<AdminEventFormPage />} />
+                <Route path="events/:id/edit" element={<AdminEventFormPage />} />
+                <Route path="services" element={<AdminServicesPage />} />
+                <Route path="media" element={<AdminMediaPage />} />
+                <Route path="enquiries" element={<AdminInquiriesPage />} />
+                <Route path="inquiries" element={<AdminInquiriesPage />} />
+                <Route path="homepage" element={<AdminHomepagePage />} />
+                <Route path="pre-wedding" element={<AdminPreWeddingPage />} />
+                <Route path="site-settings" element={<AdminSiteSettingsPage />} />
+                <Route path="activity-logs" element={<AdminActivityLogsPage />} />
+                <Route path="users" element={<AdminUsersPage />} />
+              </Route>
+            </Routes>
+          </BrowserRouter>
+        </AdminToastProvider>
+      </AdminAuthProvider>
+    </ThemeProvider>
   );
 }
 

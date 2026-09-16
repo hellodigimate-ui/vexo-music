@@ -56,24 +56,24 @@ export const Modal: React.FC<ModalProps> = ({
 
       {/* Modal Card */}
       <div
-        className={`relative w-full ${maxWidthClasses} bg-[#0e0e12] border border-zinc-800 rounded-2xl shadow-2xl overflow-hidden z-10 animate-scale-up flex flex-col max-h-[90vh]`}
+        className={`relative w-full ${maxWidthClasses} bg-white dark:bg-[#0e0e12] border border-slate-200 dark:border-zinc-800 rounded-2xl shadow-xl overflow-hidden z-10 animate-scale-up flex flex-col max-h-[90vh]`}
       >
         {/* Modal Header */}
-        <div className="px-6 py-5 border-b border-zinc-800 flex items-center justify-between bg-[#111116]">
+        <div className="px-6 py-5 border-b border-slate-200 dark:border-zinc-800 flex items-center justify-between bg-slate-50 dark:bg-[#111116]">
           <div>
-            <h3 className="text-base font-bold text-white tracking-wide">{title}</h3>
-            {subtitle && <p className="text-xs text-zinc-400 mt-0.5">{subtitle}</p>}
+            <h3 className="text-base font-bold text-slate-900 dark:text-white tracking-wide">{title}</h3>
+            {subtitle && <p className="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">{subtitle}</p>}
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors"
+            className="p-1.5 rounded-lg text-slate-400 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Modal Body */}
-        <div className="px-6 py-6 overflow-y-auto flex-1 scrollbar-thin scrollbar-thumb-zinc-700">
+        <div className="px-6 py-6 overflow-y-auto flex-1 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-zinc-700 bg-white dark:bg-[#0e0e12] text-slate-900 dark:text-zinc-100">
           {children}
         </div>
       </div>

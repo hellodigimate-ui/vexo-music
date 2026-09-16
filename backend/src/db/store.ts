@@ -18,8 +18,10 @@ import type {
   SiteSettings,
   ActivityLog,
   DatabaseSchema,
+  PreWeddingPageData,
 } from './types.js';
 import { mockServices } from '../data/services.js';
+import { initialPreWeddingData } from '../data/preWedding.js';
 import {
   initPostgresSync,
   syncServiceToPostgres,
@@ -384,7 +386,7 @@ function getInitialDatabase(): DatabaseSchema {
       publishedAt: '24 Aug 2026',
       category: 'Official Music Videos',
       featured: true,
-      description: 'Presenting "BHARTAR" by Vexo Entertainment Pvt. Ltd. Starring Mohit Arora & Shivya Arora, sung by R Beer & Rashmi Nishad, music by GR Music, directed by R Beer. राजस्थानी रंग, देसी अंदाज़ और धमाकेदार बीट्स के साथ पेश है – “BHARTAR”',
+      description: 'Presenting "BHARTAR" by Vexo Entertainment Pvt. Ltd. Starring Mohit Arora & Shivya Arora, sung by R Beer & Rashmi Nishad, music by GR Music, directed by R Beer. Vibrant folk rhythms, traditional melodies, and electrifying beats — presenting “BHARTAR”',
       tags: ['#RajasthaniMusic', '#RashmiNishad', '#NewRajasthaniSong', '#Bhartar', '#VexoMusic', '#RBeer'],
       order: 2,
       createdAt: now,
@@ -569,7 +571,7 @@ function getInitialDatabase(): DatabaseSchema {
       referenceId: 'VXO-2026-8942',
       name: 'Aarav Sharma',
       email: 'aarav@soundlab.in',
-      phone: '+91 98290 12345',
+      phone: '+91 72399 99966',
       company: 'SoundLab Studio',
       service: 'MUSIC PRODUCTION',
       message: 'Looking to produce a 5-track commercial EP blending traditional instruments with modern electronic soundscapes.',
@@ -648,7 +650,7 @@ function getInitialDatabase(): DatabaseSchema {
     logoUrl: '/logo.svg',
     faviconUrl: '/favicon.ico',
     contactEmail: 'contact@vexomusic.com',
-    contactPhone: '+91 98290 00000',
+    contactPhone: '+91 72399 99966',
     officeAddress: 'VEXO Creative Studios, Tone City, Jaipur, Rajasthan, India 302001',
     copyrightText: '© 2026 VEXO Music Entertainment Pvt. Ltd. All rights reserved.',
     socialSpotify: 'https://spotify.com',
@@ -689,6 +691,7 @@ function getInitialDatabase(): DatabaseSchema {
     homepage: initialHomepage,
     siteSettings: initialSiteSettings,
     activityLogs: initialActivityLogs,
+    preWedding: initialPreWeddingData,
   };
 }
 
@@ -786,6 +789,7 @@ class DatabaseStore {
           homepage: loadedHomepage,
           siteSettings: parsed.siteSettings || initial.siteSettings,
           activityLogs: parsed.activityLogs || initial.activityLogs,
+          preWedding: parsed.preWedding || initial.preWedding,
         };
 
         this.persistSync(merged);
@@ -1426,6 +1430,37 @@ class DatabaseStore {
         }
         this.persist();
         return log;
+      },
+    };
+  }
+
+  // --- Pre-Wedding Studio ---
+  public get preWedding() {
+    return {
+      get: () => {
+        if (!this.data.preWedding) {
+          this.data.preWedding = initialPreWeddingData;
+          this.persist();
+        }
+        return this.data.preWedding;
+      },
+      update: (updates: Partial<PreWeddingPageData>) => {
+        const current = this.preWedding.get();
+        this.data.preWedding = {
+          ...current,
+          ...updates,
+          studioInfo: {
+            ...current.studioInfo,
+            ...(updates.studioInfo || {}),
+          },
+          packages: updates.packages || current.packages,
+          customServices: updates.customServices || current.customServices,
+          addOns: updates.addOns || current.addOns,
+          whyUsPillars: updates.whyUsPillars || current.whyUsPillars,
+          updatedAt: new Date().toISOString(),
+        };
+        this.persist();
+        return this.data.preWedding;
       },
     };
   }

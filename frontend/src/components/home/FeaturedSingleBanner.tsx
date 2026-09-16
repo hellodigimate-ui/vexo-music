@@ -44,7 +44,7 @@ export const FeaturedSingleBanner: React.FC = () => {
     hashtags: ['#RajasthaniMusic', '#RashmiNishad', '#NewRajasthaniSong', '#Bhartar', '#VexoMusic'],
     descriptionHeader: '🎵 BHARTAR (Official Music Video)',
     descriptionText:
-      'Ajay Sharma & Vexo Entertainment Pvt Ltd Presents "BHARTAR"\nStarring: Mohit Arora & Shivya Arora\nSinger: R Beer & Rashmi Nishad\nLyrics: R Beer | Music: GR Music | Director: R Beer\nArtwork: Poster Factory\n🔥 राजस्थानी रंग, देसी अंदाज़ और धमाकेदार बीट्स के साथ पेश है – “BHARTAR” 💗',
+      'Ajay Sharma & Vexo Entertainment Pvt Ltd Presents "BHARTAR"\nStarring: Mohit Arora & Shivya Arora\nSinger: R Beer & Rashmi Nishad\nLyrics: R Beer | Music: GR Music | Director: R Beer\nArtwork: Poster Factory\n🔥 Vibrant folk rhythms, traditional melodies, and electrifying beats — presenting “BHARTAR” 💗',
   });
 
   useEffect(() => {

@@ -12,7 +12,7 @@ export const Footer: React.FC = () => {
     siteDescription:
       'A premier music entertainment powerhouse & record label specializing in original sound engineering, global music distribution, artist management, and cinematic audio-visual production based in Jaipur, India.',
     contactEmail: 'Contact@vexomusic.in',
-    contactPhone: '+91 72399-99966',
+    contactPhone: '+91 72399 99966',
     officeAddress: 'SKY CROWN, Office No. 205, Chordiya City, Kamla Nehru Nagar, Ajmer Road, Jaipur, Rajasthan 302021',
     copyrightText: '© 2026 VEXO Music Entertainment Pvt. Ltd. All rights reserved.',
     socialInstagram: 'https://www.instagram.com/vexomusicentertainment',
@@ -25,13 +25,15 @@ export const Footer: React.FC = () => {
     try {
       const data = adminMockStore.getSiteSettings().data;
       if (data) {
+        const rawPhone = data.contactPhone || '+91 72399 99966';
+        const cleanPhone = rawPhone.includes('98290') ? '+91 72399 99966' : rawPhone;
         setSettings({
           siteName: data.siteName || 'VEXO Music Entertainment',
           siteDescription:
             data.siteDescription ||
             'A premier music entertainment powerhouse & record label specializing in original sound engineering, global music distribution, artist management, and cinematic audio-visual production based in Jaipur, India.',
           contactEmail: data.contactEmail || 'Contact@vexomusic.in',
-          contactPhone: data.contactPhone || '+91 72399-99966',
+          contactPhone: cleanPhone,
           officeAddress:
             data.officeAddress ||
             'SKY CROWN, Office No. 205, Chordiya City, Kamla Nehru Nagar, Ajmer Road, Jaipur, Rajasthan 302021',
@@ -42,7 +44,7 @@ export const Footer: React.FC = () => {
           socialTwitter: data.socialTwitter || 'https://x.com/vexomusicentertainment',
         });
       }
-    } catch (_) {}
+    } catch (_) { }
   }, []);
 
   const scrollToTop = () => {

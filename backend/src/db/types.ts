@@ -280,6 +280,88 @@ export interface ActivityLog {
   createdAt: string;
 }
 
+export interface PreWeddingPackage {
+  id: string;
+  name: string;
+  tagline: string;
+  priceINR: number;
+  priceDisplay: string;
+  badge?: string;
+  isPopular?: boolean;
+  highlightText?: string;
+  photography: {
+    photographersCount: string;
+    cameraSetup: string;
+    details: string[];
+  };
+  cinematography: {
+    cinematographersCount: string;
+    cameraSetup: string;
+    details: string[];
+  };
+  deliverables: string[];
+  shoot: {
+    days: string;
+    locations: string;
+  };
+  bonus?: string[];
+  platinumExperience?: string[];
+}
+
+export interface CustomServiceOption {
+  id: string;
+  name: string;
+  icon: string;
+  category: 'core' | 'coverage' | 'styling' | 'deliverable';
+  startingPriceINR: number;
+  unit: string;
+  description: string;
+}
+
+export interface WhyUsPillar {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  tag: string;
+}
+
+export interface AddOnService {
+  id: string;
+  title: string;
+  priceDisplay: string;
+  priceINR: number;
+  description: string;
+  badge?: string;
+}
+
+export interface PreWeddingStudioInfo {
+  name: string;
+  tagline: string;
+  headline: string;
+  subHeadlineHindi: string;
+  storyHook: string;
+  signatureIntro: string;
+  phone: string;
+  displayPhone: string;
+  email: string;
+  instagramHandle: string;
+  instagramUrl: string;
+  location: string;
+  whatsappNumber: string;
+  experienceYears: string;
+}
+
+export interface PreWeddingPageData {
+  id: string;
+  studioInfo: PreWeddingStudioInfo;
+  packages: PreWeddingPackage[];
+  customServices: CustomServiceOption[];
+  addOns: AddOnService[];
+  whyUsPillars: WhyUsPillar[];
+  updatedAt: string;
+}
+
 export interface DatabaseSchema {
   adminUsers: AdminUser[];
   artists: Artist[];
@@ -295,4 +377,6 @@ export interface DatabaseSchema {
   homepage: Homepage;
   siteSettings: SiteSettings;
   activityLogs: ActivityLog[];
+  preWedding?: PreWeddingPageData;
 }
+

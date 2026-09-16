@@ -95,7 +95,7 @@ export const mockVideos: Video[] = [
     category: 'Official Music Videos',
     featured: true,
     description:
-      'Presenting "BHARTAR" by Vexo Entertainment Pvt. Ltd. Starring Mohit Arora & Shivya Arora, sung by R Beer & Rashmi Nishad, music by GR Music, directed by R Beer. राजस्थानी रंग, देसी अंदाज़ और धमाकेदार बीट्स के साथ पेश है – “BHARTAR”',
+      'Presenting "BHARTAR" by Vexo Entertainment Pvt. Ltd. Starring Mohit Arora & Shivya Arora, sung by R Beer & Rashmi Nishad, music by GR Music, directed by R Beer. Vibrant folk rhythms, traditional melodies, and electrifying beats — presenting “BHARTAR”',
   },
   {
     id: 'vid-2',

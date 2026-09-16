@@ -4,8 +4,15 @@
  */
 
 import { mockServicesList } from '../../data/services';
+import {
+  WEDDING_STUDIO_INFO,
+  PRE_WEDDING_PACKAGES,
+  CUSTOM_PACKAGE_SERVICES,
+  WHY_US_PILLARS,
+  ADD_ON_SERVICES,
+} from '../../data/weddingData';
 
-const STORAGE_KEY = 'vexo_admin_mock_db_v11';
+const STORAGE_KEY = 'vexo_admin_mock_db_v12';
 
 function getInitialMockDb() {
   const now = new Date().toISOString();
@@ -226,7 +233,7 @@ function getInitialMockDb() {
         publishedAt: '24 Aug 2026',
         category: 'Official Music Videos',
         featured: true,
-        description: 'Presenting "BHARTAR" by Vexo Entertainment Pvt. Ltd. Starring Mohit Arora & Shivya Arora, sung by R Beer & Rashmi Nishad, music by GR Music, directed by R Beer. राजस्थानी रंग, देसी अंदाज़ और धमाकेदार बीट्स के साथ पेश है – “BHARTAR”',
+        description: 'Presenting "BHARTAR" by Vexo Entertainment Pvt. Ltd. Starring Mohit Arora & Shivya Arora, sung by R Beer & Rashmi Nishad, music by GR Music, directed by R Beer. Vibrant folk rhythms, traditional melodies, and electrifying beats — presenting “BHARTAR”',
         tags: ['#RajasthaniMusic', '#RashmiNishad', '#NewRajasthaniSong', '#Bhartar', '#VexoMusic', '#RBeer', '#MohitArora', '#ShivyaArora'],
         order: 2,
         createdAt: now,
@@ -346,8 +353,8 @@ function getInitialMockDb() {
         imageUrl: 'https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80',
         icon: 'Camera',
         features: ['Cinematic 4K Drone Aerial Coverage', 'Custom Tailored Music Soundtrack', 'Editorial Mood Lighting & Direction', 'Luxury Album & Video Teaser Delivery'],
-        ctaText: 'CONSULT US',
-        pricingRange: 'Starting from ₹1,50,000',
+        ctaText: 'EXPLORE PACKAGES',
+        pricingRange: 'Starting from ₹24,999',
         isActive: true,
         order: 7,
         createdAt: now,
@@ -427,7 +434,7 @@ function getInitialMockDb() {
         referenceId: 'VXO-2026-8942',
         name: 'Aarav Sharma',
         email: 'aarav@soundlab.in',
-        phone: '+91 98290 12345',
+        phone: '+91 72399 99966',
         company: 'SoundLab Studio Mumbai',
         service: 'Music Production',
         message: 'Looking to produce a 5-track commercial EP blending traditional instruments with modern electronic soundscapes.',
@@ -529,7 +536,7 @@ function getInitialMockDb() {
       logoUrl: '/logo.svg',
       faviconUrl: '/favicon.ico',
       contactEmail: 'contact@vexomusic.com',
-      contactPhone: '+91 98290 00000',
+      contactPhone: '+91 72399 99966',
       officeAddress: 'VEXO Creative Studios, Tone City, Jaipur, Rajasthan, India 302001',
       copyrightText: '© 2026 VEXO Music Entertainment Pvt. Ltd. All rights reserved.',
       socialSpotify: 'https://spotify.com',
@@ -548,6 +555,15 @@ function getInitialMockDb() {
         createdAt: now,
       },
     ],
+    preWedding: {
+      id: 'pre-wedding-singleton',
+      studioInfo: WEDDING_STUDIO_INFO,
+      packages: PRE_WEDDING_PACKAGES,
+      customServices: CUSTOM_PACKAGE_SERVICES,
+      whyUsPillars: WHY_US_PILLARS,
+      addOns: ADD_ON_SERVICES,
+      updatedAt: now,
+    },
   };
 }
 
@@ -562,7 +578,7 @@ class AdminMockStore {
     const initial = getInitialMockDb();
     try {
       // Purge obsolete local storage versions
-      for (let i = 1; i <= 10; i++) {
+      for (let i = 1; i <= 11; i++) {
         localStorage.removeItem(`vexo_admin_mock_db_v${i}`);
       }
 
@@ -637,6 +653,14 @@ class AdminMockStore {
             selectedAlbumIds: ['alb-2', 'alb-bhartar'],
             featuredArtistIds: ['art-1', 'art-rbeer', 'art-2'],
           };
+        }
+
+        if (this.db.siteSettings) {
+          this.db.siteSettings.contactPhone = '+91 72399 99966';
+        }
+
+        if (!this.db.preWedding) {
+          this.db.preWedding = initial.preWedding;
         }
 
         this.save();
@@ -1183,6 +1207,33 @@ class AdminMockStore {
     this.db.siteSettings = { ...this.db.siteSettings, ...data };
     this.save();
     return { success: true, data: this.db.siteSettings };
+  }
+
+  public getPreWedding() {
+    if (!this.db.preWedding) {
+      this.db.preWedding = getInitialMockDb().preWedding;
+      this.save();
+    }
+    return { success: true, data: this.db.preWedding };
+  }
+
+  public updatePreWedding(data: any) {
+    const current = this.getPreWedding().data;
+    this.db.preWedding = {
+      ...current,
+      ...data,
+      studioInfo: {
+        ...current.studioInfo,
+        ...(data.studioInfo || {}),
+      },
+      packages: data.packages || current.packages,
+      customServices: data.customServices || current.customServices,
+      addOns: data.addOns || current.addOns,
+      whyUsPillars: data.whyUsPillars || current.whyUsPillars,
+      updatedAt: new Date().toISOString(),
+    };
+    this.save();
+    return { success: true, data: this.db.preWedding };
   }
 
   public getActivityLogs() {

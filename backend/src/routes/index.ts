@@ -8,6 +8,7 @@ import { videoRoutes } from './videos.js';
 import { contactRoutes } from './contact.js';
 import { publicHomepageRoutes } from './homepage.js';
 import { publicSiteSettingsRoutes } from './siteSettings.js';
+import { publicPreWeddingRoutes } from './preWedding.js';
 import { adminRoutes } from './admin/index.js';
 
 export const apiRoutes: FastifyPluginAsync = async (fastify) => {
@@ -21,6 +22,7 @@ export const apiRoutes: FastifyPluginAsync = async (fastify) => {
   await fastify.register(contactRoutes);
   await fastify.register(publicHomepageRoutes);
   await fastify.register(publicSiteSettingsRoutes);
+  await fastify.register(publicPreWeddingRoutes);
 
   // Authenticated Admin Routes (/api/admin/*)
   await fastify.register(adminRoutes, { prefix: '/admin' });

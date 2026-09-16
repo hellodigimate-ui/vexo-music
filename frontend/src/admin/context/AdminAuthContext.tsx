@@ -33,7 +33,11 @@ export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ chi
     return savedUser ? JSON.parse(savedUser) : null;
   });
   const [token, setToken] = useState<string | null>(getAdminToken);
-  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [isLoading, setIsLoading] = useState<boolean>(() => {
+    const savedToken = getAdminToken();
+    const savedUser = localStorage.getItem('vexo_admin_user');
+    return !savedToken || !savedUser;
+  });
 
   const refreshProfile = useCallback(async () => {
     const currentToken = getAdminToken();

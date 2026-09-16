@@ -8,6 +8,7 @@ export const navItems: NavItem[] = [
   { label: 'Music', path: '/music' },
   { label: 'Artists', path: '/artists' },
   { label: 'Services', path: '/services' },
+  { label: 'Pre-Wedding', path: '/packages' },
   { label: 'Events', path: '/events' },
   { label: 'Videos', path: '/videos' },
   { label: 'About', path: '/about' },

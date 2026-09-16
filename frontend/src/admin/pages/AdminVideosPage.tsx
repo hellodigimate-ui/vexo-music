@@ -158,24 +158,24 @@ export const AdminVideosPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Top Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-800/60">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-zinc-800/60">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
-            <span className="text-vexo-red-bright font-mono text-xs uppercase tracking-widest flex items-center gap-1.5">
+            <span className="text-vexo-red font-mono text-xs uppercase tracking-widest flex items-center gap-1.5">
               <Flame className="w-3.5 h-3.5" /> VIDEO PRODUCTION & YOUTUBE STREAM SYNC
             </span>
           </div>
-          <h1 className="text-xl sm:text-2xl font-black uppercase text-white tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-black uppercase text-slate-900 dark:text-white tracking-tight">
             Music Videos & Visual Media
           </h1>
-          <p className="text-xs text-zinc-400">
+          <p className="text-xs text-slate-500 dark:text-zinc-400">
             Manage official music videos, live stadium performances, visualizers, and behind-the-scenes content.
           </p>
         </div>
 
         <NavLink
           to="/admin/videos/new"
-          className="px-5 py-2.5 rounded-xl bg-vexo-red hover:bg-vexo-red-bright text-white text-xs font-extrabold uppercase tracking-wider flex items-center gap-2 shadow-[0_0_20px_rgba(224,0,0,0.4)] transition-all cursor-pointer w-fit"
+          className="px-5 py-2.5 rounded-xl bg-vexo-red hover:bg-[#c50000] active:scale-[0.98] text-white text-xs font-extrabold uppercase tracking-wider flex items-center gap-2 shadow-xs hover:shadow-md hover:shadow-red-500/20 transition-all cursor-pointer w-fit"
         >
           <Plus className="w-4 h-4" />
           <span>Publish Video</span>
@@ -185,35 +185,35 @@ export const AdminVideosPage: React.FC = () => {
       {/* KPI Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {/* Total Videos */}
-        <div className="bg-[#0e0e13] border border-zinc-800/80 rounded-2xl p-5 shadow-xl flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-vexo-red/10 border border-vexo-red/30 flex items-center justify-center text-vexo-red-bright">
+        <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-5 shadow-xs flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-red-50 dark:bg-vexo-red/10 border border-red-200 dark:border-vexo-red/30 flex items-center justify-center text-vexo-red">
             <Video className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-[11px] font-mono uppercase tracking-wider text-zinc-400">Total Media Library</p>
-            <p className="text-2xl font-black text-white mt-0.5">{totalVideos}</p>
+            <p className="text-[11px] font-mono uppercase tracking-wider text-slate-500 dark:text-zinc-400">Total Media Library</p>
+            <p className="text-2xl font-black text-slate-900 dark:text-white mt-0.5">{totalVideos}</p>
           </div>
         </div>
 
         {/* Published Videos */}
-        <div className="bg-[#0e0e13] border border-zinc-800/80 rounded-2xl p-5 shadow-xl flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+        <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-5 shadow-xs flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 flex items-center justify-center text-emerald-500">
             <CheckCircle2 className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-[11px] font-mono uppercase tracking-wider text-zinc-400">Live on Catalogue</p>
-            <p className="text-2xl font-black text-white mt-0.5">{publishedCount}</p>
+            <p className="text-[11px] font-mono uppercase tracking-wider text-slate-500 dark:text-zinc-400">Live on Catalogue</p>
+            <p className="text-2xl font-black text-slate-900 dark:text-white mt-0.5">{publishedCount}</p>
           </div>
         </div>
 
         {/* Featured Heroes */}
-        <div className="bg-[#0e0e13] border border-zinc-800/80 rounded-2xl p-5 shadow-xl flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
-            <Star className="w-6 h-6 fill-amber-400" />
+        <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-5 shadow-xs flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 flex items-center justify-center text-amber-500">
+            <Star className="w-6 h-6 fill-amber-500" />
           </div>
           <div>
-            <p className="text-[11px] font-mono uppercase tracking-wider text-zinc-400">Featured Hero Spotlights</p>
-            <p className="text-2xl font-black text-white mt-0.5">{featuredCount}</p>
+            <p className="text-[11px] font-mono uppercase tracking-wider text-slate-500 dark:text-zinc-400">Featured Hero Spotlights</p>
+            <p className="text-2xl font-black text-slate-900 dark:text-white mt-0.5">{featuredCount}</p>
           </div>
         </div>
       </div>

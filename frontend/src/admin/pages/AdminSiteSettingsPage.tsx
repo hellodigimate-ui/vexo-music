@@ -67,141 +67,141 @@ export const AdminSiteSettingsPage: React.FC = () => {
     <div className="max-w-4xl mx-auto space-y-6">
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Branding & SEO */}
-        <div className="bg-[#0e0e13] border border-zinc-800/80 rounded-2xl p-6 space-y-5">
-          <div className="border-b border-zinc-800/80 pb-4">
-            <h3 className="text-sm font-bold text-white tracking-wide">Brand & Identity</h3>
-            <p className="text-xs text-zinc-500">Global site title, meta descriptions, and legal copyright</p>
+        <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-6 space-y-5 shadow-sm dark:shadow-none">
+          <div className="border-b border-slate-200 dark:border-zinc-800/80 pb-4">
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white tracking-wide">Brand & Identity</h3>
+            <p className="text-xs text-slate-500 dark:text-zinc-500">Global site title, meta descriptions, and legal copyright</p>
           </div>
 
           <div className="space-y-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-mono font-medium text-zinc-300">PLATFORM / SITE NAME</label>
+              <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">PLATFORM / SITE NAME</label>
               <input
                 type="text"
                 value={formData.siteName || ''}
                 onChange={(e) => setFormData({ ...formData, siteName: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-xs text-white focus:border-vexo-red focus:outline-none"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:border-vexo-red focus:ring-1 focus:ring-vexo-red/20 focus:outline-none transition-all"
                 required
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-mono font-medium text-zinc-300">SITE DESCRIPTION / META SEO</label>
+              <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">SITE DESCRIPTION / META SEO</label>
               <textarea
                 rows={2}
                 value={formData.siteDescription || ''}
                 onChange={(e) => setFormData({ ...formData, siteDescription: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-xs text-white focus:border-vexo-red focus:outline-none resize-none"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:border-vexo-red focus:ring-1 focus:ring-vexo-red/20 focus:outline-none resize-none transition-all"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-mono font-medium text-zinc-300">COPYRIGHT NOTICE</label>
+              <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">COPYRIGHT NOTICE</label>
               <input
                 type="text"
                 value={formData.copyrightText || ''}
                 onChange={(e) => setFormData({ ...formData, copyrightText: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-xs text-white focus:border-vexo-red focus:outline-none"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:border-vexo-red focus:ring-1 focus:ring-vexo-red/20 focus:outline-none transition-all"
               />
             </div>
           </div>
         </div>
 
         {/* Corporate Contact Coordinates */}
-        <div className="bg-[#0e0e13] border border-zinc-800/80 rounded-2xl p-6 space-y-5">
-          <div className="border-b border-zinc-800/80 pb-4">
-            <h3 className="text-sm font-bold text-white tracking-wide">Studio Contact Coordinates</h3>
-            <p className="text-xs text-zinc-500">Headquarters address, official inquiries inbox, and dispatch hotline</p>
+        <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-6 space-y-5 shadow-sm dark:shadow-none">
+          <div className="border-b border-slate-200 dark:border-zinc-800/80 pb-4">
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white tracking-wide">Studio Contact Coordinates</h3>
+            <p className="text-xs text-slate-500 dark:text-zinc-500">Headquarters address, official inquiries inbox, and dispatch hotline</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-mono font-medium text-zinc-300">CONTACT INQUIRIES EMAIL</label>
+              <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">CONTACT INQUIRIES EMAIL</label>
               <input
                 type="email"
                 value={formData.contactEmail || ''}
                 onChange={(e) => setFormData({ ...formData, contactEmail: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-xs text-white focus:border-vexo-red focus:outline-none"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:border-vexo-red focus:ring-1 focus:ring-vexo-red/20 focus:outline-none transition-all"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-mono font-medium text-zinc-300">DISPATCH PHONE NUMBER</label>
+              <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">DISPATCH PHONE NUMBER</label>
               <input
                 type="text"
                 value={formData.contactPhone || ''}
                 onChange={(e) => setFormData({ ...formData, contactPhone: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-xs text-white focus:border-vexo-red focus:outline-none"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:border-vexo-red focus:ring-1 focus:ring-vexo-red/20 focus:outline-none transition-all"
               />
             </div>
 
             <div className="space-y-1.5 sm:col-span-2">
-              <label className="text-xs font-mono font-medium text-zinc-300">OFFICE / STUDIO ADDRESS</label>
+              <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">OFFICE / STUDIO ADDRESS</label>
               <input
                 type="text"
                 value={formData.officeAddress || ''}
                 onChange={(e) => setFormData({ ...formData, officeAddress: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-xs text-white focus:border-vexo-red focus:outline-none"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:border-vexo-red focus:ring-1 focus:ring-vexo-red/20 focus:outline-none transition-all"
               />
             </div>
           </div>
         </div>
 
         {/* Global Social Handles */}
-        <div className="bg-[#0e0e13] border border-zinc-800/80 rounded-2xl p-6 space-y-5">
-          <div className="border-b border-zinc-800/80 pb-4">
-            <h3 className="text-sm font-bold text-white tracking-wide">Label Social Profiles</h3>
-            <p className="text-xs text-zinc-500">Footer links and global brand channels</p>
+        <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-6 space-y-5 shadow-sm dark:shadow-none">
+          <div className="border-b border-slate-200 dark:border-zinc-800/80 pb-4">
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white tracking-wide">Label Social Profiles</h3>
+            <p className="text-xs text-slate-500 dark:text-zinc-500">Footer links and global brand channels</p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="space-y-1.5">
-              <label className="text-xs font-mono font-medium text-zinc-300">SPOTIFY PROFILE URL</label>
+              <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">SPOTIFY PROFILE URL</label>
               <input
                 type="url"
                 value={formData.socialSpotify || ''}
                 onChange={(e) => setFormData({ ...formData, socialSpotify: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-xs text-white focus:border-vexo-red focus:outline-none"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:border-vexo-red focus:ring-1 focus:ring-vexo-red/20 focus:outline-none transition-all"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-mono font-medium text-zinc-300">YOUTUBE CHANNEL URL</label>
+              <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">YOUTUBE CHANNEL URL</label>
               <input
                 type="url"
                 value={formData.socialYoutube || ''}
                 onChange={(e) => setFormData({ ...formData, socialYoutube: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-xs text-white focus:border-vexo-red focus:outline-none"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:border-vexo-red focus:ring-1 focus:ring-vexo-red/20 focus:outline-none transition-all"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-mono font-medium text-zinc-300">INSTAGRAM HANDLE / URL</label>
+              <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">INSTAGRAM HANDLE / URL</label>
               <input
                 type="url"
                 value={formData.socialInstagram || ''}
                 onChange={(e) => setFormData({ ...formData, socialInstagram: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-xs text-white focus:border-vexo-red focus:outline-none"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:border-vexo-red focus:ring-1 focus:ring-vexo-red/20 focus:outline-none transition-all"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-mono font-medium text-zinc-300">TWITTER / X PROFILE URL</label>
+              <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">TWITTER / X PROFILE URL</label>
               <input
                 type="url"
                 value={formData.socialTwitter || ''}
                 onChange={(e) => setFormData({ ...formData, socialTwitter: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-xs text-white focus:border-vexo-red focus:outline-none"
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:border-vexo-red focus:ring-1 focus:ring-vexo-red/20 focus:outline-none transition-all"
               />
             </div>
           </div>
         </div>
 
         {/* Maintenance Mode Toggle */}
-        <div className="bg-[#0e0e13] border border-zinc-800/80 rounded-2xl p-6 flex items-center justify-between">
+        <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-6 flex items-center justify-between shadow-sm dark:shadow-none">
           <div>
-            <h4 className="text-xs font-bold text-white uppercase tracking-wider">Maintenance Mode</h4>
-            <p className="text-xs text-zinc-500 mt-0.5">Toggle maintenance overlay across public website routes</p>
+            <h4 className="text-xs font-bold text-slate-900 dark:text-white uppercase tracking-wider">Maintenance Mode</h4>
+            <p className="text-xs text-slate-500 dark:text-zinc-500 mt-0.5">Toggle maintenance overlay across public website routes</p>
           </div>
 
           <label className="relative inline-flex items-center cursor-pointer">
@@ -211,7 +211,7 @@ export const AdminSiteSettingsPage: React.FC = () => {
               onChange={(e) => setFormData({ ...formData, maintenanceMode: e.target.checked })}
               className="sr-only peer"
             />
-            <div className="w-11 h-6 bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-vexo-red" />
+            <div className="w-11 h-6 bg-slate-200 dark:bg-zinc-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-vexo-red" />
           </label>
         </div>
 
@@ -220,7 +220,7 @@ export const AdminSiteSettingsPage: React.FC = () => {
           <button
             type="submit"
             disabled={isSaving}
-            className="px-8 py-3.5 rounded-xl bg-vexo-red hover:bg-red-600 text-white font-semibold text-xs tracking-wide shadow-lg shadow-red-950/60 flex items-center gap-2 transition-all cursor-pointer disabled:opacity-50"
+            className="px-8 py-3.5 rounded-xl bg-vexo-red hover:bg-red-600 text-white font-semibold text-xs tracking-wide shadow-lg shadow-red-950/40 flex items-center gap-2 transition-all cursor-pointer disabled:opacity-50"
           >
             <Save className="w-4 h-4" />
             <span>{isSaving ? 'Saving Settings...' : 'Update Global Settings'}</span>

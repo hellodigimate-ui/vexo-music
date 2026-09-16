@@ -257,7 +257,6 @@ html.light .apple-social-x:hover svg {
   min-height: 36px;
   max-height: 36px;
   border-radius: 9999px;
-  display: inline-flex;
   align-items: center;
   justify-content: center;
   background: rgba(255, 255, 255, 0.06);
@@ -378,48 +377,97 @@ html.light footer .text-vexo-muted {
 }
 
 /* ==========================================================================
-   CINEMATIC DARK STAGE PRESERVATION
-   (Hero Video, Featured Single Banner, YouTube Players)
+   CINEMATIC DARK STAGE & MODAL PRESERVATION
+   (Hero Video, Featured Single Banner, YouTube Players, Confirmation Modals)
    ========================================================================== */
 
-.cinematic-dark {
-  color: #ffffff !important;
-}
-
-section.cinematic-dark,
-div.cinematic-dark-bg {
+.cinematic-dark,
+html.light .cinematic-dark,
+div.cinematic-dark,
+section.cinematic-dark {
   background-color: #050505 !important;
+  color: #ffffff !important;
 }
 
 .cinematic-dark h1,
 .cinematic-dark h2,
 .cinematic-dark h3,
-.cinematic-dark h4 {
+.cinematic-dark h4,
+.cinematic-dark h5,
+.cinematic-dark h6,
+html.light .cinematic-dark h1,
+html.light .cinematic-dark h2,
+html.light .cinematic-dark h3,
+html.light .cinematic-dark h4,
+html.light .cinematic-dark h5,
+html.light .cinematic-dark h6 {
   color: #ffffff !important;
 }
 
-.cinematic-dark .text-white {
+.cinematic-dark p,
+html.light .cinematic-dark p {
+  color: #d1d5db !important;
+}
+
+.cinematic-dark .text-white,
+.cinematic-dark span.text-white,
+.cinematic-dark a.text-white,
+html.light .cinematic-dark .text-white,
+html.light .cinematic-dark span.text-white,
+html.light .cinematic-dark a.text-white {
   color: #ffffff !important;
 }
 
 .cinematic-dark .text-neutral-300,
-.cinematic-dark .text-zinc-300 {
+.cinematic-dark .text-zinc-300,
+html.light .cinematic-dark .text-neutral-300,
+html.light .cinematic-dark .text-zinc-300 {
   color: #d1d5db !important;
 }
 
-.cinematic-dark .text-vexo-muted {
+.cinematic-dark .text-neutral-400,
+.cinematic-dark .text-zinc-400,
+html.light .cinematic-dark .text-neutral-400,
+html.light .cinematic-dark .text-zinc-400 {
+  color: #a1a1aa !important;
+}
+
+.cinematic-dark .text-vexo-muted,
+html.light .cinematic-dark .text-vexo-muted {
   color: #9ca3af !important;
 }
 
-.cinematic-dark .bg-neutral-950\/80,
+.cinematic-dark div[class*="black"],
+.cinematic-dark div[class*="black/60"],
 .cinematic-dark .bg-black\/60,
-.cinematic-dark .bg-black\/70 {
+.cinematic-dark .bg-black\/70,
+html.light .cinematic-dark div[class*="black"],
+html.light .cinematic-dark div[class*="black/60"],
+html.light .cinematic-dark .bg-black\/60,
+html.light .cinematic-dark .bg-black\/70 {
   background-color: rgba(10, 10, 14, 0.85) !important;
-  border-color: rgba(255, 255, 255, 0.15) !important;
-  color: #e2e8f0 !important;
+  border-color: rgba(239, 68, 68, 0.35) !important;
+  color: #ffffff !important;
 }
 
-.cinematic-dark .bg-white\/5 {
+.cinematic-dark button[class*="zinc-900"],
+html.light .cinematic-dark button[class*="zinc-900"],
+.cinematic-dark button:not(.bg-vexo-red):not([class*="vexo-red"]) {
+  background-color: #18181b !important;
+  border-color: #27272a !important;
+  color: #e4e4e7 !important;
+}
+
+.cinematic-dark button.bg-vexo-red,
+.cinematic-dark [class*="bg-vexo-red"],
+html.light .cinematic-dark button.bg-vexo-red,
+html.light .cinematic-dark [class*="bg-vexo-red"] {
+  background-color: #E00000 !important;
+  color: #ffffff !important;
+}
+
+.cinematic-dark .bg-white\/5,
+html.light .cinematic-dark .bg-white\/5 {
   background-color: rgba(255, 255, 255, 0.06) !important;
   border-color: rgba(255, 255, 255, 0.12) !important;
 }
@@ -428,37 +476,240 @@ div.cinematic-dark-bg {
    ADMIN PANEL IN LIGHT MODE
    ========================================================================== */
 
+html.light .admin-root {
+  background-color: #f8fafc !important;
+  color: #09090b !important;
+}
+
 html.light aside {
   background-color: #ffffff !important;
   border-color: #e2e8f0 !important;
-  box-shadow: 2px 0 16px rgba(0, 0, 0, 0.04);
+  box-shadow: 1px 0 3px rgba(0, 0, 0, 0.03);
 }
 
-html.light aside a.text-vexo-red {
-  background-color: rgba(224, 0, 0, 0.08) !important;
+html.light aside a.nav-item-active,
+html.light aside a[class*="border-vexo-red"] {
+  background-color: rgba(224, 0, 0, 0.05) !important;
+  border-left: 2px solid #E00000 !important;
+  color: #09090b !important;
+  font-weight: 700 !important;
+}
+
+html.light aside a.nav-item-active svg,
+html.light aside a[class*="border-vexo-red"] svg {
   color: #E00000 !important;
 }
 
+html.light aside .text-white {
+  color: #09090b !important;
+}
+
+html.light aside .text-zinc-300,
+html.light aside .text-zinc-400 {
+  color: #475569 !important;
+}
+
 html.light .admin-topbar {
-  background-color: rgba(255, 255, 255, 0.95) !important;
+  background-color: rgba(255, 255, 255, 0.96) !important;
   border-color: #e2e8f0 !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.02);
 }
 
 html.light main {
-  background-color: #f8fafc;
+  background-color: #f8fafc !important;
+  color: #09090b !important;
+}
+
+/* Admin Cards, Panels & Containers in Light Mode */
+html.light .admin-root div[class*="0e0e13"]:not(.cinematic-dark):not(.cinematic-dark *),
+html.light .admin-root div[class*="0d0d12"]:not(.cinematic-dark):not(.cinematic-dark *),
+html.light .admin-root div[class*="0b0b0f"]:not(.cinematic-dark):not(.cinematic-dark *),
+html.light .admin-root div[class*="0c0c10"]:not(.cinematic-dark):not(.cinematic-dark *),
+html.light .admin-root div[class*="0a0a0d"]:not(.cinematic-dark):not(.cinematic-dark *),
+html.light .admin-root div[class*="0a0a0c"]:not(.cinematic-dark):not(.cinematic-dark *),
+html.light .admin-root div[class*="08080a"]:not(.cinematic-dark):not(.cinematic-dark *),
+html.light .admin-root div[class*="101016"]:not(.cinematic-dark):not(.cinematic-dark *),
+html.light .admin-root div[class*="121218"]:not(.cinematic-dark):not(.cinematic-dark *),
+html.light .admin-root div[class*="zinc-900"]:not(.cinematic-dark):not(.cinematic-dark *),
+html.light .admin-root div[class*="zinc-950"]:not(.cinematic-dark):not(.cinematic-dark *),
+html.light .admin-root div[class*="neutral-900"]:not(.cinematic-dark):not(.cinematic-dark *),
+html.light .admin-root div[class*="neutral-950"]:not(.cinematic-dark):not(.cinematic-dark *) {
+  background-color: #ffffff !important;
+  border-color: #e2e8f0 !important;
+  color: #09090b !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+}
+
+/* Admin Inactive Tab Pills & Secondary Buttons in Light Mode (excludes sidebar links) */
+html.light .admin-root button[class*="0e0e13"]:not(.cinematic-dark):not(.cinematic-dark *):not(.bg-vexo-red),
+html.light .admin-root button[class*="zinc-800"]:not(.cinematic-dark):not(.cinematic-dark *):not(.bg-vexo-red),
+html.light .admin-root button[class*="zinc-900"]:not(.cinematic-dark):not(.cinematic-dark *):not(.bg-vexo-red),
+html.light .admin-root button[class*="zinc-950"]:not(.cinematic-dark):not(.cinematic-dark *):not(.bg-vexo-red),
+html.light .admin-root button[class*="slate-800"]:not(.cinematic-dark):not(.cinematic-dark *):not(.bg-vexo-red),
+html.light .admin-root button[class*="slate-900"]:not(.cinematic-dark):not(.cinematic-dark *):not(.bg-vexo-red),
+html.light .admin-root a[class*="zinc-800"]:not(aside *):not(.admin-sidebar *):not(.cinematic-dark):not(.cinematic-dark *):not(.bg-vexo-red),
+html.light .admin-root a[class*="zinc-900"]:not(aside *):not(.admin-sidebar *):not(.cinematic-dark):not(.cinematic-dark *):not(.bg-vexo-red),
+html.light .admin-root a[class*="zinc-950"]:not(aside *):not(.admin-sidebar *):not(.cinematic-dark):not(.cinematic-dark *):not(.bg-vexo-red),
+html.light .admin-root a[class*="slate-800"]:not(aside *):not(.admin-sidebar *):not(.cinematic-dark):not(.cinematic-dark *):not(.bg-vexo-red),
+html.light .admin-root a[class*="slate-900"]:not(aside *):not(.admin-sidebar *):not(.cinematic-dark):not(.cinematic-dark *):not(.bg-vexo-red) {
+  background-color: #ffffff !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #334155 !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
+}
+
+html.light .admin-root button[class*="0e0e13"]:not(.cinematic-dark):not(.cinematic-dark *):not(.bg-vexo-red):hover,
+html.light .admin-root button[class*="zinc-800"]:not(.cinematic-dark):not(.cinematic-dark *):not(.bg-vexo-red):hover,
+html.light .admin-root button[class*="zinc-900"]:not(.cinematic-dark):not(.cinematic-dark *):not(.bg-vexo-red):hover,
+html.light .admin-root button[class*="zinc-950"]:not(.cinematic-dark):not(.cinematic-dark *):not(.bg-vexo-red):hover,
+html.light .admin-root button[class*="slate-800"]:not(.cinematic-dark):not(.cinematic-dark *):not(.bg-vexo-red):hover,
+html.light .admin-root button[class*="slate-900"]:not(.cinematic-dark):not(.cinematic-dark *):not(.bg-vexo-red):hover,
+html.light .admin-root a[class*="zinc-800"]:not(aside *):not(.admin-sidebar *):not(.cinematic-dark):not(.cinematic-dark *):not(.bg-vexo-red):hover,
+html.light .admin-root a[class*="zinc-900"]:not(aside *):not(.admin-sidebar *):not(.cinematic-dark):not(.cinematic-dark *):not(.bg-vexo-red):hover,
+html.light .admin-root a[class*="zinc-950"]:not(aside *):not(.admin-sidebar *):not(.cinematic-dark):not(.cinematic-dark *):not(.bg-vexo-red):hover,
+html.light .admin-root a[class*="slate-800"]:not(aside *):not(.admin-sidebar *):not(.cinematic-dark):not(.cinematic-dark *):not(.bg-vexo-red):hover,
+html.light .admin-root a[class*="slate-900"]:not(aside *):not(.admin-sidebar *):not(.cinematic-dark):not(.cinematic-dark *):not(.bg-vexo-red):hover {
+  background-color: #f1f5f9 !important;
+  color: #09090b !important;
+  border-color: #cbd5e1 !important;
+}
+
+/* Specific Sidebar Navigation Link Overrides (Light Mode) */
+html.light aside a:not(.nav-item-active):not([class*="Public Site"]),
+html.light .admin-sidebar a:not(.nav-item-active) {
+  background-color: transparent !important;
+  border: 1px solid transparent !important;
+  box-shadow: none !important;
+  color: #475569 !important;
+}
+
+html.light aside a:not(.nav-item-active):hover,
+html.light .admin-sidebar a:not(.nav-item-active):hover {
+  background-color: #f1f5f9 !important;
+  border-color: transparent !important;
+  color: #09090b !important;
+}
+
+html.light aside a.nav-item-active,
+html.light .admin-sidebar a.nav-item-active {
+  background: #fef2f2 !important;
+  border: 1px solid rgba(224, 0, 0, 0.15) !important;
+  color: #09090b !important;
+  box-shadow: 0 1px 3px rgba(224, 0, 0, 0.06) !important;
+}
+
+/* Badges, Chips & Pills in Light Mode (e.g. System, Live, Category Pills) */
+html.light .admin-root span[class*="bg-zinc-800"]:not(.cinematic-dark *):not([class*="text-white"]),
+html.light .admin-root span[class*="bg-zinc-900"]:not(.cinematic-dark *):not([class*="text-white"]),
+html.light .admin-root span[class*="bg-zinc-950"]:not(.cinematic-dark *):not([class*="text-white"]),
+html.light .admin-root span[class*="bg-neutral-800"]:not(.cinematic-dark *):not([class*="text-white"]),
+html.light .admin-root span[class*="bg-neutral-900"]:not(.cinematic-dark *):not([class*="text-white"]),
+html.light .admin-root span[class*="bg-slate-800"]:not(.cinematic-dark *):not([class*="text-white"]),
+html.light .admin-root span[class*="bg-slate-900"]:not(.cinematic-dark *):not([class*="text-white"]) {
+  background-color: #f1f5f9 !important;
+  border: 1px solid #e2e8f0 !important;
+  color: #334155 !important;
+}
+
+/* Status Badges in Light Mode */
+html.light .admin-root [class*="bg-emerald-950"]:not(.cinematic-dark *),
+html.light .admin-root [class*="bg-emerald-900"]:not(.cinematic-dark *) {
+  background-color: #ecfdf5 !important;
+  border: 1px solid #a7f3d0 !important;
+  color: #047857 !important;
+}
+
+html.light .admin-root [class*="bg-red-950"]:not(.cinematic-dark *),
+html.light .admin-root [class*="bg-red-900"]:not(.cinematic-dark *) {
+  background-color: #fef2f2 !important;
+  border: 1px solid #fecaca !important;
+  color: #b91c1c !important;
+}
+
+html.light .admin-root [class*="bg-amber-950"]:not(.cinematic-dark *),
+html.light .admin-root [class*="bg-amber-900"]:not(.cinematic-dark *) {
+  background-color: #fffbeb !important;
+  border: 1px solid #fde68a !important;
+  color: #b45309 !important;
+}
+
+html.light .admin-root [class*="bg-indigo-950"]:not(.cinematic-dark *),
+html.light .admin-root [class*="bg-indigo-900"]:not(.cinematic-dark *),
+html.light .admin-root [class*="bg-sky-950"]:not(.cinematic-dark *),
+html.light .admin-root [class*="bg-sky-900"]:not(.cinematic-dark *),
+html.light .admin-root [class*="bg-blue-950"]:not(.cinematic-dark *),
+html.light .admin-root [class*="bg-blue-900"]:not(.cinematic-dark *) {
+  background-color: #f0f9ff !important;
+  border: 1px solid #bae6fd !important;
+  color: #0369a1 !important;
+}
+
+/* Admin Borders in Light Mode */
+html.light .admin-root [class*="border-zinc-800"]:not(.cinematic-dark):not(.cinematic-dark *),
+html.light .admin-root [class*="border-zinc-700"]:not(.cinematic-dark):not(.cinematic-dark *),
+html.light .admin-root [class*="border-white"]:not(.cinematic-dark):not(.cinematic-dark *) {
+  border-color: #e2e8f0 !important;
+}
+
+/* Clean Button Shadows in Light Mode (Replace pitch-black shadows) */
+html.light .admin-root [class*="shadow-red-950"],
+html.light .admin-root [class*="shadow-red-900"] {
+  --tw-shadow-color: rgba(224, 0, 0, 0.25) !important;
+  box-shadow: 0 4px 14px rgba(224, 0, 0, 0.22) !important;
+}
+
+/* Admin Typography & Labels in Light Mode */
+html.light .admin-root label:not(.cinematic-dark *),
+html.light .admin-root [class*="text-zinc-300"]:not(.cinematic-dark *),
+html.light .admin-root [class*="text-zinc-400"]:not(.cinematic-dark *) {
+  color: #475569 !important;
+}
+
+html.light .admin-root [class*="text-zinc-500"]:not(.cinematic-dark *) {
+  color: #64748b !important;
+}
+
+html.light .admin-root [class*="text-zinc-100"]:not(.cinematic-dark *),
+html.light .admin-root [class*="text-zinc-200"]:not(.cinematic-dark *),
+html.light .admin-root h1:not(.cinematic-dark *),
+html.light .admin-root h2:not(.cinematic-dark *),
+html.light .admin-root h3:not(.cinematic-dark *),
+html.light .admin-root h4:not(.cinematic-dark *),
+html.light .admin-root strong:not(.cinematic-dark *),
+html.light .admin-root .text-white:not(.cinematic-dark *):not([class*="bg-vexo-red"] *):not(.bg-vexo-red) {
+  color: #09090b !important;
+}
+
+/* Active Red CTA / Buttons stay red with pure white text (excluding semi-transparent / opacity variants) */
+html.light .admin-root .bg-vexo-red:not([class*="/"]):not([class*="hover:"]),
+html.light .admin-root button.bg-vexo-red:not([class*="/"]):not([class*="hover:"]),
+html.light .admin-root a.bg-vexo-red:not([class*="/"]):not([class*="hover:"]) {
+  background-color: #E00000 !important;
+  color: #ffffff !important;
+  border-color: #E00000 !important;
+}
+
+html.light .admin-root .bg-vexo-red:not([class*="/"]):not([class*="hover:"]) *,
+html.light .admin-root button.bg-vexo-red:not([class*="/"]):not([class*="hover:"]) *,
+html.light .admin-root a.bg-vexo-red:not([class*="/"]):not([class*="hover:"]) * {
+  color: #ffffff !important;
 }
 
 html.light table thead {
-  background-color: #f1f5f9 !important;
-  border-color: #e2e8f0 !important;
+  background-color: #f8fafc !important;
+  border-bottom: 1px solid #e2e8f0 !important;
 }
 
 html.light table thead th {
   color: #475569 !important;
+  font-size: 11px !important;
+  text-transform: uppercase !important;
+  letter-spacing: 0.05em !important;
 }
 
 html.light table tbody tr {
-  border-color: #f1f5f9 !important;
+  background-color: #ffffff !important;
+  border-bottom: 1px solid #f1f5f9 !important;
 }
 
 html.light table tbody tr:hover {
@@ -470,7 +721,8 @@ html.light textarea,
 html.light select {
   background-color: #ffffff !important;
   color: #09090b !important;
-  border-color: #cbd5e1 !important;
+  border: 1px solid #e2e8f0 !important;
+  box-shadow: 0 1px 2px rgba(0, 0, 0, 0.03) !important;
 }
 
 html.light input.apple-search-input {
@@ -486,12 +738,13 @@ html.light input:not([type="checkbox"]):not([type="radio"]):not(.apple-search-in
 html.light textarea:focus,
 html.light select:focus {
   border-color: #E00000 !important;
-  box-shadow: 0 0 0 2px rgba(224, 0, 0, 0.18) !important;
+  outline: none !important;
+  box-shadow: 0 0 0 1.5px #E00000 !important;
 }
 
 html.light input::placeholder,
 html.light textarea::placeholder {
-  color: #94a3b8 !important;
+  color: #64748b !important;
 }
 
 /* Scrollbars in Light Mode */

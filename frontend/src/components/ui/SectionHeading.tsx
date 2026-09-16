@@ -43,7 +43,7 @@ export const SectionHeading: React.FC<SectionHeadingProps> = ({
           <div className="w-1.5 h-7 bg-gradient-to-b from-vexo-red-bright to-vexo-red rounded-full shrink-0" />
           <h2
             className={cn(
-              'text-2xl sm:text-3xl font-extrabold tracking-tight text-white',
+              'text-2xl sm:text-3xl font-extrabold tracking-tight text-slate-950 dark:text-white',
               titleClassName
             )}
           >

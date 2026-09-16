@@ -75,11 +75,11 @@ export const AdminUsersPage: React.FC = () => {
     <div className="space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h2 className="text-sm font-bold text-white tracking-wide flex items-center gap-2">
+          <h2 className="text-sm font-bold text-slate-900 dark:text-white tracking-wide flex items-center gap-2">
             <ShieldCheck className="w-4 h-4 text-vexo-red" />
             <span>Administrator Directory & Role-Based Access</span>
           </h2>
-          <p className="text-xs text-zinc-500">Only Super Administrators can create or deactivate accounts</p>
+          <p className="text-xs text-slate-500 dark:text-zinc-500">Only Super Administrators can create or deactivate accounts</p>
         </div>
 
         <button
@@ -87,20 +87,20 @@ export const AdminUsersPage: React.FC = () => {
             setFormData({ email: '', name: '', password: '', role: 'ADMIN' });
             setIsModalOpen(true);
           }}
-          className="px-4 py-2.5 rounded-xl bg-vexo-red hover:bg-red-600 text-xs font-semibold text-white shadow-lg shadow-red-950/60 flex items-center justify-center gap-2 transition-colors cursor-pointer"
+          className="px-4 py-2.5 rounded-xl bg-vexo-red hover:bg-red-600 text-xs font-semibold text-white shadow-lg shadow-red-950/40 flex items-center justify-center gap-2 transition-colors cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           <span>Add Administrator</span>
         </button>
       </div>
 
-      <div className="bg-[#0e0e13] border border-zinc-800/80 rounded-2xl overflow-hidden">
+      <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl overflow-hidden shadow-sm dark:shadow-none">
         {isLoading ? (
-          <div className="py-20 text-center text-xs font-mono text-zinc-500">LOADING USERS...</div>
+          <div className="py-20 text-center text-xs font-mono text-slate-400 dark:text-zinc-500">LOADING USERS...</div>
         ) : (
           <div className="overflow-x-auto">
             <table className="w-full text-left text-xs">
-              <thead className="bg-[#121218] border-b border-zinc-800/80 text-[10px] font-mono uppercase tracking-widest text-zinc-400">
+              <thead className="bg-slate-50 dark:bg-[#121218] border-b border-slate-200 dark:border-zinc-800/80 text-[10px] font-mono uppercase tracking-widest text-slate-500 dark:text-zinc-400">
                 <tr>
                   <th className="py-3.5 px-6">Admin Name & Email</th>
                   <th className="py-3.5 px-6">Role</th>
@@ -109,17 +109,17 @@ export const AdminUsersPage: React.FC = () => {
                   <th className="py-3.5 px-6 text-right">Access Control</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-800/60">
+              <tbody className="divide-y divide-slate-200 dark:divide-zinc-800/60">
                 {users.map((user) => (
-                  <tr key={user.id} className="hover:bg-zinc-900/40 transition-colors">
+                  <tr key={user.id} className="hover:bg-slate-50/80 dark:hover:bg-zinc-900/40 transition-colors">
                     <td className="py-4 px-6">
                       <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-xl bg-zinc-800 border border-zinc-700 font-bold font-mono text-xs flex items-center justify-center text-white">
+                        <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 font-bold font-mono text-xs flex items-center justify-center text-slate-900 dark:text-white">
                           {user.name?.[0] || 'A'}
                         </div>
                         <div>
-                          <p className="font-bold text-white text-xs">{user.name}</p>
-                          <p className="text-[11px] text-zinc-500">{user.email}</p>
+                          <p className="font-bold text-slate-900 dark:text-white text-xs">{user.name}</p>
+                          <p className="text-[11px] text-slate-500 dark:text-zinc-500">{user.email}</p>
                         </div>
                       </div>
                     </td>
@@ -128,10 +128,10 @@ export const AdminUsersPage: React.FC = () => {
                       <span
                         className={`px-2.5 py-1 rounded-md text-[10px] font-mono font-bold uppercase ${
                           user.role === 'SUPER_ADMIN'
-                            ? 'bg-red-950/80 border border-red-800 text-red-300'
+                            ? 'bg-red-50 text-red-700 border border-red-200 dark:bg-red-950/80 dark:border-red-800 dark:text-red-300'
                             : user.role === 'ADMIN'
-                            ? 'bg-amber-950/80 border border-amber-800 text-amber-300'
-                            : 'bg-zinc-800 border border-zinc-700 text-zinc-300'
+                            ? 'bg-amber-50 text-amber-700 border border-amber-200 dark:bg-amber-950/80 dark:border-amber-800 dark:text-amber-300'
+                            : 'bg-slate-100 text-slate-700 border border-slate-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-300'
                         }`}
                       >
                         {user.role}
@@ -142,15 +142,15 @@ export const AdminUsersPage: React.FC = () => {
                       <span
                         className={`text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded-full ${
                           user.isActive
-                            ? 'bg-emerald-950 border border-emerald-800 text-emerald-400'
-                            : 'bg-zinc-800 border border-zinc-700 text-zinc-400'
+                            ? 'bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950 dark:border-emerald-800 dark:text-emerald-400'
+                            : 'bg-slate-100 text-slate-600 border border-slate-200 dark:bg-zinc-800 dark:border-zinc-700 dark:text-zinc-400'
                         }`}
                       >
                         {user.isActive ? 'Active' : 'Deactivated'}
                       </span>
                     </td>
 
-                    <td className="py-4 px-6 font-mono text-zinc-400 text-[11px]">
+                    <td className="py-4 px-6 font-mono text-slate-500 dark:text-zinc-400 text-[11px]">
                       {user.lastLoginAt
                         ? new Date(user.lastLoginAt).toLocaleDateString('en-GB', {
                             day: 'numeric',
@@ -168,8 +168,8 @@ export const AdminUsersPage: React.FC = () => {
                           onClick={() => setStatusTarget({ id: user.id, name: user.name, active: user.isActive })}
                           className={`px-3 py-1 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
                             user.isActive
-                              ? 'bg-red-950/60 hover:bg-red-900 border border-red-800 text-red-300'
-                              : 'bg-emerald-950/60 hover:bg-emerald-900 border border-emerald-800 text-emerald-300'
+                              ? 'bg-red-50 hover:bg-red-100 border border-red-200 text-red-700 dark:bg-red-950/60 dark:hover:bg-red-900 dark:border-red-800 dark:text-red-300'
+                              : 'bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 dark:bg-emerald-950/60 dark:hover:bg-emerald-900 dark:border-emerald-800 dark:text-emerald-300'
                           }`}
                         >
                           {user.isActive ? 'Deactivate' : 'Reactivate'}
@@ -194,47 +194,47 @@ export const AdminUsersPage: React.FC = () => {
       >
         <form onSubmit={handleCreateUser} className="space-y-4">
           <div className="space-y-1.5">
-            <label className="text-xs font-mono font-medium text-zinc-300">FULL NAME *</label>
+            <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">FULL NAME *</label>
             <input
               type="text"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               placeholder="e.g. Maya Lin"
-              className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-xs text-white focus:border-vexo-red focus:outline-none"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:border-vexo-red focus:ring-1 focus:ring-vexo-red/20 focus:outline-none"
               required
             />
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-mono font-medium text-zinc-300">EMAIL ADDRESS *</label>
+            <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">EMAIL ADDRESS *</label>
             <input
               type="email"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               placeholder="maya@vexomusic.com"
-              className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-xs text-white focus:border-vexo-red focus:outline-none"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:border-vexo-red focus:ring-1 focus:ring-vexo-red/20 focus:outline-none"
               required
             />
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-mono font-medium text-zinc-300">TEMPORARY PASSWORD *</label>
+            <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">TEMPORARY PASSWORD *</label>
             <input
               type="password"
               value={formData.password}
               onChange={(e) => setFormData({ ...formData, password: e.target.value })}
               placeholder="••••••••"
-              className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-xs text-white focus:border-vexo-red focus:outline-none"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:border-vexo-red focus:ring-1 focus:ring-vexo-red/20 focus:outline-none"
               required
             />
           </div>
 
           <div className="space-y-1.5">
-            <label className="text-xs font-mono font-medium text-zinc-300">ROLE PRIVILEGES</label>
+            <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">ROLE PRIVILEGES</label>
             <select
               value={formData.role}
               onChange={(e) => setFormData({ ...formData, role: e.target.value })}
-              className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-800 text-xs text-white focus:border-vexo-red focus:outline-none"
+              className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white focus:border-vexo-red focus:ring-1 focus:ring-vexo-red/20 focus:outline-none cursor-pointer"
             >
               <option value="ADMIN">ADMIN — Full CMS Access (Artists, Music, Events, Videos, Inquiries)</option>
               <option value="EDITOR">EDITOR — Content Authoring Only</option>
@@ -242,18 +242,18 @@ export const AdminUsersPage: React.FC = () => {
             </select>
           </div>
 
-          <div className="flex items-center justify-end gap-3 pt-4 border-t border-zinc-800">
+          <div className="flex items-center justify-end gap-3 pt-4 border-t border-slate-200 dark:border-zinc-800">
             <button
               type="button"
               onClick={() => setIsModalOpen(false)}
-              className="px-4 py-2 rounded-xl bg-zinc-900 text-xs text-zinc-400 hover:text-white"
+              className="px-4 py-2 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 text-xs text-slate-700 dark:text-zinc-400 transition-colors cursor-pointer"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isSubmitting}
-              className="px-6 py-2 rounded-xl bg-vexo-red hover:bg-red-600 text-xs font-semibold text-white cursor-pointer"
+              className="px-6 py-2 rounded-xl bg-vexo-red hover:bg-red-600 text-xs font-semibold text-white cursor-pointer transition-colors"
             >
               {isSubmitting ? 'Creating...' : 'Provision Admin Account'}
             </button>

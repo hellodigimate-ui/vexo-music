@@ -17,12 +17,12 @@ export const AdminTopbar: React.FC<AdminTopbarProps> = ({
   const { user } = useAdminAuth();
 
   return (
-    <header className="admin-topbar h-14 px-4 lg:px-6 border-b border-zinc-800/80 bg-[#08080a]/90 backdrop-blur-md sticky top-0 z-30 flex items-center justify-between">
+    <header className="admin-topbar h-14 px-4 lg:px-6 border-b border-slate-200 dark:border-zinc-800/80 bg-white/90 dark:bg-[#08080a]/90 backdrop-blur-md sticky top-0 z-30 flex items-center justify-between transition-colors duration-300">
       {/* Left: Mobile Toggle & Page Title */}
       <div className="flex items-center gap-3">
         <button
           onClick={onToggleSidebar}
-          className="lg:hidden p-1.5 rounded-lg text-zinc-400 hover:text-white hover:bg-zinc-800 transition-colors cursor-pointer"
+          className="lg:hidden p-1.5 rounded-lg text-slate-500 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
           aria-label="Toggle navigation menu"
         >
           <Menu className="w-5 h-5" />
@@ -30,11 +30,11 @@ export const AdminTopbar: React.FC<AdminTopbarProps> = ({
 
         {title && (
           <div>
-            <h1 className="text-sm font-bold text-white tracking-wide flex items-center gap-2">
+            <h1 className="text-sm font-bold text-slate-900 dark:text-white tracking-wide flex items-center gap-2">
               <Music2 className="w-3.5 h-3.5 text-vexo-red" />
               <span>{title}</span>
             </h1>
-            {subtitle && <p className="text-[11px] text-zinc-400 hidden sm:block">{subtitle}</p>}
+            {subtitle && <p className="text-[11px] text-slate-500 dark:text-zinc-400 hidden sm:block">{subtitle}</p>}
           </div>
         )}
       </div>
@@ -45,7 +45,7 @@ export const AdminTopbar: React.FC<AdminTopbarProps> = ({
         <MusicThemeToggle variant="compact" />
 
         {/* Studio Status Indicator */}
-        <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-red-950/40 border border-red-800/40 text-[10px] font-mono text-red-400">
+        <div className="hidden sm:flex items-center gap-2 px-3 py-1 rounded-full bg-red-50 dark:bg-red-950/40 border border-red-200 dark:border-red-800/40 text-[10px] font-mono text-vexo-red dark:text-red-400">
           <Radio className="w-3 h-3 text-vexo-red animate-pulse" />
           <span className="font-semibold tracking-wider uppercase">STUDIO CONSOLE &bull; LIVE</span>
         </div>
@@ -55,20 +55,20 @@ export const AdminTopbar: React.FC<AdminTopbarProps> = ({
           href="/"
           target="_blank"
           rel="noopener noreferrer"
-          className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-[11px] text-zinc-400 hover:text-white transition-colors"
+          className="hidden md:flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-white dark:bg-zinc-900 hover:bg-slate-100 dark:hover:bg-zinc-800 border border-slate-200 dark:border-zinc-800 text-[11px] text-slate-700 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-white transition-colors shadow-xs"
         >
           <ExternalLink className="w-3 h-3" />
           <span>Live Site</span>
         </a>
 
         {/* User Pill */}
-        <div className="flex items-center gap-2 pl-2 sm:border-l border-zinc-800">
-          <div className="w-7 h-7 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center text-xs font-bold text-vexo-red font-mono">
+        <div className="flex items-center gap-2 pl-2 sm:border-l border-slate-200 dark:border-zinc-800">
+          <div className="w-7 h-7 rounded-lg bg-red-50 dark:bg-zinc-900 border border-red-100 dark:border-zinc-800 flex items-center justify-center text-xs font-bold text-vexo-red font-mono">
             <Disc3 className="w-3.5 h-3.5 text-vexo-red" />
           </div>
           <div className="hidden md:block text-left">
-            <p className="text-[11px] font-semibold text-zinc-200">{user?.name || 'VEXO Admin'}</p>
-            <p className="text-[9px] text-zinc-500 font-mono">{user?.email || 'admin@vexomusic.com'}</p>
+            <p className="text-[11px] font-semibold text-slate-900 dark:text-zinc-200">{user?.name || 'VEXO Admin'}</p>
+            <p className="text-[9px] text-slate-500 dark:text-zinc-500 font-mono">{user?.email || 'admin@vexomusic.com'}</p>
           </div>
         </div>
       </div>

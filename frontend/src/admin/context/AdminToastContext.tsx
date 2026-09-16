@@ -76,13 +76,13 @@ export const AdminToastProvider: React.FC<{ children: React.ReactNode }> = ({ ch
             const isError = t.type === 'error';
             const isWarning = t.type === 'warning';
 
-            const accentColor = isSuccess
-              ? 'text-emerald-400 border-emerald-500/40 bg-emerald-500/10 shadow-[0_0_25px_rgba(16,185,129,0.25)]'
+            const accentBorder = isSuccess
+              ? 'border-emerald-200 dark:border-emerald-500/40 shadow-emerald-500/10 dark:shadow-[0_0_25px_rgba(16,185,129,0.25)]'
               : isError
-              ? 'text-vexo-red-bright border-red-500/50 bg-red-500/10 shadow-[0_0_25px_rgba(224,0,0,0.35)]'
+              ? 'border-red-200 dark:border-red-500/50 shadow-red-500/10 dark:shadow-[0_0_25px_rgba(224,0,0,0.35)]'
               : isWarning
-              ? 'text-amber-400 border-amber-500/40 bg-amber-500/10 shadow-[0_0_25px_rgba(245,158,11,0.25)]'
-              : 'text-sky-400 border-sky-500/40 bg-sky-500/10 shadow-[0_0_25px_rgba(56,189,248,0.25)]';
+              ? 'border-amber-200 dark:border-amber-500/40 shadow-amber-500/10 dark:shadow-[0_0_25px_rgba(245,158,11,0.25)]'
+              : 'border-sky-200 dark:border-sky-500/40 shadow-sky-500/10 dark:shadow-[0_0_25px_rgba(56,189,248,0.25)]';
 
             const progressBarColor = isSuccess
               ? 'bg-gradient-to-r from-emerald-500 to-emerald-400'
@@ -111,38 +111,38 @@ export const AdminToastProvider: React.FC<{ children: React.ReactNode }> = ({ ch
                   stiffness: 350,
                   mass: 0.8,
                 }}
-                className={`pointer-events-auto relative overflow-hidden flex items-start gap-3.5 p-4 rounded-2xl border backdrop-blur-2xl bg-gradient-to-b from-[#14141f]/95 via-[#0d0d14]/95 to-[#060609]/95 text-white shadow-2xl ${accentColor}`}
+                className={`pointer-events-auto relative overflow-hidden flex items-start gap-3.5 p-4 rounded-2xl border backdrop-blur-2xl bg-white/98 dark:bg-gradient-to-b dark:from-[#14141f]/95 dark:via-[#0d0d14]/95 dark:to-[#060609]/95 text-slate-900 dark:text-white shadow-xl dark:shadow-2xl ${accentBorder}`}
               >
                 {/* Left Subtle Glow Bar */}
                 <div
                   className={`absolute left-0 top-3 bottom-3 w-1 rounded-r-full ${
                     isSuccess
-                      ? 'bg-emerald-400 shadow-[0_0_10px_#34d399]'
+                      ? 'bg-emerald-500 dark:bg-emerald-400 shadow-[0_0_8px_rgba(16,185,129,0.5)]'
                       : isError
-                      ? 'bg-vexo-red-bright shadow-[0_0_10px_#FF1111]'
+                      ? 'bg-vexo-red dark:bg-vexo-red-bright shadow-[0_0_8px_rgba(224,0,0,0.5)]'
                       : isWarning
-                      ? 'bg-amber-400 shadow-[0_0_10px_#fbbf24]'
-                      : 'bg-sky-400 shadow-[0_0_10px_#38bdf8]'
+                      ? 'bg-amber-500 dark:bg-amber-400 shadow-[0_0_8px_rgba(245,158,11,0.5)]'
+                      : 'bg-sky-500 dark:bg-sky-400 shadow-[0_0_8px_rgba(56,189,248,0.5)]'
                   }`}
                 />
 
                 {/* Animated Music Icon */}
                 <div className="shrink-0 mt-0.5 pl-1">
                   {isSuccess ? (
-                    <div className="w-6 h-6 rounded-full bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center">
-                      <CheckCircle2 className="w-4 h-4 text-emerald-400" />
+                    <div className="w-6 h-6 rounded-full bg-emerald-50 dark:bg-emerald-500/20 border border-emerald-200 dark:border-emerald-500/40 flex items-center justify-center">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600 dark:text-emerald-400" />
                     </div>
                   ) : isError ? (
-                    <div className="w-6 h-6 rounded-full bg-red-500/20 border border-red-500/40 flex items-center justify-center">
-                      <AlertCircle className="w-4 h-4 text-vexo-red-bright animate-pulse" />
+                    <div className="w-6 h-6 rounded-full bg-red-50 dark:bg-red-500/20 border border-red-200 dark:border-red-500/40 flex items-center justify-center">
+                      <AlertCircle className="w-4 h-4 text-vexo-red dark:text-vexo-red-bright animate-pulse" />
                     </div>
                   ) : isWarning ? (
-                    <div className="w-6 h-6 rounded-full bg-amber-500/20 border border-amber-500/40 flex items-center justify-center">
-                      <AlertTriangle className="w-4 h-4 text-amber-400" />
+                    <div className="w-6 h-6 rounded-full bg-amber-50 dark:bg-amber-500/20 border border-amber-200 dark:border-amber-500/40 flex items-center justify-center">
+                      <AlertTriangle className="w-4 h-4 text-amber-600 dark:text-amber-400" />
                     </div>
                   ) : (
-                    <div className="w-6 h-6 rounded-full bg-sky-500/20 border border-sky-500/40 flex items-center justify-center">
-                      <Disc3 className="w-4 h-4 text-sky-400 animate-[spin_6s_linear_infinite]" />
+                    <div className="w-6 h-6 rounded-full bg-sky-50 dark:bg-sky-500/20 border border-sky-200 dark:border-sky-500/40 flex items-center justify-center">
+                      <Disc3 className="w-4 h-4 text-sky-600 dark:text-sky-400 animate-[spin_6s_linear_infinite]" />
                     </div>
                   )}
                 </div>
@@ -150,12 +150,12 @@ export const AdminToastProvider: React.FC<{ children: React.ReactNode }> = ({ ch
                 {/* Content */}
                 <div className="flex-1 min-w-0 pr-1">
                   <div className="flex items-center gap-1.5">
-                    <p className="text-xs font-black uppercase tracking-wider text-white">
+                    <p className="text-xs font-black uppercase tracking-wider text-slate-900 dark:text-white">
                       {t.title}
                     </p>
                   </div>
                   {t.message && (
-                    <p className="text-[11px] text-zinc-300/90 mt-1 leading-relaxed break-words font-sans">
+                    <p className="text-[11px] text-slate-600 dark:text-zinc-300/90 mt-1 leading-relaxed break-words font-sans">
                       {t.message}
                     </p>
                   )}
@@ -164,7 +164,7 @@ export const AdminToastProvider: React.FC<{ children: React.ReactNode }> = ({ ch
                 {/* Dismiss Close Button */}
                 <button
                   onClick={() => removeToast(t.id)}
-                  className="p-1 rounded-lg text-zinc-400 hover:text-white hover:bg-white/10 transition-colors shrink-0 cursor-pointer"
+                  className="p-1 rounded-lg text-slate-400 hover:text-slate-900 hover:bg-slate-100 dark:text-zinc-400 dark:hover:text-white dark:hover:bg-white/10 transition-colors shrink-0 cursor-pointer"
                 >
                   <X className="w-3.5 h-3.5" />
                 </button>

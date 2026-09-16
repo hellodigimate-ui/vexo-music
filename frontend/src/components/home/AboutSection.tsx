@@ -112,19 +112,19 @@ export const AboutSection: React.FC = () => {
           )}
 
           {/* Feature Highlights */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 pt-4 border-t border-white/10">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8 pt-4 border-t border-slate-200 dark:border-white/10">
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-lg bg-vexo-red/10 text-vexo-red-bright border border-vexo-red/20">
                 <ShieldCheck className="w-4 h-4" />
               </div>
-              <span className="text-xs font-bold text-white">100% Original Music</span>
+              <span className="text-xs font-bold text-slate-900 dark:text-white">100% Original Music</span>
             </div>
 
             <div className="flex items-center gap-3">
               <div className="p-2 rounded-lg bg-vexo-red/10 text-vexo-red-bright border border-vexo-red/20">
                 <Disc className="w-4 h-4" />
               </div>
-              <span className="text-xs font-bold text-white">Global Distribution</span>
+              <span className="text-xs font-bold text-slate-900 dark:text-white">Global Distribution</span>
             </div>
           </div>
 

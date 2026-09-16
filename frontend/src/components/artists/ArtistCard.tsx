@@ -32,7 +32,7 @@ export const ArtistCard: React.FC<ArtistCardProps> = ({ artist, className }) => 
   return (
     <div
       className={cn(
-        'group relative bg-gradient-to-b from-[#15151e] via-[#0c0c11] to-[#050507] border border-white/10 rounded-2xl overflow-hidden aspect-[3/4] transition-all duration-500 hover:border-vexo-red/60 hover:shadow-[0_0_40px_rgba(224,0,0,0.4)] flex flex-col justify-between p-6 select-none',
+        'cinematic-dark group relative bg-gradient-to-b from-[#15151e] via-[#0c0c11] to-[#050507] border border-white/10 rounded-2xl overflow-hidden aspect-[3/4] transition-all duration-500 hover:border-vexo-red/60 hover:shadow-[0_0_40px_rgba(224,0,0,0.4)] flex flex-col justify-between p-6 select-none',
         className
       )}
     >

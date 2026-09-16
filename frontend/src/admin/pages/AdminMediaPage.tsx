@@ -219,74 +219,74 @@ export const AdminMediaPage: React.FC = () => {
     <div className="space-y-6">
       {/* Overview Stats Badges */}
       <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-5 gap-3.5">
-        <div className="p-4 rounded-2xl bg-[#0e0e13] border border-zinc-800/80 flex items-center justify-between">
+        <div className="p-4 rounded-2xl bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 shadow-xs flex items-center justify-between transition-colors">
           <div>
-            <p className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">Total Assets</p>
-            <p className="text-xl font-bold text-white mt-0.5">{totalAssets}</p>
+            <p className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-zinc-400 font-semibold">Total Assets</p>
+            <p className="text-xl font-bold font-mono text-slate-900 dark:text-white mt-0.5">{totalAssets}</p>
           </div>
-          <div className="p-2.5 rounded-xl bg-zinc-800/60 text-zinc-300">
+          <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-zinc-800/60 text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-transparent">
             <HardDrive className="w-4 h-4" />
           </div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-[#0e0e13] border border-zinc-800/80 flex items-center justify-between">
+        <div className="p-4 rounded-2xl bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 shadow-xs flex items-center justify-between transition-colors">
           <div>
-            <p className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">Images</p>
-            <p className="text-xl font-bold text-emerald-400 mt-0.5">{imageCount}</p>
+            <p className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-zinc-400 font-semibold">Images</p>
+            <p className="text-xl font-bold font-mono text-emerald-600 dark:text-emerald-400 mt-0.5">{imageCount}</p>
           </div>
-          <div className="p-2.5 rounded-xl bg-emerald-950/40 text-emerald-400 border border-emerald-900/40">
+          <div className="p-2.5 rounded-xl bg-emerald-50 text-emerald-600 border border-emerald-200 dark:bg-emerald-950/40 dark:text-emerald-400 dark:border-emerald-900/40">
             <ImageIcon className="w-4 h-4" />
           </div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-[#0e0e13] border border-zinc-800/80 flex items-center justify-between">
+        <div className="p-4 rounded-2xl bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 shadow-xs flex items-center justify-between transition-colors">
           <div>
-            <p className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">Audio Masters</p>
-            <p className="text-xl font-bold text-amber-400 mt-0.5">{audioCount}</p>
+            <p className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-zinc-400 font-semibold">Audio Masters</p>
+            <p className="text-xl font-bold font-mono text-amber-600 dark:text-amber-400 mt-0.5">{audioCount}</p>
           </div>
-          <div className="p-2.5 rounded-xl bg-amber-950/40 text-amber-400 border border-amber-900/40">
+          <div className="p-2.5 rounded-xl bg-amber-50 text-amber-600 border border-amber-200 dark:bg-amber-950/40 dark:text-amber-400 dark:border-amber-900/40">
             <Music className="w-4 h-4" />
           </div>
         </div>
 
-        <div className="p-4 rounded-2xl bg-[#0e0e13] border border-zinc-800/80 flex items-center justify-between">
+        <div className="p-4 rounded-2xl bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 shadow-xs flex items-center justify-between transition-colors">
           <div>
-            <p className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">Videos & Clips</p>
-            <p className="text-xl font-bold text-purple-400 mt-0.5">{videoCount}</p>
+            <p className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-zinc-400 font-semibold">Videos & Clips</p>
+            <p className="text-xl font-bold font-mono text-purple-600 dark:text-purple-400 mt-0.5">{videoCount}</p>
           </div>
-          <div className="p-2.5 rounded-xl bg-purple-950/40 text-purple-400 border border-purple-900/40">
+          <div className="p-2.5 rounded-xl bg-purple-50 text-purple-600 border border-purple-200 dark:bg-purple-950/40 dark:text-purple-400 dark:border-purple-900/40">
             <Video className="w-4 h-4" />
           </div>
         </div>
 
-        <div className="col-span-2 sm:col-span-1 p-4 rounded-2xl bg-[#0e0e13] border border-zinc-800/80 flex items-center justify-between">
+        <div className="col-span-2 sm:col-span-1 p-4 rounded-2xl bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 shadow-xs flex items-center justify-between transition-colors">
           <div>
-            <p className="text-[10px] font-mono uppercase tracking-wider text-zinc-400">Storage Used</p>
-            <p className="text-xl font-bold text-vexo-red-bright mt-0.5">{formatBytes(totalBytes)}</p>
+            <p className="text-[10px] font-mono uppercase tracking-wider text-slate-500 dark:text-zinc-400 font-semibold">Storage Used</p>
+            <p className="text-xl font-bold font-mono text-vexo-red mt-0.5">{formatBytes(totalBytes)}</p>
           </div>
-          <div className="p-2.5 rounded-xl bg-vexo-red/10 text-vexo-red border border-vexo-red/20">
+          <div className="p-2.5 rounded-xl bg-red-50 text-vexo-red border border-red-200 dark:bg-vexo-red/10 dark:text-vexo-red dark:border-vexo-red/20">
             <HardDrive className="w-4 h-4" />
           </div>
         </div>
       </div>
 
       {/* Action Bar (Search, Category Filters, View Switcher, Upload Button) */}
-      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 bg-[#0e0e13] p-4 rounded-2xl border border-zinc-800/80">
+      <div className="flex flex-col lg:flex-row items-stretch lg:items-center justify-between gap-4 bg-white dark:bg-[#0e0e13] p-4 rounded-2xl border border-slate-200 dark:border-zinc-800/80 shadow-xs transition-colors">
         {/* Search */}
         <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-slate-400 dark:text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             placeholder="Search media files by name, type, or alt text..."
-            className="w-full pl-10 pr-4 py-2 rounded-xl bg-zinc-900 border border-zinc-800 text-xs text-white placeholder-zinc-500 focus:border-vexo-red focus:outline-none transition-colors"
+            className="w-full pl-10 pr-4 py-2 rounded-xl bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:border-vexo-red focus:outline-none transition-colors"
           />
         </div>
 
         <div className="flex flex-wrap items-center gap-3">
           {/* Category Filter Pills */}
-          <div className="flex items-center gap-1 bg-zinc-900 p-1 rounded-xl border border-zinc-800">
+          <div className="flex items-center gap-1 bg-slate-100 dark:bg-zinc-900 p-1 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-2xs">
             {[
               { key: 'all', label: 'All' },
               { key: 'image', label: 'Images' },
@@ -299,8 +299,8 @@ export const AdminMediaPage: React.FC = () => {
                 onClick={() => setSelectedCategory(cat.key)}
                 className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
                   selectedCategory === cat.key
-                    ? 'bg-vexo-red text-white shadow'
-                    : 'text-zinc-400 hover:text-white'
+                    ? 'bg-vexo-red text-white shadow-xs'
+                    : 'text-slate-600 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-white'
                 }`}
               >
                 {cat.label}
@@ -309,12 +309,12 @@ export const AdminMediaPage: React.FC = () => {
           </div>
 
           {/* View Mode Toggle */}
-          <div className="flex items-center gap-1 bg-zinc-900 p-1 rounded-xl border border-zinc-800">
+          <div className="flex items-center gap-1 bg-slate-100 dark:bg-zinc-900 p-1 rounded-xl border border-slate-200 dark:border-zinc-800 shadow-2xs">
             <button
               type="button"
               onClick={() => setViewMode('grid')}
               className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
-                viewMode === 'grid' ? 'bg-zinc-800 text-white' : 'text-zinc-500 hover:text-zinc-300'
+                viewMode === 'grid' ? 'bg-white dark:bg-zinc-800 text-slate-900 dark:text-white shadow-2xs' : 'text-slate-500 dark:text-zinc-500 hover:text-slate-800 dark:hover:text-zinc-300'
               }`}
               title="Grid View"
             >
@@ -324,7 +324,7 @@ export const AdminMediaPage: React.FC = () => {
               type="button"
               onClick={() => setViewMode('list')}
               className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
-                viewMode === 'list' ? 'bg-zinc-800 text-white' : 'text-zinc-500 hover:text-zinc-300'
+                viewMode === 'list' ? 'bg-white dark:bg-zinc-800 text-slate-900 dark:text-white shadow-2xs' : 'text-slate-500 dark:text-zinc-500 hover:text-slate-800 dark:hover:text-zinc-300'
               }`}
               title="List View"
             >
@@ -335,7 +335,7 @@ export const AdminMediaPage: React.FC = () => {
           {/* Add Media Button */}
           <button
             onClick={openCreateModal}
-            className="px-4 py-2.5 rounded-xl bg-vexo-red hover:bg-red-600 text-xs font-semibold text-white shadow-lg shadow-red-950/60 flex items-center justify-center gap-2 transition-colors cursor-pointer shrink-0"
+            className="px-4 py-2.5 rounded-xl bg-vexo-red hover:bg-red-600 text-xs font-semibold text-white shadow-md shadow-red-500/25 flex items-center justify-center gap-2 transition-colors cursor-pointer shrink-0"
           >
             <Plus className="w-4 h-4" />
             <span>Upload Media</span>
@@ -380,10 +380,10 @@ export const AdminMediaPage: React.FC = () => {
             return (
               <div
                 key={media.id}
-                className="bg-[#0e0e13] border border-zinc-800/80 rounded-2xl overflow-hidden group hover:border-zinc-700 transition-all flex flex-col justify-between"
+                className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl overflow-hidden group hover:border-slate-300 dark:hover:border-zinc-700 transition-all flex flex-col justify-between shadow-xs"
               >
                 {/* Media Thumbnail */}
-                <div className="relative aspect-video bg-black/60 overflow-hidden flex items-center justify-center">
+                <div className="relative aspect-video bg-slate-100 dark:bg-black/60 overflow-hidden flex items-center justify-center">
                   {isImage ? (
                     <img
                       src={getMediaUrl(media.url)}
@@ -391,11 +391,11 @@ export const AdminMediaPage: React.FC = () => {
                       className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
                     />
                   ) : isVideo ? (
-                    <div className="w-full h-full relative flex items-center justify-center bg-zinc-900">
+                    <div className="w-full h-full relative flex items-center justify-center bg-slate-100 dark:bg-zinc-900">
                       {media.url.includes('youtube') || media.url.endsWith('.jpg') || media.url.endsWith('.png') ? (
                         <img src={getMediaUrl(media.url)} alt={media.filename} className="w-full h-full object-cover" />
                       ) : (
-                        <Video className="w-10 h-10 text-purple-400" />
+                        <Video className="w-10 h-10 text-purple-500 dark:text-purple-400" />
                       )}
                       <div className="absolute inset-0 bg-black/40 flex items-center justify-center">
                         <div className="p-2.5 rounded-full bg-purple-600 text-white shadow-lg">
@@ -404,24 +404,24 @@ export const AdminMediaPage: React.FC = () => {
                       </div>
                     </div>
                   ) : isAudio ? (
-                    <div className="w-full h-full bg-gradient-to-br from-amber-950/30 to-black p-4 flex flex-col items-center justify-center text-center">
+                    <div className="w-full h-full bg-gradient-to-br from-amber-100/50 to-slate-100 dark:from-amber-950/30 dark:to-black p-4 flex flex-col items-center justify-center text-center">
                       <button
                         type="button"
                         onClick={(e) => handleAudioToggle(e, media.id, media.url)}
-                        className="p-3 rounded-full bg-amber-500/20 text-amber-400 border border-amber-500/40 hover:scale-110 transition-transform mb-2 cursor-pointer shadow-lg"
+                        className="p-3 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-400 border border-amber-500/40 hover:scale-110 transition-transform mb-2 cursor-pointer shadow-md"
                       >
                         {isAudioPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 fill-current" />}
                       </button>
-                      <span className="text-[10px] font-mono text-amber-300/80">Audio Master</span>
+                      <span className="text-[10px] font-mono text-amber-700 dark:text-amber-300/80 font-bold">Audio Master</span>
                     </div>
                   ) : (
-                    <div className="w-full h-full flex items-center justify-center text-zinc-600">
+                    <div className="w-full h-full flex items-center justify-center text-slate-400 dark:text-zinc-600">
                       <FileText className="w-12 h-12" />
                     </div>
                   )}
 
                   {/* Category Pill */}
-                  <span className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md text-[9px] font-mono uppercase bg-black/75 text-zinc-300 backdrop-blur-sm border border-white/10">
+                  <span className="absolute top-2.5 left-2.5 px-2 py-0.5 rounded-md text-[9px] font-mono uppercase bg-black/75 text-white backdrop-blur-sm border border-white/20">
                     {media.category}
                   </span>
 
@@ -445,7 +445,7 @@ export const AdminMediaPage: React.FC = () => {
                     </a>
                     <button
                       onClick={() => setDeleteTarget({ id: media.id, name: media.originalName || media.filename })}
-                      className="p-1.5 rounded-lg bg-red-950/80 hover:bg-red-900 text-red-300 transition-colors cursor-pointer"
+                      className="p-1.5 rounded-lg bg-red-600/90 hover:bg-red-600 text-white transition-colors cursor-pointer"
                       title="Delete Asset"
                     >
                       <Trash2 className="w-3.5 h-3.5" />
@@ -456,20 +456,20 @@ export const AdminMediaPage: React.FC = () => {
                 {/* Media Details & Copy Button */}
                 <div className="p-4 space-y-3">
                   <div>
-                    <p className="font-semibold text-xs text-white truncate" title={media.originalName || media.filename}>
+                    <p className="font-semibold text-xs text-slate-900 dark:text-white truncate" title={media.originalName || media.filename}>
                       {media.originalName || media.filename}
                     </p>
-                    <p className="text-[10px] font-mono text-zinc-500 mt-0.5">
+                    <p className="text-[10px] font-mono text-slate-500 dark:text-zinc-500 mt-0.5">
                       {formatBytes(media.size)} &bull; {media.mimeType}
                     </p>
                   </div>
 
                   <button
                     onClick={() => handleCopyUrl(media.url, media.id)}
-                    className={`w-full py-1.5 px-2.5 rounded-lg text-[11px] font-mono flex items-center justify-center gap-1.5 transition-colors cursor-pointer ${
+                    className={`w-full py-1.5 px-2.5 rounded-lg text-[11px] font-mono flex items-center justify-center gap-1.5 transition-colors cursor-pointer shadow-2xs ${
                       copiedId === media.id
-                        ? 'bg-emerald-950/80 border border-emerald-800 text-emerald-400'
-                        : 'bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-zinc-400 hover:text-white'
+                        ? 'bg-emerald-50 border border-emerald-300 text-emerald-700 dark:bg-emerald-950/80 dark:border-emerald-800 dark:text-emerald-400'
+                        : 'bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 hover:text-slate-950 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-800 dark:text-zinc-400 dark:hover:text-white'
                     }`}
                   >
                     {copiedId === media.id ? (
@@ -491,11 +491,11 @@ export const AdminMediaPage: React.FC = () => {
         </div>
       ) : (
         /* LIST / TABLE VIEW */
-        <div className="bg-[#0e0e13] border border-zinc-800/80 rounded-2xl overflow-hidden">
+        <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl overflow-hidden shadow-xs">
           <div className="overflow-x-auto">
             <table className="w-full text-left border-collapse">
               <thead>
-                <tr className="border-b border-zinc-800/80 bg-zinc-900/50 text-[10px] font-mono uppercase tracking-wider text-zinc-400">
+                <tr className="border-b border-slate-200 dark:border-zinc-800/80 bg-slate-50 dark:bg-zinc-900/50 text-[10px] font-mono uppercase tracking-wider text-slate-600 dark:text-zinc-400">
                   <th className="py-3 px-4">Asset</th>
                   <th className="py-3 px-4">Type / Category</th>
                   <th className="py-3 px-4">Size</th>
@@ -503,47 +503,47 @@ export const AdminMediaPage: React.FC = () => {
                   <th className="py-3 px-4 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-800/60 text-xs">
+              <tbody className="divide-y divide-slate-100 dark:divide-zinc-800/60 text-xs">
                 {mediaList.map((media) => {
                   const isImage = media.category === 'image';
                   const isAudio = media.category === 'audio';
                   const isVideo = media.category === 'video';
 
                   return (
-                    <tr key={media.id} className="hover:bg-zinc-900/30 transition-colors">
+                    <tr key={media.id} className="hover:bg-slate-50/80 dark:hover:bg-zinc-900/30 transition-colors">
                       <td className="py-3 px-4">
                         <div className="flex items-center gap-3">
-                          <div className="w-10 h-10 rounded-lg overflow-hidden bg-black/60 shrink-0 border border-zinc-800 flex items-center justify-center">
+                          <div className="w-10 h-10 rounded-lg overflow-hidden bg-slate-100 dark:bg-black/60 shrink-0 border border-slate-200 dark:border-zinc-800 flex items-center justify-center">
                             {isImage ? (
                               <img src={getMediaUrl(media.url)} alt="" className="w-full h-full object-cover" />
                             ) : isAudio ? (
-                              <Music className="w-4 h-4 text-amber-400" />
+                              <Music className="w-4 h-4 text-amber-500" />
                             ) : isVideo ? (
-                              <Video className="w-4 h-4 text-purple-400" />
+                              <Video className="w-4 h-4 text-purple-500" />
                             ) : (
-                              <FileText className="w-4 h-4 text-zinc-500" />
+                              <FileText className="w-4 h-4 text-slate-400 dark:text-zinc-500" />
                             )}
                           </div>
                           <div className="min-w-0">
-                            <p className="font-semibold text-white truncate max-w-xs sm:max-w-sm">
+                            <p className="font-semibold text-slate-900 dark:text-white truncate max-w-xs sm:max-w-sm">
                               {media.originalName || media.filename}
                             </p>
-                            <p className="text-[10px] text-zinc-500 font-mono truncate">{media.url}</p>
+                            <p className="text-[10px] text-slate-400 dark:text-zinc-500 font-mono truncate">{media.url}</p>
                           </div>
                         </div>
                       </td>
 
                       <td className="py-3 px-4">
-                        <span className="px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-zinc-800 text-zinc-300 border border-zinc-700">
+                        <span className="px-2 py-0.5 rounded text-[10px] font-mono uppercase bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-zinc-700 shadow-2xs">
                           {media.category}
                         </span>
                       </td>
 
-                      <td className="py-3 px-4 font-mono text-zinc-400">
+                      <td className="py-3 px-4 font-mono text-slate-600 dark:text-zinc-400">
                         {formatBytes(media.size)}
                       </td>
 
-                      <td className="py-3 px-4 font-mono text-zinc-500 text-[11px]">
+                      <td className="py-3 px-4 font-mono text-slate-500 dark:text-zinc-500 text-[11px]">
                         {media.mimeType}
                       </td>
 
@@ -551,14 +551,14 @@ export const AdminMediaPage: React.FC = () => {
                         <div className="flex items-center justify-end gap-1.5">
                           <button
                             onClick={() => handleCopyUrl(media.url, media.id)}
-                            className="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white transition-colors cursor-pointer"
+                            className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-950 border border-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-300 dark:hover:text-white dark:border-transparent transition-colors cursor-pointer shadow-2xs"
                             title="Copy URL"
                           >
-                            {copiedId === media.id ? <Check className="w-3.5 h-3.5 text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
+                            {copiedId === media.id ? <Check className="w-3.5 h-3.5 text-emerald-600 dark:text-emerald-400" /> : <Copy className="w-3.5 h-3.5" />}
                           </button>
                           <button
                             onClick={() => setPreviewAsset(media)}
-                            className="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white transition-colors cursor-pointer"
+                            className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-950 border border-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-300 dark:hover:text-white dark:border-transparent transition-colors cursor-pointer shadow-2xs"
                             title="Inspect Asset"
                           >
                             <Eye className="w-3.5 h-3.5" />
@@ -567,14 +567,14 @@ export const AdminMediaPage: React.FC = () => {
                             href={media.url}
                             target="_blank"
                             rel="noreferrer"
-                            className="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white transition-colors"
+                            className="p-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-950 border border-slate-200 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-300 dark:hover:text-white dark:border-transparent transition-colors shadow-2xs"
                             title="Open in new tab"
                           >
                             <ExternalLink className="w-3.5 h-3.5" />
                           </a>
                           <button
                             onClick={() => setDeleteTarget({ id: media.id, name: media.originalName || media.filename })}
-                            className="p-1.5 rounded-lg bg-red-950/60 hover:bg-red-900 text-red-300 transition-colors cursor-pointer"
+                            className="p-1.5 rounded-lg bg-slate-100 hover:bg-red-50 text-slate-500 hover:text-red-600 border border-slate-200 hover:border-red-200 dark:bg-red-950/60 dark:hover:bg-red-900 dark:text-red-300 dark:border-transparent transition-colors cursor-pointer shadow-2xs"
                             title="Delete Asset"
                           >
                             <Trash2 className="w-3.5 h-3.5" />

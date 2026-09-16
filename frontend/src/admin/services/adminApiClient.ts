@@ -656,6 +656,27 @@ export const adminSiteSettingsApi = {
   },
 };
 
+// Pre-Wedding Studio API
+export const adminPreWeddingApi = {
+  get: async () => {
+    try {
+      return await adminFetch<any>('/admin/pre-wedding');
+    } catch {
+      return adminMockStore.getPreWedding();
+    }
+  },
+  update: async (data: any) => {
+    try {
+      return await adminFetch<any>('/admin/pre-wedding', {
+        method: 'PUT',
+        body: JSON.stringify(data),
+      });
+    } catch {
+      return adminMockStore.updatePreWedding(data);
+    }
+  },
+};
+
 // Activity Logs
 export const adminActivityLogsApi = {
   list: async (limit = 50) => {

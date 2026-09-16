@@ -141,7 +141,7 @@ export const ServicesSection: React.FC = () => {
                   >
                     {service.number}
                   </span>
-                  <span className="font-extrabold text-base text-white">{service.title}</span>
+                  <span className="font-extrabold text-base text-slate-900 dark:text-white">{service.title}</span>
                 </div>
 
                 <ChevronDown
@@ -153,7 +153,7 @@ export const ServicesSection: React.FC = () => {
 
               {/* Accordion Expanded Details */}
               {isExpanded && (
-                <div className="px-5 pb-6 pt-2 border-t border-white/5 animate-fadeIn flex flex-col gap-4">
+                <div className="px-5 pb-6 pt-2 border-t border-slate-100 dark:border-white/5 animate-fadeIn flex flex-col gap-4">
                   <div className="relative aspect-video rounded-xl overflow-hidden my-2">
                     <img
                       src={getMediaUrl(service.imageUrl)}
@@ -163,13 +163,13 @@ export const ServicesSection: React.FC = () => {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
                   </div>
 
-                  <p className="text-xs text-vexo-muted leading-relaxed">
+                  <p className="text-xs text-slate-600 dark:text-vexo-muted leading-relaxed">
                     {service.fullDesc}
                   </p>
 
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 my-2">
                     {service.features.map((feat, fIdx) => (
-                      <div key={fIdx} className="flex items-center gap-2 text-xs text-white/90">
+                      <div key={fIdx} className="flex items-center gap-2 text-xs text-slate-700 dark:text-white/90">
                         <CheckCircle2 className="w-3.5 h-3.5 text-vexo-red-bright shrink-0" />
                         <span>{feat}</span>
                       </div>

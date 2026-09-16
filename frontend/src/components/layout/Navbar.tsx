@@ -101,8 +101,8 @@ export const Navbar: React.FC = () => {
   return (
     <>
       {/* Apple-Grade Frosted Glass Navigation Bar */}
-      <header className="fixed top-0 left-0 right-0 z-50 transition-colors duration-300 apple-glass-header h-16 sm:h-20 flex items-center">
-        <div className="w-full max-w-[1920px] mx-auto px-4 sm:px-6 lg:px-8 xl:px-10 flex items-center justify-between gap-3 xl:gap-6">
+      <header className="fixed top-0 left-0 right-0 z-50 transition-colors duration-300 apple-glass-header h-16 sm:h-20 flex items-center overflow-x-clip">
+        <div className="w-full max-w-[1920px] mx-auto px-3 sm:px-5 lg:px-6 xl:px-8 flex items-center justify-between gap-2 sm:gap-3 xl:gap-4">
           {/* 1. LEFT: VEXO Logo */}
           <div className="flex items-center shrink-0">
             <Link
@@ -115,15 +115,15 @@ export const Navbar: React.FC = () => {
           </div>
 
           {/* 2. CENTER: Apple-Style Translucent Nav Pill */}
-          <div className="hidden lg:flex items-center justify-center shrink-0">
+          <div className="hidden lg:flex items-center justify-center shrink-0 min-w-0">
             <nav
               ref={navRef}
               onMouseLeave={() => setHoveredPath(null)}
-              className="relative flex items-center apple-nav-pill p-1 rounded-full"
+              className="relative flex items-center apple-nav-pill p-0.5 xl:p-1 rounded-full"
             >
               {/* Ultra-Smooth Animated Red Active Indicator */}
               <div
-                className="absolute top-1 bottom-1 left-0 rounded-full bg-vexo-red shadow-sm pointer-events-none"
+                className="absolute top-0.5 bottom-0.5 xl:top-1 xl:bottom-1 left-0 rounded-full bg-vexo-red shadow-sm pointer-events-none"
                 style={{
                   transform: `translate3d(${bubbleStyle.left}px, 0, 0)`,
                   width: `${bubbleStyle.width}px`,
@@ -149,7 +149,7 @@ export const Navbar: React.FC = () => {
                     }}
                     onMouseEnter={() => setHoveredPath(item.path)}
                     className={cn(
-                      'relative z-10 px-3.5 xl:px-4 py-1.5 rounded-full text-xs font-semibold tracking-wide transition-colors duration-200 select-none whitespace-nowrap flex items-center justify-center',
+                      'relative z-10 px-2.5 xl:px-3.5 py-1 xl:py-1.5 rounded-full text-[11px] xl:text-xs font-semibold tracking-wide transition-colors duration-200 select-none whitespace-nowrap flex items-center justify-center',
                       isHighlighted
                         ? 'nav-link-active text-white font-bold'
                         : 'nav-link-inactive text-slate-600 dark:text-zinc-400'
@@ -163,34 +163,34 @@ export const Navbar: React.FC = () => {
           </div>
 
           {/* 3. RIGHT: Controls (Cool Search Bar + Theme Toggle + Socials + BOOK A PROJECT) */}
-          <div className="flex items-center gap-2.5 xl:gap-3 shrink-0">
+          <div className="flex items-center gap-2 xl:gap-2.5 shrink-0">
             {/* Desktop Cool Search Capsule with ⌘K Badge */}
-            <div className="relative hidden md:block">
+            <div className="relative hidden md:block shrink-0">
               <form
                 onSubmit={handleSearchSubmit}
                 className={cn(
-                  'group flex items-center gap-2.5 px-3.5 py-1.5 h-9.5 rounded-full transition-all duration-300 border cursor-text',
+                  'group flex items-center gap-2 px-3 py-1.5 h-9 rounded-full transition-all duration-300 border cursor-text',
                   isSearchFocused
-                    ? 'w-56 xl:w-72 border-vexo-red/60 bg-white dark:bg-zinc-900/95 shadow-md ring-2 ring-vexo-red/20'
-                    : 'w-44 lg:w-48 xl:w-56 bg-white/80 dark:bg-white/[0.06] border-slate-300 dark:border-white/[0.12] hover:border-slate-400 dark:hover:border-white/25 shadow-2xs'
+                    ? 'w-48 lg:w-56 xl:w-64 border-vexo-red/60 bg-white dark:bg-zinc-900/95 shadow-md ring-2 ring-vexo-red/20'
+                    : 'w-36 lg:w-40 xl:w-48 bg-white/80 dark:bg-white/[0.06] border-slate-300 dark:border-white/[0.12] hover:border-slate-400 dark:hover:border-white/25 shadow-2xs'
                 )}
                 onClick={() => searchInputRef.current?.focus()}
               >
                 <Search
                   className={cn(
-                    'w-4 h-4 shrink-0 transition-colors duration-200',
+                    'w-3.5 h-3.5 shrink-0 transition-colors duration-200',
                     isSearchFocused ? 'text-vexo-red' : 'text-slate-600 dark:text-zinc-400 group-hover:text-vexo-red'
                   )}
                 />
                 <input
                   ref={searchInputRef}
                   type="text"
-                  placeholder="Search music, artists..."
+                  placeholder="Search music..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => setIsSearchFocused(true)}
                   onBlur={() => setTimeout(() => setIsSearchFocused(false), 220)}
-                  className="apple-search-input bg-transparent border-none outline-none text-[13px] w-full text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-zinc-400 font-medium"
+                  className="apple-search-input bg-transparent border-none outline-none text-xs w-full text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-zinc-400 font-medium"
                 />
 
                 {/* Clear or ⌘K Shortcut Chip */}
@@ -208,7 +208,7 @@ export const Navbar: React.FC = () => {
                     <X className="w-3.5 h-3.5" />
                   </button>
                 ) : (
-                  <kbd className="hidden xl:inline-flex items-center px-1.5 py-0.5 text-[10px] font-mono font-bold rounded-md bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-zinc-400 border border-slate-300 dark:border-white/10 select-none shrink-0 shadow-2xs">
+                  <kbd className="hidden xl:inline-flex items-center px-1.5 py-0.5 text-[9px] font-mono font-bold rounded bg-slate-100 dark:bg-white/10 text-slate-600 dark:text-zinc-400 border border-slate-300 dark:border-white/10 select-none shrink-0 shadow-2xs">
                     ⌘K
                   </kbd>
                 )}
@@ -222,7 +222,7 @@ export const Navbar: React.FC = () => {
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 4, scale: 0.98 }}
                     transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                    className="absolute top-12 right-0 w-72 p-3.5 rounded-2xl apple-glass-card shadow-2xl border z-50 text-xs select-none"
+                    className="absolute top-11 right-0 w-64 sm:w-72 p-3.5 rounded-2xl apple-glass-card shadow-2xl border z-50 text-xs select-none"
                   >
                     <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-zinc-400 mb-2.5 pb-1.5 border-b border-black/5 dark:border-white/10">
                       <span className="flex items-center gap-1 font-bold">
@@ -265,14 +265,14 @@ export const Navbar: React.FC = () => {
               </AnimatePresence>
             </div>
 
-            {/* Mobile Search Button (Compact round icon on mobile) */}
+            {/* Mobile Search Button (Compact round icon on mobile only) */}
             <button
               type="button"
               onClick={() => {
                 setIsMobileSearchOpen(!isMobileSearchOpen);
                 if (isMobileMenuOpen) setIsMobileMenuOpen(false);
               }}
-              className="w-9 h-9 min-h-[36px] max-h-[36px] rounded-full apple-btn-round flex items-center justify-center cursor-pointer md:hidden shrink-0 transition-transform active:scale-95"
+              className="w-9 h-9 min-h-[36px] max-h-[36px] rounded-full apple-btn-round md:!hidden flex items-center justify-center cursor-pointer shrink-0 transition-transform active:scale-95"
               aria-label="Search"
             >
               <Search className="w-4 h-4" />
@@ -281,8 +281,8 @@ export const Navbar: React.FC = () => {
             {/* Music-Themed Theme Visualizer Toggle */}
             <MusicThemeToggle variant="compact" className="shrink-0" />
 
-            {/* Social Icons (Unified Bordered Action Buttons & Brand Themes - Desktop only) */}
-            <div className="hidden xl:flex items-center gap-2 pl-1 shrink-0">
+            {/* Social Icons (Shown only on ultra-wide screens 2xl: 1536px+ to preserve navbar width on standard screens) */}
+            <div className="hidden 2xl:flex items-center gap-2 pl-1 shrink-0">
               <a
                 href="https://www.instagram.com/vexomusicentertainment"
                 target="_blank"
@@ -323,15 +323,16 @@ export const Navbar: React.FC = () => {
               </a>
             </div>
 
-            {/* Book A Project CTA (Hidden on mobile phones to prevent navbar overflow; prominent full-width CTA inside the drawer) */}
+            {/* Book A Project CTA */}
             <Button
               variant="primary"
-              size="md"
+              size="sm"
               onClick={() => navigate('/contact')}
-              rightIcon={<ArrowUpRight className="w-4 h-4" />}
-              className="hidden sm:inline-flex font-bold tracking-wider text-xs uppercase shadow-sm hover:bg-red-700 transition-colors shrink-0"
+              rightIcon={<ArrowUpRight className="w-3.5 h-3.5" />}
+              className="hidden sm:inline-flex font-bold tracking-wider text-xs uppercase shadow-sm hover:bg-red-700 transition-colors shrink-0 px-3 xl:px-4 py-1.5"
             >
-              BOOK A PROJECT
+              <span className="hidden xl:inline">BOOK A PROJECT</span>
+              <span className="xl:hidden">BOOK NOW</span>
             </Button>
 
             {/* Mobile Menu Hamburger */}

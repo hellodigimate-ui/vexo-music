@@ -179,20 +179,20 @@ export const AdminArtistsPage: React.FC = () => {
   return (
     <div className="space-y-6 pb-12">
       {/* 1. Header & Metrics Bar */}
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-zinc-800/80">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-slate-200 dark:border-zinc-800/80">
         <div className="space-y-1">
-          <div className="flex items-center gap-2 text-xs font-mono text-zinc-500">
-            <span className="text-zinc-400">ADMIN CMS</span>
+          <div className="flex items-center gap-2 text-xs font-mono text-slate-500 dark:text-zinc-500">
+            <span className="text-slate-600 dark:text-zinc-400">ADMIN CMS</span>
             <span>/</span>
-            <span className="text-vexo-red-bright">ARTISTS ROSTER</span>
+            <span className="text-vexo-red">ARTISTS ROSTER</span>
           </div>
-          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-white uppercase flex items-center gap-3">
+          <h1 className="text-2xl sm:text-3xl font-black tracking-tight text-slate-900 dark:text-white uppercase flex items-center gap-3">
             <span>Artists Management</span>
-            <span className="text-xs font-mono font-normal normal-case px-2.5 py-1 rounded-full bg-zinc-800 text-zinc-300 border border-zinc-700">
+            <span className="text-xs font-mono font-normal normal-case px-2.5 py-1 rounded-full bg-slate-100 dark:bg-zinc-800 text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-zinc-700">
               {artists.length} Total
             </span>
           </h1>
-          <p className="text-xs text-zinc-400">
+          <p className="text-xs text-slate-500 dark:text-zinc-400">
             Manage recording artists, vocalists, genres, social profiles, and public directory visibility.
           </p>
         </div>
@@ -201,7 +201,7 @@ export const AdminArtistsPage: React.FC = () => {
           {/* Add New Artist Button -> Navigates to /admin/artists/new */}
           <button
             onClick={() => navigate('/admin/artists/new')}
-            className="px-5 py-2.5 rounded-xl bg-gradient-to-r from-vexo-red-bright to-vexo-red hover:from-red-500 hover:to-red-700 text-xs font-bold uppercase tracking-wider text-white shadow-lg shadow-red-950/60 flex items-center justify-center gap-2 transition-all cursor-pointer"
+            className="px-5 py-2.5 rounded-xl bg-vexo-red hover:bg-[#c50000] active:scale-[0.98] text-xs font-bold uppercase tracking-wider text-white shadow-xs hover:shadow-md hover:shadow-red-500/20 flex items-center justify-center gap-2 transition-all cursor-pointer"
           >
             <Plus className="w-4 h-4" />
             <span>Add New Artist</span>
@@ -211,33 +211,33 @@ export const AdminArtistsPage: React.FC = () => {
 
       {/* 2. Quick Metrics Chips */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-        <div className="bg-[#0e0e13] border border-zinc-800/80 rounded-2xl p-4 flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-xl bg-vexo-red/10 border border-vexo-red/30 flex items-center justify-center text-vexo-red-bright">
+        <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-4 flex items-center gap-3.5 shadow-xs">
+          <div className="w-10 h-10 rounded-xl bg-red-50 dark:bg-vexo-red/10 border border-red-200 dark:border-vexo-red/30 flex items-center justify-center text-vexo-red">
             <Users className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-[11px] font-mono uppercase text-zinc-500">Total Signed Artists</p>
-            <p className="text-lg font-black text-white">{artists.length}</p>
+            <p className="text-[11px] font-mono uppercase text-slate-500 dark:text-zinc-500">Total Signed Artists</p>
+            <p className="text-lg font-black text-slate-900 dark:text-white">{artists.length}</p>
           </div>
         </div>
 
-        <div className="bg-[#0e0e13] border border-zinc-800/80 rounded-2xl p-4 flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+        <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-4 flex items-center gap-3.5 shadow-xs">
+          <div className="w-10 h-10 rounded-xl bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 flex items-center justify-center text-amber-500">
             <Star className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-[11px] font-mono uppercase text-zinc-500">Featured Artists</p>
-            <p className="text-lg font-black text-white">{featuredCount}</p>
+            <p className="text-[11px] font-mono uppercase text-slate-500 dark:text-zinc-500">Featured Artists</p>
+            <p className="text-lg font-black text-slate-900 dark:text-white">{featuredCount}</p>
           </div>
         </div>
 
-        <div className="bg-[#0e0e13] border border-zinc-800/80 rounded-2xl p-4 flex items-center gap-3.5">
-          <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+        <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-4 flex items-center gap-3.5 shadow-xs">
+          <div className="w-10 h-10 rounded-xl bg-emerald-50 dark:bg-emerald-500/10 border border-emerald-200 dark:border-emerald-500/30 flex items-center justify-center text-emerald-500">
             <Headphones className="w-5 h-5" />
           </div>
           <div>
-            <p className="text-[11px] font-mono uppercase text-zinc-500">Combined Listeners</p>
-            <p className="text-lg font-black text-white font-mono">{totalListeners.toLocaleString()}</p>
+            <p className="text-[11px] font-mono uppercase text-slate-500 dark:text-zinc-500">Combined Listeners</p>
+            <p className="text-lg font-black text-slate-900 dark:text-white font-mono">{totalListeners.toLocaleString()}</p>
           </div>
         </div>
       </div>

@@ -69,7 +69,7 @@ export const FinalCTASection: React.FC = () => {
   }
 
   return (
-    <section className="relative bg-[#050505] py-24 sm:py-32 lg:py-40 overflow-hidden border-t border-white/10 select-none">
+    <section className="relative bg-slate-50 dark:bg-[#050505] py-24 sm:py-32 lg:py-40 overflow-hidden border-t border-slate-200 dark:border-white/10 select-none transition-colors duration-300">
       {/* Ambient Red Glow Backdrops */}
       <motion.div
         animate={{
@@ -81,33 +81,33 @@ export const FinalCTASection: React.FC = () => {
           repeat: Infinity,
           ease: 'easeInOut',
         }}
-        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[450px] bg-vexo-red/25 rounded-full blur-[160px] pointer-events-none"
+        className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[450px] bg-vexo-red/10 dark:bg-vexo-red/25 rounded-full blur-[160px] pointer-events-none"
       />
 
-      <div className="absolute top-0 right-0 w-96 h-96 bg-vexo-red-bright/10 rounded-full blur-[140px] pointer-events-none" />
+      <div className="absolute top-0 right-0 w-96 h-96 bg-vexo-red-bright/5 dark:bg-vexo-red-bright/10 rounded-full blur-[140px] pointer-events-none" />
 
       <Container className="relative z-10 text-center flex flex-col items-center">
         {/* Top Badge */}
         <div className="mb-6">
-          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-[0.25em] bg-vexo-red/10 text-white border border-vexo-red/40 shadow-[0_0_20px_rgba(224,0,0,0.3)] backdrop-blur-md">
+          <span className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full text-xs font-extrabold uppercase tracking-[0.25em] bg-red-50 dark:bg-vexo-red/10 text-vexo-red dark:text-white border border-red-200 dark:border-vexo-red/40 shadow-sm dark:shadow-[0_0_20px_rgba(224,0,0,0.3)] backdrop-blur-md">
             <span className="w-2 h-2 rounded-full bg-vexo-red-bright shadow-[0_0_8px_#FF1111] animate-pulse" />
             {ctaData.badge}
           </span>
         </div>
 
         {/* Large Iconic Headline */}
-        <h2 className="text-5xl sm:text-7xl lg:text-8xl xl:text-9xl font-black uppercase tracking-tight text-white leading-[0.92] mb-6 text-center">
-          <span className="block">{line1}</span>
+        <h2 className="text-5xl sm:text-7xl lg:text-8xl xl:text-9xl font-black uppercase tracking-tight leading-[0.92] mb-6 text-center">
+          <span className="block text-slate-950 dark:text-white">{line1}</span>
           {line2 && (
-            <span className="block text-gradient-red drop-shadow-[0_10px_35px_rgba(224,0,0,0.5)]">
+            <span className="block bg-gradient-to-r from-vexo-red to-vexo-red-bright bg-clip-text text-transparent drop-shadow-[0_10px_35px_rgba(224,0,0,0.35)]">
               {line2}
             </span>
           )}
-          {line3 && <span className="block text-white">{line3}</span>}
+          {line3 && <span className="block text-slate-950 dark:text-white">{line3}</span>}
         </h2>
 
         {ctaData.description && (
-          <p className="text-vexo-muted text-sm sm:text-base max-w-xl text-center mb-10 leading-relaxed font-normal">
+          <p className="text-slate-600 dark:text-zinc-400 text-sm sm:text-base max-w-xl text-center mb-10 leading-relaxed font-normal">
             {ctaData.description}
           </p>
         )}
@@ -118,21 +118,20 @@ export const FinalCTASection: React.FC = () => {
             variant="primary"
             size="lg"
             onClick={() => navigate(ctaData.buttonUrl)}
-            rightIcon={<ArrowUpRight className="w-5 h-5" />}
-            className="w-full sm:w-auto px-9 py-4 text-xs sm:text-sm font-extrabold tracking-wider uppercase rounded-xl shadow-[0_0_30px_rgba(224,0,0,0.6)] hover:scale-105 transition-all duration-300"
+            rightIcon={<ArrowUpRight className="w-5 h-5 text-white" />}
+            className="w-full sm:w-auto px-9 py-4 text-xs sm:text-sm font-extrabold tracking-wider uppercase rounded-xl shadow-[0_0_30px_rgba(224,0,0,0.6)] hover:scale-105 transition-all duration-300 cursor-pointer"
           >
             {ctaData.buttonLabel}
           </Button>
 
-          <Button
-            variant="secondary"
-            size="lg"
+          <button
+            type="button"
             onClick={() => navigate(ctaData.secondaryUrl)}
-            leftIcon={<Mail className="w-4 h-4 text-vexo-red-bright" />}
-            className="w-full sm:w-auto px-9 py-4 text-xs sm:text-sm font-extrabold tracking-wider uppercase rounded-xl bg-neutral-950/80 backdrop-blur-md border border-white/15 hover:bg-white/10 hover:border-white/30 transition-all duration-300"
+            className="w-full sm:w-auto px-9 py-4 text-xs sm:text-sm font-extrabold tracking-wider uppercase rounded-xl inline-flex items-center justify-center gap-2 transition-all duration-300 cursor-pointer bg-white text-slate-900 border border-slate-300 shadow-md hover:bg-slate-100 hover:border-slate-400 dark:bg-neutral-900/80 dark:text-white dark:border-white/15 dark:hover:bg-white/10 dark:hover:border-white/30 dark:shadow-none backdrop-blur-md"
           >
-            {ctaData.secondaryLabel}
-          </Button>
+            <Mail className="w-4 h-4 text-vexo-red-bright shrink-0" />
+            <span className="text-slate-900 dark:text-white">{ctaData.secondaryLabel}</span>
+          </button>
         </div>
       </Container>
     </section>

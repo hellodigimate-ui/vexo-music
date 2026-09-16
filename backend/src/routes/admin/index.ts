@@ -11,6 +11,7 @@ import { adminMediaRoutes } from './media.js';
 import { adminInquiryRoutes } from './inquiries.js';
 import { adminHomepageRoutes } from './homepage.js';
 import { adminSiteSettingsRoutes } from './siteSettings.js';
+import { adminPreWeddingRoutes } from './preWedding.js';
 import { adminActivityLogRoutes } from './activityLogs.js';
 import { adminUserManagementRoutes } from './adminUsers.js';
 
@@ -27,6 +28,7 @@ export const adminRoutes: FastifyPluginAsync = async (fastify) => {
   await fastify.register(adminInquiryRoutes);
   await fastify.register(adminHomepageRoutes);
   await fastify.register(adminSiteSettingsRoutes);
+  await fastify.register(adminPreWeddingRoutes);
   await fastify.register(adminActivityLogRoutes);
   await fastify.register(adminUserManagementRoutes);
 };

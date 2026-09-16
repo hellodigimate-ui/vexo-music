@@ -62,19 +62,14 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
     } catch { }
   }, [theme]);
 
-  // Listen to system color scheme changes if user hasn't explicitly set preference
+  // VEXO Music Record Label defaults to dark ('Midnight') theme unless user explicitly toggles theme
   useEffect(() => {
-    if (typeof window === 'undefined') return;
+    // Only set default if nothing is in localStorage
     try {
-      if (localStorage.getItem(STORAGE_KEY)) return;
+      if (!localStorage.getItem(STORAGE_KEY)) {
+        localStorage.setItem(STORAGE_KEY, 'dark');
+      }
     } catch { }
-
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: light)');
-    const handler = (e: MediaQueryListEvent) => {
-      setCurrentTheme(e.matches ? 'light' : 'dark');
-    };
-    mediaQuery.addEventListener('change', handler);
-    return () => mediaQuery.removeEventListener('change', handler);
   }, []);
 
   const setTheme = useCallback((newTheme: Theme) => {

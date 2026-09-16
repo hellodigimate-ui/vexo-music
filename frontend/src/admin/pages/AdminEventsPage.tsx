@@ -158,17 +158,17 @@ export const AdminEventsPage: React.FC = () => {
   return (
     <div className="space-y-6">
       {/* Top Header Banner */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-zinc-800/60">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-zinc-800/60">
         <div className="space-y-1">
           <div className="flex items-center gap-2">
             <span className="text-vexo-red-bright font-mono text-xs uppercase tracking-widest flex items-center gap-1.5">
               <Flame className="w-3.5 h-3.5" /> LIVE TOUR & CONCERT MANAGEMENT
             </span>
           </div>
-          <h1 className="text-xl sm:text-2xl font-black uppercase text-white tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-black uppercase text-slate-900 dark:text-white tracking-tight">
             Live Events & Arena Shows
           </h1>
-          <p className="text-xs text-zinc-400">
+          <p className="text-xs text-slate-500 dark:text-zinc-400">
             Manage stadium itineraries, arena tours, festival appearances, and multi-artist lineups.
           </p>
         </div>
@@ -185,35 +185,35 @@ export const AdminEventsPage: React.FC = () => {
       {/* KPI Metric Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         {/* Total Events */}
-        <div className="bg-[#0e0e13] border border-zinc-800/80 rounded-2xl p-5 shadow-xl flex items-center gap-4">
+        <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-5 shadow-sm dark:shadow-xl flex items-center gap-4">
           <div className="w-12 h-12 rounded-xl bg-vexo-red/10 border border-vexo-red/30 flex items-center justify-center text-vexo-red-bright">
             <Calendar className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-[11px] font-mono uppercase tracking-wider text-zinc-400">Total Events</p>
-            <p className="text-2xl font-black text-white mt-0.5">{totalEvents}</p>
+            <p className="text-[11px] font-mono uppercase tracking-wider text-slate-500 dark:text-zinc-400">Total Events</p>
+            <p className="text-2xl font-black text-slate-900 dark:text-white mt-0.5">{totalEvents}</p>
           </div>
         </div>
 
         {/* Upcoming / Live */}
-        <div className="bg-[#0e0e13] border border-zinc-800/80 rounded-2xl p-5 shadow-xl flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400">
+        <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-5 shadow-sm dark:shadow-xl flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-600 dark:text-emerald-400">
             <Radio className="w-6 h-6 animate-pulse" />
           </div>
           <div>
-            <p className="text-[11px] font-mono uppercase tracking-wider text-zinc-400">Upcoming & Live</p>
-            <p className="text-2xl font-black text-white mt-0.5">{upcomingCount}</p>
+            <p className="text-[11px] font-mono uppercase tracking-wider text-slate-500 dark:text-zinc-400">Upcoming & Live</p>
+            <p className="text-2xl font-black text-slate-900 dark:text-white mt-0.5">{upcomingCount}</p>
           </div>
         </div>
 
         {/* Featured Spotlights */}
-        <div className="bg-[#0e0e13] border border-zinc-800/80 rounded-2xl p-5 shadow-xl flex items-center gap-4">
-          <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-400">
+        <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-5 shadow-sm dark:shadow-xl flex items-center gap-4">
+          <div className="w-12 h-12 rounded-xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-amber-500 dark:text-amber-400">
             <Star className="w-6 h-6 fill-amber-400" />
           </div>
           <div>
-            <p className="text-[11px] font-mono uppercase tracking-wider text-zinc-400">Featured Spotlights</p>
-            <p className="text-2xl font-black text-white mt-0.5">{featuredCount}</p>
+            <p className="text-[11px] font-mono uppercase tracking-wider text-slate-500 dark:text-zinc-400">Featured Spotlights</p>
+            <p className="text-2xl font-black text-slate-900 dark:text-white mt-0.5">{featuredCount}</p>
           </div>
         </div>
       </div>
@@ -246,13 +246,13 @@ export const AdminEventsPage: React.FC = () => {
           LOADING LIVE EVENTS DIRECTORY...
         </div>
       ) : paginatedEvents.length === 0 ? (
-        <div className="p-16 text-center rounded-2xl border border-dashed border-zinc-800 bg-[#0e0e13] space-y-4">
-          <div className="w-12 h-12 rounded-2xl bg-zinc-900 border border-zinc-800 flex items-center justify-center text-zinc-500 mx-auto">
+        <div className="p-16 text-center rounded-2xl border border-dashed border-slate-200 dark:border-zinc-800 bg-white dark:bg-[#0e0e13] space-y-4 shadow-sm dark:shadow-none">
+          <div className="w-12 h-12 rounded-2xl bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 flex items-center justify-center text-slate-400 dark:text-zinc-500 mx-auto">
             <Calendar className="w-6 h-6" />
           </div>
           <div>
-            <p className="text-sm font-bold text-white">No live events found</p>
-            <p className="text-xs text-zinc-500 mt-1">
+            <p className="text-sm font-bold text-slate-900 dark:text-white">No live events found</p>
+            <p className="text-xs text-slate-500 dark:text-zinc-500 mt-1">
               Try adjusting your search criteria or schedule a new event.
             </p>
           </div>
@@ -289,8 +289,8 @@ export const AdminEventsPage: React.FC = () => {
 
       {/* Pagination Bar */}
       {totalPages > 1 && (
-        <div className="flex items-center justify-between pt-2 border-t border-zinc-800/60">
-          <span className="text-xs font-mono text-zinc-500">
+        <div className="flex items-center justify-between pt-2 border-t border-slate-200 dark:border-zinc-800/60">
+          <span className="text-xs font-mono text-slate-500 dark:text-zinc-500">
             Page {currentPage} of {totalPages} &bull; Showing {paginatedEvents.length} of {filteredEvents.length} events
           </span>
 
@@ -298,14 +298,14 @@ export const AdminEventsPage: React.FC = () => {
             <button
               onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
               disabled={currentPage === 1}
-              className="p-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white disabled:opacity-30 disabled:hover:bg-zinc-900 cursor-pointer"
+              className="p-2 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-30 cursor-pointer shadow-sm dark:shadow-none"
             >
               <ChevronLeft className="w-4 h-4" />
             </button>
             <button
               onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
               disabled={currentPage === totalPages}
-              className="p-2 rounded-xl bg-zinc-900 border border-zinc-800 text-zinc-400 hover:text-white disabled:opacity-30 disabled:hover:bg-zinc-900 cursor-pointer"
+              className="p-2 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-30 cursor-pointer shadow-sm dark:shadow-none"
             >
               <ChevronRight className="w-4 h-4" />
             </button>

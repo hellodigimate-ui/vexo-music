@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef, useCallback } from 'react';
 import {
   Save,
   Disc3,
@@ -15,6 +15,8 @@ import {
   Trash2,
   Send,
   Eye,
+  ChevronLeft,
+  ChevronRight,
 } from 'lucide-react';
 import {
   adminHomepageApi,
@@ -40,6 +42,71 @@ type TabKey =
 export const AdminHomepagePage: React.FC = () => {
   const toast = useAdminToast();
   const [activeTab, setActiveTab] = useState<TabKey>('hero');
+  const [isLoading, setIsLoading] = useState(true);
+  const [isSaving, setIsSaving] = useState(false);
+
+  // Tabs Slider ref and scroll state
+  const tabsContainerRef = useRef<HTMLDivElement>(null);
+  const [canScrollLeft, setCanScrollLeft] = useState(false);
+  const [canScrollRight, setCanScrollRight] = useState(false);
+
+  const checkTabsScroll = useCallback(() => {
+    const el = tabsContainerRef.current;
+    if (!el) return;
+    const scrollLeft = Math.ceil(el.scrollLeft);
+    const maxScroll = el.scrollWidth - el.clientWidth;
+    setCanScrollLeft(scrollLeft > 2);
+    setCanScrollRight(maxScroll > 2 && scrollLeft < maxScroll - 2);
+  }, []);
+
+  useEffect(() => {
+    if (isLoading) return;
+
+    const el = tabsContainerRef.current;
+    if (!el) return;
+
+    // Check immediately when loading completes
+    checkTabsScroll();
+
+    el.addEventListener('scroll', checkTabsScroll, { passive: true });
+    window.addEventListener('resize', checkTabsScroll);
+
+    let ro: ResizeObserver | null = null;
+    if (typeof ResizeObserver !== 'undefined') {
+      ro = new ResizeObserver(() => {
+        checkTabsScroll();
+      });
+      ro.observe(el);
+      Array.from(el.children).forEach((child) => ro?.observe(child));
+    }
+
+    const t1 = setTimeout(checkTabsScroll, 50);
+    const t2 = setTimeout(checkTabsScroll, 200);
+
+    return () => {
+      clearTimeout(t1);
+      clearTimeout(t2);
+      el.removeEventListener('scroll', checkTabsScroll);
+      window.removeEventListener('resize', checkTabsScroll);
+      if (ro) ro.disconnect();
+    };
+  }, [checkTabsScroll, isLoading]);
+
+  const slideTabs = (direction: 'left' | 'right') => {
+    const el = tabsContainerRef.current;
+    if (!el) return;
+    const distance = 260;
+    if (direction === 'left') {
+      const target = Math.max(0, el.scrollLeft - distance);
+      el.scrollTo({ left: target, behavior: 'smooth' });
+    } else {
+      const maxScroll = el.scrollWidth - el.clientWidth;
+      const target = Math.min(maxScroll, el.scrollLeft + distance);
+      el.scrollTo({ left: target, behavior: 'smooth' });
+    }
+    setTimeout(checkTabsScroll, 100);
+    setTimeout(checkTabsScroll, 350);
+  };
 
   // Available catalog data for selection pickers
   const [allAlbums, setAllAlbums] = useState<any[]>([]);
@@ -104,9 +171,6 @@ export const AdminHomepagePage: React.FC = () => {
     finalCtaSecondaryLabel: 'CONTACT VEXO',
     finalCtaSecondaryUrl: '/contact',
   });
-
-  const [isLoading, setIsLoading] = useState(true);
-  const [isSaving, setIsSaving] = useState(false);
 
   const fetchInitialData = async () => {
     try {
@@ -228,22 +292,26 @@ export const AdminHomepagePage: React.FC = () => {
     index: number,
     direction: 'up' | 'down'
   ) => {
-    const list = [...(formData[key] || [])];
-    const targetIdx = direction === 'up' ? index - 1 : index + 1;
-    if (targetIdx < 0 || targetIdx >= list.length) return;
-    const [item] = list.splice(index, 1);
-    list.splice(targetIdx, 0, item);
-    setFormData({ ...formData, [key]: list });
+    setFormData((prev: any) => {
+      const list = [...(prev[key] || [])];
+      const targetIdx = direction === 'up' ? index - 1 : index + 1;
+      if (targetIdx < 0 || targetIdx >= list.length) return prev;
+      const [item] = list.splice(index, 1);
+      list.splice(targetIdx, 0, item);
+      return { ...prev, [key]: list };
+    });
   };
 
   const toggleItemIdInArray = (
     key: 'selectedAlbumIds' | 'featuredArtistIds' | 'featuredEventIds' | 'featuredVideoIds',
     id: string
   ) => {
-    const list = [...(formData[key] || [])];
-    const exists = list.includes(id);
-    const updated = exists ? list.filter((item) => item !== id) : [...list, id];
-    setFormData({ ...formData, [key]: updated });
+    setFormData((prev: any) => {
+      const list = [...(prev[key] || [])];
+      const exists = list.includes(id);
+      const updated = exists ? list.filter((item: string) => item !== id) : [...list, id];
+      return { ...prev, [key]: updated };
+    });
   };
 
   const tabs: { id: TabKey; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
@@ -269,13 +337,13 @@ export const AdminHomepagePage: React.FC = () => {
   return (
     <div className="max-w-5xl mx-auto space-y-6 pb-20">
       {/* Top Header & Navigation Banner */}
-      <div className="p-6 rounded-2xl bg-[#0e0e13] border border-zinc-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="p-6 rounded-2xl bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-colors">
         <div>
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-vexo-red animate-pulse" />
-            <h2 className="text-base font-bold text-white tracking-wide">Homepage CMS Editor</h2>
+            <h2 className="text-base font-bold text-slate-900 dark:text-white tracking-wide">Homepage CMS Editor</h2>
           </div>
-          <p className="text-xs text-zinc-400 mt-1">
+          <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1">
             Configure dynamic content across all landing sections with immediate live reflection.
           </p>
         </div>
@@ -285,59 +353,98 @@ export const AdminHomepagePage: React.FC = () => {
             to="/"
             target="_blank"
             rel="noreferrer"
-            className="px-4 py-2 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-zinc-700 text-xs font-semibold text-zinc-300 hover:text-white flex items-center gap-1.5 transition-colors"
+            className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 hover:bg-slate-200 dark:hover:border-zinc-700 text-xs font-semibold text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white flex items-center gap-1.5 transition-colors shadow-xs"
           >
             <Eye className="w-3.5 h-3.5 text-vexo-red" />
             <span>View Live Site</span>
-            <ExternalLink className="w-3 h-3 text-zinc-500" />
+            <ExternalLink className="w-3 h-3 text-slate-400 dark:text-zinc-500" />
           </Link>
 
           <button
             type="button"
             onClick={handleSubmit}
             disabled={isSaving}
-            className="px-5 py-2 rounded-xl bg-vexo-red hover:bg-red-600 text-xs font-semibold text-white shadow-lg shadow-red-950/60 flex items-center gap-2 transition-all cursor-pointer disabled:opacity-50"
+            className="px-5 py-2 rounded-xl bg-vexo-red hover:bg-red-600 text-xs font-semibold text-white shadow-md shadow-red-500/25 flex items-center gap-2 transition-all cursor-pointer disabled:opacity-50"
           >
-            <Save className="w-3.5 h-3.5" />
-            <span>{isSaving ? 'Saving...' : 'Save All Changes'}</span>
+            <Save className="w-3.5 h-3.5 text-white" />
+            <span className="text-white">{isSaving ? 'Saving...' : 'Save All Changes'}</span>
           </button>
         </div>
       </div>
 
-      {/* Tabs Navigation Bar */}
-      <div className="flex items-center gap-1.5 overflow-x-auto pb-2 scrollbar-none border-b border-zinc-800/80">
-        {tabs.map((t) => {
-          const IconComp = t.icon;
-          const isActive = activeTab === t.id;
-          return (
-            <button
-              key={t.id}
-              type="button"
-              onClick={() => setActiveTab(t.id)}
-              className={`px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 whitespace-nowrap transition-all cursor-pointer ${
-                isActive
-                  ? 'bg-vexo-red text-white shadow-md shadow-red-950/50'
-                  : 'bg-[#0e0e13] text-zinc-400 hover:text-white hover:bg-zinc-900 border border-zinc-800/60'
-              }`}
-            >
-              <IconComp className="w-3.5 h-3.5" />
-              <span>{t.label}</span>
-            </button>
-          );
-        })}
+      {/* Tabs Navigation Slider with Left/Right Arrows */}
+      <div className="relative flex items-center gap-2">
+        {/* Left Arrow Button */}
+        <button
+          type="button"
+          onClick={() => slideTabs('left')}
+          disabled={!canScrollLeft}
+          title="Scroll Left"
+          aria-label="Scroll tabs left"
+          className="w-8 h-8 rounded-xl bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800 flex items-center justify-center text-slate-700 dark:text-zinc-300 hover:text-white hover:bg-vexo-red hover:border-vexo-red dark:hover:bg-vexo-red dark:hover:border-vexo-red transition-all shadow-xs shrink-0 cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-white dark:disabled:hover:bg-[#0e0e13] disabled:hover:text-slate-400 dark:disabled:hover:text-zinc-600 disabled:hover:border-slate-200 dark:disabled:hover:border-zinc-800"
+        >
+          <ChevronLeft className="w-4 h-4" />
+        </button>
+
+        {/* Scrollable Tabs Row */}
+        <div
+          ref={tabsContainerRef}
+          className="flex-1 flex items-center gap-2 overflow-x-auto pb-2 pt-0.5 scroll-smooth border-b border-slate-200 dark:border-zinc-800/80"
+          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
+        >
+          {tabs.map((t) => {
+            const IconComp = t.icon;
+            const isActive = activeTab === t.id;
+            return (
+              <button
+                key={t.id}
+                type="button"
+                data-tab-id={t.id}
+                onClick={() => {
+                  setActiveTab(t.id);
+                  const el = tabsContainerRef.current?.querySelector(`[data-tab-id="${t.id}"]`) as HTMLElement;
+                  if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', inline: 'nearest', block: 'nearest' });
+                  }
+                  setTimeout(checkTabsScroll, 350);
+                }}
+                className={`px-3.5 py-2.5 rounded-xl text-xs font-semibold flex items-center gap-2 whitespace-nowrap transition-all cursor-pointer shrink-0 ${
+                  isActive
+                    ? 'bg-vexo-red text-white shadow-md shadow-red-500/25 scale-[1.02]'
+                    : 'bg-white dark:bg-[#0e0e13] text-slate-600 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-zinc-900 border border-slate-200 dark:border-zinc-800/60 shadow-xs'
+                }`}
+              >
+                <IconComp className="w-3.5 h-3.5" />
+                <span>{t.label}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        {/* Right Arrow Button */}
+        <button
+          type="button"
+          onClick={() => slideTabs('right')}
+          disabled={!canScrollRight}
+          title="Scroll Right"
+          aria-label="Scroll tabs right"
+          className="w-8 h-8 rounded-xl bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800 flex items-center justify-center text-slate-700 dark:text-zinc-300 hover:text-white hover:bg-vexo-red hover:border-vexo-red dark:hover:bg-vexo-red dark:hover:border-vexo-red transition-all shadow-xs shrink-0 cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed disabled:hover:bg-white dark:disabled:hover:bg-[#0e0e13] disabled:hover:text-slate-400 dark:disabled:hover:text-zinc-600 disabled:hover:border-slate-200 dark:disabled:hover:border-zinc-800"
+        >
+          <ChevronRight className="w-4 h-4" />
+        </button>
       </div>
 
       {/* Form Content */}
       <form onSubmit={handleSubmit} className="space-y-6">
         {/* 1. HERO TAB */}
         {activeTab === 'hero' && (
-          <div className="bg-[#0e0e13] border border-zinc-800/80 rounded-2xl p-6 space-y-6">
-            <div className="border-b border-zinc-800/80 pb-4">
-              <h3 className="text-sm font-bold text-white tracking-wide flex items-center gap-2">
+          <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-6 space-y-6 shadow-sm transition-colors">
+            <div className="border-b border-slate-200 dark:border-zinc-800/80 pb-4">
+              <h3 className="text-sm font-bold text-slate-900 dark:text-white tracking-wide flex items-center gap-2">
                 <Disc3 className="w-4 h-4 text-vexo-red" />
                 <span>Hero Visuals, Typography & Call To Actions</span>
               </h3>
-              <p className="text-xs text-zinc-500">
+              <p className="text-xs text-slate-500 dark:text-zinc-500">
                 Primary landing viewport displaying the headline, tagline, background media, and main CTA buttons.
               </p>
             </div>
@@ -484,7 +591,7 @@ export const AdminHomepagePage: React.FC = () => {
 
         {/* 2. LATEST RELEASES TAB */}
         {activeTab === 'releases' && (
-          <div className="bg-[#0e0e13] border border-zinc-800/80 rounded-2xl p-6 space-y-6">
+          <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-6 space-y-6 shadow-sm transition-colors">
             <div className="border-b border-zinc-800/80 pb-4">
               <h3 className="text-sm font-bold text-white tracking-wide flex items-center gap-2">
                 <Music className="w-4 h-4 text-vexo-red" />
@@ -539,26 +646,26 @@ export const AdminHomepagePage: React.FC = () => {
                     return (
                       <div
                         key={albumId}
-                        className="p-3 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-between gap-4"
+                        className="p-3 rounded-xl bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 flex items-center justify-between gap-4 shadow-2xs"
                       >
                         <div className="flex items-center gap-3 min-w-0">
-                          <span className="w-6 h-6 rounded-lg bg-zinc-800 text-vexo-red font-mono font-bold text-xs flex items-center justify-center shrink-0">
+                          <span className="w-6 h-6 rounded-lg bg-slate-200 dark:bg-zinc-800 text-vexo-red font-mono font-bold text-xs flex items-center justify-center shrink-0">
                             {idx + 1}
                           </span>
                           {album?.coverUrl ? (
                             <img
                               src={album.coverUrl}
                               alt={album.title}
-                              className="w-10 h-10 rounded-lg object-cover border border-zinc-800 shrink-0"
+                              className="w-10 h-10 rounded-lg object-cover border border-slate-200 dark:border-zinc-800 shrink-0"
                             />
                           ) : (
-                            <div className="w-10 h-10 rounded-lg bg-zinc-800 flex items-center justify-center text-zinc-600 shrink-0 text-[10px]">
+                            <div className="w-10 h-10 rounded-lg bg-slate-200 dark:bg-zinc-800 flex items-center justify-center text-slate-500 dark:text-zinc-600 shrink-0 text-[10px]">
                               ALB
                             </div>
                           )}
                           <div className="min-w-0">
-                            <p className="font-bold text-xs text-white truncate">{album?.title || albumId}</p>
-                            <p className="text-[11px] text-zinc-400 truncate">{album?.artist || 'Unknown Artist'}</p>
+                            <p className="font-bold text-xs text-slate-900 dark:text-white truncate">{album?.title || albumId}</p>
+                            <p className="text-[11px] text-slate-500 dark:text-zinc-400 truncate">{album?.artist || 'Unknown Artist'}</p>
                           </div>
                         </div>
 
@@ -567,7 +674,7 @@ export const AdminHomepagePage: React.FC = () => {
                             type="button"
                             onClick={() => moveItemInArray('selectedAlbumIds', idx, 'up')}
                             disabled={isFirst}
-                            className="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed transition-colors"
+                            className="p-1.5 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 hover:text-slate-950 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-300 dark:hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed transition-colors shadow-2xs"
                             title="Move Up"
                           >
                             <ArrowUp className="w-3.5 h-3.5" />
@@ -576,7 +683,7 @@ export const AdminHomepagePage: React.FC = () => {
                             type="button"
                             onClick={() => moveItemInArray('selectedAlbumIds', idx, 'down')}
                             disabled={isLast}
-                            className="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed transition-colors"
+                            className="p-1.5 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 hover:text-slate-950 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-300 dark:hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed transition-colors shadow-2xs"
                             title="Move Down"
                           >
                             <ArrowDown className="w-3.5 h-3.5" />
@@ -584,7 +691,7 @@ export const AdminHomepagePage: React.FC = () => {
                           <button
                             type="button"
                             onClick={() => toggleItemIdInArray('selectedAlbumIds', albumId)}
-                            className="p-1.5 rounded-lg bg-red-950/40 hover:bg-red-900/60 text-red-400 hover:text-red-200 transition-colors cursor-pointer ml-1"
+                            className="p-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 border border-red-200 dark:bg-red-950/40 dark:hover:bg-red-900/60 dark:text-red-400 dark:hover:text-red-200 dark:border-transparent transition-colors cursor-pointer ml-1 shadow-2xs"
                             title="Remove from featured list"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -595,15 +702,15 @@ export const AdminHomepagePage: React.FC = () => {
                   })}
                 </div>
               ) : (
-                <div className="p-6 rounded-xl bg-zinc-900/50 border border-dashed border-zinc-800 text-center text-xs text-zinc-500">
+                <div className="p-6 rounded-xl bg-slate-50 dark:bg-zinc-900/50 border border-dashed border-slate-200 dark:border-zinc-800 text-center text-xs text-slate-500 dark:text-zinc-500">
                   No albums selected. Check albums below to feature them on the homepage.
                 </div>
               )}
             </div>
 
             {/* Select from catalog grid */}
-            <div className="space-y-3 pt-4 border-t border-zinc-800">
-              <label className="text-xs font-mono font-bold text-zinc-300">
+            <div className="space-y-3 pt-4 border-t border-slate-200 dark:border-zinc-800">
+              <label className="text-xs font-mono font-bold text-slate-700 dark:text-zinc-300">
                 CATALOG ALBUMS (CLICK TO SELECT / DESELECT):
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 max-h-80 overflow-y-auto pr-1">
@@ -616,22 +723,22 @@ export const AdminHomepagePage: React.FC = () => {
                       onClick={() => toggleItemIdInArray('selectedAlbumIds', album.id)}
                       className={`p-3 rounded-xl border flex items-center gap-3 text-left transition-all cursor-pointer ${
                         isSelected
-                          ? 'bg-vexo-red/10 border-vexo-red text-white shadow-md'
-                          : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
+                          ? 'bg-red-50 dark:bg-vexo-red/10 border-vexo-red text-slate-900 dark:text-white shadow-2xs'
+                          : 'bg-slate-50 hover:bg-slate-100 dark:bg-zinc-900/60 border-slate-200 dark:border-zinc-800 text-slate-600 dark:text-zinc-400 hover:border-slate-300 dark:hover:border-zinc-700 hover:text-slate-900 dark:hover:text-zinc-200'
                       }`}
                     >
                       <img
                         src={album.coverUrl}
                         alt={album.title}
-                        className="w-10 h-10 rounded-lg object-cover shrink-0"
+                        className="w-10 h-10 rounded-lg object-cover shrink-0 border border-slate-200 dark:border-zinc-800"
                       />
                       <div className="min-w-0 flex-1">
-                        <p className="font-bold text-xs truncate text-white">{album.title}</p>
-                        <p className="text-[10px] text-zinc-400 truncate">{album.artist}</p>
+                        <p className="font-bold text-xs truncate text-slate-900 dark:text-white">{album.title}</p>
+                        <p className="text-[10px] text-slate-500 dark:text-zinc-400 truncate">{album.artist}</p>
                       </div>
                       <div
                         className={`w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 ${
-                          isSelected ? 'bg-vexo-red text-white' : 'border border-zinc-700 text-transparent'
+                          isSelected ? 'bg-vexo-red text-white' : 'border border-slate-300 dark:border-zinc-700 text-transparent'
                         }`}
                       >
                         <Check className="w-3 h-3" />
@@ -646,7 +753,7 @@ export const AdminHomepagePage: React.FC = () => {
 
         {/* 3. FEATURED ARTISTS TAB */}
         {activeTab === 'artists' && (
-          <div className="bg-[#0e0e13] border border-zinc-800/80 rounded-2xl p-6 space-y-6">
+          <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-6 space-y-6 shadow-sm transition-colors">
             <div className="border-b border-zinc-800/80 pb-4">
               <h3 className="text-sm font-bold text-white tracking-wide flex items-center gap-2">
                 <Users className="w-4 h-4 text-vexo-red" />
@@ -684,20 +791,20 @@ export const AdminHomepagePage: React.FC = () => {
                     return (
                       <div
                         key={artistId}
-                        className="p-3 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-between gap-4"
+                        className="p-3 rounded-xl bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 flex items-center justify-between gap-4 shadow-2xs"
                       >
                         <div className="flex items-center gap-3 min-w-0">
-                          <span className="w-6 h-6 rounded-lg bg-zinc-800 text-vexo-red font-mono font-bold text-xs flex items-center justify-center shrink-0">
+                          <span className="w-6 h-6 rounded-lg bg-slate-200 dark:bg-zinc-800 text-vexo-red font-mono font-bold text-xs flex items-center justify-center shrink-0">
                             {idx + 1}
                           </span>
                           <img
                             src={artist?.avatarUrl || 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=200&q=80'}
                             alt={artist?.name}
-                            className="w-10 h-10 rounded-full object-cover border border-zinc-800 shrink-0"
+                            className="w-10 h-10 rounded-full object-cover border border-slate-200 dark:border-zinc-800 shrink-0"
                           />
                           <div className="min-w-0">
-                            <p className="font-bold text-xs text-white truncate">{artist?.name || artistId}</p>
-                            <p className="text-[11px] text-zinc-400 truncate">{artist?.role || 'Artist'}</p>
+                            <p className="font-bold text-xs text-slate-900 dark:text-white truncate">{artist?.name || artistId}</p>
+                            <p className="text-[11px] text-slate-500 dark:text-zinc-400 truncate">{artist?.role || 'Artist'}</p>
                           </div>
                         </div>
 
@@ -706,7 +813,7 @@ export const AdminHomepagePage: React.FC = () => {
                             type="button"
                             onClick={() => moveItemInArray('featuredArtistIds', idx, 'up')}
                             disabled={isFirst}
-                            className="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed transition-colors"
+                            className="p-1.5 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 hover:text-slate-950 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-300 dark:hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed transition-colors shadow-2xs"
                             title="Move Up"
                           >
                             <ArrowUp className="w-3.5 h-3.5" />
@@ -715,7 +822,7 @@ export const AdminHomepagePage: React.FC = () => {
                             type="button"
                             onClick={() => moveItemInArray('featuredArtistIds', idx, 'down')}
                             disabled={isLast}
-                            className="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed transition-colors"
+                            className="p-1.5 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 hover:text-slate-950 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-300 dark:hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed transition-colors shadow-2xs"
                             title="Move Down"
                           >
                             <ArrowDown className="w-3.5 h-3.5" />
@@ -723,7 +830,7 @@ export const AdminHomepagePage: React.FC = () => {
                           <button
                             type="button"
                             onClick={() => toggleItemIdInArray('featuredArtistIds', artistId)}
-                            className="p-1.5 rounded-lg bg-red-950/40 hover:bg-red-900/60 text-red-400 hover:text-red-200 transition-colors cursor-pointer ml-1"
+                            className="p-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 border border-red-200 dark:bg-red-950/40 dark:hover:bg-red-900/60 dark:text-red-400 dark:hover:text-red-200 dark:border-transparent transition-colors cursor-pointer ml-1 shadow-2xs"
                             title="Remove from featured list"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -734,15 +841,15 @@ export const AdminHomepagePage: React.FC = () => {
                   })}
                 </div>
               ) : (
-                <div className="p-6 rounded-xl bg-zinc-900/50 border border-dashed border-zinc-800 text-center text-xs text-zinc-500">
+                <div className="p-6 rounded-xl bg-slate-50 dark:bg-zinc-900/50 border border-dashed border-slate-200 dark:border-zinc-800 text-center text-xs text-slate-500 dark:text-zinc-500">
                   No artists selected. Check artists below to feature them on the homepage.
                 </div>
               )}
             </div>
 
             {/* Select from roster */}
-            <div className="space-y-3 pt-4 border-t border-zinc-800">
-              <label className="text-xs font-mono font-bold text-zinc-300">
+            <div className="space-y-3 pt-4 border-t border-slate-200 dark:border-zinc-800">
+              <label className="text-xs font-mono font-bold text-slate-700 dark:text-zinc-300">
                 ROSTER ARTISTS (CLICK TO SELECT / DESELECT):
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3 max-h-80 overflow-y-auto pr-1">
@@ -755,22 +862,22 @@ export const AdminHomepagePage: React.FC = () => {
                       onClick={() => toggleItemIdInArray('featuredArtistIds', artist.id)}
                       className={`p-3 rounded-xl border flex items-center gap-3 text-left transition-all cursor-pointer ${
                         isSelected
-                          ? 'bg-vexo-red/10 border-vexo-red text-white shadow-md'
-                          : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
+                          ? 'bg-red-50 dark:bg-vexo-red/10 border-vexo-red text-slate-900 dark:text-white shadow-2xs'
+                          : 'bg-slate-50 hover:bg-slate-100 dark:bg-zinc-900/60 border-slate-200 dark:border-zinc-800 text-slate-600 dark:text-zinc-400 hover:border-slate-300 dark:hover:border-zinc-700 hover:text-slate-900 dark:hover:text-zinc-200'
                       }`}
                     >
                       <img
                         src={artist.avatarUrl}
                         alt={artist.name}
-                        className="w-10 h-10 rounded-full object-cover shrink-0"
+                        className="w-10 h-10 rounded-full object-cover shrink-0 border border-slate-200 dark:border-zinc-800"
                       />
                       <div className="min-w-0 flex-1">
-                        <p className="font-bold text-xs truncate text-white">{artist.name}</p>
-                        <p className="text-[10px] text-zinc-400 truncate">{artist.role}</p>
+                        <p className="font-bold text-xs truncate text-slate-900 dark:text-white">{artist.name}</p>
+                        <p className="text-[10px] text-slate-500 dark:text-zinc-400 truncate">{artist.role}</p>
                       </div>
                       <div
                         className={`w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 ${
-                          isSelected ? 'bg-vexo-red text-white' : 'border border-zinc-700 text-transparent'
+                          isSelected ? 'bg-vexo-red text-white' : 'border border-slate-300 dark:border-zinc-700 text-transparent'
                         }`}
                       >
                         <Check className="w-3 h-3" />
@@ -785,7 +892,7 @@ export const AdminHomepagePage: React.FC = () => {
 
         {/* 4. FEATURED EVENTS TAB */}
         {activeTab === 'events' && (
-          <div className="bg-[#0e0e13] border border-zinc-800/80 rounded-2xl p-6 space-y-6">
+          <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-6 space-y-6 shadow-sm transition-colors">
             <div className="border-b border-zinc-800/80 pb-4">
               <h3 className="text-sm font-bold text-white tracking-wide flex items-center gap-2">
                 <Calendar className="w-4 h-4 text-vexo-red" />
@@ -823,20 +930,20 @@ export const AdminHomepagePage: React.FC = () => {
                     return (
                       <div
                         key={eventId}
-                        className="p-3 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-between gap-4"
+                        className="p-3 rounded-xl bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 flex items-center justify-between gap-4 shadow-2xs"
                       >
                         <div className="flex items-center gap-3 min-w-0">
-                          <span className="w-6 h-6 rounded-lg bg-zinc-800 text-vexo-red font-mono font-bold text-xs flex items-center justify-center shrink-0">
+                          <span className="w-6 h-6 rounded-lg bg-slate-200 dark:bg-zinc-800 text-vexo-red font-mono font-bold text-xs flex items-center justify-center shrink-0">
                             {idx + 1}
                           </span>
                           <img
                             src={event?.imageUrl || 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?auto=format&fit=crop&w=200&q=80'}
                             alt={event?.title}
-                            className="w-12 h-9 rounded-lg object-cover border border-zinc-800 shrink-0"
+                            className="w-12 h-9 rounded-lg object-cover border border-slate-200 dark:border-zinc-800 shrink-0"
                           />
                           <div className="min-w-0">
-                            <p className="font-bold text-xs text-white truncate">{event?.title || eventId}</p>
-                            <p className="text-[11px] text-zinc-400 truncate">
+                            <p className="font-bold text-xs text-slate-900 dark:text-white truncate">{event?.title || eventId}</p>
+                            <p className="text-[11px] text-slate-500 dark:text-zinc-400 truncate">
                               {event?.date} • {event?.venue || event?.location}
                             </p>
                           </div>
@@ -847,7 +954,7 @@ export const AdminHomepagePage: React.FC = () => {
                             type="button"
                             onClick={() => moveItemInArray('featuredEventIds', idx, 'up')}
                             disabled={isFirst}
-                            className="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed transition-colors"
+                            className="p-1.5 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 hover:text-slate-950 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-300 dark:hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed transition-colors shadow-2xs"
                             title="Move Up"
                           >
                             <ArrowUp className="w-3.5 h-3.5" />
@@ -856,7 +963,7 @@ export const AdminHomepagePage: React.FC = () => {
                             type="button"
                             onClick={() => moveItemInArray('featuredEventIds', idx, 'down')}
                             disabled={isLast}
-                            className="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed transition-colors"
+                            className="p-1.5 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 hover:text-slate-950 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-300 dark:hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed transition-colors shadow-2xs"
                             title="Move Down"
                           >
                             <ArrowDown className="w-3.5 h-3.5" />
@@ -864,7 +971,7 @@ export const AdminHomepagePage: React.FC = () => {
                           <button
                             type="button"
                             onClick={() => toggleItemIdInArray('featuredEventIds', eventId)}
-                            className="p-1.5 rounded-lg bg-red-950/40 hover:bg-red-900/60 text-red-400 hover:text-red-200 transition-colors cursor-pointer ml-1"
+                            className="p-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 border border-red-200 dark:bg-red-950/40 dark:hover:bg-red-900/60 dark:text-red-400 dark:hover:text-red-200 dark:border-transparent transition-colors cursor-pointer ml-1 shadow-2xs"
                             title="Remove from featured list"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -875,15 +982,15 @@ export const AdminHomepagePage: React.FC = () => {
                   })}
                 </div>
               ) : (
-                <div className="p-6 rounded-xl bg-zinc-900/50 border border-dashed border-zinc-800 text-center text-xs text-zinc-500">
+                <div className="p-6 rounded-xl bg-slate-50 dark:bg-zinc-900/50 border border-dashed border-slate-200 dark:border-zinc-800 text-center text-xs text-slate-500 dark:text-zinc-500">
                   No events selected. Check events below to feature them on the homepage.
                 </div>
               )}
             </div>
 
             {/* Select from events */}
-            <div className="space-y-3 pt-4 border-t border-zinc-800">
-              <label className="text-xs font-mono font-bold text-zinc-300">
+            <div className="space-y-3 pt-4 border-t border-slate-200 dark:border-zinc-800">
+              <label className="text-xs font-mono font-bold text-slate-700 dark:text-zinc-300">
                 ALL EVENTS (CLICK TO SELECT / DESELECT):
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-80 overflow-y-auto pr-1">
@@ -896,22 +1003,22 @@ export const AdminHomepagePage: React.FC = () => {
                       onClick={() => toggleItemIdInArray('featuredEventIds', event.id)}
                       className={`p-3 rounded-xl border flex items-center gap-3 text-left transition-all cursor-pointer ${
                         isSelected
-                          ? 'bg-vexo-red/10 border-vexo-red text-white shadow-md'
-                          : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
+                          ? 'bg-red-50 dark:bg-vexo-red/10 border-vexo-red text-slate-900 dark:text-white shadow-2xs'
+                          : 'bg-slate-50 hover:bg-slate-100 dark:bg-zinc-900/60 border-slate-200 dark:border-zinc-800 text-slate-600 dark:text-zinc-400 hover:border-slate-300 dark:hover:border-zinc-700 hover:text-slate-900 dark:hover:text-zinc-200'
                       }`}
                     >
                       <img
                         src={event.imageUrl}
                         alt={event.title}
-                        className="w-12 h-9 rounded-lg object-cover shrink-0"
+                        className="w-12 h-9 rounded-lg object-cover shrink-0 border border-slate-200 dark:border-zinc-800"
                       />
                       <div className="min-w-0 flex-1">
-                        <p className="font-bold text-xs truncate text-white">{event.title}</p>
-                        <p className="text-[10px] text-zinc-400 truncate">{event.date} • {event.location}</p>
+                        <p className="font-bold text-xs truncate text-slate-900 dark:text-white">{event.title}</p>
+                        <p className="text-[10px] text-slate-500 dark:text-zinc-400 truncate">{event.date} • {event.location}</p>
                       </div>
                       <div
                         className={`w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 ${
-                          isSelected ? 'bg-vexo-red text-white' : 'border border-zinc-700 text-transparent'
+                          isSelected ? 'bg-vexo-red text-white' : 'border border-slate-300 dark:border-zinc-700 text-transparent'
                         }`}
                       >
                         <Check className="w-3 h-3" />
@@ -926,7 +1033,7 @@ export const AdminHomepagePage: React.FC = () => {
 
         {/* 5. FEATURED VIDEOS TAB */}
         {activeTab === 'videos' && (
-          <div className="bg-[#0e0e13] border border-zinc-800/80 rounded-2xl p-6 space-y-6">
+          <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-6 space-y-6 shadow-sm transition-colors">
             <div className="border-b border-zinc-800/80 pb-4">
               <h3 className="text-sm font-bold text-white tracking-wide flex items-center gap-2">
                 <Video className="w-4 h-4 text-vexo-red" />
@@ -964,20 +1071,20 @@ export const AdminHomepagePage: React.FC = () => {
                     return (
                       <div
                         key={videoId}
-                        className="p-3 rounded-xl bg-zinc-900 border border-zinc-800 flex items-center justify-between gap-4"
+                        className="p-3 rounded-xl bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 flex items-center justify-between gap-4 shadow-2xs"
                       >
                         <div className="flex items-center gap-3 min-w-0">
-                          <span className="w-6 h-6 rounded-lg bg-zinc-800 text-vexo-red font-mono font-bold text-xs flex items-center justify-center shrink-0">
+                          <span className="w-6 h-6 rounded-lg bg-slate-200 dark:bg-zinc-800 text-vexo-red font-mono font-bold text-xs flex items-center justify-center shrink-0">
                             {idx + 1}
                           </span>
                           <img
                             src={video?.thumbnailUrl || `https://img.youtube.com/vi/${video?.youtubeId}/mqdefault.jpg`}
                             alt={video?.title}
-                            className="w-14 h-9 rounded-lg object-cover border border-zinc-800 shrink-0"
+                            className="w-14 h-9 rounded-lg object-cover border border-slate-200 dark:border-zinc-800 shrink-0"
                           />
                           <div className="min-w-0">
-                            <p className="font-bold text-xs text-white truncate">{video?.title || videoId}</p>
-                            <p className="text-[11px] text-zinc-400 truncate">{video?.artist || video?.category}</p>
+                            <p className="font-bold text-xs text-slate-900 dark:text-white truncate">{video?.title || videoId}</p>
+                            <p className="text-[11px] text-slate-500 dark:text-zinc-400 truncate">{video?.artist || video?.category}</p>
                           </div>
                         </div>
 
@@ -986,7 +1093,7 @@ export const AdminHomepagePage: React.FC = () => {
                             type="button"
                             onClick={() => moveItemInArray('featuredVideoIds', idx, 'up')}
                             disabled={isFirst}
-                            className="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed transition-colors"
+                            className="p-1.5 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 hover:text-slate-950 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-300 dark:hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed transition-colors shadow-2xs"
                             title="Move Up"
                           >
                             <ArrowUp className="w-3.5 h-3.5" />
@@ -995,7 +1102,7 @@ export const AdminHomepagePage: React.FC = () => {
                             type="button"
                             onClick={() => moveItemInArray('featuredVideoIds', idx, 'down')}
                             disabled={isLast}
-                            className="p-1.5 rounded-lg bg-zinc-800 hover:bg-zinc-700 text-zinc-300 hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed transition-colors"
+                            className="p-1.5 rounded-lg bg-slate-200 hover:bg-slate-300 text-slate-700 hover:text-slate-950 dark:bg-zinc-800 dark:hover:bg-zinc-700 dark:text-zinc-300 dark:hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed transition-colors shadow-2xs"
                             title="Move Down"
                           >
                             <ArrowDown className="w-3.5 h-3.5" />
@@ -1003,7 +1110,7 @@ export const AdminHomepagePage: React.FC = () => {
                           <button
                             type="button"
                             onClick={() => toggleItemIdInArray('featuredVideoIds', videoId)}
-                            className="p-1.5 rounded-lg bg-red-950/40 hover:bg-red-900/60 text-red-400 hover:text-red-200 transition-colors cursor-pointer ml-1"
+                            className="p-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 hover:text-red-700 border border-red-200 dark:bg-red-950/40 dark:hover:bg-red-900/60 dark:text-red-400 dark:hover:text-red-200 dark:border-transparent transition-colors cursor-pointer ml-1 shadow-2xs"
                             title="Remove from featured list"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -1014,15 +1121,15 @@ export const AdminHomepagePage: React.FC = () => {
                   })}
                 </div>
               ) : (
-                <div className="p-6 rounded-xl bg-zinc-900/50 border border-dashed border-zinc-800 text-center text-xs text-zinc-500">
+                <div className="p-6 rounded-xl bg-slate-50 dark:bg-zinc-900/50 border border-dashed border-slate-200 dark:border-zinc-800 text-center text-xs text-slate-500 dark:text-zinc-500">
                   No videos selected. Check videos below to feature them on the homepage.
                 </div>
               )}
             </div>
 
             {/* Select from videos */}
-            <div className="space-y-3 pt-4 border-t border-zinc-800">
-              <label className="text-xs font-mono font-bold text-zinc-300">
+            <div className="space-y-3 pt-4 border-t border-slate-200 dark:border-zinc-800">
+              <label className="text-xs font-mono font-bold text-slate-700 dark:text-zinc-300">
                 ALL VIDEOS (CLICK TO SELECT / DESELECT):
               </label>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 max-h-80 overflow-y-auto pr-1">
@@ -1035,22 +1142,22 @@ export const AdminHomepagePage: React.FC = () => {
                       onClick={() => toggleItemIdInArray('featuredVideoIds', video.id)}
                       className={`p-3 rounded-xl border flex items-center gap-3 text-left transition-all cursor-pointer ${
                         isSelected
-                          ? 'bg-vexo-red/10 border-vexo-red text-white shadow-md'
-                          : 'bg-zinc-900/60 border-zinc-800 text-zinc-400 hover:border-zinc-700 hover:text-zinc-200'
+                          ? 'bg-red-50 dark:bg-vexo-red/10 border-vexo-red text-slate-900 dark:text-white shadow-2xs'
+                          : 'bg-slate-50 hover:bg-slate-100 dark:bg-zinc-900/60 border-slate-200 dark:border-zinc-800 text-slate-600 dark:text-zinc-400 hover:border-slate-300 dark:hover:border-zinc-700 hover:text-slate-900 dark:hover:text-zinc-200'
                       }`}
                     >
                       <img
                         src={video.thumbnailUrl || `https://img.youtube.com/vi/${video.youtubeId}/mqdefault.jpg`}
                         alt={video.title}
-                        className="w-14 h-9 rounded-lg object-cover shrink-0"
+                        className="w-14 h-9 rounded-lg object-cover shrink-0 border border-slate-200 dark:border-zinc-800"
                       />
                       <div className="min-w-0 flex-1">
-                        <p className="font-bold text-xs truncate text-white">{video.title}</p>
-                        <p className="text-[10px] text-zinc-400 truncate">{video.artist} • {video.category}</p>
+                        <p className="font-bold text-xs truncate text-slate-900 dark:text-white">{video.title}</p>
+                        <p className="text-[10px] text-slate-500 dark:text-zinc-400 truncate">{video.artist} • {video.category}</p>
                       </div>
                       <div
                         className={`w-5 h-5 rounded-full flex items-center justify-center text-xs shrink-0 ${
-                          isSelected ? 'bg-vexo-red text-white' : 'border border-zinc-700 text-transparent'
+                          isSelected ? 'bg-vexo-red text-white' : 'border border-slate-300 dark:border-zinc-700 text-transparent'
                         }`}
                       >
                         <Check className="w-3 h-3" />
@@ -1065,7 +1172,7 @@ export const AdminHomepagePage: React.FC = () => {
 
         {/* 6. STATISTICS TAB */}
         {activeTab === 'stats' && (
-          <div className="bg-[#0e0e13] border border-zinc-800/80 rounded-2xl p-6 space-y-6">
+          <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-6 space-y-6 shadow-sm transition-colors">
             <div className="border-b border-zinc-800/80 pb-4">
               <h3 className="text-sm font-bold text-white tracking-wide flex items-center gap-2">
                 <TrendingUp className="w-4 h-4 text-vexo-red" />
@@ -1151,7 +1258,7 @@ export const AdminHomepagePage: React.FC = () => {
 
         {/* 7. ABOUT SECTION TAB */}
         {activeTab === 'about' && (
-          <div className="bg-[#0e0e13] border border-zinc-800/80 rounded-2xl p-6 space-y-6">
+          <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-6 space-y-6 shadow-sm transition-colors">
             <div className="border-b border-zinc-800/80 pb-4">
               <h3 className="text-sm font-bold text-white tracking-wide flex items-center gap-2">
                 <Sparkles className="w-4 h-4 text-vexo-red" />
@@ -1217,7 +1324,7 @@ export const AdminHomepagePage: React.FC = () => {
 
         {/* 8. FINAL CTA TAB */}
         {activeTab === 'finalCta' && (
-          <div className="bg-[#0e0e13] border border-zinc-800/80 rounded-2xl p-6 space-y-6">
+          <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-6 space-y-6 shadow-sm transition-colors">
             <div className="border-b border-zinc-800/80 pb-4">
               <h3 className="text-sm font-bold text-white tracking-wide flex items-center gap-2">
                 <Send className="w-4 h-4 text-vexo-red" />
@@ -1326,9 +1433,9 @@ export const AdminHomepagePage: React.FC = () => {
         )}
 
         {/* Sticky Bottom Save Bar */}
-        <div className="sticky bottom-4 z-20 p-4 rounded-2xl bg-[#0e0e13]/95 backdrop-blur-md border border-zinc-800/90 shadow-2xl flex items-center justify-between">
-          <div className="flex items-center gap-2 text-xs text-zinc-400 font-mono">
-            <span className="w-2 h-2 rounded-full bg-emerald-400" />
+        <div className="sticky bottom-4 z-20 p-4 rounded-2xl bg-white/95 dark:bg-[#0e0e13]/95 backdrop-blur-md border border-slate-200 dark:border-zinc-800/90 shadow-xl flex items-center justify-between transition-colors">
+          <div className="flex items-center gap-2 text-xs text-slate-600 dark:text-zinc-400 font-mono">
+            <span className="w-2 h-2 rounded-full bg-emerald-500" />
             <span>Changes will apply directly to public homepage</span>
           </div>
 
@@ -1336,7 +1443,7 @@ export const AdminHomepagePage: React.FC = () => {
             <button
               type="button"
               onClick={fetchInitialData}
-              className="px-4 py-2.5 rounded-xl bg-zinc-900 hover:bg-zinc-800 text-xs text-zinc-400 hover:text-white transition-colors cursor-pointer"
+              className="px-4 py-2.5 rounded-xl bg-slate-100 dark:bg-zinc-900 hover:bg-slate-200 dark:hover:bg-zinc-800 text-xs text-slate-700 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-white transition-colors cursor-pointer border border-slate-200 dark:border-transparent"
             >
               Discard Changes
             </button>

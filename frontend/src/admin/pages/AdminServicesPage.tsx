@@ -535,17 +535,17 @@ export const AdminServicesPage: React.FC = () => {
       {/* Header Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black uppercase tracking-tight text-white flex items-center gap-2">
+          <h1 className="text-2xl font-black uppercase tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
             <span>Studio Services & Pricing CMS</span>
           </h1>
-          <p className="text-xs text-zinc-400 mt-1">
+          <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1">
             Manage your service capabilities, edit 3 pricing plans per service, tech specs, and production roadmaps.
           </p>
         </div>
 
         <button
           onClick={openCreateModal}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-vexo-red hover:bg-red-600 text-xs font-bold font-mono uppercase tracking-wider text-white shadow-lg shadow-red-950/50 transition-all cursor-pointer"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-vexo-red hover:bg-[#c50000] active:scale-[0.98] text-xs font-bold font-mono uppercase tracking-wider text-white shadow-xs hover:shadow-md hover:shadow-red-500/20 transition-all cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           <span>New Studio Service</span>
@@ -553,15 +553,15 @@ export const AdminServicesPage: React.FC = () => {
       </div>
 
       {/* Filter & Search Controls */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-zinc-900/70 p-3 rounded-2xl border border-zinc-800">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white dark:bg-zinc-900/70 p-3 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-xs">
         <div className="relative w-full sm:w-80">
-          <Search className="w-4 h-4 text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
+          <Search className="w-4 h-4 text-slate-400 dark:text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
             type="text"
             placeholder="Search by title, slug, or category..."
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
-            className="w-full pl-10 pr-4 py-2 rounded-xl bg-zinc-900 border border-zinc-700/80 text-xs sm:text-sm text-white placeholder:text-zinc-500 focus:outline-none focus:border-vexo-red"
+            className="w-full pl-10 pr-4 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700/80 text-xs sm:text-sm text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-500 focus:outline-none focus:border-vexo-red focus:ring-1 focus:ring-vexo-red"
           />
         </div>
 
@@ -570,8 +570,8 @@ export const AdminServicesPage: React.FC = () => {
             onClick={() => setStatusFilter('all')}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
               statusFilter === 'all'
-                ? 'bg-zinc-800 text-white border border-zinc-600 shadow-sm'
-                : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'
+                ? 'bg-slate-200 text-slate-900 border border-slate-300 shadow-2xs font-bold dark:bg-zinc-800 dark:text-white dark:border-zinc-600'
+                : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-zinc-800/50'
             }`}
           >
             All ({services.length})
@@ -580,8 +580,8 @@ export const AdminServicesPage: React.FC = () => {
             onClick={() => setStatusFilter('published')}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
               statusFilter === 'published'
-                ? 'bg-zinc-800 text-white border border-zinc-600 shadow-sm'
-                : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'
+                ? 'bg-slate-200 text-slate-900 border border-slate-300 shadow-2xs font-bold dark:bg-zinc-800 dark:text-white dark:border-zinc-600'
+                : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-zinc-800/50'
             }`}
           >
             Live ({services.filter((s) => s.isActive).length})
@@ -590,8 +590,8 @@ export const AdminServicesPage: React.FC = () => {
             onClick={() => setStatusFilter('draft')}
             className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
               statusFilter === 'draft'
-                ? 'bg-zinc-800 text-white border border-zinc-600 shadow-sm'
-                : 'text-zinc-400 hover:text-white hover:bg-zinc-800/50'
+                ? 'bg-slate-200 text-slate-900 border border-slate-300 shadow-2xs font-bold dark:bg-zinc-800 dark:text-white dark:border-zinc-600'
+                : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-zinc-800/50'
             }`}
           >
             Drafts ({services.filter((s) => !s.isActive).length})
@@ -600,19 +600,19 @@ export const AdminServicesPage: React.FC = () => {
       </div>
 
       {/* Services Table */}
-      <div className="rounded-2xl border border-zinc-800 bg-[#0c0c10] overflow-hidden shadow-lg">
+      <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-[#0c0c10] overflow-hidden shadow-xs">
         {isLoading ? (
-          <div className="py-16 text-center text-xs sm:text-sm font-mono text-zinc-400">
+          <div className="py-16 text-center text-xs sm:text-sm font-mono text-slate-500 dark:text-zinc-400">
             LOADING SERVICES...
           </div>
         ) : filteredServices.length === 0 ? (
-          <div className="py-14 text-center text-xs sm:text-sm font-mono text-zinc-400">
+          <div className="py-14 text-center text-xs sm:text-sm font-mono text-slate-500 dark:text-zinc-400">
             No services found matching current filters.
           </div>
         ) : (
           <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs sm:text-sm text-zinc-200">
-              <thead className="bg-zinc-900/90 border-b border-zinc-800 text-zinc-400 font-mono text-[11px] uppercase tracking-wider font-semibold">
+            <table className="w-full text-left text-xs sm:text-sm text-slate-800 dark:text-zinc-200">
+              <thead className="bg-slate-50 dark:bg-zinc-900/90 border-b border-slate-200 dark:border-zinc-800 text-slate-600 dark:text-zinc-400 font-mono text-[11px] uppercase tracking-wider font-semibold">
                 <tr>
                   <th className="py-3 px-3.5 w-14 text-center">Seq</th>
                   <th className="py-3 px-5">Capability & Cover</th>
@@ -622,14 +622,14 @@ export const AdminServicesPage: React.FC = () => {
                   <th className="py-3 px-5 text-right">Actions</th>
                 </tr>
               </thead>
-              <tbody className="divide-y divide-zinc-800/70 font-sans">
+              <tbody className="divide-y divide-slate-100 dark:divide-zinc-800/70 font-sans">
                 {filteredServices.map((service, index) => {
                   const IconComp = getIconComponent(service.icon);
                   const isFirst = index === 0;
                   const isLast = index === filteredServices.length - 1;
 
                   return (
-                    <tr key={service.id} className="hover:bg-zinc-900/40 transition-colors">
+                    <tr key={service.id} className="hover:bg-slate-50/80 dark:hover:bg-zinc-900/40 transition-colors">
                       {/* Reorder Buttons */}
                       <td className="py-3.5 px-3.5 text-center">
                         <div className="flex flex-col items-center gap-0.5">
@@ -637,19 +637,19 @@ export const AdminServicesPage: React.FC = () => {
                             type="button"
                             onClick={() => handleMove(index, 'up')}
                             disabled={isFirst || isReordering}
-                            className="p-1 rounded hover:bg-zinc-800 text-zinc-400 hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed"
+                            className="p-1 rounded hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-400 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed"
                             title="Move Up"
                           >
                             <ArrowUp className="w-3.5 h-3.5" />
                           </button>
-                          <span className="font-mono text-xs font-bold text-zinc-400">
+                          <span className="font-mono text-xs font-bold text-slate-700 dark:text-zinc-400">
                             {service.number || (index + 1 < 10 ? `0${index + 1}` : index + 1)}
                           </span>
                           <button
                             type="button"
                             onClick={() => handleMove(index, 'down')}
                             disabled={isLast || isReordering}
-                            className="p-1 rounded hover:bg-zinc-800 text-zinc-400 hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed"
+                            className="p-1 rounded hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-400 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed"
                             title="Move Down"
                           >
                             <ArrowDown className="w-3.5 h-3.5" />
@@ -660,11 +660,11 @@ export const AdminServicesPage: React.FC = () => {
                       {/* Service Info */}
                       <td className="py-3.5 px-5">
                         <div className="flex items-center gap-3.5">
-                          <div className="relative w-16 h-11 rounded-lg overflow-hidden border border-zinc-700/80 bg-zinc-900 shrink-0 shadow-sm">
+                          <div className="relative w-16 h-11 rounded-lg overflow-hidden border border-slate-200 dark:border-zinc-700/80 bg-slate-100 dark:bg-zinc-900 shrink-0 shadow-xs">
                             {service.imageUrl ? (
                               <img src={getMediaUrl(service.imageUrl)} alt={service.title} className="w-full h-full object-cover" />
                             ) : (
-                              <div className="w-full h-full flex items-center justify-center text-zinc-500 font-mono text-[10px]">
+                              <div className="w-full h-full flex items-center justify-center text-slate-400 dark:text-zinc-500 font-mono text-[10px]">
                                 NO IMG
                               </div>
                             )}
@@ -672,12 +672,12 @@ export const AdminServicesPage: React.FC = () => {
                           <div className="min-w-0 flex-1">
                             <div className="flex items-center gap-2 flex-wrap">
                               <IconComp className="w-4 h-4 text-vexo-red shrink-0" />
-                              <span className="font-bold text-white text-sm">{service.title}</span>
-                              <span className="px-1.5 py-0.2 rounded text-[10px] font-mono font-bold bg-red-500/15 text-vexo-red border border-red-500/30 shrink-0">
+                              <span className="font-bold text-slate-900 dark:text-white text-sm">{service.title}</span>
+                              <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-red-50 dark:bg-red-500/15 text-vexo-red border border-red-200 dark:border-red-500/30 shrink-0">
                                 3 PLANS
                               </span>
                             </div>
-                            <p className="text-xs text-zinc-400 line-clamp-1 mt-0.5 leading-normal">
+                            <p className="text-xs text-slate-500 dark:text-zinc-400 line-clamp-1 mt-0.5 leading-normal">
                               {service.shortDesc}
                             </p>
                           </div>
@@ -686,7 +686,7 @@ export const AdminServicesPage: React.FC = () => {
 
                       {/* Category */}
                       <td className="py-3.5 px-3.5 font-mono text-xs">
-                        <span className="inline-block px-2.5 py-1 rounded-md bg-zinc-900 border border-zinc-700/70 text-[11px] uppercase font-semibold text-zinc-200 whitespace-nowrap shadow-sm">
+                        <span className="inline-block px-2.5 py-1 rounded-md bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700/70 text-[11px] uppercase font-semibold text-slate-700 dark:text-zinc-200 whitespace-nowrap shadow-xs">
                           {service.category || 'Production'}
                         </span>
                       </td>
@@ -694,10 +694,10 @@ export const AdminServicesPage: React.FC = () => {
                       {/* Pricing Range */}
                       <td className="py-3.5 px-5">
                         <div className="flex flex-col whitespace-nowrap">
-                          <span className="text-white text-sm font-bold tracking-tight">
+                          <span className="text-slate-900 dark:text-white text-sm font-bold tracking-tight">
                             {service.pricingRange || 'Tiered Milestone Pricing'}
                           </span>
-                          <span className="text-[11px] text-zinc-400 font-mono mt-0.5">
+                          <span className="text-[11px] text-slate-400 dark:text-zinc-400 font-mono mt-1">
                             Tiered Pricing Active
                           </span>
                         </div>
@@ -708,20 +708,20 @@ export const AdminServicesPage: React.FC = () => {
                         <button
                           type="button"
                           onClick={() => handleTogglePublish(service)}
-                          className={`inline-flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-bold uppercase transition-all cursor-pointer whitespace-nowrap shrink-0 min-w-[76px] shadow-sm ${
+                          className={`inline-flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-bold uppercase transition-all cursor-pointer whitespace-nowrap shrink-0 min-w-[76px] shadow-xs ${
                             service.isActive
-                              ? 'bg-emerald-950/90 border border-emerald-600/70 text-emerald-300 hover:border-emerald-500'
-                              : 'bg-zinc-900 border border-zinc-700 text-zinc-400 hover:border-zinc-500'
+                              ? 'bg-emerald-50 dark:bg-emerald-950/90 border border-emerald-200 dark:border-emerald-600/70 text-emerald-700 dark:text-emerald-300 hover:border-emerald-300'
+                              : 'bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 text-slate-600 dark:text-zinc-400 hover:border-slate-300'
                           }`}
                         >
                           {service.isActive ? (
                             <>
-                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shrink-0" />
+                              <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse shrink-0" />
                               <span>Live</span>
                             </>
                           ) : (
                             <>
-                              <span className="w-1.5 h-1.5 rounded-full bg-zinc-500 shrink-0" />
+                              <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-zinc-500 shrink-0" />
                               <span>Draft</span>
                             </>
                           )}
@@ -733,7 +733,7 @@ export const AdminServicesPage: React.FC = () => {
                         <div className="flex items-center justify-end gap-2 whitespace-nowrap">
                           <button
                             onClick={() => openEditModal(service)}
-                            className="px-3 py-1.5 rounded-lg bg-zinc-800 hover:bg-vexo-red text-zinc-200 hover:text-white transition-all cursor-pointer border border-zinc-700 hover:border-red-600 text-xs font-semibold flex items-center gap-1.5 shadow-sm"
+                            className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-950 border border-slate-200 dark:bg-zinc-800 dark:hover:bg-vexo-red dark:text-zinc-200 dark:hover:text-white transition-all cursor-pointer dark:border-zinc-700 hover:border-slate-300 dark:hover:border-red-600 text-xs font-semibold flex items-center gap-1.5 shadow-2xs"
                             title="Edit Service & 3 Plans"
                           >
                             <Edit2 className="w-3.5 h-3.5 shrink-0" />
@@ -741,7 +741,7 @@ export const AdminServicesPage: React.FC = () => {
                           </button>
                           <button
                             onClick={() => setDeleteTarget({ id: service.id, title: service.title })}
-                            className="p-1.5 rounded-lg bg-zinc-800 hover:bg-red-950 text-zinc-400 hover:text-red-400 transition-colors cursor-pointer border border-zinc-700/60"
+                            className="p-1.5 rounded-lg bg-slate-100 hover:bg-red-50 text-slate-500 hover:text-red-600 border border-slate-200 hover:border-red-200 dark:bg-zinc-800 dark:hover:bg-red-950 dark:text-zinc-400 dark:hover:text-red-400 transition-colors cursor-pointer dark:border-zinc-700/60 shadow-2xs"
                             title="Delete Service"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -766,15 +766,15 @@ export const AdminServicesPage: React.FC = () => {
         maxWidth="6xl"
       >
         {/* Navigation Tabs Inside Modal */}
-        <div className="flex flex-wrap items-center justify-between border-b border-zinc-800 pb-4 mb-6 gap-3">
+        <div className="flex flex-wrap items-center justify-between border-b border-slate-200 dark:border-zinc-800 pb-4 mb-6 gap-3">
           <div className="flex flex-wrap items-center gap-2.5">
             <button
               type="button"
               onClick={() => setActiveTab('details')}
               className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-mono font-bold uppercase transition-all cursor-pointer flex items-center gap-2 ${
                 activeTab === 'details'
-                  ? 'bg-vexo-red text-white shadow-md shadow-red-950/40'
-                  : 'bg-zinc-900 text-zinc-300 hover:text-white border border-zinc-800'
+                  ? 'bg-vexo-red text-white shadow-md shadow-red-500/25'
+                  : 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border border-slate-200 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:text-white dark:border-zinc-800'
               }`}
             >
               <Sliders className="w-4 h-4" />
@@ -786,8 +786,8 @@ export const AdminServicesPage: React.FC = () => {
               onClick={() => setActiveTab('plans')}
               className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-mono font-bold uppercase transition-all cursor-pointer flex items-center gap-2 ${
                 activeTab === 'plans'
-                  ? 'bg-vexo-red text-white shadow-md shadow-red-950/40'
-                  : 'bg-zinc-900 text-zinc-300 hover:text-white border border-zinc-800'
+                  ? 'bg-vexo-red text-white shadow-md shadow-red-500/25'
+                  : 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border border-slate-200 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:text-white dark:border-zinc-800'
               }`}
             >
               <Sparkles className="w-4 h-4" />
@@ -799,8 +799,8 @@ export const AdminServicesPage: React.FC = () => {
               onClick={() => setActiveTab('process')}
               className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-mono font-bold uppercase transition-all cursor-pointer flex items-center gap-2 ${
                 activeTab === 'process'
-                  ? 'bg-vexo-red text-white shadow-md shadow-red-950/40'
-                  : 'bg-zinc-900 text-zinc-300 hover:text-white border border-zinc-800'
+                  ? 'bg-vexo-red text-white shadow-md shadow-red-500/25'
+                  : 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border border-slate-200 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:text-white dark:border-zinc-800'
               }`}
             >
               <Layers className="w-4 h-4" />
@@ -812,8 +812,8 @@ export const AdminServicesPage: React.FC = () => {
               onClick={() => setActiveTab('specs')}
               className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-mono font-bold uppercase transition-all cursor-pointer flex items-center gap-2 ${
                 activeTab === 'specs'
-                  ? 'bg-vexo-red text-white shadow-md shadow-red-950/40'
-                  : 'bg-zinc-900 text-zinc-300 hover:text-white border border-zinc-800'
+                  ? 'bg-vexo-red text-white shadow-md shadow-red-500/25'
+                  : 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border border-slate-200 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:text-white dark:border-zinc-800'
               }`}
             >
               <FileCheck className="w-4 h-4" />
@@ -825,8 +825,8 @@ export const AdminServicesPage: React.FC = () => {
               onClick={() => setActiveTab('faqs')}
               className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-mono font-bold uppercase transition-all cursor-pointer flex items-center gap-2 ${
                 activeTab === 'faqs'
-                  ? 'bg-vexo-red text-white shadow-md shadow-red-950/40'
-                  : 'bg-zinc-900 text-zinc-300 hover:text-white border border-zinc-800'
+                  ? 'bg-vexo-red text-white shadow-md shadow-red-500/25'
+                  : 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border border-slate-200 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:text-white dark:border-zinc-800'
               }`}
             >
               <HelpCircle className="w-4 h-4" />
@@ -838,8 +838,8 @@ export const AdminServicesPage: React.FC = () => {
               onClick={() => setActiveTab('preview')}
               className={`px-4 py-2 rounded-xl text-xs sm:text-sm font-mono font-bold uppercase transition-all cursor-pointer flex items-center gap-2 ${
                 activeTab === 'preview'
-                  ? 'bg-zinc-800 text-white border border-zinc-600'
-                  : 'bg-zinc-900 text-zinc-300 hover:text-white border border-zinc-800'
+                  ? 'bg-slate-200 text-slate-900 border border-slate-300 dark:bg-zinc-800 dark:text-white dark:border-zinc-600'
+                  : 'bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-900 border border-slate-200 dark:bg-zinc-900 dark:text-zinc-300 dark:hover:text-white dark:border-zinc-800'
               }`}
             >
               <Eye className="w-4 h-4" />
@@ -1440,8 +1440,8 @@ export const AdminServicesPage: React.FC = () => {
           )}
 
           {/* Modal Bottom Submission Actions */}
-          <div className="flex items-center justify-between pt-5 border-t border-zinc-800">
-            <div className="text-xs sm:text-sm font-mono text-zinc-400 hidden sm:block">
+          <div className="flex items-center justify-between pt-5 border-t border-slate-200 dark:border-zinc-800">
+            <div className="text-xs sm:text-sm font-mono text-slate-500 dark:text-zinc-400 hidden sm:block">
               {editingService ? `Editing ID: ${editingService.id}` : 'Creating New Service'}
             </div>
 
@@ -1449,14 +1449,14 @@ export const AdminServicesPage: React.FC = () => {
               <button
                 type="button"
                 onClick={() => setIsModalOpen(false)}
-                className="px-5 py-2.5 rounded-xl bg-zinc-900 border border-zinc-700 text-sm font-semibold text-zinc-300 hover:text-white transition-colors cursor-pointer"
+                className="px-5 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 border border-slate-200 text-sm font-semibold text-slate-700 hover:text-slate-900 dark:bg-zinc-900 dark:border-zinc-700 dark:text-zinc-300 dark:hover:text-white transition-colors cursor-pointer"
               >
                 Cancel
               </button>
               <button
                 type="submit"
                 disabled={isSubmitting}
-                className="px-6 py-2.5 rounded-xl bg-vexo-red hover:bg-red-600 text-sm font-mono font-bold uppercase tracking-wider text-white shadow-lg shadow-red-950/60 transition-all cursor-pointer disabled:opacity-50 flex items-center gap-2.5"
+                className="px-6 py-2.5 rounded-xl bg-vexo-red hover:bg-red-600 text-sm font-mono font-bold uppercase tracking-wider text-white shadow-md shadow-red-500/25 transition-all cursor-pointer disabled:opacity-50 flex items-center gap-2.5"
               >
                 <span>{isSubmitting ? 'Saving Service...' : editingService ? 'Save Service & 3 Plans' : 'Create Service & Plans'}</span>
                 <ArrowRight className="w-4 h-4" />

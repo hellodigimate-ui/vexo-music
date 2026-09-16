@@ -290,13 +290,13 @@ export const AdminMusicPage: React.FC = () => {
       {/* Top Bar: Tabs & Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         {/* Switcher */}
-        <div className="flex items-center p-1 rounded-xl bg-[#0e0e13] border border-zinc-800 w-fit">
+        <div className="flex items-center p-1 rounded-xl bg-slate-100 dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800 w-fit shadow-xs">
           <button
             onClick={() => setActiveTab('albums')}
             className={`flex items-center gap-2 px-5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
               activeTab === 'albums'
-                ? 'bg-vexo-red text-white shadow-md'
-                : 'text-zinc-400 hover:text-white'
+                ? 'bg-vexo-red text-white shadow-xs'
+                : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             <Disc3 className="w-4 h-4" />
@@ -306,8 +306,8 @@ export const AdminMusicPage: React.FC = () => {
             onClick={() => setActiveTab('tracks')}
             className={`flex items-center gap-2 px-5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
               activeTab === 'tracks'
-                ? 'bg-vexo-red text-white shadow-md'
-                : 'text-zinc-400 hover:text-white'
+                ? 'bg-vexo-red text-white shadow-xs'
+                : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white'
             }`}
           >
             <Music className="w-4 h-4" />
@@ -318,20 +318,20 @@ export const AdminMusicPage: React.FC = () => {
         {/* Right side search & create */}
         <div className="flex items-center gap-3">
           <div className="relative">
-            <Search className="w-4 h-4 text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <Search className="w-4 h-4 text-slate-400 dark:text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={`Search ${activeTab}...`}
-              className="pl-10 pr-4 py-2 rounded-xl bg-[#0e0e13] border border-zinc-800 text-xs text-white placeholder-zinc-500 focus:border-vexo-red focus:outline-none"
+              className="pl-10 pr-4 py-2 rounded-xl bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:border-vexo-red focus:outline-none focus:ring-1 focus:ring-vexo-red"
             />
           </div>
 
           {activeTab === 'albums' ? (
             <button
               onClick={openCreateAlbum}
-              className="px-4 py-2.5 rounded-xl bg-vexo-red hover:bg-vexo-red-bright text-xs font-semibold text-white shadow-[0_0_20px_rgba(224,0,0,0.35)] flex items-center gap-2 transition-all cursor-pointer"
+              className="px-4 py-2.5 rounded-xl bg-vexo-red hover:bg-[#c50000] active:scale-[0.98] text-xs font-semibold text-white shadow-xs hover:shadow-md hover:shadow-red-500/20 flex items-center gap-2 transition-all cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>Add Album</span>
@@ -339,7 +339,7 @@ export const AdminMusicPage: React.FC = () => {
           ) : (
             <button
               onClick={() => openCreateTrack()}
-              className="px-4 py-2.5 rounded-xl bg-vexo-red hover:bg-vexo-red-bright text-xs font-semibold text-white shadow-[0_0_20px_rgba(224,0,0,0.35)] flex items-center gap-2 transition-all cursor-pointer"
+              className="px-4 py-2.5 rounded-xl bg-vexo-red hover:bg-[#c50000] active:scale-[0.98] text-xs font-semibold text-white shadow-xs hover:shadow-md hover:shadow-red-500/20 flex items-center gap-2 transition-all cursor-pointer"
             >
               <Plus className="w-4 h-4" />
               <span>Add Track</span>
@@ -350,17 +350,17 @@ export const AdminMusicPage: React.FC = () => {
 
       {/* Main Tab Content */}
       {activeTab === 'albums' ? (
-        <div className="bg-[#0e0e13] border border-zinc-800/80 rounded-2xl overflow-hidden shadow-2xl">
+        <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl overflow-hidden shadow-xs">
           {isLoading ? (
-            <div className="py-20 text-center text-xs font-mono text-zinc-500 animate-pulse">
+            <div className="py-20 text-center text-xs font-mono text-slate-400 dark:text-zinc-500 animate-pulse">
               LOADING DISCOGRAPHY...
             </div>
           ) : filteredAlbums.length === 0 ? (
-            <div className="py-20 text-center text-xs text-zinc-500">No albums found.</div>
+            <div className="py-20 text-center text-xs text-slate-400 dark:text-zinc-500">No albums found.</div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-[#121218] border-b border-zinc-800/80 text-[10px] font-mono uppercase tracking-widest text-zinc-400">
+                <thead className="bg-slate-50 dark:bg-[#121218] border-b border-slate-200 dark:border-zinc-800/80 text-[10px] font-mono uppercase tracking-widest text-slate-600 dark:text-zinc-400">
                   <tr>
                     <th className="py-3.5 px-6">Release Title</th>
                     <th className="py-3.5 px-6">Primary Artist</th>
@@ -370,14 +370,14 @@ export const AdminMusicPage: React.FC = () => {
                     <th className="py-3.5 px-6 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-zinc-800/60">
+                <tbody className="divide-y divide-slate-100 dark:divide-zinc-800/60">
                   {filteredAlbums.map((album) => {
                     const albumTracksCount = tracks.filter((t) => t.albumId === album.id).length;
                     return (
-                      <tr key={album.id} className="hover:bg-zinc-900/40 transition-colors group">
+                      <tr key={album.id} className="hover:bg-slate-50/80 dark:hover:bg-zinc-900/40 transition-colors group">
                         <td className="py-4 px-6">
                           <div className="flex items-center gap-3">
-                            <div className="w-11 h-11 rounded-lg overflow-hidden bg-zinc-900 border border-zinc-700/80 shrink-0">
+                            <div className="w-11 h-11 rounded-lg overflow-hidden bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700/80 shrink-0">
                               {album.coverUrl ? (
                                 <img
                                   src={album.coverUrl}
@@ -385,7 +385,7 @@ export const AdminMusicPage: React.FC = () => {
                                   className="w-full h-full object-cover"
                                 />
                               ) : (
-                                <div className="w-full h-full flex items-center justify-center text-zinc-600">
+                                <div className="w-full h-full flex items-center justify-center text-slate-400 dark:text-zinc-600">
                                   <Disc3 className="w-5 h-5" />
                                 </div>
                               )}
@@ -393,22 +393,22 @@ export const AdminMusicPage: React.FC = () => {
                             <div>
                               <button
                                 onClick={() => selectAlbum(album.id)}
-                                className="font-bold text-white text-xs hover:text-vexo-red-bright transition-colors text-left flex items-center gap-1.5 cursor-pointer"
+                                className="font-bold text-slate-900 dark:text-white text-xs hover:text-vexo-red transition-colors text-left flex items-center gap-1.5 cursor-pointer"
                               >
                                 <span>{album.title}</span>
-                                <ChevronRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-vexo-red-bright" />
+                                <ChevronRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-vexo-red" />
                               </button>
-                              <p className="text-[10px] font-mono text-zinc-500">
+                              <p className="text-[10px] font-mono text-slate-400 dark:text-zinc-500">
                                 Released: {album.releaseDate || album.year || '2026'}
                               </p>
                             </div>
                           </div>
                         </td>
 
-                        <td className="py-4 px-6 font-semibold text-zinc-200">{album.artistName}</td>
+                        <td className="py-4 px-6 font-semibold text-slate-800 dark:text-zinc-200">{album.artistName}</td>
 
                         <td className="py-4 px-6">
-                          <span className="px-2 py-0.5 rounded bg-zinc-800 text-[10px] font-mono text-zinc-300">
+                          <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-zinc-800 text-[10px] font-mono text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-transparent">
                             {album.genre} &bull; {album.year}
                           </span>
                         </td>
@@ -416,13 +416,13 @@ export const AdminMusicPage: React.FC = () => {
                         <td className="py-4 px-6">
                           <button
                             onClick={() => selectAlbum(album.id)}
-                            className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-zinc-900 border border-zinc-800 hover:border-vexo-red/40 hover:bg-vexo-red/10 text-xs font-mono text-zinc-300 hover:text-vexo-red-bright transition-all cursor-pointer"
+                            className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 hover:border-red-300 dark:hover:border-vexo-red/40 hover:bg-red-50 dark:hover:bg-vexo-red/10 text-xs font-mono text-slate-700 dark:text-zinc-300 hover:text-vexo-red transition-all cursor-pointer"
                           >
-                            <Layers className="w-3.5 h-3.5 text-vexo-red-bright" />
+                            <Layers className="w-3.5 h-3.5 text-vexo-red" />
                             <span>
                               {albumTracksCount} {albumTracksCount === 1 ? 'Track' : 'Tracks'}
                             </span>
-                            <span className="text-[10px] text-zinc-500">→ Manage</span>
+                            <span className="text-[10px] text-slate-400 dark:text-zinc-500">→ Manage</span>
                           </button>
                         </td>
 
@@ -433,7 +433,7 @@ export const AdminMusicPage: React.FC = () => {
                                 href={album.spotifyUrl}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="p-1.5 rounded-lg bg-emerald-950/60 border border-emerald-800/60 text-emerald-400 hover:bg-emerald-900 transition-colors"
+                                className="p-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800/60 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900 transition-colors"
                               >
                                 <Headphones className="w-3.5 h-3.5" />
                               </a>
@@ -443,7 +443,7 @@ export const AdminMusicPage: React.FC = () => {
                                 href={album.youtubeUrl}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="p-1.5 rounded-lg bg-red-950/60 border border-red-800/60 text-red-400 hover:bg-red-900 transition-colors"
+                                className="p-1.5 rounded-lg bg-red-50 dark:bg-red-950/60 border border-red-200 dark:border-red-800/60 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900 transition-colors"
                               >
                                 <YoutubeIcon className="w-3.5 h-3.5" />
                               </a>
@@ -456,15 +456,15 @@ export const AdminMusicPage: React.FC = () => {
                             <button
                               onClick={() => selectAlbum(album.id)}
                               title="Manage Tracks in Album"
-                              className="px-2.5 py-1.5 rounded-lg bg-zinc-800/80 hover:bg-zinc-700 text-zinc-200 text-xs font-mono flex items-center gap-1 transition-colors cursor-pointer"
+                              className="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-zinc-800/80 hover:bg-slate-200 dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-200 text-xs font-mono flex items-center gap-1 border border-slate-200 dark:border-transparent transition-colors cursor-pointer"
                             >
-                              <Music className="w-3 h-3 text-vexo-red-bright" />
+                              <Music className="w-3 h-3 text-vexo-red" />
                               <span>Tracks</span>
                             </button>
                             <button
                               onClick={() => openEditAlbum(album)}
                               title="Edit Album"
-                              className="p-2 rounded-lg bg-zinc-800/60 hover:bg-zinc-700 text-zinc-300 hover:text-white transition-colors cursor-pointer"
+                              className="p-2 rounded-lg bg-slate-100 dark:bg-zinc-800/60 hover:bg-slate-200 dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white border border-slate-200 dark:border-transparent transition-colors cursor-pointer"
                             >
                               <Edit2 className="w-3.5 h-3.5" />
                             </button>
@@ -473,7 +473,7 @@ export const AdminMusicPage: React.FC = () => {
                                 setDeleteTarget({ type: 'album', id: album.id, title: album.title })
                               }
                               title="Delete Album"
-                              className="p-2 rounded-lg bg-red-950/40 hover:bg-red-900/60 text-red-400 hover:text-red-200 transition-colors cursor-pointer"
+                              className="p-2 rounded-lg bg-slate-100 dark:bg-red-950/40 hover:bg-red-50 dark:hover:bg-red-900/60 text-slate-400 dark:text-red-400 hover:text-red-600 dark:hover:text-red-200 border border-slate-200 dark:border-transparent transition-colors cursor-pointer"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
                             </button>
@@ -489,17 +489,17 @@ export const AdminMusicPage: React.FC = () => {
         </div>
       ) : (
         /* Tracks Tab */
-        <div className="bg-[#0e0e13] border border-zinc-800/80 rounded-2xl overflow-hidden shadow-2xl">
+        <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl overflow-hidden shadow-xs">
           {isLoading ? (
-            <div className="py-20 text-center text-xs font-mono text-zinc-500 animate-pulse">
+            <div className="py-20 text-center text-xs font-mono text-slate-400 dark:text-zinc-500 animate-pulse">
               LOADING TRACKS...
             </div>
           ) : filteredTracks.length === 0 ? (
-            <div className="py-20 text-center text-xs text-zinc-500">No tracks found.</div>
+            <div className="py-20 text-center text-xs text-slate-400 dark:text-zinc-500">No tracks found.</div>
           ) : (
             <div className="overflow-x-auto">
               <table className="w-full text-left text-xs">
-                <thead className="bg-[#121218] border-b border-zinc-800/80 text-[10px] font-mono uppercase tracking-widest text-zinc-400">
+                <thead className="bg-slate-50 dark:bg-[#121218] border-b border-slate-200 dark:border-zinc-800/80 text-[10px] font-mono uppercase tracking-widest text-slate-600 dark:text-zinc-400">
                   <tr>
                     <th className="py-3.5 px-6">Track # / Title</th>
                     <th className="py-3.5 px-6">Album</th>
@@ -510,28 +510,28 @@ export const AdminMusicPage: React.FC = () => {
                     <th className="py-3.5 px-6 text-right">Actions</th>
                   </tr>
                 </thead>
-                <tbody className="divide-y divide-zinc-800/60">
+                <tbody className="divide-y divide-slate-100 dark:divide-zinc-800/60">
                   {filteredTracks.map((track) => {
                     const parentAlbum = albums.find((a) => a.id === track.albumId);
                     const isPublished = track.published !== false;
 
                     return (
-                      <tr key={track.id} className="hover:bg-zinc-900/40 transition-colors group">
+                      <tr key={track.id} className="hover:bg-slate-50/80 dark:hover:bg-zinc-900/40 transition-colors group">
                         <td className="py-4 px-6">
                           <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-lg bg-zinc-900 border border-zinc-800 flex items-center justify-center font-mono font-bold text-zinc-400 text-xs shrink-0">
+                            <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 flex items-center justify-center font-mono font-bold text-slate-700 dark:text-zinc-400 text-xs shrink-0">
                               {String(track.order || 1).padStart(2, '0')}
                             </div>
                             <div>
-                              <p className="font-bold text-white text-xs flex items-center gap-2">
+                              <p className="font-bold text-slate-900 dark:text-white text-xs flex items-center gap-2">
                                 {track.title}
                                 {track.isPopular && (
-                                  <span className="px-1.5 py-0.5 rounded bg-amber-950 border border-amber-800 text-[9px] font-mono text-amber-400">
+                                  <span className="px-1.5 py-0.5 rounded bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 text-[9px] font-mono text-amber-700 dark:text-amber-400">
                                     POPULAR
                                   </span>
                                 )}
                               </p>
-                              <p className="text-[10px] font-mono text-zinc-500">ID: {track.id}</p>
+                              <p className="text-[10px] font-mono text-slate-400 dark:text-zinc-500">ID: {track.id}</p>
                             </div>
                           </div>
                         </td>
@@ -540,20 +540,20 @@ export const AdminMusicPage: React.FC = () => {
                           {parentAlbum ? (
                             <button
                               onClick={() => selectAlbum(parentAlbum.id)}
-                              className="font-medium text-zinc-300 hover:text-vexo-red-bright transition-colors text-left"
+                              className="font-medium text-slate-700 dark:text-zinc-300 hover:text-vexo-red transition-colors text-left"
                             >
                               {parentAlbum.title}
                             </button>
                           ) : (
-                            <span className="text-zinc-500 font-mono text-[11px]">
+                            <span className="text-slate-400 dark:text-zinc-500 font-mono text-[11px]">
                               Single / Unassigned
                             </span>
                           )}
                         </td>
 
-                        <td className="py-4 px-6 font-semibold text-zinc-200">{track.artistName}</td>
+                        <td className="py-4 px-6 font-semibold text-slate-800 dark:text-zinc-200">{track.artistName}</td>
 
-                        <td className="py-4 px-6 font-mono text-zinc-400">
+                        <td className="py-4 px-6 font-mono text-slate-500 dark:text-zinc-400">
                           {formatTime(track.duration || 210)}
                         </td>
 
@@ -563,8 +563,8 @@ export const AdminMusicPage: React.FC = () => {
                             onClick={() => handleToggleTrackPublish(track)}
                             className={`px-2.5 py-1 rounded-lg text-[11px] font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
                               isPublished
-                                ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
-                                : 'bg-zinc-800 text-zinc-400 border border-zinc-700'
+                                ? 'bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30'
+                                : 'bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400 border border-slate-200 dark:border-zinc-700'
                             }`}
                           >
                             {isPublished ? <Check className="w-3 h-3" /> : <Clock className="w-3 h-3" />}
@@ -579,7 +579,7 @@ export const AdminMusicPage: React.FC = () => {
                                 href={track.spotifyUrl}
                                 target="_blank"
                                 rel="noreferrer"
-                                className="p-1.5 rounded-lg bg-emerald-950/60 border border-emerald-800/60 text-emerald-400 hover:bg-emerald-900"
+                                className="p-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800/60 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900"
                               >
                                 <Headphones className="w-3.5 h-3.5" />
                               </a>
@@ -593,7 +593,7 @@ export const AdminMusicPage: React.FC = () => {
                                 }
                                 target="_blank"
                                 rel="noreferrer"
-                                className="p-1.5 rounded-lg bg-red-950/60 border border-red-800/60 text-red-400 hover:bg-red-900"
+                                className="p-1.5 rounded-lg bg-red-50 dark:bg-red-950/60 border border-red-200 dark:border-red-800/60 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900"
                               >
                                 <YoutubeIcon className="w-3.5 h-3.5" />
                               </a>
@@ -605,7 +605,7 @@ export const AdminMusicPage: React.FC = () => {
                           <div className="flex items-center justify-end gap-2">
                             <button
                               onClick={() => openEditTrack(track)}
-                              className="p-2 rounded-lg bg-zinc-800/60 hover:bg-zinc-700 text-zinc-300 hover:text-white transition-colors cursor-pointer"
+                              className="p-2 rounded-lg bg-slate-100 dark:bg-zinc-800/60 hover:bg-slate-200 dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white border border-slate-200 dark:border-transparent transition-colors cursor-pointer"
                             >
                               <Edit2 className="w-3.5 h-3.5" />
                             </button>
@@ -614,7 +614,7 @@ export const AdminMusicPage: React.FC = () => {
                                 setDeleteTarget({ type: 'track', id: track.id, title: track.title })
                               }
                               title="Delete Track"
-                              className="p-2 rounded-lg bg-red-950/40 hover:bg-red-900/60 text-red-400 hover:text-red-200 transition-colors cursor-pointer"
+                              className="p-2 rounded-lg bg-slate-100 dark:bg-red-950/40 hover:bg-red-50 dark:hover:bg-red-900/60 text-slate-400 dark:text-red-400 hover:text-red-600 dark:hover:text-red-200 border border-slate-200 dark:border-transparent transition-colors cursor-pointer"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
                             </button>

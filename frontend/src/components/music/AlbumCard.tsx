@@ -146,17 +146,17 @@ export const AlbumCard: React.FC<AlbumCardProps> = ({ album, className }) => {
         </div>
 
         {/* Album Info */}
-        <div className="p-5 flex flex-col justify-between flex-1 bg-gradient-to-b from-vexo-card to-vexo-surface">
+        <div className="p-5 flex flex-col justify-between flex-1 bg-gradient-to-b from-vexo-card to-vexo-surface border-t border-slate-100 dark:border-white/5">
           <div>
-            <h3 className="font-extrabold text-base text-white group-hover:text-vexo-red-bright transition-colors duration-300 line-clamp-1">
+            <h3 className="font-extrabold text-base text-slate-950 dark:text-white group-hover:text-vexo-red-bright transition-colors duration-300 line-clamp-1">
               {album.title}
             </h3>
-            <p className="text-xs text-vexo-muted mt-1 font-medium line-clamp-1">
+            <p className="text-xs text-slate-600 dark:text-vexo-muted mt-1 font-medium line-clamp-1">
               {album.artist}
             </p>
           </div>
 
-          <div className="flex items-center justify-between mt-4 pt-3 border-t border-white/5 text-[11px] font-mono text-vexo-muted">
+          <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-100 dark:border-white/5 text-[11px] font-mono text-slate-500 dark:text-vexo-muted">
             <span>{album.genre}</span>
             <span className="flex items-center gap-1 text-vexo-red-bright">
               <ListMusic className="w-3 h-3" />
@@ -176,7 +176,7 @@ export const AlbumCard: React.FC<AlbumCardProps> = ({ album, className }) => {
           }}
         >
           <div
-            className="relative w-full max-w-3xl bg-[#0b0b10] border border-white/15 rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]"
+            className="cinematic-dark relative w-full max-w-3xl bg-[#0b0b10] border border-white/15 rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]"
             onClick={(e) => e.stopPropagation()}
           >
             {/* Modal Header Dossier */}

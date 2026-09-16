@@ -58,7 +58,7 @@ export const AdminConfirmModal: React.FC<AdminConfirmModalProps> = ({
           animate={{ opacity: 1, scale: 1, y: 0 }}
           exit={{ opacity: 0, scale: 0.94, y: 10 }}
           transition={{ type: 'spring', damping: 25, stiffness: 350 }}
-          className="relative w-full max-w-lg bg-gradient-to-b from-[#161622] via-[#0d0d13] to-[#060608] border border-red-500/40 rounded-3xl p-6 sm:p-8 shadow-[0_0_60px_rgba(224,0,0,0.35)] ring-1 ring-red-500/30 z-10 space-y-6 overflow-hidden"
+          className="cinematic-dark relative w-full max-w-lg bg-gradient-to-b from-[#161622] via-[#0d0d13] to-[#060608] border border-red-500/40 rounded-3xl p-6 sm:p-8 shadow-[0_0_60px_rgba(224,0,0,0.35)] ring-1 ring-red-500/30 z-10 space-y-6 overflow-hidden"
         >
           {/* Ambient Glows & Concentric Vinyl Grooves Watermark */}
           <div className="absolute -top-24 -right-24 w-60 h-60 bg-vexo-red/20 rounded-full blur-[90px] pointer-events-none" />
@@ -103,10 +103,16 @@ export const AdminConfirmModal: React.FC<AdminConfirmModalProps> = ({
             </div>
 
             <div className="space-y-1.5 pt-0.5">
-              <h3 className="text-lg sm:text-xl font-black text-white uppercase tracking-tight">
+              <h3
+                style={{ color: '#ffffff' }}
+                className="text-lg sm:text-xl font-black uppercase tracking-tight"
+              >
                 {title}
               </h3>
-              <p className="text-xs text-zinc-400 leading-relaxed font-sans">
+              <p
+                style={{ color: '#a1a1aa' }}
+                className="text-xs leading-relaxed font-sans"
+              >
                 {message ||
                   'Are you sure you want to delete this record? This action will immediately expel the entry from public directories, playlists, and associated media streams.'}
               </p>
@@ -115,7 +121,10 @@ export const AdminConfirmModal: React.FC<AdminConfirmModalProps> = ({
 
           {/* Target Track / Artist Visualizer Card */}
           {itemName && (
-            <div className="relative z-10 p-4 rounded-2xl bg-black/60 border border-red-500/30 backdrop-blur-md space-y-2 shadow-inner">
+            <div
+              style={{ backgroundColor: 'rgba(10, 10, 14, 0.85)', borderColor: 'rgba(239, 68, 68, 0.35)' }}
+              className="relative z-10 p-4 rounded-2xl border backdrop-blur-md space-y-2 shadow-inner"
+            >
               <div className="flex items-center justify-between text-[10px] font-mono text-zinc-500">
                 <span className="flex items-center gap-1.5 text-zinc-400 font-bold">
                   <Volume2 className="w-3.5 h-3.5 text-vexo-red-bright" />
@@ -131,7 +140,7 @@ export const AdminConfirmModal: React.FC<AdminConfirmModalProps> = ({
                   {getInitials(itemName)}
                 </div>
                 <div className="min-w-0 flex-1">
-                  <p className="font-bold text-white text-sm truncate">{itemName}</p>
+                  <p style={{ color: '#ffffff' }} className="font-bold text-sm truncate">{itemName}</p>
                   <p className="text-[10px] font-mono text-zinc-400">STATUS: ACTIVE CATALOG ENTRY</p>
                 </div>
               </div>
@@ -144,7 +153,8 @@ export const AdminConfirmModal: React.FC<AdminConfirmModalProps> = ({
               type="button"
               disabled={isLoading}
               onClick={onCancel}
-              className="w-full sm:w-auto px-5 py-3 rounded-xl bg-zinc-900 hover:bg-zinc-800 border border-zinc-800 text-xs font-bold uppercase tracking-wider text-zinc-300 hover:text-white transition-colors cursor-pointer disabled:opacity-50"
+              style={{ backgroundColor: '#18181b', borderColor: '#27272a', color: '#e4e4e7' }}
+              className="w-full sm:w-auto px-5 py-3 rounded-xl border text-xs font-bold uppercase tracking-wider hover:text-white transition-colors cursor-pointer disabled:opacity-50"
             >
               {cancelText}
             </button>

@@ -6,6 +6,24 @@ import { AdminMobileNavigation } from './AdminMobileNavigation';
 
 export const AdminLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isSidebarPinned, setIsSidebarPinned] = useState(() => {
+    try {
+      return localStorage.getItem('vexo_admin_sidebar_pinned') === 'true';
+    } catch {
+      return false;
+    }
+  });
+
+  const handleTogglePin = () => {
+    setIsSidebarPinned((prev) => {
+      const next = !prev;
+      try {
+        localStorage.setItem('vexo_admin_sidebar_pinned', String(next));
+      } catch {}
+      return next;
+    });
+  };
+
   const location = useLocation();
 
   const getPageMeta = (pathname: string) => {
@@ -42,12 +60,19 @@ export const AdminLayout: React.FC = () => {
   const meta = getPageMeta(location.pathname);
 
   return (
-    <div className="min-h-screen bg-[#08080a] text-zinc-100 flex selection:bg-vexo-red selection:text-white font-sans antialiased">
+    <div className="admin-root min-h-screen bg-slate-100 dark:bg-[#08080a] text-slate-900 dark:text-zinc-100 flex selection:bg-vexo-red selection:text-white font-sans antialiased transition-colors duration-300">
       {/* Desktop & Mobile Sidebar Drawer */}
-      <AdminSidebar isOpen={sidebarOpen} onClose={() => setSidebarOpen(false)} />
+      <AdminSidebar
+        isOpen={sidebarOpen}
+        onClose={() => setSidebarOpen(false)}
+        isPinned={isSidebarPinned}
+        onTogglePin={handleTogglePin}
+      />
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col min-w-0 lg:pl-60 pb-16 lg:pb-0">
+      <div className={`flex-1 flex flex-col min-w-0 pb-16 lg:pb-0 transition-all duration-300 ${
+        isSidebarPinned ? 'lg:pl-64' : 'lg:pl-[72px]'
+      }`}>
         {/* Topbar Header */}
         <AdminTopbar
           onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
@@ -56,7 +81,7 @@ export const AdminLayout: React.FC = () => {
         />
 
         {/* Dashboard Shell Canvas */}
-        <main className="flex-1 p-4 lg:p-6 overflow-y-auto">
+        <main className="flex-1 p-4 lg:p-6 overflow-y-auto bg-slate-100 dark:bg-[#08080a] transition-colors duration-300">
           <div className="max-w-7xl mx-auto space-y-6">
             <Outlet />
           </div>
