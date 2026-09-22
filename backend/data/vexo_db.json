@@ -1835,7 +1835,7 @@
       }
     ],
     "marqueeText": "LATEST RELEASE: \"BHARTAR\" BY R BEER & RASHMI NISHAD — STREAMING NOW ON ALL MAJOR DSPS",
-    "updatedAt": "2026-09-22T11:18:42.290Z"
+    "updatedAt": "2026-09-22T12:47:47.043Z"
   },
   "siteSettings": {
     "id": "site-settings-singleton",
@@ -2179,6 +2179,166 @@
     }
   },
   "activityLogs": [
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_HOMEPAGE_CMS",
+      "entityType": "Homepage",
+      "entityId": "homepage-singleton",
+      "details": {
+        "updates": {
+          "heroTagline": "Pioneering Original Soundscapes & Entertainment",
+          "heroHeadline": "vexo entertainment pvt limited",
+          "heroSubtitle": "VEXO Music Entertainment is a global record label, high-end audio-visual production powerhouse, and artist development agency.",
+          "heroBgImage": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=2000&q=80",
+          "heroBgMedia": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=2000&q=80",
+          "featuredVideoId": "PsmXAUKjR5Y",
+          "heroCtaText": "EXPLORE RELEASES",
+          "heroCtaUrl": "/music",
+          "heroSecondaryCtaText": "STUDIO SERVICES",
+          "heroSecondaryCtaUrl": "/services",
+          "marqueeText": "LATEST RELEASE: \"BHARTAR\" BY R BEER & RASHMI NISHAD — STREAMING NOW ON ALL MAJOR DSPS",
+          "releasesHeading": "LATEST RELEASES",
+          "releasesSubtitle": "Explore the newest original tracks, singles, and full albums from VEXO Music Entertainment.",
+          "selectedAlbumIds": [
+            "alb-2",
+            "alb-bhartar",
+            "alb-1",
+            "alb-3"
+          ],
+          "releasesLimit": 4,
+          "artistsHeading": "FEATURED ARTISTS",
+          "artistsSubtitle": "Discover the visionary producers, vocalists, and composers driving our sonic movement.",
+          "featuredArtistIds": [
+            "art-2",
+            "art-rbeer",
+            "art-3",
+            "art-1"
+          ],
+          "eventsHeading": "FEATURED EVENTS & TOUR",
+          "eventsSubtitle": "Experience the raw energy of VEXO live across premier concert halls and festival stadiums globally.",
+          "featuredEventIds": [
+            "evt-1",
+            "evt-2",
+            "evt-3",
+            "evt-4"
+          ],
+          "videosHeading": "OFFICIAL VIDEO PRODUCTIONS",
+          "videosSubtitle": "Watch high-definition 4K music videos, studio recordings, live stadium performances, and visualizers.",
+          "featuredVideoIds": [
+            "vid-1",
+            "vid-bhartar",
+            "vid-2",
+            "vid-3"
+          ],
+          "statsArtistsCount": "10+",
+          "statsReleasesCount": "50+",
+          "statsProjectsCount": "100+",
+          "statsTotalStreams": "1.2M+",
+          "statsGlobalReach": "45+ Countries",
+          "aboutBadge": "ABOUT VEXO",
+          "aboutHeading": "VEXO MUSIC ENTERTAINMENT PVT. LTD.",
+          "aboutDescription": "Pioneering original soundscapes, artist management, and digital distribution for the next generation. VEXO Music Entertainment Pvt. Ltd. is a premier music agency and record label headquartered in Jaipur, Rajasthan. We specialize in producing chart-topping commercial tracks, high-concept audio visualizers, and empowering recording artists with global digital distribution.",
+          "aboutImage": "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1200&q=80",
+          "finalCtaBadge": "READY TO COLLABORATE?",
+          "finalCtaHeading": "LET'S CREATE SOMETHING ICONIC.",
+          "finalCtaDescription": "Ready to bring your sonic or visual project to life? Collaborate with our team of elite sound engineers, music directors, and producers.",
+          "finalCtaButtonLabel": "START A PROJECT",
+          "finalCtaButtonUrl": "/contact",
+          "finalCtaSecondaryLabel": "CONTACT VEXO",
+          "finalCtaSecondaryUrl": "/contact",
+          "reviewsBadge": "TESTIMONIALS & TRUST",
+          "reviewsHeading": "VOICES OF EXCELLENCE",
+          "reviewsSubtitle": "What artists, visionary couples, and industry partners say about producing with VEXO.",
+          "reviews": [
+            {
+              "id": "rev-1",
+              "clientName": "Rashmi Nishad",
+              "roleOrProject": "Lead Vocalist • \"Satane Lage Ho\"",
+              "rating": 5,
+              "reviewText": "Working with VEXO Music on \"Satane Lage Ho\" was a transformative experience. Their studio engineering, arrangement sensibilities, and dedication to visual storytelling elevated our folk release to international chart standards.",
+              "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80",
+              "category": "Music Production",
+              "verified": true,
+              "date": "August 2026"
+            },
+            {
+              "id": "rev-2",
+              "clientName": "Aarav & Simran Rathore",
+              "roleOrProject": "Royal Pre-Wedding Shoot • Jaipur Forts",
+              "rating": 5,
+              "reviewText": "The cinematic pre-wedding film produced by VEXO looked like a Bollywood period epic. From synchronized drone choreography over Nahargarh Fort to the original background score they composed for us, it was beyond our wildest dreams.",
+              "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80",
+              "category": "Wedding & Film",
+              "verified": true,
+              "date": "September 2026"
+            },
+            {
+              "id": "rev-3",
+              "clientName": "Vikramaditya Sen",
+              "roleOrProject": "Executive Producer • Desert Storm Festival",
+              "rating": 5,
+              "reviewText": "VEXO handled live audio engineering, multi-camera 4K visual feeds, and headline artist management for our 15,000-attendee festival with surgical precision. The sound was pristine and unforgettable.",
+              "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80",
+              "category": "Artist Management",
+              "verified": true,
+              "date": "July 2026"
+            },
+            {
+              "id": "rev-4",
+              "clientName": "Kabir & Meera Singhania",
+              "roleOrProject": "Destination Pre-Wedding • Udaipur Lakes",
+              "rating": 5,
+              "reviewText": "Their signature package was worth every rupee. The team took care of luxury logistics, custom styling, multi-camera 4K drone reels, and delivered the finished cut in record time. Every guest was mesmerized.",
+              "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80",
+              "category": "Wedding & Film",
+              "verified": true,
+              "date": "June 2026"
+            },
+            {
+              "id": "rev-5",
+              "clientName": "R Beer",
+              "roleOrProject": "Singer-Songwriter • \"Bhartar\"",
+              "rating": 5,
+              "reviewText": "The creative freedom and sonic power VEXO brings is unmatched. The production on \"Bhartar\" hit millions of streams within weeks. Their mixing, mastering, and global DSP distribution network are best-in-class.",
+              "avatarUrl": "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=300&q=80",
+              "category": "Music Production",
+              "verified": true,
+              "date": "August 2026"
+            },
+            {
+              "id": "rev-6",
+              "clientName": "Ananya Deshmukh",
+              "roleOrProject": "Indie Artist • Debut EP Production",
+              "rating": 5,
+              "reviewText": "As an independent musician, finding a team that respects your vision while providing world-class Dolby Atmos mastering and visualizer production is rare. VEXO is the definitive home for serious artists.",
+              "avatarUrl": "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=300&q=80",
+              "category": "Music Production",
+              "verified": true,
+              "date": "May 2026"
+            }
+          ]
+        }
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-0b9dd8c5704fa72c",
+      "createdAt": "2026-09-22T12:47:47.043Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-b4a3ded58daeaaaa",
+      "createdAt": "2026-09-22T12:47:28.466Z"
+    },
     {
       "adminUserId": "admin-super-1",
       "adminUserName": "VEXO Executive Admin",
@@ -5502,7 +5662,7 @@
         "description": "Secondary Sony Cinema camera operator for multi-angle emotional cuts."
       }
     ],
-    "updatedAt": "2026-09-22T12:19:41.269Z",
+    "updatedAt": "2026-09-22T12:47:28.466Z",
     "heroStats": [
       {
         "number": "01",

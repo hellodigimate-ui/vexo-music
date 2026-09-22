@@ -10,9 +10,11 @@ import {
   CUSTOM_PACKAGE_SERVICES,
   WHY_US_PILLARS,
   ADD_ON_SERVICES,
+  DEFAULT_WEDDING_PLANS,
+  DEFAULT_WEDDING_DAY_STORIES,
 } from '../../data/weddingData';
 
-const STORAGE_KEY = 'vexo_admin_mock_db_v13';
+const STORAGE_KEY = 'vexo_admin_mock_db_v14';
 
 function getInitialMockDb() {
   const now = new Date().toISOString();
@@ -665,6 +667,8 @@ function getInitialMockDb() {
       id: 'pre-wedding-singleton',
       studioInfo: WEDDING_STUDIO_INFO,
       packages: PRE_WEDDING_PACKAGES,
+      weddingPackages: DEFAULT_WEDDING_PLANS,
+      weddingDayStories: DEFAULT_WEDDING_DAY_STORIES,
       customServices: CUSTOM_PACKAGE_SERVICES,
       whyUsPillars: WHY_US_PILLARS,
       addOns: ADD_ON_SERVICES,
@@ -684,7 +688,7 @@ class AdminMockStore {
     const initial = getInitialMockDb();
     try {
       // Purge obsolete local storage versions
-      for (let i = 1; i <= 12; i++) {
+      for (let i = 1; i <= 13; i++) {
         localStorage.removeItem(`vexo_admin_mock_db_v${i}`);
       }
 
@@ -766,7 +770,6 @@ class AdminMockStore {
           this.db.siteSettings = {
             ...initial.siteSettings,
             ...this.db.siteSettings,
-            contactPhone: '+91 72399 99966',
             footerServicesLinks: (this.db.siteSettings.footerServicesLinks && this.db.siteSettings.footerServicesLinks.length > 0) ? this.db.siteSettings.footerServicesLinks : initial.siteSettings.footerServicesLinks,
             footerQuickLinks: (this.db.siteSettings.footerQuickLinks && this.db.siteSettings.footerQuickLinks.length > 0) ? this.db.siteSettings.footerQuickLinks : initial.siteSettings.footerQuickLinks,
           };
@@ -774,6 +777,18 @@ class AdminMockStore {
 
         if (!this.db.preWedding) {
           this.db.preWedding = initial.preWedding;
+        } else {
+          this.db.preWedding = {
+            ...initial.preWedding,
+            ...this.db.preWedding,
+            weddingPackages: (this.db.preWedding.weddingPackages && this.db.preWedding.weddingPackages.length > 0)
+              ? this.db.preWedding.weddingPackages
+              : initial.preWedding.weddingPackages,
+            weddingDayStories: this.db.preWedding.weddingDayStories || initial.preWedding.weddingDayStories,
+            packages: (this.db.preWedding.packages && this.db.preWedding.packages.length > 0)
+              ? this.db.preWedding.packages
+              : initial.preWedding.packages,
+          };
         }
 
         this.save();
@@ -1350,6 +1365,8 @@ class AdminMockStore {
       coverageTypes: data.coverageTypes || current.coverageTypes || [],
       coupleStories: data.coupleStories || current.coupleStories || [],
       packages: data.packages || current.packages || [],
+      weddingPackages: data.weddingPackages || current.weddingPackages || DEFAULT_WEDDING_PLANS,
+      weddingDayStories: data.weddingDayStories || current.weddingDayStories || DEFAULT_WEDDING_DAY_STORIES,
       customServices: (() => {
         let csList = data.customServices || current.customServices || [];
         const addonsList = data.addOns || current.addOns || [];
