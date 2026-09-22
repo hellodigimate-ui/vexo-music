@@ -5,7 +5,7 @@ import type { ApiResponse } from './types';
  * Connects to Fastify API server on http://localhost:4000/api.
  */
 
-export const API_BASE_URL = import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api';
+export const API_BASE_URL = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api';
 
 // Set USE_MOCK_DATA to false by default so requests connect to Fastify backend
 export const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_API === 'true';

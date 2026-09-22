@@ -22,7 +22,7 @@ export function formatNumber(num: number): string {
   return num.toString();
 }
 
-const BACKEND_HOST = (import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api').replace(/\/api\/?$/, '');
+const BACKEND_HOST = (import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api').replace(/\/api\/?$/, '');
 
 export function getMediaUrl(url?: string | null): string {
   if (!url) return '';

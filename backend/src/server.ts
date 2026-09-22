@@ -37,7 +37,10 @@ async function start() {
           origin.startsWith('http://localhost:') ||
           origin.startsWith('http://127.0.0.1:') ||
           origin === 'http://localhost' ||
-          origin === 'http://127.0.0.1'
+          origin === 'http://127.0.0.1' ||
+          origin.endsWith('.vercel.app') ||
+          origin.endsWith('.onrender.com') ||
+          origin.startsWith('https://')
         ) {
           return cb(null, true);
         }
