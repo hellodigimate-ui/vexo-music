@@ -11,7 +11,7 @@ dotenv.config();
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 4000;
 const HOST = process.env.HOST || '0.0.0.0';
-const CORS_ORIGIN = process.env.CORS_ORIGIN || '*'; // VEXO Fastify API Server v2
+const CORS_ORIGIN = (process.env.CORS_ORIGIN || '*').replace(/\/+$/, '');
 
 const server = Fastify({
   logger: {
@@ -31,16 +31,17 @@ async function start() {
     await server.register(cors, {
       origin: (origin, cb) => {
         if (!origin) return cb(null, true);
+        const cleanOrigin = origin.replace(/\/+$/, '');
         if (
           CORS_ORIGIN === '*' ||
-          origin === CORS_ORIGIN ||
-          origin.startsWith('http://localhost:') ||
-          origin.startsWith('http://127.0.0.1:') ||
-          origin === 'http://localhost' ||
-          origin === 'http://127.0.0.1' ||
-          origin.endsWith('.vercel.app') ||
-          origin.endsWith('.onrender.com') ||
-          origin.startsWith('https://')
+          cleanOrigin === CORS_ORIGIN ||
+          cleanOrigin.startsWith('http://localhost:') ||
+          cleanOrigin.startsWith('http://127.0.0.1:') ||
+          cleanOrigin === 'http://localhost' ||
+          cleanOrigin === 'http://127.0.0.1' ||
+          cleanOrigin.endsWith('.vercel.app') ||
+          cleanOrigin.endsWith('.onrender.com') ||
+          cleanOrigin.startsWith('https://')
         ) {
           return cb(null, true);
         }
