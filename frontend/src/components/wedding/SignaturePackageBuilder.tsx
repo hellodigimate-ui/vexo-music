@@ -32,6 +32,7 @@ interface SignaturePackageBuilderProps {
   onProceedToBooking?: (selectedServiceNames: string[], totalEstimate: number) => void;
   customServices?: CustomServiceOption[];
   studioInfo?: any;
+  addOns?: any[];
 }
 
 const ICON_MAP: Record<string, React.ComponentType<{ className?: string }>> = {
@@ -54,7 +55,33 @@ export const SignaturePackageBuilder: React.FC<SignaturePackageBuilderProps> = (
   onProceedToBooking,
   customServices = CUSTOM_PACKAGE_SERVICES,
   studioInfo = WEDDING_STUDIO_INFO,
+  addOns,
 }) => {
+  const mergedServices = useMemo(() => {
+    if (!addOns || addOns.length === 0) return customServices;
+    return customServices.map((cs) => {
+      const csName = (cs.name || '').trim().toLowerCase();
+      const match = addOns.find((a: any) =>
+        (a.title && a.title.trim().toLowerCase() === csName) ||
+        (a.id === 'addon-drone' && cs.id === 'opt-drone') ||
+        (a.id === 'addon-reel' && cs.id === 'opt-reels') ||
+        (a.id === 'addon-makeup' && cs.id === 'opt-makeup') ||
+        (a.id === 'addon-costume' && cs.id === 'opt-costume') ||
+        (a.id === 'addon-location' && cs.id === 'opt-location') ||
+        (a.id === 'addon-album' && cs.id === 'opt-album')
+      );
+      if (match) {
+        return {
+          ...cs,
+          startingPriceINR: match.priceINR ?? cs.startingPriceINR,
+          description: match.description ?? cs.description,
+          name: match.title ?? cs.name,
+        };
+      }
+      return cs;
+    });
+  }, [customServices, addOns]);
+
   const [selectedIds, setSelectedIds] = useState<string[]>([
     'opt-photography',
     'opt-cinematography',
@@ -63,11 +90,11 @@ export const SignaturePackageBuilder: React.FC<SignaturePackageBuilderProps> = (
   const [activeCategory, setActiveCategory] = useState<CategoryKey>('all');
 
   const filteredServices = useMemo(() => {
-    if (activeCategory === 'all') return customServices;
-    return customServices.filter(
+    if (activeCategory === 'all') return mergedServices;
+    return mergedServices.filter(
       (s: CustomServiceOption) => s.category === activeCategory
     );
-  }, [activeCategory, customServices]);
+  }, [activeCategory, mergedServices]);
 
   const toggleService = (id: string) => {
     setSelectedIds((prev: string[]) =>
@@ -76,10 +103,10 @@ export const SignaturePackageBuilder: React.FC<SignaturePackageBuilderProps> = (
   };
 
   const selectedServices = useMemo(() => {
-    return customServices.filter((s: CustomServiceOption) =>
+    return mergedServices.filter((s: CustomServiceOption) =>
       selectedIds.includes(s.id)
     );
-  }, [selectedIds, customServices]);
+  }, [selectedIds, mergedServices]);
 
   const totalEstimate = useMemo(() => {
     return selectedServices.reduce(
@@ -116,7 +143,7 @@ export const SignaturePackageBuilder: React.FC<SignaturePackageBuilderProps> = (
   };
 
   const categories: { key: CategoryKey; label: string }[] = [
-    { key: 'all', label: `All Services (${customServices.length})` },
+    { key: 'all', label: `All Services (${mergedServices.length})` },
     { key: 'core', label: 'Core Shoots' },
     { key: 'coverage', label: 'Coverage & Location' },
     { key: 'styling', label: 'Styling & Looks' },

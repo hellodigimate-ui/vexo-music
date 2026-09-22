@@ -15,6 +15,7 @@ import type {
   Media,
   ContactRequest,
   Homepage,
+  ReviewItem,
   SiteSettings,
   ActivityLog,
   DatabaseSchema,
@@ -119,6 +120,7 @@ function getInitialDatabase(): DatabaseSchema {
       createdAt: now,
       updatedAt: now,
     },
+
     {
       id: 'art-rbeer',
       name: 'R Beer',
@@ -639,6 +641,79 @@ function getInitialDatabase(): DatabaseSchema {
     finalCtaSecondaryLabel: 'CONTACT VEXO',
     finalCtaSecondaryUrl: '/contact',
 
+    // Reviews / Testimonials Section
+    reviewsBadge: 'TESTIMONIALS & TRUST',
+    reviewsHeading: 'VOICES OF EXCELLENCE',
+    reviewsSubtitle: 'What artists, visionary couples, and industry partners say about producing with VEXO.',
+    reviews: [
+      {
+        id: 'rev-1',
+        clientName: 'Rashmi Nishad',
+        roleOrProject: 'Lead Vocalist • "Satane Lage Ho"',
+        rating: 5,
+        reviewText: 'Working with VEXO Music on "Satane Lage Ho" was a transformative experience. Their studio engineering, arrangement sensibilities, and dedication to visual storytelling elevated our folk release to international chart standards.',
+        avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
+        category: 'Music Production',
+        verified: true,
+        date: 'August 2026',
+      },
+      {
+        id: 'rev-2',
+        clientName: 'Aarav & Simran Rathore',
+        roleOrProject: 'Royal Pre-Wedding Shoot • Jaipur Forts',
+        rating: 5,
+        reviewText: 'The cinematic pre-wedding film produced by VEXO looked like a Bollywood period epic. From synchronized drone choreography over Nahargarh Fort to the original background score they composed for us, it was beyond our wildest dreams.',
+        avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
+        category: 'Wedding & Film',
+        verified: true,
+        date: 'September 2026',
+      },
+      {
+        id: 'rev-3',
+        clientName: 'Vikramaditya Sen',
+        roleOrProject: 'Executive Producer • Desert Storm Festival',
+        rating: 5,
+        reviewText: 'VEXO handled live audio engineering, multi-camera 4K visual feeds, and headline artist management for our 15,000-attendee festival with surgical precision. The sound was pristine and unforgettable.',
+        avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80',
+        category: 'Artist Management',
+        verified: true,
+        date: 'July 2026',
+      },
+      {
+        id: 'rev-4',
+        clientName: 'Kabir & Meera Singhania',
+        roleOrProject: 'Destination Pre-Wedding • Udaipur Lakes',
+        rating: 5,
+        reviewText: 'Their signature package was worth every rupee. The team took care of luxury logistics, custom styling, multi-camera 4K drone reels, and delivered the finished cut in record time. Every guest was mesmerized.',
+        avatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80',
+        category: 'Wedding & Film',
+        verified: true,
+        date: 'June 2026',
+      },
+      {
+        id: 'rev-5',
+        clientName: 'R Beer',
+        roleOrProject: 'Singer-Songwriter • "Bhartar"',
+        rating: 5,
+        reviewText: 'The creative freedom and sonic power VEXO brings is unmatched. The production on "Bhartar" hit millions of streams within weeks. Their mixing, mastering, and global DSP distribution network are best-in-class.',
+        avatarUrl: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=300&q=80',
+        category: 'Music Production',
+        verified: true,
+        date: 'August 2026',
+      },
+      {
+        id: 'rev-6',
+        clientName: 'Ananya Deshmukh',
+        roleOrProject: 'Indie Artist • Debut EP Production',
+        rating: 5,
+        reviewText: 'As an independent musician, finding a team that respects your vision while providing world-class Dolby Atmos mastering and visualizer production is rare. VEXO is the definitive home for serious artists.',
+        avatarUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=300&q=80',
+        category: 'Music Production',
+        verified: true,
+        date: 'May 2026',
+      },
+    ],
+
     marqueeText: 'LATEST RELEASE: "BHARTAR" BY R BEER & RASHMI NISHAD — STREAMING NOW ON ALL MAJOR DSPS',
     updatedAt: now,
   };
@@ -654,10 +729,43 @@ function getInitialDatabase(): DatabaseSchema {
     officeAddress: 'VEXO Creative Studios, Tone City, Jaipur, Rajasthan, India 302001',
     copyrightText: '© 2026 VEXO Music Entertainment Pvt. Ltd. All rights reserved.',
     socialSpotify: 'https://spotify.com',
-    socialYoutube: 'https://youtube.com',
-    socialInstagram: 'https://instagram.com',
-    socialTwitter: 'https://twitter.com',
+    socialYoutube: 'https://youtube.com/@vexomusicentertainment',
+    socialInstagram: 'https://www.instagram.com/vexomusicentertainment',
+    socialTwitter: 'https://x.com/vexomusicentertainment',
+    socialAppleMusic: 'https://music.apple.com',
+    socialFacebook: 'https://facebook.com',
+    socialSoundcloud: 'https://soundcloud.com',
     maintenanceMode: false,
+
+    // Footer Customization
+    footerBio: 'A premier music entertainment powerhouse & record label specializing in original sound engineering, global music distribution, artist management, and cinematic audio-visual production based in Jaipur, India.',
+    footerQuickLinksHeading: 'QUICK LINKS',
+    footerQuickLinks: [
+      { id: 'fn-1', label: 'Home', path: '/' },
+      { id: 'fn-2', label: 'Music', path: '/music' },
+      { id: 'fn-3', label: 'Artists', path: '/artists' },
+      { id: 'fn-4', label: 'Services', path: '/services' },
+      { id: 'fn-5', label: 'Events', path: '/events' },
+      { id: 'fn-6', label: 'Videos', path: '/videos' },
+      { id: 'fn-7', label: 'About', path: '/about' },
+      { id: 'fn-8', label: 'Contact', path: '/contact' },
+    ],
+    footerServicesHeading: 'SERVICES',
+    footerServicesLinks: [
+      { id: 'fs-1', label: 'Music Production', path: '/services' },
+      { id: 'fs-2', label: 'Audio & Video Production', path: '/services' },
+      { id: 'fs-3', label: 'Artist Management', path: '/services' },
+      { id: 'fs-4', label: 'Music Distribution', path: '/services' },
+      { id: 'fs-5', label: 'Digital Marketing', path: '/services' },
+      { id: 'fs-6', label: 'Brand Collaborations', path: '/services' },
+      { id: 'fs-7', label: 'Pre-Wedding Shoot', path: '/pre-wedding' },
+    ],
+    footerContactHeading: 'CONTACT US',
+    footerStatusText: 'STUDIO ACTIVE • JAIPUR',
+    footerStatusEnabled: true,
+    footerBackToTopEnabled: true,
+    footerAdminLinkEnabled: true,
+
     updatedAt: now,
   };
 
@@ -707,7 +815,7 @@ class DatabaseStore {
       this.data.contactRequests,
       this.data.artists,
       this.data.artistSocials
-    ).catch(() => {});
+    ).catch(() => { });
   }
 
   private load(): DatabaseSchema {
@@ -719,22 +827,22 @@ class DatabaseStore {
         // Ensure all 14 models exist in parsed data
         const loadedServices = (parsed.services && parsed.services.length > 0)
           ? parsed.services.map((s: any, idx: number) => {
-              const fallback = initial.services.find(
-                (is) => is.id === s.id || is.slug === s.slug || is.title?.toLowerCase() === s.title?.toLowerCase()
-              );
-              return {
-                ...s,
-                icon: s.icon || fallback?.icon || 'Music',
-                order: typeof s.order === 'number' ? s.order : idx + 1,
-                slug: s.slug || fallback?.slug || (s.title ? s.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') : `service-${idx + 1}`),
-                isActive: s.isActive !== undefined ? Boolean(s.isActive) : true,
-                plans: (Array.isArray(s.plans) && s.plans.length > 0) ? s.plans : (fallback?.plans || []),
-                specs: (Array.isArray(s.specs) && s.specs.length > 0) ? s.specs : (s.specifications || fallback?.specs || []),
-                processSteps: (Array.isArray(s.processSteps) && s.processSteps.length > 0) ? s.processSteps : (fallback?.processSteps || []),
-                deliverables: (Array.isArray(s.deliverables) && s.deliverables.length > 0) ? s.deliverables : (fallback?.deliverables || []),
-                faqs: (Array.isArray(s.faqs) && s.faqs.length > 0) ? s.faqs : (fallback?.faqs || []),
-              };
-            })
+            const fallback = initial.services.find(
+              (is) => is.id === s.id || is.slug === s.slug || is.title?.toLowerCase() === s.title?.toLowerCase()
+            );
+            return {
+              ...s,
+              icon: s.icon || fallback?.icon || 'Music',
+              order: typeof s.order === 'number' ? s.order : idx + 1,
+              slug: s.slug || fallback?.slug || (s.title ? s.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') : `service-${idx + 1}`),
+              isActive: s.isActive !== undefined ? Boolean(s.isActive) : true,
+              plans: (Array.isArray(s.plans) && s.plans.length > 0) ? s.plans : (fallback?.plans || []),
+              specs: (Array.isArray(s.specs) && s.specs.length > 0) ? s.specs : (s.specifications || fallback?.specs || []),
+              processSteps: (Array.isArray(s.processSteps) && s.processSteps.length > 0) ? s.processSteps : (fallback?.processSteps || []),
+              deliverables: (Array.isArray(s.deliverables) && s.deliverables.length > 0) ? s.deliverables : (fallback?.deliverables || []),
+              faqs: (Array.isArray(s.faqs) && s.faqs.length > 0) ? s.faqs : (fallback?.faqs || []),
+            };
+          })
           : initial.services;
 
         const loadedArtists = Array.isArray(parsed.artists)
@@ -765,13 +873,14 @@ class DatabaseStore {
 
         const loadedHomepage = parsed.homepage
           ? {
-              ...initial.homepage,
-              ...parsed.homepage,
-              featuredVideoId: parsed.homepage.featuredVideoId === 'HcEcM5AtEZ8' ? 'PsmXAUKjR5Y' : (parsed.homepage.featuredVideoId || 'PsmXAUKjR5Y'),
-              selectedAlbumIds: ['alb-2', 'alb-bhartar', 'alb-1', 'alb-3'],
-              featuredVideoIds: ['vid-1', 'vid-bhartar', 'vid-2', 'vid-3'],
-              marqueeText: initial.homepage.marqueeText,
-            }
+            ...initial.homepage,
+            ...parsed.homepage,
+            featuredVideoId: parsed.homepage.featuredVideoId === 'HcEcM5AtEZ8' ? 'PsmXAUKjR5Y' : (parsed.homepage.featuredVideoId || 'PsmXAUKjR5Y'),
+            selectedAlbumIds: ['alb-2', 'alb-bhartar', 'alb-1', 'alb-3'],
+            featuredVideoIds: ['vid-1', 'vid-bhartar', 'vid-2', 'vid-3'],
+            marqueeText: initial.homepage.marqueeText,
+            reviews: parsed.homepage.reviews && parsed.homepage.reviews.length > 0 ? parsed.homepage.reviews : initial.homepage.reviews,
+          }
           : initial.homepage;
 
         const merged: DatabaseSchema = {
@@ -787,7 +896,7 @@ class DatabaseStore {
           media: parsed.media || initial.media,
           contactRequests: parsed.contactRequests || initial.contactRequests,
           homepage: loadedHomepage,
-          siteSettings: parsed.siteSettings || initial.siteSettings,
+          siteSettings: parsed.siteSettings ? { ...initial.siteSettings, ...parsed.siteSettings } : initial.siteSettings,
           activityLogs: parsed.activityLogs || initial.activityLogs,
           preWedding: parsed.preWedding || initial.preWedding,
         };
@@ -924,7 +1033,7 @@ class DatabaseStore {
         this.persist();
         const createdArtist = this.artists.findById(id);
         if (createdArtist) {
-          syncArtistToPostgres(createdArtist, createdArtist.socials).catch(() => {});
+          syncArtistToPostgres(createdArtist, createdArtist.socials).catch(() => { });
         }
         return createdArtist;
       },
@@ -959,7 +1068,7 @@ class DatabaseStore {
         this.persist();
         const updatedArtist = this.artists.findById(id);
         if (updatedArtist) {
-          syncArtistToPostgres(updatedArtist, updatedArtist.socials).catch(() => {});
+          syncArtistToPostgres(updatedArtist, updatedArtist.socials).catch(() => { });
         }
         return updatedArtist;
       },
@@ -970,7 +1079,7 @@ class DatabaseStore {
         this.data.artistSocials = this.data.artistSocials.filter((s) => s.artistId !== id);
         this.data.eventArtists = this.data.eventArtists.filter((ea) => ea.artistId !== id);
         this.persist();
-        deleteArtistFromPostgres(id).catch(() => {});
+        deleteArtistFromPostgres(id).catch(() => { });
         return true;
       },
     };
@@ -1242,7 +1351,7 @@ class DatabaseStore {
         };
         this.data.services.push(service);
         this.persist();
-        syncServiceToPostgres(service).catch(() => {});
+        syncServiceToPostgres(service).catch(() => { });
         return service;
       },
       update: (id: string, updates: Partial<Service>) => {
@@ -1254,7 +1363,7 @@ class DatabaseStore {
           updatedAt: new Date().toISOString(),
         };
         this.persist();
-        syncServiceToPostgres(this.data.services[index]).catch(() => {});
+        syncServiceToPostgres(this.data.services[index]).catch(() => { });
         return this.data.services[index];
       },
       reorder: (serviceIds: string[]) => {
@@ -1264,7 +1373,7 @@ class DatabaseStore {
             if (s) {
               s.order = idx + 1;
               s.updatedAt = new Date().toISOString();
-              syncServiceToPostgres(s).catch(() => {});
+              syncServiceToPostgres(s).catch(() => { });
             }
           });
           this.persist();
@@ -1276,7 +1385,7 @@ class DatabaseStore {
         if (index === -1) return false;
         this.data.services.splice(index, 1);
         this.persist();
-        deleteServiceFromPostgres(id).catch(() => {});
+        deleteServiceFromPostgres(id).catch(() => { });
         return true;
       },
     };
@@ -1356,7 +1465,7 @@ class DatabaseStore {
         };
         this.data.contactRequests.unshift(contact);
         this.persist();
-        syncContactRequestToPostgres(contact).catch(() => {});
+        syncContactRequestToPostgres(contact).catch(() => { });
         return contact;
       },
       update: (id: string, updates: Partial<ContactRequest>) => {
@@ -1368,7 +1477,7 @@ class DatabaseStore {
           updatedAt: new Date().toISOString(),
         };
         this.persist();
-        syncContactRequestToPostgres(this.data.contactRequests[index]).catch(() => {});
+        syncContactRequestToPostgres(this.data.contactRequests[index]).catch(() => { });
         return this.data.contactRequests[index];
       },
       delete: (id: string) => {
@@ -1376,7 +1485,7 @@ class DatabaseStore {
         if (index === -1) return false;
         this.data.contactRequests.splice(index, 1);
         this.persist();
-        deleteContactRequestFromPostgres(id).catch(() => {});
+        deleteContactRequestFromPostgres(id).catch(() => { });
         return true;
       },
     };
@@ -1441,6 +1550,36 @@ class DatabaseStore {
         if (!this.data.preWedding) {
           this.data.preWedding = initialPreWeddingData;
           this.persist();
+        } else {
+          // Merge any newly introduced schema fields if missing from existing JSON DB
+          let hasMerged = false;
+          const initialObj = initialPreWeddingData as any;
+          const currentObj = this.data.preWedding as any;
+          for (const key of Object.keys(initialObj)) {
+            if (currentObj[key] === undefined) {
+              currentObj[key] = initialObj[key];
+              hasMerged = true;
+            }
+          }
+          if (currentObj.studioInfo && initialObj.studioInfo) {
+            for (const sKey of Object.keys(initialObj.studioInfo)) {
+              if (currentObj.studioInfo[sKey] === undefined) {
+                currentObj.studioInfo[sKey] = initialObj.studioInfo[sKey];
+                hasMerged = true;
+              }
+            }
+          }
+          if (currentObj.directorInfo && initialObj.directorInfo) {
+            for (const dKey of Object.keys(initialObj.directorInfo)) {
+              if (currentObj.directorInfo[dKey] === undefined) {
+                currentObj.directorInfo[dKey] = initialObj.directorInfo[dKey];
+                hasMerged = true;
+              }
+            }
+          }
+          if (hasMerged) {
+            this.persist();
+          }
         }
         return this.data.preWedding;
       },
@@ -1453,10 +1592,22 @@ class DatabaseStore {
             ...current.studioInfo,
             ...(updates.studioInfo || {}),
           },
-          packages: updates.packages || current.packages,
-          customServices: updates.customServices || current.customServices,
-          addOns: updates.addOns || current.addOns,
-          whyUsPillars: updates.whyUsPillars || current.whyUsPillars,
+          directorInfo: {
+            ...(current.directorInfo || {}),
+            ...(updates.directorInfo || {}),
+          },
+          heroStats: updates.heroStats || current.heroStats || [],
+          processSteps: updates.processSteps || current.processSteps || [],
+          videos: updates.videos || current.videos || [],
+          portfolioGallery: updates.portfolioGallery || current.portfolioGallery || [],
+          coverageTypes: updates.coverageTypes || current.coverageTypes || [],
+          coupleStories: updates.coupleStories || current.coupleStories || [],
+          packages: updates.packages || current.packages || [],
+          weddingPackages: updates.weddingPackages || current.weddingPackages || [],
+          weddingDayStories: updates.weddingDayStories !== undefined ? updates.weddingDayStories : current.weddingDayStories,
+          customServices: updates.customServices || current.customServices || [],
+          addOns: updates.addOns || current.addOns || [],
+          whyUsPillars: updates.whyUsPillars || current.whyUsPillars || [],
           updatedAt: new Date().toISOString(),
         };
         this.persist();

@@ -24,6 +24,7 @@ export function setAdminToken(token: string) {
 
 export function removeAdminToken() {
   localStorage.removeItem('vexo_admin_token');
+  localStorage.removeItem('vexo_admin_user');
 }
 
 export async function adminFetch<T>(
@@ -660,19 +661,25 @@ export const adminSiteSettingsApi = {
 export const adminPreWeddingApi = {
   get: async () => {
     try {
-      return await adminFetch<any>('/admin/pre-wedding');
+      const res = await adminFetch<any>('/admin/pre-wedding');
+      if (res && res.success && res.data) {
+        adminMockStore.updatePreWedding(res.data);
+        return res;
+      }
+      return adminMockStore.getPreWedding();
     } catch {
       return adminMockStore.getPreWedding();
     }
   },
   update: async (data: any) => {
+    adminMockStore.updatePreWedding(data);
     try {
       return await adminFetch<any>('/admin/pre-wedding', {
         method: 'PUT',
         body: JSON.stringify(data),
       });
     } catch {
-      return adminMockStore.updatePreWedding(data);
+      return { success: true, data };
     }
   },
 };

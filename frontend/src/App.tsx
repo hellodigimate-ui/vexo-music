@@ -36,6 +36,7 @@ import { AdminSiteSettingsPage } from './admin/pages/AdminSiteSettingsPage';
 import { AdminPreWeddingPage } from './admin/pages/AdminPreWeddingPage';
 import { AdminActivityLogsPage } from './admin/pages/AdminActivityLogsPage';
 import { AdminUsersPage } from './admin/pages/AdminUsersPage';
+import { AdminFooterPage } from './admin/pages/AdminFooterPage';
 
 // Theme Experience System
 import { ThemeProvider, ThemeTransition } from './components/theme';
@@ -116,6 +117,7 @@ export function App() {
                 <Route path="homepage" element={<AdminHomepagePage />} />
                 <Route path="pre-wedding" element={<AdminPreWeddingPage />} />
                 <Route path="site-settings" element={<AdminSiteSettingsPage />} />
+                <Route path="footer" element={<AdminFooterPage />} />
                 <Route path="activity-logs" element={<AdminActivityLogsPage />} />
                 <Route path="users" element={<AdminUsersPage />} />
               </Route>

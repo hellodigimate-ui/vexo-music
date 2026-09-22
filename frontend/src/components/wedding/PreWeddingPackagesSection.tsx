@@ -47,10 +47,7 @@ export const PreWeddingPackagesSection: React.FC<PreWeddingPackagesSectionProps>
   };
 
   return (
-    <section id="packages" className="cinematic-dark relative py-24 bg-[#050505] overflow-hidden text-white">
-      {/* Subtle ambient red background glow */}
-      <div className="absolute top-1/3 left-1/2 -translate-x-1/2 w-[600px] h-[350px] bg-vexo-red/10 blur-[150px] rounded-full pointer-events-none opacity-20" />
-
+    <section id="packages" className="cinematic-dark relative py-24 bg-[#050505] overflow-hidden text-white border-b border-white/5">
       <Container className="relative z-10">
         {/* Section Header */}
         <div className="max-w-3xl mx-auto text-center mb-16">
@@ -191,14 +188,14 @@ export const PreWeddingPackagesSection: React.FC<PreWeddingPackagesSectionProps>
                     </div>
 
                     {/* Shoot Logistics */}
-                    <div className="pt-2 border-t border-white/10 flex items-center justify-between text-xs text-zinc-400 font-mono">
-                      <span className="flex items-center gap-1.5">
-                        <Calendar className="w-3.5 h-3.5 text-vexo-red" />
-                        {pkg.shoot.days}
+                    <div className="pt-2 border-t border-white/10 flex items-center justify-between gap-2 text-xs text-zinc-400 font-mono">
+                      <span className="flex items-center gap-1.5 shrink-0">
+                        <Calendar className="w-3.5 h-3.5 text-vexo-red shrink-0" />
+                        <span>{pkg.shoot.days}</span>
                       </span>
-                      <span className="flex items-center gap-1.5">
-                        <MapPin className="w-3.5 h-3.5 text-vexo-red" />
-                        {pkg.shoot.locations}
+                      <span className="flex items-center gap-1.5 shrink-0">
+                        <MapPin className="w-3.5 h-3.5 text-vexo-red shrink-0" />
+                        <span>{pkg.shoot.locations}</span>
                       </span>
                     </div>
 
@@ -211,7 +208,7 @@ export const PreWeddingPackagesSection: React.FC<PreWeddingPackagesSectionProps>
                         <ul className="space-y-1 text-zinc-300">
                           {pkg.bonus.map((b: string, i: number) => (
                             <li key={i} className="flex items-center gap-1.5">
-                              <Sparkles className="w-3 h-3 text-vexo-red" />
+                              <Sparkles className="w-3 h-3 text-vexo-red shrink-0" />
                               <span>{b}</span>
                             </li>
                           ))}
@@ -223,13 +220,13 @@ export const PreWeddingPackagesSection: React.FC<PreWeddingPackagesSectionProps>
                     {pkg.platinumExperience && pkg.platinumExperience.length > 0 && (
                       <div className="p-3.5 rounded-xl bg-white/[0.04] border border-white/15 text-xs">
                         <span className="font-bold text-white uppercase tracking-wider block mb-1 flex items-center gap-1">
-                          <Crown className="w-3.5 h-3.5 text-vexo-red" />
+                          <Crown className="w-3.5 h-3.5 text-vexo-red shrink-0" />
                           Platinum VIP Direction
                         </span>
                         <ul className="space-y-1 text-zinc-300">
                           {pkg.platinumExperience.map((exp: string, i: number) => (
                             <li key={i} className="flex items-center gap-1.5">
-                              <Compass className="w-3 h-3 text-vexo-red" />
+                              <Compass className="w-3 h-3 text-vexo-red shrink-0" />
                               <span>{exp}</span>
                             </li>
                           ))}

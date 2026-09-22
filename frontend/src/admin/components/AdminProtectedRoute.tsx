@@ -5,8 +5,16 @@ import { useAdminAuth } from '../context/AdminAuthContext';
 export const AdminProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const { isAuthenticated, isLoading } = useAdminAuth();
   const location = useLocation();
+  const [timedOut, setTimedOut] = React.useState(false);
 
-  if (isLoading) {
+  React.useEffect(() => {
+    if (isLoading) {
+      const timer = setTimeout(() => setTimedOut(true), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [isLoading]);
+
+  if (isLoading && !timedOut) {
     return (
       <div className="min-h-screen bg-slate-50 dark:bg-[#08080a] flex items-center justify-center text-slate-900 dark:text-white transition-colors duration-300">
         <div className="flex flex-col items-center gap-4">
@@ -19,7 +27,7 @@ export const AdminProtectedRoute: React.FC<{ children: React.ReactNode }> = ({ c
     );
   }
 
-  if (!isAuthenticated) {
+  if (!isAuthenticated || timedOut) {
     return <Navigate to="/admin/login" state={{ from: location }} replace />;
   }
 

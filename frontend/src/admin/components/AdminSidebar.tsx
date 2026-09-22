@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate, useLocation } from 'react-router-dom';
 import {
   LayoutDashboard,
   Globe,
@@ -21,6 +21,10 @@ import {
   Flame,
   Pin,
   PinOff,
+  PanelBottom,
+  Link as LinkIcon,
+  MapPin,
+  Share2,
 } from 'lucide-react';
 import { useAdminAuth } from '../context/AdminAuthContext';
 import { adminMockStore } from '../services/adminMockStore';
@@ -53,12 +57,30 @@ export const AdminSidebar: React.FC<SidebarProps> = ({
 }) => {
   const { user, logout } = useAdminAuth();
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [isHovered, setIsHovered] = useState(false);
   const leaveTimeoutRef = React.useRef<ReturnType<typeof setTimeout> | null>(null);
 
   // Expanded if mobile drawer is open, or desktop sidebar is pinned or currently hovered
   const isExpanded = isOpen || isPinned || isHovered;
+
+  const isItemActive = (itemPath: string, exact?: boolean) => {
+    const [targetPath, targetSearch] = itemPath.split('?');
+    const currentPath = location.pathname;
+    const currentSearch = location.search;
+
+    if (targetSearch) {
+      return currentPath === targetPath && currentSearch.includes(targetSearch);
+    }
+    if (exact || targetPath === '/admin') {
+      return currentPath === targetPath && (!currentSearch || currentSearch === '');
+    }
+    if (targetPath === '/admin/footer') {
+      return currentPath === targetPath && (!currentSearch || currentSearch === '');
+    }
+    return currentPath === targetPath || currentPath.startsWith(targetPath + '/');
+  };
 
   const handleMouseEnter = () => {
     if (leaveTimeoutRef.current) {
@@ -132,6 +154,16 @@ export const AdminSidebar: React.FC<SidebarProps> = ({
       ],
     },
     {
+      title: 'FOOTER CMS',
+      items: [
+        { name: 'Footer Overview', path: '/admin/footer', icon: PanelBottom, exact: true },
+        { name: 'Footer Services', path: '/admin/footer?tab=services', icon: Briefcase },
+        { name: 'Quick Links', path: '/admin/footer?tab=quickLinks', icon: LinkIcon },
+        { name: 'Contact & Status', path: '/admin/footer?tab=contact', icon: MapPin },
+        { name: 'Brand & Socials', path: '/admin/footer?tab=brandSocials', icon: Share2 },
+      ],
+    },
+    {
       title: 'MEDIA',
       items: [
         { name: 'Media Library', path: '/admin/media', icon: ImageIcon },
@@ -152,6 +184,7 @@ export const AdminSidebar: React.FC<SidebarProps> = ({
       title: 'SETTINGS',
       items: [
         { name: 'Website Settings', path: '/admin/site-settings', icon: Sliders },
+        { name: 'Footer Customization', path: '/admin/footer', icon: PanelBottom },
       ],
     },
     {
@@ -237,71 +270,69 @@ export const AdminSidebar: React.FC<SidebarProps> = ({
               )}
 
               <div className="space-y-0.5">
-                {section.items.map((item, iIdx) => (
-                  <NavLink
-                    key={`${item.path}-${iIdx}`}
-                    to={item.path}
-                    end={item.exact}
-                    onClick={onClose}
-                    title={!isExpanded ? item.name : undefined}
-                    className={({ isActive }) =>
-                      `relative flex items-center min-h-0 h-10 rounded-xl text-xs transition-all duration-200 group overflow-hidden ${
-                        isExpanded
-                          ? 'justify-between px-2.5 py-2'
-                          : 'justify-center w-10 mx-auto'
-                      } ${
-                        isActive
-                          ? 'nav-item-active bg-gradient-to-r from-red-500/15 via-red-500/5 to-transparent dark:from-vexo-red/20 dark:via-vexo-red/5 dark:to-transparent text-slate-900 dark:text-white font-bold shadow-2xs'
-                          : 'text-slate-600 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-zinc-900/60 font-medium hover:translate-x-0.5'
-                      }`
-                    }
-                  >
-                    {({ isActive }) => (
-                      <>
-                        {/* Red Accent Active Indicator Pill */}
-                        {isActive && isExpanded && (
-                          <div className="absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r-full bg-vexo-red shadow-[0_0_8px_rgba(224,0,0,0.7)]" />
-                        )}
+                {section.items.map((item, iIdx) => {
+                  const active = isItemActive(item.path, item.exact);
+                  return (
+                    <NavLink
+                      key={`${item.path}-${iIdx}`}
+                      to={item.path}
+                      onClick={onClose}
+                      title={!isExpanded ? item.name : undefined}
+                      className={
+                        `relative flex items-center min-h-0 h-10 rounded-xl text-xs transition-all duration-200 group overflow-hidden ${
+                          isExpanded
+                            ? 'justify-between px-2.5 py-2'
+                            : 'justify-center w-10 mx-auto'
+                        } ${
+                          active
+                            ? 'nav-item-active bg-gradient-to-r from-red-500/15 via-red-500/5 to-transparent dark:from-vexo-red/20 dark:via-vexo-red/5 dark:to-transparent text-slate-900 dark:text-white font-bold shadow-2xs'
+                            : 'text-slate-600 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-zinc-900/60 font-medium hover:translate-x-0.5'
+                        }`
+                      }
+                    >
+                      {/* Red Accent Active Indicator Pill */}
+                      {active && isExpanded && (
+                        <div className="absolute left-0 top-1.5 bottom-1.5 w-1 rounded-r-full bg-vexo-red shadow-[0_0_8px_rgba(224,0,0,0.7)]" />
+                      )}
 
-                        <div className={`flex items-center gap-2.5 min-w-0 ${!isExpanded ? 'justify-center' : ''}`}>
-                          <item.icon
-                            className={`w-4 h-4 transition-all duration-200 shrink-0 ${
-                              isActive
-                                ? 'text-vexo-red scale-110 drop-shadow-[0_0_6px_rgba(224,0,0,0.4)]'
-                                : 'text-slate-500 dark:text-zinc-500 group-hover:text-vexo-red group-hover:scale-110'
+                      <div className={`flex items-center gap-2.5 min-w-0 ${!isExpanded ? 'justify-center' : ''}`}>
+                        <item.icon
+                          className={`w-4 h-4 transition-all duration-200 shrink-0 ${
+                            active
+                              ? 'text-vexo-red scale-110 drop-shadow-[0_0_6px_rgba(224,0,0,0.4)]'
+                              : 'text-slate-500 dark:text-zinc-500 group-hover:text-vexo-red group-hover:scale-110'
+                          }`}
+                        />
+                        {isExpanded && (
+                          <span className="truncate whitespace-nowrap">{item.name}</span>
+                        )}
+                      </div>
+
+                      {/* Badges & Chevron (Expanded) */}
+                      {isExpanded && (
+                        <div className="flex items-center gap-1 shrink-0">
+                          {item.badge && (
+                            <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold bg-vexo-red text-white shadow-[0_0_6px_rgba(220,38,38,0.7)] animate-pulse">
+                              {item.badge}
+                            </span>
+                          )}
+                          <ChevronRight
+                            className={`w-3 h-3 transition-all duration-200 ${
+                              active
+                                ? 'text-vexo-red opacity-100 translate-x-0'
+                                : 'text-slate-400 dark:text-zinc-600 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5'
                             }`}
                           />
-                          {isExpanded && (
-                            <span className="truncate whitespace-nowrap">{item.name}</span>
-                          )}
                         </div>
+                      )}
 
-                        {/* Badges & Chevron (Expanded) */}
-                        {isExpanded && (
-                          <div className="flex items-center gap-1 shrink-0">
-                            {item.badge && (
-                              <span className="px-1.5 py-0.2 rounded-full text-[10px] font-mono font-bold bg-vexo-red text-white shadow-[0_0_6px_rgba(220,38,38,0.7)] animate-pulse">
-                                {item.badge}
-                              </span>
-                            )}
-                            <ChevronRight
-                              className={`w-3 h-3 transition-all duration-200 ${
-                                isActive
-                                  ? 'text-vexo-red opacity-100 translate-x-0'
-                                  : 'text-slate-400 dark:text-zinc-600 opacity-0 group-hover:opacity-100 group-hover:translate-x-0.5'
-                              }`}
-                            />
-                          </div>
-                        )}
-
-                        {/* Badge notification dot (Collapsed) */}
-                        {!isExpanded && item.badge && (
-                          <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-vexo-red ring-2 ring-white dark:ring-[#08080a] animate-pulse" />
-                        )}
-                      </>
-                    )}
-                  </NavLink>
-                ))}
+                      {/* Badge notification dot (Collapsed) */}
+                      {!isExpanded && item.badge && (
+                        <span className="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-vexo-red ring-2 ring-white dark:ring-[#08080a] animate-pulse" />
+                      )}
+                    </NavLink>
+                  );
+                })}
               </div>
             </div>
           ))}

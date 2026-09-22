@@ -149,6 +149,24 @@ html.light ::-webkit-scrollbar-thumb:hover {
   -webkit-text-fill-color: transparent;
 }
 
+.text-gradient-gold {
+  background: linear-gradient(135deg, #FFF6D6 0%, #F3E5AB 25%, #D4AF37 60%, #AA7C11 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.gold-badge {
+  background: rgba(212, 175, 55, 0.12);
+  border: 1px solid rgba(212, 175, 55, 0.35);
+  color: #F3E5AB;
+}
+
+.bg-radial-gold {
+  background: radial-gradient(circle at 50% 30%, rgba(212, 175, 55, 0.18) 0%, transparent 70%);
+}
+
+
 html.light :not(.cinematic-dark) > .text-gradient-red,
 html.light :not(.cinematic-dark *) .text-gradient-red:not(.cinematic-dark *) {
   background: linear-gradient(135deg, #09090b 30%, #E00000 100%);

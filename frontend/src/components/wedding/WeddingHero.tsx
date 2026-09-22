@@ -2,18 +2,65 @@ import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Container } from '../ui/Container';
 import { Button } from '../ui/Button';
-import { WEDDING_STUDIO_INFO } from '../../data/weddingData';
+import { WEDDING_STUDIO_INFO, type PreWeddingHeroStat } from '../../data/weddingData';
 import { Sparkles, Calendar, Camera, Film, Play, ArrowDown, Award, Heart } from 'lucide-react';
+import { getMediaUrl } from '../../lib/utils';
 
-export const WeddingHero: React.FC = () => {
+export interface WeddingHeroProps {
+  studioInfo?: any;
+  heroStats?: PreWeddingHeroStat[];
+  onExplorePackages?: () => void;
+  onBookDate?: () => void;
+}
+
+export const WeddingHero: React.FC<WeddingHeroProps> = ({
+  studioInfo = WEDDING_STUDIO_INFO,
+  heroStats,
+  onExplorePackages,
+  onBookDate,
+}) => {
   const shouldReduceMotion = useReducedMotion();
 
-  const scrollToSection = (id: string) => {
+  const scrollToSection = (id: string): boolean => {
     const el = document.getElementById(id);
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
+      return true;
+    }
+    return false;
+  };
+
+  const handleExplore = () => {
+    if (onExplorePackages) {
+      onExplorePackages();
+    } else if (!scrollToSection('pre-wedding-packages')) {
+      scrollToSection('packages');
     }
   };
+
+  const handleBook = () => {
+    if (onBookDate) {
+      onBookDate();
+    } else if (!scrollToSection('book-your-date')) {
+      scrollToSection('book-date');
+    }
+  };
+
+  // Dynamic Background Image from studioInfo, resolved through getMediaUrl
+  const rawBg =
+    studioInfo?.heroBgImage ||
+    WEDDING_STUDIO_INFO.heroBgImage ||
+    'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=2000&q=85';
+  const bgImage = getMediaUrl(rawBg);
+
+  // Statistics: use heroStats if provided with data, otherwise fall back to WEDDING_STUDIO_INFO.stats
+  const statsList =
+    heroStats && heroStats.length > 0
+      ? heroStats.map((s: any) => ({
+          value: s.number || s.value || '01',
+          label: s.title || s.label || '',
+        }))
+      : WEDDING_STUDIO_INFO.stats;
 
   return (
     <section className="relative min-h-[92vh] lg:min-h-screen flex flex-col justify-between overflow-hidden bg-[#050508] pt-28 pb-14 text-white">
@@ -25,14 +72,14 @@ export const WeddingHero: React.FC = () => {
           transition={{ duration: 24, repeat: Infinity, ease: 'linear' }}
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: `url('https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=2000&q=85')`,
-            filter: 'brightness(0.38) contrast(1.1) saturate(1.15)',
+            backgroundImage: `url('${bgImage}')`,
+            filter: 'brightness(0.55) contrast(1.08) saturate(1.15)',
           }}
         />
 
         {/* Deep Gradient Overlays & Gold Radial Halo */}
-        <div className="absolute inset-0 bg-gradient-to-t from-[#050508] via-[#050508]/60 to-[#050508]/85" />
-        <div className="absolute inset-0 bg-radial-gold opacity-60" />
+        <div className="absolute inset-0 bg-gradient-to-t from-[#050508] via-[#050508]/50 to-[#050508]/80 pointer-events-none" />
+        <div className="absolute inset-0 bg-radial-gold opacity-50 pointer-events-none" />
         <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-[#D4AF37]/10 rounded-full blur-[160px] pointer-events-none" />
       </div>
 
@@ -48,7 +95,7 @@ export const WeddingHero: React.FC = () => {
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full gold-badge text-xs sm:text-sm font-semibold tracking-widest uppercase mb-6 shadow-lg shadow-[#D4AF37]/10"
           >
             <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
-            <span>{WEDDING_STUDIO_INFO.tagline}</span>
+            <span>{studioInfo?.tagline || WEDDING_STUDIO_INFO.tagline}</span>
           </motion.div>
 
           {/* Main Royal Cinematic Headline */}
@@ -69,13 +116,13 @@ export const WeddingHero: React.FC = () => {
             initial={{ opacity: 0, y: 25 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7, delay: 0.2 }}
-            className="relative px-6 py-4 rounded-2xl bg-white/[0.04] border border-[#D4AF37]/25 backdrop-blur-md mb-8 max-w-2xl shadow-xl text-center"
+            className="relative px-6 py-4 rounded-2xl bg-white/[0.04] border border-vexo-red/30 backdrop-blur-md mb-8 max-w-2xl shadow-xl text-center"
           >
-            <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-[#0A0A0E] border border-[#D4AF37]/30 rounded-full text-[10px] font-semibold text-[#D4AF37] tracking-wider uppercase flex items-center gap-1">
-              <Heart className="w-2.5 h-2.5 fill-[#D4AF37]" /> FROM THE HEART
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-[#0A0A0E] border border-vexo-red/50 rounded-full text-[10px] font-semibold text-vexo-red tracking-wider uppercase flex items-center gap-1 shadow-md">
+              <Heart className="w-2.5 h-2.5 fill-vexo-red text-vexo-red" /> FROM THE HEART
             </div>
             <p className="text-base sm:text-lg md:text-xl text-zinc-200 font-medium leading-relaxed">
-              &ldquo;{WEDDING_STUDIO_INFO.subHeadlineHindi}&rdquo;
+              &ldquo;{studioInfo?.subHeadlineHindi || WEDDING_STUDIO_INFO.subHeadlineHindi}&rdquo;
             </p>
           </motion.div>
 
@@ -88,8 +135,8 @@ export const WeddingHero: React.FC = () => {
           >
             <Button
               size="lg"
-              onClick={() => scrollToSection('packages')}
-              className="w-full sm:w-auto px-8 py-4 bg-gradient-to-r from-[#D4AF37] via-[#F3E5AB] to-[#AA7C11] text-black font-bold tracking-wider rounded-xl shadow-lg shadow-[#D4AF37]/30 hover:scale-[1.02] hover:shadow-[#D4AF37]/45 transition-all text-sm uppercase flex items-center justify-center gap-2 cursor-pointer"
+              onClick={handleExplore}
+              className="w-full sm:w-auto px-8 py-4 bg-vexo-red hover:bg-[#ff1a1a] text-white font-bold tracking-wider rounded-xl shadow-lg shadow-red-600/30 hover:scale-[1.02] hover:shadow-red-600/50 transition-all text-sm uppercase flex items-center justify-center gap-2 cursor-pointer font-mono"
             >
               <Camera className="w-4 h-4" />
               <span>EXPLORE PACKAGES</span>
@@ -98,10 +145,10 @@ export const WeddingHero: React.FC = () => {
             <Button
               size="lg"
               variant="outline"
-              onClick={() => scrollToSection('book-date')}
-              className="w-full sm:w-auto px-8 py-4 rounded-xl border border-[#D4AF37]/40 bg-black/40 backdrop-blur-md hover:bg-[#D4AF37]/10 hover:border-[#D4AF37] text-white font-semibold tracking-wider text-sm transition-all flex items-center justify-center gap-2 cursor-pointer"
+              onClick={handleBook}
+              className="w-full sm:w-auto px-8 py-4 rounded-xl border border-white/20 bg-black/50 backdrop-blur-md hover:bg-white/10 hover:border-vexo-red text-white font-semibold tracking-wider text-sm transition-all flex items-center justify-center gap-2 cursor-pointer font-mono"
             >
-              <Calendar className="w-4 h-4 text-[#D4AF37]" />
+              <Calendar className="w-4 h-4 text-vexo-red shrink-0" />
               <span>BOOK YOUR DATE</span>
             </Button>
           </motion.div>
@@ -134,7 +181,7 @@ export const WeddingHero: React.FC = () => {
       <div className="relative z-10 border-t border-[#D4AF37]/20 bg-black/60 backdrop-blur-xl">
         <Container>
           <div className="grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-[#D4AF37]/15 py-6">
-            {WEDDING_STUDIO_INFO.stats.map((stat: { value: string; label: string }, idx: number) => (
+            {statsList.map((stat: { value: string; label: string }, idx: number) => (
               <div key={idx} className="px-4 py-3 sm:py-2 text-center flex flex-col items-center justify-center">
                 <span className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gradient-gold font-serif">
                   {stat.value}

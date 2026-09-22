@@ -29,14 +29,18 @@ const AdminAuthContext = createContext<AdminAuthContextType | undefined>(undefin
 
 export const AdminAuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
   const [user, setUser] = useState<AdminUser | null>(() => {
-    const savedUser = localStorage.getItem('vexo_admin_user');
-    return savedUser ? JSON.parse(savedUser) : null;
+    try {
+      const savedUser = localStorage.getItem('vexo_admin_user');
+      return savedUser ? JSON.parse(savedUser) : null;
+    } catch {
+      localStorage.removeItem('vexo_admin_user');
+      return null;
+    }
   });
   const [token, setToken] = useState<string | null>(getAdminToken);
   const [isLoading, setIsLoading] = useState<boolean>(() => {
     const savedToken = getAdminToken();
-    const savedUser = localStorage.getItem('vexo_admin_user');
-    return !savedToken || !savedUser;
+    return !!savedToken;
   });
 
   const refreshProfile = useCallback(async () => {

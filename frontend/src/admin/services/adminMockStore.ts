@@ -12,7 +12,7 @@ import {
   ADD_ON_SERVICES,
 } from '../../data/weddingData';
 
-const STORAGE_KEY = 'vexo_admin_mock_db_v12';
+const STORAGE_KEY = 'vexo_admin_mock_db_v13';
 
 function getInitialMockDb() {
   const now = new Date().toISOString();
@@ -526,6 +526,79 @@ function getInitialMockDb() {
       finalCtaSecondaryLabel: 'CONTACT VEXO',
       finalCtaSecondaryUrl: '/contact',
 
+      // Reviews / Testimonials Section
+      reviewsBadge: 'TESTIMONIALS & TRUST',
+      reviewsHeading: 'VOICES OF EXCELLENCE',
+      reviewsSubtitle: 'What artists, visionary couples, and industry partners say about producing with VEXO.',
+      reviews: [
+        {
+          id: 'rev-1',
+          clientName: 'Rashmi Nishad',
+          roleOrProject: 'Lead Vocalist • "Satane Lage Ho"',
+          rating: 5,
+          reviewText: 'Working with VEXO Music on "Satane Lage Ho" was a transformative experience. Their studio engineering, arrangement sensibilities, and dedication to visual storytelling elevated our folk release to international chart standards.',
+          avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
+          category: 'Music Production',
+          verified: true,
+          date: 'August 2026',
+        },
+        {
+          id: 'rev-2',
+          clientName: 'Aarav & Simran Rathore',
+          roleOrProject: 'Royal Pre-Wedding Shoot • Jaipur Forts',
+          rating: 5,
+          reviewText: 'The cinematic pre-wedding film produced by VEXO looked like a Bollywood period epic. From synchronized drone choreography over Nahargarh Fort to the original background score they composed for us, it was beyond our wildest dreams.',
+          avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
+          category: 'Wedding & Film',
+          verified: true,
+          date: 'September 2026',
+        },
+        {
+          id: 'rev-3',
+          clientName: 'Vikramaditya Sen',
+          roleOrProject: 'Executive Producer • Desert Storm Festival',
+          rating: 5,
+          reviewText: 'VEXO handled live audio engineering, multi-camera 4K visual feeds, and headline artist management for our 15,000-attendee festival with surgical precision. The sound was pristine and unforgettable.',
+          avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80',
+          category: 'Artist Management',
+          verified: true,
+          date: 'July 2026',
+        },
+        {
+          id: 'rev-4',
+          clientName: 'Kabir & Meera Singhania',
+          roleOrProject: 'Destination Pre-Wedding • Udaipur Lakes',
+          rating: 5,
+          reviewText: 'Their signature package was worth every rupee. The team took care of luxury logistics, custom styling, multi-camera 4K drone reels, and delivered the finished cut in record time. Every guest was mesmerized.',
+          avatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80',
+          category: 'Wedding & Film',
+          verified: true,
+          date: 'June 2026',
+        },
+        {
+          id: 'rev-5',
+          clientName: 'R Beer',
+          roleOrProject: 'Singer-Songwriter • "Bhartar"',
+          rating: 5,
+          reviewText: 'The creative freedom and sonic power VEXO brings is unmatched. The production on "Bhartar" hit millions of streams within weeks. Their mixing, mastering, and global DSP distribution network are best-in-class.',
+          avatarUrl: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=300&q=80',
+          category: 'Music Production',
+          verified: true,
+          date: 'August 2026',
+        },
+        {
+          id: 'rev-6',
+          clientName: 'Ananya Deshmukh',
+          roleOrProject: 'Indie Artist • Debut EP Production',
+          rating: 5,
+          reviewText: 'As an independent musician, finding a team that respects your vision while providing world-class Dolby Atmos mastering and visualizer production is rare. VEXO is the definitive home for serious artists.',
+          avatarUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=300&q=80',
+          category: 'Music Production',
+          verified: true,
+          date: 'May 2026',
+        },
+      ],
+
       marqueeText: 'LATEST RELEASES: "BHARTAR" BY R BEER & RASHMI NISHAD & "SATANE LAGE HO" — STREAMING NOW ON ALL MAJOR DSPS',
       updatedAt: now,
     },
@@ -537,13 +610,46 @@ function getInitialMockDb() {
       faviconUrl: '/favicon.ico',
       contactEmail: 'contact@vexomusic.com',
       contactPhone: '+91 72399 99966',
-      officeAddress: 'VEXO Creative Studios, Tone City, Jaipur, Rajasthan, India 302001',
+      officeAddress: 'SKY CROWN, Office No. 205, Chordiya City, Kamla Nehru Nagar, Ajmer Road, Jaipur, Pin Code- 302021, Rajasthan, India',
       copyrightText: '© 2026 VEXO Music Entertainment Pvt. Ltd. All rights reserved.',
       socialSpotify: 'https://spotify.com',
-      socialYoutube: 'https://youtube.com',
-      socialInstagram: 'https://instagram.com',
-      socialTwitter: 'https://twitter.com',
+      socialYoutube: 'https://youtube.com/@vexomusicentertainment',
+      socialInstagram: 'https://www.instagram.com/vexomusicentertainment',
+      socialTwitter: 'https://x.com/vexomusicentertainment',
+      socialAppleMusic: 'https://music.apple.com',
+      socialFacebook: 'https://facebook.com',
+      socialSoundcloud: 'https://soundcloud.com',
       maintenanceMode: false,
+
+      // Footer Customization
+      footerBio: 'A premier music entertainment powerhouse & record label specializing in original sound engineering, global music distribution, artist management, and cinematic audio-visual production based in Jaipur, India.',
+      footerQuickLinksHeading: 'QUICK LINKS',
+      footerQuickLinks: [
+        { id: 'fn-1', label: 'Home', path: '/' },
+        { id: 'fn-2', label: 'Music', path: '/music' },
+        { id: 'fn-3', label: 'Artists', path: '/artists' },
+        { id: 'fn-4', label: 'Services', path: '/services' },
+        { id: 'fn-5', label: 'Events', path: '/events' },
+        { id: 'fn-6', label: 'Videos', path: '/videos' },
+        { id: 'fn-7', label: 'About', path: '/about' },
+        { id: 'fn-8', label: 'Contact', path: '/contact' },
+      ],
+      footerServicesHeading: 'SERVICES',
+      footerServicesLinks: [
+        { id: 'fs-1', label: 'Music Production', path: '/services' },
+        { id: 'fs-2', label: 'Audio & Video Production', path: '/services' },
+        { id: 'fs-3', label: 'Artist Management', path: '/services' },
+        { id: 'fs-4', label: 'Music Distribution', path: '/services' },
+        { id: 'fs-5', label: 'Digital Marketing', path: '/services' },
+        { id: 'fs-6', label: 'Brand Collaborations', path: '/services' },
+        { id: 'fs-7', label: 'Pre-Wedding Shoot', path: '/pre-wedding' },
+      ],
+      footerContactHeading: 'CONTACT US',
+      footerStatusText: 'STUDIO ACTIVE • JAIPUR',
+      footerStatusEnabled: true,
+      footerBackToTopEnabled: true,
+      footerAdminLinkEnabled: true,
+
       updatedAt: now,
     },
     activityLogs: [
@@ -578,7 +684,7 @@ class AdminMockStore {
     const initial = getInitialMockDb();
     try {
       // Purge obsolete local storage versions
-      for (let i = 1; i <= 11; i++) {
+      for (let i = 1; i <= 12; i++) {
         localStorage.removeItem(`vexo_admin_mock_db_v${i}`);
       }
 
@@ -652,11 +758,18 @@ class AdminMockStore {
             ...this.db.homepage,
             selectedAlbumIds: ['alb-2', 'alb-bhartar'],
             featuredArtistIds: ['art-1', 'art-rbeer', 'art-2'],
+            reviews: (this.db.homepage.reviews && this.db.homepage.reviews.length > 0) ? this.db.homepage.reviews : initial.homepage.reviews,
           };
         }
 
         if (this.db.siteSettings) {
-          this.db.siteSettings.contactPhone = '+91 72399 99966';
+          this.db.siteSettings = {
+            ...initial.siteSettings,
+            ...this.db.siteSettings,
+            contactPhone: '+91 72399 99966',
+            footerServicesLinks: (this.db.siteSettings.footerServicesLinks && this.db.siteSettings.footerServicesLinks.length > 0) ? this.db.siteSettings.footerServicesLinks : initial.siteSettings.footerServicesLinks,
+            footerQuickLinks: (this.db.siteSettings.footerQuickLinks && this.db.siteSettings.footerQuickLinks.length > 0) ? this.db.siteSettings.footerQuickLinks : initial.siteSettings.footerQuickLinks,
+          };
         }
 
         if (!this.db.preWedding) {
@@ -1226,10 +1339,46 @@ class AdminMockStore {
         ...current.studioInfo,
         ...(data.studioInfo || {}),
       },
-      packages: data.packages || current.packages,
-      customServices: data.customServices || current.customServices,
-      addOns: data.addOns || current.addOns,
-      whyUsPillars: data.whyUsPillars || current.whyUsPillars,
+      directorInfo: {
+        ...(current.directorInfo || {}),
+        ...(data.directorInfo || {}),
+      },
+      heroStats: data.heroStats || current.heroStats || [],
+      processSteps: data.processSteps || current.processSteps || [],
+      videos: data.videos || current.videos || [],
+      portfolioGallery: data.portfolioGallery || current.portfolioGallery || [],
+      coverageTypes: data.coverageTypes || current.coverageTypes || [],
+      coupleStories: data.coupleStories || current.coupleStories || [],
+      packages: data.packages || current.packages || [],
+      customServices: (() => {
+        let csList = data.customServices || current.customServices || [];
+        const addonsList = data.addOns || current.addOns || [];
+        if (addonsList.length > 0) {
+          csList = csList.map((cs: any) => {
+            const csName = (cs.name || '').trim().toLowerCase();
+            const match = addonsList.find((a: any) =>
+              (a.title && a.title.trim().toLowerCase() === csName) ||
+              (a.id === 'addon-drone' && cs.id === 'opt-drone') ||
+              (a.id === 'addon-reel' && cs.id === 'opt-reels') ||
+              (a.id === 'addon-makeup' && cs.id === 'opt-makeup') ||
+              (a.id === 'addon-costume' && cs.id === 'opt-costume') ||
+              (a.id === 'addon-location' && cs.id === 'opt-location') ||
+              (a.id === 'addon-album' && cs.id === 'opt-album')
+            );
+            if (match) {
+              return {
+                ...cs,
+                startingPriceINR: match.priceINR ?? cs.startingPriceINR,
+                description: match.description ?? cs.description,
+              };
+            }
+            return cs;
+          });
+        }
+        return csList;
+      })(),
+      addOns: data.addOns || current.addOns || [],
+      whyUsPillars: data.whyUsPillars || current.whyUsPillars || [],
       updatedAt: new Date().toISOString(),
     };
     this.save();

@@ -1,5 +1,6 @@
 export interface PreWeddingPackage {
   id: string;
+  category?: 'PRE_WEDDING' | 'WEDDING';
   name: string;
   tagline: string;
   priceINR: number;
@@ -7,6 +8,9 @@ export interface PreWeddingPackage {
   badge?: string;
   isPopular?: boolean;
   highlightText?: string;
+  foodTravel?: string;
+  ctaText?: string;
+  whatsappMessage?: string;
   photography: {
     photographersCount: string;
     cameraSetup: string;
@@ -58,12 +62,114 @@ export interface WeddingFilmItem {
   title: string;
   couple: string;
   location: string;
-  category: 'Cinematic Film' | 'Pre-Wedding' | 'Instagram Reel' | 'Teaser';
+  category: 'Cinematic Film' | 'Pre-Wedding' | 'Instagram Reel' | 'Teaser' | string;
   duration: string;
   thumbnailUrl: string;
   videoUrl: string;
-  aspectRatio: '16:9' | '9:16';
+  aspectRatio?: '16:9' | '9:16';
   views?: string;
+  tag?: string;
+}
+
+export interface PreWeddingHeroStat {
+  number: string;
+  title: string;
+  description: string;
+}
+
+export interface PreWeddingDirectorInfo {
+  name: string;
+  title: string;
+  quote: string;
+  bio: string;
+  image: string;
+  experienceYears: string;
+}
+
+export interface PreWeddingProcessStep {
+  step: string;
+  title: string;
+  description: string;
+}
+
+export interface PreWeddingGalleryItem {
+  id: string;
+  title: string;
+  category: string;
+  imageUrl: string;
+  location: string;
+  couple: string;
+}
+
+export interface PreWeddingCoverageType {
+  id: string;
+  title: string;
+  description: string;
+  tag: string;
+  linkText?: string;
+}
+
+export interface PreWeddingCoupleStory {
+  id: string;
+  title: string;
+  couple: string;
+  location: string;
+  imageUrl: string;
+  quote: string;
+}
+
+export interface WeddingDayStoryItem {
+  id: string;
+  category: 'Candid Moments' | 'Wedding Rituals' | 'Couple Portraits' | 'Family & Celebrations' | string;
+  title: string;
+  location?: string;
+  couple?: string;
+  imageUrl: string;
+  featured?: boolean;
+}
+
+export interface WeddingDayStoriesData {
+  eyebrow?: string;
+  heading?: string;
+  supportingText?: string;
+  quote?: string;
+  ctaText?: string;
+  ctaLink?: string;
+  stories?: WeddingDayStoryItem[];
+}
+
+export interface PreWeddingPageData {
+  id: string;
+  studioInfo: typeof WEDDING_STUDIO_INFO & {
+    name: string;
+    tagline: string;
+    headline: string;
+    subHeadlineHindi: string;
+    storyHook: string;
+    signatureIntro: string;
+    phone: string;
+    displayPhone: string;
+    email: string;
+    instagramHandle: string;
+    instagramUrl: string;
+    location: string;
+    whatsappNumber: string;
+    experienceYears: string;
+  };
+  heroStats: PreWeddingHeroStat[];
+  directorInfo: PreWeddingDirectorInfo;
+  processSteps: PreWeddingProcessStep[];
+  videos: WeddingFilmItem[];
+  portfolioGallery: PreWeddingGalleryItem[];
+  coverageTypes: PreWeddingCoverageType[];
+  coupleStories: PreWeddingCoupleStory[];
+  packages: PreWeddingPackage[];
+  weddingPackages?: PreWeddingPackage[];
+  customServices: CustomServiceOption[];
+  addOns: AddOnService[];
+  whyUsPillars: WhyUsPillar[];
+  weddingDayStories?: WeddingDayStoriesData;
+  updatedAt: string;
 }
 
 export const WEDDING_STUDIO_INFO = {
@@ -81,6 +187,7 @@ export const WEDDING_STUDIO_INFO = {
   location: 'Jaipur • Udaipur • Destination Shoots Across India',
   whatsappNumber: '917239999966',
   experienceYears: '8+ Years of Excellence',
+  heroBgImage: '/images/pre-wedding/hero-bride.jpg',
   stats: [
     { value: '250+', label: 'Love Stories Captured' },
     { value: 'Sony Cinema', label: 'FX3 & FX6 4K Production' },
@@ -278,9 +385,9 @@ export const CUSTOM_PACKAGE_SERVICES: CustomServiceOption[] = [
     name: 'Drone Coverage',
     icon: 'Plane',
     category: 'coverage',
-    startingPriceINR: 5000,
+    startingPriceINR: 10000,
     unit: 'per session',
-    description: 'Sweeping 4K aerial shots of palace venues, processions & landscape romance.',
+    description: 'Cinematic 4K aerial bird-eye views of your majestic venues and rituals.',
   },
   {
     id: 'opt-trailer',
@@ -371,8 +478,8 @@ export const ADD_ON_SERVICES: AddOnService[] = [
   {
     id: 'addon-drone',
     title: 'Drone Coverage',
-    priceDisplay: 'Starting ₹5,000',
-    priceINR: 5000,
+    priceDisplay: 'Starting ₹10,000',
+    priceINR: 10000,
     description: 'Cinematic 4K aerial bird-eye views of your majestic venues and rituals.',
     badge: 'POPULAR',
   },
@@ -509,3 +616,171 @@ export const FEATURED_WEDDING_FILMS: WeddingFilmItem[] = [
     views: '320K Views',
   },
 ];
+
+export const DEFAULT_WEDDING_DAY_STORIES: WeddingDayStoriesData = {
+  eyebrow: 'WEDDING DAY COVERAGE',
+  heading: 'Wedding Day Stories',
+  supportingText:
+    'Beyond the pre-wedding, we capture every emotion, ritual and celebration of your wedding day.',
+  quote: 'Every moment deserves its frame.',
+  ctaText: 'VIEW WEDDING STORIES →',
+  ctaLink: '#portfolio-gallery',
+  stories: [
+    {
+      id: 'wds-rituals',
+      category: 'Wedding Rituals',
+      title: 'The Sacred Varmala Symphony',
+      location: 'Rambagh Palace, Jaipur',
+      couple: 'Yuvraj & Aditi',
+      imageUrl:
+        'https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=1400&q=85',
+      featured: true,
+    },
+    {
+      id: 'wds-candid',
+      category: 'Candid Moments',
+      title: 'Spontaneous Laughter & Joy',
+      location: 'Samode Palace Courtyard',
+      couple: 'Kabir & Radhika',
+      imageUrl:
+        'https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=85',
+    },
+    {
+      id: 'wds-portraits',
+      category: 'Couple Portraits',
+      title: 'Heritage Palace Elegance',
+      location: 'Amer Fort, Jaipur',
+      couple: 'Aarav & Simran',
+      imageUrl:
+        'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=85',
+    },
+    {
+      id: 'wds-family',
+      category: 'Family & Celebrations',
+      title: 'Grand Baraat & Family Blessings',
+      location: 'Jagmandir Island, Udaipur',
+      couple: 'Kunal & Divya',
+      imageUrl:
+        'https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&w=800&q=85',
+    },
+  ],
+};
+
+export const DEFAULT_WEDDING_PLANS: PreWeddingPackage[] = [
+  {
+    id: 'wedding-essential',
+    category: 'WEDDING',
+    name: 'ESSENTIAL WEDDING',
+    tagline: 'For intimate wedding celebrations',
+    priceINR: 0,
+    priceDisplay: 'Custom Quote',
+    badge: 'INTIMATE CELEBRATIONS',
+    isPopular: false,
+    highlightText: 'Artfully curated coverage for close-knit and meaningful ceremonies.',
+    foodTravel: 'Food, Travel — Paid By Client / Company',
+    ctaText: 'Choose Essential Wedding',
+    photography: {
+      photographersCount: 'Professional Wedding Photographer',
+      cameraSetup: 'High-Res Sony Cinema Still Rig',
+      details: [
+        'Professional wedding photography',
+        'Candid photography',
+        'Traditional ceremony coverage',
+      ],
+    },
+    cinematography: {
+      cinematographersCount: 'Professional Cinematographer',
+      cameraSetup: '4K Cinema Camera Setup',
+      details: ['Wedding cinematography'],
+    },
+    deliverables: [
+      'Professionally edited photographs',
+      'Highlight wedding film',
+    ],
+    shoot: {
+      days: '1 Shoot Day',
+      locations: 'Up to 1 Location',
+    },
+  },
+  {
+    id: 'wedding-signature',
+    category: 'WEDDING',
+    name: 'SIGNATURE WEDDING',
+    tagline: 'For complete wedding-day coverage',
+    priceINR: 0,
+    priceDisplay: 'Custom Quote',
+    badge: 'MOST POPULAR',
+    isPopular: true,
+    highlightText: 'The quintessential wedding day chronicle blending candid realism with cinema.',
+    foodTravel: 'Food, Travel — Paid By Client / Company',
+    ctaText: 'Choose Signature Wedding',
+    photography: {
+      photographersCount: 'Professional Photographers Team',
+      cameraSetup: 'Dual Full-Frame Cinema Cameras',
+      details: [
+        'Professional photographers',
+        'Candid + traditional photography',
+      ],
+    },
+    cinematography: {
+      cinematographersCount: 'Professional Cinematographer',
+      cameraSetup: 'Gimbal + 4K Cinema Rig',
+      details: [
+        'Professional cinematographer',
+        'Cinematic wedding coverage',
+      ],
+    },
+    deliverables: [
+      'Professionally edited photos',
+      'Premium colour grading',
+      'Cinematic wedding film',
+      'Social media reels',
+    ],
+    shoot: {
+      days: '1–2 Shoot Days',
+      locations: 'Up to 2 Locations',
+    },
+  },
+  {
+    id: 'wedding-royal',
+    category: 'WEDDING',
+    name: 'ROYAL WEDDING',
+    tagline: 'For complete multi-event wedding coverage',
+    priceINR: 0,
+    priceDisplay: 'Custom Quote',
+    badge: 'ROYAL LUXURY',
+    isPopular: false,
+    highlightText: 'Multi-crew cinematic grandeur capturing every ritual and royal celebration.',
+    foodTravel: 'Food, Travel — Paid By Client / Company',
+    ctaText: 'Choose Royal Wedding',
+    photography: {
+      photographersCount: 'Multiple Photographers Crew',
+      cameraSetup: 'Multi-Camera Sony Master Rig',
+      details: [
+        'Multiple photographers',
+        'Premium candid photography',
+        'Traditional ceremony coverage',
+      ],
+    },
+    cinematography: {
+      cinematographersCount: 'Multiple Cinematographers Crew',
+      cameraSetup: 'Multi-Angle Cinema & Drone Setup',
+      details: [
+        'Multiple cinematographers',
+        'Full cinematic coverage',
+      ],
+    },
+    deliverables: [
+      'Wedding teaser',
+      'Full wedding film',
+      'Multiple Instagram reels',
+      'Premium colour grading',
+      'Professional sound design',
+    ],
+    shoot: {
+      days: '2–3 Shoot Days',
+      locations: 'Multiple Locations',
+    },
+  },
+];
+

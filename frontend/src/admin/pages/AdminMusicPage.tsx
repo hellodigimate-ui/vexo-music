@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { useSearchParams, useParams } from 'react-router-dom';
+import { useSearchParams, useParams, NavLink } from 'react-router-dom';
 import {
   Disc3,
   Music,
@@ -12,6 +12,7 @@ import {
   ChevronRight,
   Headphones,
   Check,
+  ArrowLeft,
 } from 'lucide-react';
 
 const YoutubeIcon: React.FC<{ className?: string }> = ({ className = 'w-3.5 h-3.5' }) => (
@@ -289,30 +290,42 @@ export const AdminMusicPage: React.FC = () => {
     <div className="space-y-6">
       {/* Top Bar: Tabs & Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        {/* Switcher */}
-        <div className="flex items-center p-1 rounded-xl bg-slate-100 dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800 w-fit shadow-xs">
-          <button
-            onClick={() => setActiveTab('albums')}
-            className={`flex items-center gap-2 px-5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-              activeTab === 'albums'
-                ? 'bg-vexo-red text-white shadow-xs'
-                : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
+        {/* Left Side: Back to Dashboard & Switcher */}
+        <div className="flex flex-wrap items-center gap-3">
+          <NavLink
+            to="/admin"
+            className="flex items-center gap-2 px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 dark:bg-[#0e0e13] hover:dark:bg-zinc-800/80 border border-slate-200 dark:border-zinc-800 text-xs font-semibold text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white transition-all group shadow-xs cursor-pointer"
+            title="Return to Admin Dashboard"
           >
-            <Disc3 className="w-4 h-4" />
-            <span>Albums & EPs ({albums.length})</span>
-          </button>
-          <button
-            onClick={() => setActiveTab('tracks')}
-            className={`flex items-center gap-2 px-5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
-              activeTab === 'tracks'
-                ? 'bg-vexo-red text-white shadow-xs'
-                : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white'
-            }`}
-          >
-            <Music className="w-4 h-4" />
-            <span>Tracks Directory ({tracks.length})</span>
-          </button>
+            <ArrowLeft className="w-4 h-4 text-vexo-red group-hover:-translate-x-0.5 transition-transform" />
+            <span>Back to Dashboard</span>
+          </NavLink>
+
+          {/* Switcher */}
+          <div className="flex items-center p-1 rounded-xl bg-slate-100 dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800 w-fit shadow-xs">
+            <button
+              onClick={() => setActiveTab('albums')}
+              className={`flex items-center gap-2 px-5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                activeTab === 'albums'
+                  ? 'bg-vexo-red text-white shadow-xs'
+                  : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              <Disc3 className="w-4 h-4" />
+              <span>Albums & EPs ({albums.length})</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('tracks')}
+              className={`flex items-center gap-2 px-5 py-2 rounded-lg text-xs font-semibold transition-all cursor-pointer ${
+                activeTab === 'tracks'
+                  ? 'bg-vexo-red text-white shadow-xs'
+                  : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              <Music className="w-4 h-4" />
+              <span>Tracks Directory ({tracks.length})</span>
+            </button>
+          </div>
         </div>
 
         {/* Right side search & create */}

@@ -79,14 +79,87 @@ export const AdminDashboardPage: React.FC = () => {
   const kpis = stats?.kpis || {};
 
   const kpiCards = [
-    { title: 'SIGNED ARTISTS', count: kpis.totalArtists || 0, icon: Users, link: '/admin/artists', color: 'from-red-500/20 to-zinc-900/50', border: 'border-red-900/40' },
-    { title: 'ALBUMS & EPS', count: kpis.totalAlbums || 0, icon: Disc3, link: '/admin/music', color: 'from-amber-500/20 to-zinc-900/50', border: 'border-amber-900/40' },
-    { title: 'CATALOG TRACKS', count: kpis.totalTracks || 0, icon: Music, link: '/admin/music', color: 'from-emerald-500/20 to-zinc-900/50', border: 'border-emerald-900/40' },
-    { title: 'MUSIC VIDEOS & VISUALS', count: kpis.totalVideos || 0, icon: Video, link: '/admin/videos', color: 'from-sky-500/20 to-zinc-900/50', border: 'border-sky-900/40' },
-    { title: 'LIVE CONCERTS & TOURS', count: kpis.totalEvents || 0, icon: Calendar, link: '/admin/events', color: 'from-purple-500/20 to-zinc-900/50', border: 'border-purple-900/40' },
-    { title: 'STUDIO SERVICES', count: kpis.totalServices || 0, icon: Briefcase, link: '/admin/services', color: 'from-rose-500/20 to-zinc-900/50', border: 'border-rose-900/40' },
-    { title: 'COVER ART & MEDIA', count: kpis.totalMedia || 0, icon: ImageIcon, link: '/admin/media', color: 'from-indigo-500/20 to-zinc-900/50', border: 'border-indigo-900/40' },
-    { title: 'CLIENT INQUIRIES', count: kpis.totalInquiries || 0, badge: kpis.newInquiries ? `${kpis.newInquiries} NEW` : undefined, icon: Mail, link: '/admin/enquiries', color: 'from-red-600/30 to-zinc-900/50', border: 'border-vexo-red/60' },
+    {
+      title: 'SIGNED ARTISTS',
+      count: kpis.totalArtists || 0,
+      icon: Users,
+      link: '/admin/artists',
+      gradient: 'from-red-600/15 via-red-950/25 to-zinc-950/80',
+      darkBorder: 'dark:border-red-900/40 dark:hover:border-red-500/60',
+      iconBox: 'bg-red-50 text-red-600 border-red-200 dark:bg-red-500/10 dark:text-red-400 dark:border-red-500/20 group-hover:dark:bg-red-500/20',
+      glow: 'group-hover:shadow-[0_0_20px_rgba(239,68,68,0.15)]',
+    },
+    {
+      title: 'ALBUMS & EPS',
+      count: kpis.totalAlbums || 0,
+      icon: Disc3,
+      link: '/admin/music',
+      gradient: 'from-amber-600/15 via-amber-950/25 to-zinc-950/80',
+      darkBorder: 'dark:border-amber-900/40 dark:hover:border-amber-500/60',
+      iconBox: 'bg-amber-50 text-amber-600 border-amber-200 dark:bg-amber-500/10 dark:text-amber-400 dark:border-amber-500/20 group-hover:dark:bg-amber-500/20',
+      glow: 'group-hover:shadow-[0_0_20px_rgba(245,158,11,0.15)]',
+    },
+    {
+      title: 'CATALOG TRACKS',
+      count: kpis.totalTracks || 0,
+      icon: Music,
+      link: '/admin/music',
+      gradient: 'from-emerald-600/15 via-emerald-950/25 to-zinc-950/80',
+      darkBorder: 'dark:border-emerald-900/40 dark:hover:border-emerald-500/60',
+      iconBox: 'bg-emerald-50 text-emerald-600 border-emerald-200 dark:bg-emerald-500/10 dark:text-emerald-400 dark:border-emerald-500/20 group-hover:dark:bg-emerald-500/20',
+      glow: 'group-hover:shadow-[0_0_20px_rgba(16,185,129,0.15)]',
+    },
+    {
+      title: 'MUSIC VIDEOS & VISUALS',
+      count: kpis.totalVideos || 0,
+      icon: Video,
+      link: '/admin/videos',
+      gradient: 'from-sky-600/15 via-sky-950/25 to-zinc-950/80',
+      darkBorder: 'dark:border-sky-900/40 dark:hover:border-sky-500/60',
+      iconBox: 'bg-sky-50 text-sky-600 border-sky-200 dark:bg-sky-500/10 dark:text-sky-400 dark:border-sky-500/20 group-hover:dark:bg-sky-500/20',
+      glow: 'group-hover:shadow-[0_0_20px_rgba(14,165,233,0.15)]',
+    },
+    {
+      title: 'LIVE CONCERTS & TOURS',
+      count: kpis.totalEvents || 0,
+      icon: Calendar,
+      link: '/admin/events',
+      gradient: 'from-purple-600/15 via-purple-950/25 to-zinc-950/80',
+      darkBorder: 'dark:border-purple-900/40 dark:hover:border-purple-500/60',
+      iconBox: 'bg-purple-50 text-purple-600 border-purple-200 dark:bg-purple-500/10 dark:text-purple-400 dark:border-purple-500/20 group-hover:dark:bg-purple-500/20',
+      glow: 'group-hover:shadow-[0_0_20px_rgba(168,85,247,0.15)]',
+    },
+    {
+      title: 'STUDIO SERVICES',
+      count: kpis.totalServices || 0,
+      icon: Briefcase,
+      link: '/admin/services',
+      gradient: 'from-rose-600/15 via-rose-950/25 to-zinc-950/80',
+      darkBorder: 'dark:border-rose-900/40 dark:hover:border-rose-500/60',
+      iconBox: 'bg-rose-50 text-rose-600 border-rose-200 dark:bg-rose-500/10 dark:text-rose-400 dark:border-rose-500/20 group-hover:dark:bg-rose-500/20',
+      glow: 'group-hover:shadow-[0_0_20px_rgba(244,63,94,0.15)]',
+    },
+    {
+      title: 'COVER ART & MEDIA',
+      count: kpis.totalMedia || 0,
+      icon: ImageIcon,
+      link: '/admin/media',
+      gradient: 'from-indigo-600/15 via-indigo-950/25 to-zinc-950/80',
+      darkBorder: 'dark:border-indigo-900/40 dark:hover:border-indigo-500/60',
+      iconBox: 'bg-indigo-50 text-indigo-600 border-indigo-200 dark:bg-indigo-500/10 dark:text-indigo-400 dark:border-indigo-500/20 group-hover:dark:bg-indigo-500/20',
+      glow: 'group-hover:shadow-[0_0_20px_rgba(99,102,241,0.15)]',
+    },
+    {
+      title: 'CLIENT INQUIRIES',
+      count: kpis.totalInquiries || 0,
+      badge: kpis.newInquiries ? `${kpis.newInquiries} NEW` : undefined,
+      icon: Mail,
+      link: '/admin/enquiries',
+      gradient: 'from-red-600/25 via-red-950/35 to-zinc-950/80',
+      darkBorder: 'dark:border-vexo-red/50 dark:hover:border-vexo-red',
+      iconBox: 'bg-red-50 text-vexo-red border-red-200 dark:bg-red-500/15 dark:text-vexo-red dark:border-red-500/30 group-hover:dark:bg-red-500/25',
+      glow: 'group-hover:shadow-[0_0_25px_rgba(220,38,38,0.25)]',
+    },
   ];
 
   return (
@@ -145,24 +218,35 @@ export const AdminDashboardPage: React.FC = () => {
             <NavLink
               key={card.title}
               to={card.link}
-              className={`group relative overflow-hidden p-6 rounded-2xl bg-white dark:bg-gradient-to-br dark:${card.color} border border-slate-200 dark:${card.border} hover:border-slate-300 dark:hover:border-white/20 shadow-xs hover:shadow-sm transition-all duration-300 flex flex-col justify-between`}
+              className={`group relative overflow-hidden p-6 rounded-2xl bg-white dark:bg-[#0c0c12] border border-slate-200 ${card.darkBorder} ${card.glow} hover:border-slate-300 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between`}
             >
-              <div className="flex items-center justify-between">
-                <div className="p-2.5 rounded-xl bg-slate-100 dark:bg-black/40 border border-slate-200 dark:border-white/5 text-slate-800 dark:text-white">
+              {/* Dark mode gradient background overlay */}
+              <div
+                className={`absolute inset-0 bg-gradient-to-br ${card.gradient} opacity-0 dark:opacity-100 transition-opacity pointer-events-none`}
+              />
+
+              <div className="relative z-10 flex items-center justify-between">
+                <div
+                  className={`p-2.5 rounded-xl border transition-all duration-200 ${card.iconBox}`}
+                >
                   <Icon className="w-5 h-5" />
                 </div>
                 {card.badge ? (
-                  <span className="px-2 py-0.5 rounded-md bg-vexo-red text-[10px] font-mono font-bold text-white shadow-xs">
+                  <span className="px-2 py-0.5 rounded-md bg-vexo-red text-[10px] font-mono font-bold text-white shadow-[0_0_10px_rgba(220,38,38,0.5)] animate-pulse">
                     {card.badge}
                   </span>
                 ) : (
-                  <ArrowUpRight className="w-4 h-4 text-slate-400 dark:text-zinc-600 group-hover:text-slate-900 dark:group-hover:text-white transition-colors" />
+                  <ArrowUpRight className="w-4 h-4 text-slate-400 dark:text-zinc-500 group-hover:text-slate-900 dark:group-hover:text-white group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-all" />
                 )}
               </div>
 
-              <div className="mt-6 space-y-1">
-                <p className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">{card.count}</p>
-                <p className="text-[11px] font-mono tracking-wider uppercase text-slate-500 dark:text-zinc-400">{card.title}</p>
+              <div className="relative z-10 mt-6 space-y-1">
+                <p className="text-3xl font-black text-slate-900 dark:text-white tracking-tight group-hover:scale-105 transition-transform origin-left">
+                  {card.count}
+                </p>
+                <p className="text-[11px] font-mono tracking-wider uppercase text-slate-500 dark:text-zinc-400 font-semibold">
+                  {card.title}
+                </p>
               </div>
             </NavLink>
           );

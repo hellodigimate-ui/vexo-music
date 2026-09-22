@@ -6,6 +6,7 @@ import { ServicesSection } from '../components/services';
 import { FeaturedArtists } from '../components/artists';
 import { AboutSection } from '../components/home/AboutSection';
 import { StatsSection } from '../components/home/StatsSection';
+import { ReviewsSection } from '../components/home/ReviewsSection';
 import { FinalCTASection } from '../components/home/FinalCTASection';
 
 export const HomePage: React.FC = () => {
@@ -32,7 +33,10 @@ export const HomePage: React.FC = () => {
       {/* 7. Statistics Section */}
       <StatsSection />
 
-      {/* 8. Final CTA Section */}
+      {/* 8. Reviews & Testimonials Carousel Section */}
+      <ReviewsSection />
+
+      {/* 9. Final CTA Section */}
       <FinalCTASection />
     </>
   );

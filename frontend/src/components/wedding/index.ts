@@ -1,7 +1,15 @@
 export { WeddingHero } from './WeddingHero';
+export { PortfolioGallerySection } from './PortfolioGallerySection';
+export { DirectorAboutSection } from './DirectorAboutSection';
+export { ProcessWorkflowSection } from './ProcessWorkflowSection';
+export { VideoTeasersSection } from './VideoTeasersSection';
+export { CoupleStoriesSection } from './CoupleStoriesSection';
+export { CoverageCategoriesSection } from './CoverageCategoriesSection';
 export { PreWeddingPackagesSection } from './PreWeddingPackagesSection';
 export { SignaturePackageBuilder } from './SignaturePackageBuilder';
 export { WhyVexoSection } from './WhyVexoSection';
 export { AddOnServicesSection } from './AddOnServicesSection';
 export { FilmsReelsShowcase } from './FilmsReelsShowcase';
 export { BookDateSection } from './BookDateSection';
+export { WeddingDayStoriesSection } from './WeddingDayStoriesSection';
+export { WeddingPlansSection } from './WeddingPlansSection';

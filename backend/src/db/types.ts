@@ -188,6 +188,18 @@ export interface ContactRequest {
   updatedAt: string;
 }
 
+export interface ReviewItem {
+  id: string;
+  clientName: string;
+  roleOrProject: string;
+  rating: number; // 1 to 5
+  reviewText: string;
+  avatarUrl?: string | null;
+  category?: string | null;
+  verified?: boolean;
+  date?: string | null;
+}
+
 export interface Homepage {
   id: string;
   // Hero Section
@@ -245,8 +257,21 @@ export interface Homepage {
   finalCtaSecondaryLabel?: string | null;
   finalCtaSecondaryUrl?: string | null;
 
+  // Reviews / Testimonials Section
+  reviewsHeading?: string | null;
+  reviewsSubtitle?: string | null;
+  reviewsBadge?: string | null;
+  reviews?: ReviewItem[] | null;
+
   marqueeText?: string | null;
   updatedAt: string;
+}
+
+export interface FooterLink {
+  id: string;
+  label: string;
+  path: string;
+  isExternal?: boolean;
 }
 
 export interface SiteSettings {
@@ -263,7 +288,23 @@ export interface SiteSettings {
   socialYoutube?: string | null;
   socialInstagram?: string | null;
   socialTwitter?: string | null;
+  socialAppleMusic?: string | null;
+  socialFacebook?: string | null;
+  socialSoundcloud?: string | null;
   maintenanceMode: boolean;
+
+  // Footer Customization
+  footerBio?: string | null;
+  footerQuickLinksHeading?: string | null;
+  footerQuickLinks?: FooterLink[] | null;
+  footerServicesHeading?: string | null;
+  footerServicesLinks?: FooterLink[] | null;
+  footerContactHeading?: string | null;
+  footerStatusText?: string | null;
+  footerStatusEnabled?: boolean;
+  footerBackToTopEnabled?: boolean;
+  footerAdminLinkEnabled?: boolean;
+
   updatedAt: string;
 }
 
@@ -282,6 +323,7 @@ export interface ActivityLog {
 
 export interface PreWeddingPackage {
   id: string;
+  category?: 'PRE_WEDDING' | 'WEDDING';
   name: string;
   tagline: string;
   priceINR: number;
@@ -289,6 +331,9 @@ export interface PreWeddingPackage {
   badge?: string;
   isPopular?: boolean;
   highlightText?: string;
+  foodTravel?: string;
+  ctaText?: string;
+  whatsappMessage?: string;
   photography: {
     photographersCount: string;
     cameraSetup: string;
@@ -350,15 +395,104 @@ export interface PreWeddingStudioInfo {
   location: string;
   whatsappNumber: string;
   experienceYears: string;
+  heroBgImage?: string;
+}
+
+export interface PreWeddingHeroStat {
+  number: string;
+  title: string;
+  description: string;
+}
+
+export interface PreWeddingDirectorInfo {
+  name: string;
+  title: string;
+  quote: string;
+  bio: string;
+  image: string;
+  experienceYears: string;
+}
+
+export interface PreWeddingProcessStep {
+  step: string;
+  title: string;
+  description: string;
+}
+
+export interface PreWeddingVideoItem {
+  id: string;
+  title: string;
+  category: string;
+  videoUrl: string;
+  thumbnailUrl: string;
+  duration: string;
+  location: string;
+  couple: string;
+  tag?: string;
+}
+
+export interface PreWeddingGalleryItem {
+  id: string;
+  title: string;
+  category: 'Weddings' | 'Pre-Wedding' | 'Portraits' | string;
+  imageUrl: string;
+  location: string;
+  couple: string;
+}
+
+export interface PreWeddingCoverageType {
+  id: string;
+  title: string;
+  description: string;
+  tag: string;
+  linkText?: string;
+}
+
+export interface PreWeddingCoupleStory {
+  id: string;
+  title: string;
+  couple: string;
+  location: string;
+  imageUrl: string;
+  quote: string;
+}
+
+export interface WeddingDayStoryItem {
+  id: string;
+  category: 'Candid Moments' | 'Wedding Rituals' | 'Couple Portraits' | 'Family & Celebrations' | string;
+  title: string;
+  location?: string;
+  couple?: string;
+  imageUrl: string;
+  featured?: boolean;
+}
+
+export interface WeddingDayStoriesData {
+  eyebrow?: string;
+  heading?: string;
+  supportingText?: string;
+  quote?: string;
+  ctaText?: string;
+  ctaLink?: string;
+  stories?: WeddingDayStoryItem[];
 }
 
 export interface PreWeddingPageData {
   id: string;
   studioInfo: PreWeddingStudioInfo;
+  heroStats: PreWeddingHeroStat[];
+  directorInfo: PreWeddingDirectorInfo;
+  processSteps: PreWeddingProcessStep[];
+  videos: PreWeddingVideoItem[];
+  portfolioGallery: PreWeddingGalleryItem[];
+  coverageTypes: PreWeddingCoverageType[];
+  coupleStories: PreWeddingCoupleStory[];
   packages: PreWeddingPackage[];
+  weddingPackages?: PreWeddingPackage[];
   customServices: CustomServiceOption[];
   addOns: AddOnService[];
   whyUsPillars: WhyUsPillar[];
+  weddingDayStories?: WeddingDayStoriesData;
   updatedAt: string;
 }
 

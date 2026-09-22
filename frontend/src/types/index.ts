@@ -168,7 +168,65 @@ export interface Homepage {
   finalCtaButtonUrl?: string;
   finalCtaSecondaryLabel?: string;
   finalCtaSecondaryUrl?: string;
+  // Reviews / Testimonials Section
+  reviewsHeading?: string;
+  reviewsSubtitle?: string;
+  reviewsBadge?: string;
+  reviews?: ReviewItem[];
 
   marqueeText?: string;
+  updatedAt?: string;
+}
+
+export interface ReviewItem {
+  id: string;
+  clientName: string;
+  roleOrProject: string;
+  rating: number; // 1 to 5
+  reviewText: string;
+  avatarUrl?: string;
+  category?: string;
+  verified?: boolean;
+  date?: string;
+}
+
+export interface FooterLink {
+  id: string;
+  label: string;
+  path: string;
+  isExternal?: boolean;
+}
+
+export interface SiteSettings {
+  id?: string;
+  siteName: string;
+  siteDescription?: string;
+  logoUrl?: string;
+  faviconUrl?: string;
+  contactEmail?: string;
+  contactPhone?: string;
+  officeAddress?: string;
+  copyrightText?: string;
+  socialSpotify?: string;
+  socialYoutube?: string;
+  socialInstagram?: string;
+  socialTwitter?: string;
+  socialAppleMusic?: string;
+  socialFacebook?: string;
+  socialSoundcloud?: string;
+  maintenanceMode?: boolean;
+
+  // Footer Customization
+  footerBio?: string;
+  footerQuickLinksHeading?: string;
+  footerQuickLinks?: FooterLink[];
+  footerServicesHeading?: string;
+  footerServicesLinks?: FooterLink[];
+  footerContactHeading?: string;
+  footerStatusText?: string;
+  footerStatusEnabled?: boolean;
+  footerBackToTopEnabled?: boolean;
+  footerAdminLinkEnabled?: boolean;
+
   updatedAt?: string;
 }

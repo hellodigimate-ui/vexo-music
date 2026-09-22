@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
-import { Flame, Lock, Mail, ArrowRight, ShieldAlert, Zap, ShieldCheck, CheckCircle } from 'lucide-react';
+import { useNavigate, useLocation, Link } from 'react-router-dom';
+import { Flame, Lock, Mail, ArrowRight, ShieldAlert, Zap, ShieldCheck, CheckCircle, ArrowLeft } from 'lucide-react';
 import { useAdminAuth } from '../context/AdminAuthContext';
 
 export const AdminLoginPage: React.FC = () => {
@@ -178,7 +178,16 @@ export const AdminLoginPage: React.FC = () => {
         </div>
 
         {/* Footer info */}
-        <div className="text-center">
+        <div className="text-center space-y-2">
+          <div>
+            <Link
+              to="/"
+              className="inline-flex items-center gap-1.5 text-xs font-mono text-zinc-400 hover:text-white transition-colors py-1 px-3 rounded-lg hover:bg-zinc-800/50"
+            >
+              <ArrowLeft className="w-3.5 h-3.5" />
+              <span>Back to Public Website</span>
+            </Link>
+          </div>
           <p className="text-[11px] text-zinc-600 font-mono">
             VEXO ENTERTAINMENT PVT. LTD. &bull; ALL RIGHTS RESERVED &bull; 2026
           </p>

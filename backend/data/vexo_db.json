@@ -7,9 +7,9 @@
       "name": "VEXO Executive Admin",
       "role": "SUPER_ADMIN",
       "isActive": true,
-      "lastLoginAt": "2026-09-12T09:15:09.355Z",
+      "lastLoginAt": "2026-09-22T12:19:41.251Z",
       "createdAt": "2026-08-18T05:58:38.923Z",
-      "updatedAt": "2026-09-12T09:15:09.355Z"
+      "updatedAt": "2026-09-22T12:19:41.251Z"
     }
   ],
   "artists": [
@@ -1696,16 +1696,16 @@
       "company": "SoundLab Studio",
       "service": "MUSIC PRODUCTION",
       "message": "Looking to produce a 5-track commercial EP blending traditional instruments with modern electronic soundscapes.",
-      "status": "NEW",
+      "status": "CONTACTED",
       "notes": "Initial inquiry received via website contact form.",
       "createdAt": "2026-08-18T05:58:38.923Z",
-      "updatedAt": "2026-09-12T09:10:40.967Z"
+      "updatedAt": "2026-09-22T11:31:36.994Z"
     }
   ],
   "homepage": {
     "id": "homepage-singleton",
     "heroTagline": "Pioneering Original Soundscapes & Entertainment",
-    "heroHeadline": "SONIC ARCHITECTURE FOR THE NEXT ERA",
+    "heroHeadline": "vexo entertainment pvt limited",
     "heroSubtitle": "VEXO Music Entertainment is a global record label, high-end audio-visual production powerhouse, and artist development agency.",
     "heroBgImage": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=2000&q=80",
     "heroBgMedia": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=2000&q=80",
@@ -1763,8 +1763,79 @@
     "finalCtaButtonUrl": "/contact",
     "finalCtaSecondaryLabel": "CONTACT VEXO",
     "finalCtaSecondaryUrl": "/contact",
+    "reviewsBadge": "TESTIMONIALS & TRUST",
+    "reviewsHeading": "VOICES OF EXCELLENCE",
+    "reviewsSubtitle": "What artists, visionary couples, and industry partners say about producing with VEXO.",
+    "reviews": [
+      {
+        "id": "rev-1",
+        "clientName": "Rashmi Nishad",
+        "roleOrProject": "Lead Vocalist • \"Satane Lage Ho\"",
+        "rating": 5,
+        "reviewText": "Working with VEXO Music on \"Satane Lage Ho\" was a transformative experience. Their studio engineering, arrangement sensibilities, and dedication to visual storytelling elevated our folk release to international chart standards.",
+        "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80",
+        "category": "Music Production",
+        "verified": true,
+        "date": "August 2026"
+      },
+      {
+        "id": "rev-2",
+        "clientName": "Aarav & Simran Rathore",
+        "roleOrProject": "Royal Pre-Wedding Shoot • Jaipur Forts",
+        "rating": 5,
+        "reviewText": "The cinematic pre-wedding film produced by VEXO looked like a Bollywood period epic. From synchronized drone choreography over Nahargarh Fort to the original background score they composed for us, it was beyond our wildest dreams.",
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80",
+        "category": "Wedding & Film",
+        "verified": true,
+        "date": "September 2026"
+      },
+      {
+        "id": "rev-3",
+        "clientName": "Vikramaditya Sen",
+        "roleOrProject": "Executive Producer • Desert Storm Festival",
+        "rating": 5,
+        "reviewText": "VEXO handled live audio engineering, multi-camera 4K visual feeds, and headline artist management for our 15,000-attendee festival with surgical precision. The sound was pristine and unforgettable.",
+        "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80",
+        "category": "Artist Management",
+        "verified": true,
+        "date": "July 2026"
+      },
+      {
+        "id": "rev-4",
+        "clientName": "Kabir & Meera Singhania",
+        "roleOrProject": "Destination Pre-Wedding • Udaipur Lakes",
+        "rating": 5,
+        "reviewText": "Their signature package was worth every rupee. The team took care of luxury logistics, custom styling, multi-camera 4K drone reels, and delivered the finished cut in record time. Every guest was mesmerized.",
+        "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80",
+        "category": "Wedding & Film",
+        "verified": true,
+        "date": "June 2026"
+      },
+      {
+        "id": "rev-5",
+        "clientName": "R Beer",
+        "roleOrProject": "Singer-Songwriter • \"Bhartar\"",
+        "rating": 5,
+        "reviewText": "The creative freedom and sonic power VEXO brings is unmatched. The production on \"Bhartar\" hit millions of streams within weeks. Their mixing, mastering, and global DSP distribution network are best-in-class.",
+        "avatarUrl": "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=300&q=80",
+        "category": "Music Production",
+        "verified": true,
+        "date": "August 2026"
+      },
+      {
+        "id": "rev-6",
+        "clientName": "Ananya Deshmukh",
+        "roleOrProject": "Indie Artist • Debut EP Production",
+        "rating": 5,
+        "reviewText": "As an independent musician, finding a team that respects your vision while providing world-class Dolby Atmos mastering and visualizer production is rare. VEXO is the definitive home for serious artists.",
+        "avatarUrl": "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=300&q=80",
+        "category": "Music Production",
+        "verified": true,
+        "date": "May 2026"
+      }
+    ],
     "marqueeText": "LATEST RELEASE: \"BHARTAR\" BY R BEER & RASHMI NISHAD — STREAMING NOW ON ALL MAJOR DSPS",
-    "updatedAt": "2026-08-18T05:58:38.923Z"
+    "updatedAt": "2026-09-22T11:18:42.290Z"
   },
   "siteSettings": {
     "id": "site-settings-singleton",
@@ -1774,16 +1845,2910 @@
     "faviconUrl": "/favicon.ico",
     "contactEmail": "contact@vexomusic.com",
     "contactPhone": "+91 72399 99966",
-    "officeAddress": "VEXO Creative Studios, Tone City, Jaipur, Rajasthan, India 302001",
+    "officeAddress": "SKY CROWN, Office No. 205  Chordiya City, Kamla Nehru Nagar, Ajmer Road  Jaipur, Pin Code- 302021, Rajasthan, India",
     "copyrightText": "© 2026 VEXO Music Entertainment Pvt. Ltd. All rights reserved.",
     "socialSpotify": "https://spotify.com",
     "socialYoutube": "https://youtube.com",
     "socialInstagram": "https://instagram.com",
     "socialTwitter": "https://twitter.com",
+    "socialAppleMusic": "https://music.apple.com",
+    "socialFacebook": "https://facebook.com",
+    "socialSoundcloud": "https://soundcloud.com",
     "maintenanceMode": false,
-    "updatedAt": "2026-08-18T05:58:38.923Z"
+    "footerBio": "A premier music entertainment powerhouse & record label specializing in original sound engineering, global music distribution, artist management, and cinematic audio-visual production based in Jaipur, India.",
+    "footerQuickLinksHeading": "QUICK LINKS",
+    "footerQuickLinks": [
+      {
+        "id": "fn-1",
+        "label": "Home",
+        "path": "/"
+      },
+      {
+        "id": "fn-2",
+        "label": "Music",
+        "path": "/music"
+      },
+      {
+        "id": "fn-3",
+        "label": "Artists",
+        "path": "/artists"
+      },
+      {
+        "id": "fn-4",
+        "label": "Services",
+        "path": "/services"
+      },
+      {
+        "id": "fn-5",
+        "label": "Events",
+        "path": "/events"
+      },
+      {
+        "id": "fn-6",
+        "label": "Videos",
+        "path": "/videos"
+      },
+      {
+        "id": "fn-7",
+        "label": "About",
+        "path": "/about"
+      },
+      {
+        "id": "fn-8",
+        "label": "Contact",
+        "path": "/contact"
+      }
+    ],
+    "footerServicesHeading": "SERVICES",
+    "footerServicesLinks": [
+      {
+        "id": "fs-1",
+        "label": "Music Production",
+        "path": "/services"
+      },
+      {
+        "id": "fs-2",
+        "label": "Audio & Video Production",
+        "path": "/services"
+      },
+      {
+        "id": "fs-3",
+        "label": "Artist Management",
+        "path": "/services"
+      },
+      {
+        "id": "fs-4",
+        "label": "Music Distribution",
+        "path": "/services"
+      },
+      {
+        "id": "fs-5",
+        "label": "Digital Marketing",
+        "path": "/services"
+      },
+      {
+        "id": "fs-6",
+        "label": "Brand Collaborations",
+        "path": "/services"
+      },
+      {
+        "id": "fs-7",
+        "label": "Pre-Wedding Shoot",
+        "path": "/pre-wedding"
+      },
+      {
+        "id": "fs-1790076908691",
+        "label": "camera rental ",
+        "path": "/services",
+        "isExternal": false
+      }
+    ],
+    "footerContactHeading": "CONTACT US",
+    "footerStatusText": "STUDIO ACTIVE • JAIPUR",
+    "footerStatusEnabled": true,
+    "footerBackToTopEnabled": true,
+    "footerAdminLinkEnabled": true,
+    "updatedAt": "2026-09-22T11:41:43.807Z",
+    "success": true,
+    "data": {
+      "id": "site-settings-singleton",
+      "siteName": "VEXO Music Entertainment Pvt. Ltd.",
+      "siteDescription": "Premier record label, studio production house, and artist management company.",
+      "logoUrl": "/logo.svg",
+      "faviconUrl": "/favicon.ico",
+      "contactEmail": "contact@vexomusic.com",
+      "contactPhone": "+91 72399 99966",
+      "officeAddress": "SKY CROWN, Office No. 205  Chordiya City, Kamla Nehru Nagar, Ajmer Road  Jaipur, Pin Code- 302021, Rajasthan, India",
+      "copyrightText": "© 2026 VEXO Music Entertainment Pvt. Ltd. All rights reserved.",
+      "socialSpotify": "https://spotify.com",
+      "socialYoutube": "https://youtube.com",
+      "socialInstagram": "https://instagram.com",
+      "socialTwitter": "https://twitter.com",
+      "socialAppleMusic": "https://music.apple.com",
+      "socialFacebook": "https://facebook.com",
+      "socialSoundcloud": "https://soundcloud.com",
+      "maintenanceMode": false,
+      "footerBio": "A premier music entertainment powerhouse & record label specializing in original sound engineering, global music distribution, artist management, and cinematic audio-visual production based in Jaipur, India.",
+      "footerQuickLinksHeading": "EXPLORE VEXO",
+      "footerQuickLinks": [
+        {
+          "id": "fn-1",
+          "label": "Home",
+          "path": "/"
+        },
+        {
+          "id": "fn-2",
+          "label": "Music",
+          "path": "/music"
+        },
+        {
+          "id": "fn-3",
+          "label": "Artists",
+          "path": "/artists"
+        },
+        {
+          "id": "fn-4",
+          "label": "Services",
+          "path": "/services"
+        },
+        {
+          "id": "fn-5",
+          "label": "Events",
+          "path": "/events"
+        },
+        {
+          "id": "fn-6",
+          "label": "Videos",
+          "path": "/videos"
+        },
+        {
+          "id": "fn-7",
+          "label": "About",
+          "path": "/about"
+        },
+        {
+          "id": "fn-8",
+          "label": "Contact",
+          "path": "/contact"
+        }
+      ],
+      "footerServicesHeading": "OUR CORE SERVICES",
+      "footerServicesLinks": [
+        {
+          "id": "fs-1",
+          "label": "Music Production",
+          "path": "/services"
+        },
+        {
+          "id": "fs-2",
+          "label": "Audio & Video Production",
+          "path": "/services"
+        },
+        {
+          "id": "fs-3",
+          "label": "Artist Management",
+          "path": "/services"
+        },
+        {
+          "id": "fs-4",
+          "label": "Music Distribution",
+          "path": "/services"
+        },
+        {
+          "id": "fs-5",
+          "label": "Digital Marketing",
+          "path": "/services"
+        },
+        {
+          "id": "fs-6",
+          "label": "Brand Collaborations",
+          "path": "/services"
+        },
+        {
+          "id": "fs-7",
+          "label": "Pre-Wedding Shoot",
+          "path": "/pre-wedding"
+        },
+        {
+          "id": "fs-1790076908691",
+          "label": "camera rental ",
+          "path": "/services",
+          "isExternal": false
+        }
+      ],
+      "footerContactHeading": "CONTACT US",
+      "footerStatusText": "STUDIO ACTIVE • JAIPUR HQ",
+      "footerStatusEnabled": true,
+      "footerBackToTopEnabled": true,
+      "footerAdminLinkEnabled": true,
+      "updatedAt": "2026-09-22T11:41:27.353Z",
+      "success": true,
+      "data": {
+        "id": "site-settings-singleton",
+        "siteName": "VEXO Music Entertainment Pvt. Ltd.",
+        "siteDescription": "Premier record label, studio production house, and artist management company.",
+        "logoUrl": "/logo.svg",
+        "faviconUrl": "/favicon.ico",
+        "contactEmail": "contact@vexomusic.com",
+        "contactPhone": "+91 72399 99966",
+        "officeAddress": "SKY CROWN, Office No. 205  Chordiya City, Kamla Nehru Nagar, Ajmer Road  Jaipur, Pin Code- 302021, Rajasthan, India",
+        "copyrightText": "© 2026 VEXO Music Entertainment Pvt. Ltd. All rights reserved.",
+        "socialSpotify": "https://spotify.com",
+        "socialYoutube": "https://youtube.com",
+        "socialInstagram": "https://instagram.com",
+        "socialTwitter": "https://twitter.com",
+        "socialAppleMusic": "https://music.apple.com",
+        "socialFacebook": "https://facebook.com",
+        "socialSoundcloud": "https://soundcloud.com",
+        "maintenanceMode": false,
+        "footerBio": "A premier music entertainment powerhouse & record label specializing in original sound engineering, global music distribution, artist management, and cinematic audio-visual production based in Jaipur, India.",
+        "footerQuickLinksHeading": "QUICK LINKS",
+        "footerQuickLinks": [
+          {
+            "id": "fn-1",
+            "label": "Home",
+            "path": "/"
+          },
+          {
+            "id": "fn-2",
+            "label": "Music",
+            "path": "/music"
+          },
+          {
+            "id": "fn-3",
+            "label": "Artists",
+            "path": "/artists"
+          },
+          {
+            "id": "fn-4",
+            "label": "Services",
+            "path": "/services"
+          },
+          {
+            "id": "fn-5",
+            "label": "Events",
+            "path": "/events"
+          },
+          {
+            "id": "fn-6",
+            "label": "Videos",
+            "path": "/videos"
+          },
+          {
+            "id": "fn-7",
+            "label": "About",
+            "path": "/about"
+          },
+          {
+            "id": "fn-8",
+            "label": "Contact",
+            "path": "/contact"
+          }
+        ],
+        "footerServicesHeading": "SERVICES",
+        "footerServicesLinks": [
+          {
+            "id": "fs-1",
+            "label": "Music Production",
+            "path": "/services"
+          },
+          {
+            "id": "fs-2",
+            "label": "Audio & Video Production",
+            "path": "/services"
+          },
+          {
+            "id": "fs-3",
+            "label": "Artist Management",
+            "path": "/services"
+          },
+          {
+            "id": "fs-4",
+            "label": "Music Distribution",
+            "path": "/services"
+          },
+          {
+            "id": "fs-5",
+            "label": "Digital Marketing",
+            "path": "/services"
+          },
+          {
+            "id": "fs-6",
+            "label": "Brand Collaborations",
+            "path": "/services"
+          },
+          {
+            "id": "fs-7",
+            "label": "Pre-Wedding Shoot",
+            "path": "/pre-wedding"
+          },
+          {
+            "id": "fs-1790076908691",
+            "label": "camera rental ",
+            "path": "/services",
+            "isExternal": false
+          }
+        ],
+        "footerContactHeading": "CONTACT US",
+        "footerStatusText": "STUDIO ACTIVE • JAIPUR",
+        "footerStatusEnabled": true,
+        "footerBackToTopEnabled": true,
+        "footerAdminLinkEnabled": true,
+        "updatedAt": "2026-09-22T11:35:30.631Z"
+      }
+    }
   },
   "activityLogs": [
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "node",
+      "id": "log-206cf7f5b5cc9fdb",
+      "createdAt": "2026-09-22T12:19:41.269Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "ADMIN_LOGIN",
+      "entityType": "AdminUser",
+      "entityId": "admin-super-1",
+      "details": {
+        "email": "admin@vexomusic.com"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "node",
+      "id": "log-578eedade16c22f2",
+      "createdAt": "2026-09-22T12:19:41.252Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "node",
+      "id": "log-bd8eb38d0309409b",
+      "createdAt": "2026-09-22T12:19:22.090Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "ADMIN_LOGIN",
+      "entityType": "AdminUser",
+      "entityId": "admin-super-1",
+      "details": {
+        "email": "admin@vexomusic.com"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "node",
+      "id": "log-e2a7dd8bfc55fdbe",
+      "createdAt": "2026-09-22T12:19:22.071Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-d646f6c9c7a58292",
+      "createdAt": "2026-09-22T12:11:21.092Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-42cfe65b91e52f57",
+      "createdAt": "2026-09-22T11:45:42.745Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-f57b3cf09da9dabd",
+      "createdAt": "2026-09-22T11:44:57.522Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_SITE_SETTINGS",
+      "entityType": "SiteSettings",
+      "entityId": "site-settings-singleton",
+      "details": {
+        "updates": {
+          "id": "site-settings-singleton",
+          "siteName": "VEXO Music Entertainment Pvt. Ltd.",
+          "siteDescription": "Premier record label, studio production house, and artist management company.",
+          "logoUrl": "/logo.svg",
+          "faviconUrl": "/favicon.ico",
+          "contactEmail": "contact@vexomusic.com",
+          "contactPhone": "+91 72399 99966",
+          "officeAddress": "SKY CROWN, Office No. 205  Chordiya City, Kamla Nehru Nagar, Ajmer Road  Jaipur, Pin Code- 302021, Rajasthan, India",
+          "copyrightText": "© 2026 VEXO Music Entertainment Pvt. Ltd. All rights reserved.",
+          "socialSpotify": "https://spotify.com",
+          "socialYoutube": "https://youtube.com",
+          "socialInstagram": "https://instagram.com",
+          "socialTwitter": "https://twitter.com",
+          "socialAppleMusic": "https://music.apple.com",
+          "socialFacebook": "https://facebook.com",
+          "socialSoundcloud": "https://soundcloud.com",
+          "maintenanceMode": false,
+          "footerBio": "A premier music entertainment powerhouse & record label specializing in original sound engineering, global music distribution, artist management, and cinematic audio-visual production based in Jaipur, India.",
+          "footerQuickLinksHeading": "QUICK LINKS",
+          "footerQuickLinks": [
+            {
+              "id": "fn-1",
+              "label": "Home",
+              "path": "/"
+            },
+            {
+              "id": "fn-2",
+              "label": "Music",
+              "path": "/music"
+            },
+            {
+              "id": "fn-3",
+              "label": "Artists",
+              "path": "/artists"
+            },
+            {
+              "id": "fn-4",
+              "label": "Services",
+              "path": "/services"
+            },
+            {
+              "id": "fn-5",
+              "label": "Events",
+              "path": "/events"
+            },
+            {
+              "id": "fn-6",
+              "label": "Videos",
+              "path": "/videos"
+            },
+            {
+              "id": "fn-7",
+              "label": "About",
+              "path": "/about"
+            },
+            {
+              "id": "fn-8",
+              "label": "Contact",
+              "path": "/contact"
+            }
+          ],
+          "footerServicesHeading": "SERVICES",
+          "footerServicesLinks": [
+            {
+              "id": "fs-1",
+              "label": "Music Production",
+              "path": "/services"
+            },
+            {
+              "id": "fs-2",
+              "label": "Audio & Video Production",
+              "path": "/services"
+            },
+            {
+              "id": "fs-3",
+              "label": "Artist Management",
+              "path": "/services"
+            },
+            {
+              "id": "fs-4",
+              "label": "Music Distribution",
+              "path": "/services"
+            },
+            {
+              "id": "fs-5",
+              "label": "Digital Marketing",
+              "path": "/services"
+            },
+            {
+              "id": "fs-6",
+              "label": "Brand Collaborations",
+              "path": "/services"
+            },
+            {
+              "id": "fs-7",
+              "label": "Pre-Wedding Shoot",
+              "path": "/pre-wedding"
+            },
+            {
+              "id": "fs-1790076908691",
+              "label": "camera rental ",
+              "path": "/services",
+              "isExternal": false
+            }
+          ],
+          "footerContactHeading": "CONTACT US",
+          "footerStatusText": "STUDIO ACTIVE • JAIPUR",
+          "footerStatusEnabled": true,
+          "footerBackToTopEnabled": true,
+          "footerAdminLinkEnabled": true,
+          "updatedAt": "2026-09-22T11:41:43.802Z",
+          "success": true,
+          "data": {
+            "id": "site-settings-singleton",
+            "siteName": "VEXO Music Entertainment Pvt. Ltd.",
+            "siteDescription": "Premier record label, studio production house, and artist management company.",
+            "logoUrl": "/logo.svg",
+            "faviconUrl": "/favicon.ico",
+            "contactEmail": "contact@vexomusic.com",
+            "contactPhone": "+91 72399 99966",
+            "officeAddress": "SKY CROWN, Office No. 205  Chordiya City, Kamla Nehru Nagar, Ajmer Road  Jaipur, Pin Code- 302021, Rajasthan, India",
+            "copyrightText": "© 2026 VEXO Music Entertainment Pvt. Ltd. All rights reserved.",
+            "socialSpotify": "https://spotify.com",
+            "socialYoutube": "https://youtube.com",
+            "socialInstagram": "https://instagram.com",
+            "socialTwitter": "https://twitter.com",
+            "socialAppleMusic": "https://music.apple.com",
+            "socialFacebook": "https://facebook.com",
+            "socialSoundcloud": "https://soundcloud.com",
+            "maintenanceMode": false,
+            "footerBio": "A premier music entertainment powerhouse & record label specializing in original sound engineering, global music distribution, artist management, and cinematic audio-visual production based in Jaipur, India.",
+            "footerQuickLinksHeading": "EXPLORE VEXO",
+            "footerQuickLinks": [
+              {
+                "id": "fn-1",
+                "label": "Home",
+                "path": "/"
+              },
+              {
+                "id": "fn-2",
+                "label": "Music",
+                "path": "/music"
+              },
+              {
+                "id": "fn-3",
+                "label": "Artists",
+                "path": "/artists"
+              },
+              {
+                "id": "fn-4",
+                "label": "Services",
+                "path": "/services"
+              },
+              {
+                "id": "fn-5",
+                "label": "Events",
+                "path": "/events"
+              },
+              {
+                "id": "fn-6",
+                "label": "Videos",
+                "path": "/videos"
+              },
+              {
+                "id": "fn-7",
+                "label": "About",
+                "path": "/about"
+              },
+              {
+                "id": "fn-8",
+                "label": "Contact",
+                "path": "/contact"
+              }
+            ],
+            "footerServicesHeading": "OUR CORE SERVICES",
+            "footerServicesLinks": [
+              {
+                "id": "fs-1",
+                "label": "Music Production",
+                "path": "/services"
+              },
+              {
+                "id": "fs-2",
+                "label": "Audio & Video Production",
+                "path": "/services"
+              },
+              {
+                "id": "fs-3",
+                "label": "Artist Management",
+                "path": "/services"
+              },
+              {
+                "id": "fs-4",
+                "label": "Music Distribution",
+                "path": "/services"
+              },
+              {
+                "id": "fs-5",
+                "label": "Digital Marketing",
+                "path": "/services"
+              },
+              {
+                "id": "fs-6",
+                "label": "Brand Collaborations",
+                "path": "/services"
+              },
+              {
+                "id": "fs-7",
+                "label": "Pre-Wedding Shoot",
+                "path": "/pre-wedding"
+              },
+              {
+                "id": "fs-1790076908691",
+                "label": "camera rental ",
+                "path": "/services",
+                "isExternal": false
+              }
+            ],
+            "footerContactHeading": "CONTACT US",
+            "footerStatusText": "STUDIO ACTIVE • JAIPUR HQ",
+            "footerStatusEnabled": true,
+            "footerBackToTopEnabled": true,
+            "footerAdminLinkEnabled": true,
+            "updatedAt": "2026-09-22T11:41:27.353Z",
+            "success": true,
+            "data": {
+              "id": "site-settings-singleton",
+              "siteName": "VEXO Music Entertainment Pvt. Ltd.",
+              "siteDescription": "Premier record label, studio production house, and artist management company.",
+              "logoUrl": "/logo.svg",
+              "faviconUrl": "/favicon.ico",
+              "contactEmail": "contact@vexomusic.com",
+              "contactPhone": "+91 72399 99966",
+              "officeAddress": "SKY CROWN, Office No. 205  Chordiya City, Kamla Nehru Nagar, Ajmer Road  Jaipur, Pin Code- 302021, Rajasthan, India",
+              "copyrightText": "© 2026 VEXO Music Entertainment Pvt. Ltd. All rights reserved.",
+              "socialSpotify": "https://spotify.com",
+              "socialYoutube": "https://youtube.com",
+              "socialInstagram": "https://instagram.com",
+              "socialTwitter": "https://twitter.com",
+              "socialAppleMusic": "https://music.apple.com",
+              "socialFacebook": "https://facebook.com",
+              "socialSoundcloud": "https://soundcloud.com",
+              "maintenanceMode": false,
+              "footerBio": "A premier music entertainment powerhouse & record label specializing in original sound engineering, global music distribution, artist management, and cinematic audio-visual production based in Jaipur, India.",
+              "footerQuickLinksHeading": "QUICK LINKS",
+              "footerQuickLinks": [
+                {
+                  "id": "fn-1",
+                  "label": "Home",
+                  "path": "/"
+                },
+                {
+                  "id": "fn-2",
+                  "label": "Music",
+                  "path": "/music"
+                },
+                {
+                  "id": "fn-3",
+                  "label": "Artists",
+                  "path": "/artists"
+                },
+                {
+                  "id": "fn-4",
+                  "label": "Services",
+                  "path": "/services"
+                },
+                {
+                  "id": "fn-5",
+                  "label": "Events",
+                  "path": "/events"
+                },
+                {
+                  "id": "fn-6",
+                  "label": "Videos",
+                  "path": "/videos"
+                },
+                {
+                  "id": "fn-7",
+                  "label": "About",
+                  "path": "/about"
+                },
+                {
+                  "id": "fn-8",
+                  "label": "Contact",
+                  "path": "/contact"
+                }
+              ],
+              "footerServicesHeading": "SERVICES",
+              "footerServicesLinks": [
+                {
+                  "id": "fs-1",
+                  "label": "Music Production",
+                  "path": "/services"
+                },
+                {
+                  "id": "fs-2",
+                  "label": "Audio & Video Production",
+                  "path": "/services"
+                },
+                {
+                  "id": "fs-3",
+                  "label": "Artist Management",
+                  "path": "/services"
+                },
+                {
+                  "id": "fs-4",
+                  "label": "Music Distribution",
+                  "path": "/services"
+                },
+                {
+                  "id": "fs-5",
+                  "label": "Digital Marketing",
+                  "path": "/services"
+                },
+                {
+                  "id": "fs-6",
+                  "label": "Brand Collaborations",
+                  "path": "/services"
+                },
+                {
+                  "id": "fs-7",
+                  "label": "Pre-Wedding Shoot",
+                  "path": "/pre-wedding"
+                },
+                {
+                  "id": "fs-1790076908691",
+                  "label": "camera rental ",
+                  "path": "/services",
+                  "isExternal": false
+                }
+              ],
+              "footerContactHeading": "CONTACT US",
+              "footerStatusText": "STUDIO ACTIVE • JAIPUR",
+              "footerStatusEnabled": true,
+              "footerBackToTopEnabled": true,
+              "footerAdminLinkEnabled": true,
+              "updatedAt": "2026-09-22T11:35:30.631Z"
+            }
+          }
+        }
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "",
+      "id": "log-f9b8363aa5f60981",
+      "createdAt": "2026-09-22T11:41:43.808Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_SITE_SETTINGS",
+      "entityType": "SiteSettings",
+      "entityId": "site-settings-singleton",
+      "details": {
+        "updates": {
+          "id": "site-settings-singleton",
+          "siteName": "VEXO Music Entertainment Pvt. Ltd.",
+          "siteDescription": "Premier record label, studio production house, and artist management company.",
+          "logoUrl": "/logo.svg",
+          "faviconUrl": "/favicon.ico",
+          "contactEmail": "contact@vexomusic.com",
+          "contactPhone": "+91 72399 99966",
+          "officeAddress": "SKY CROWN, Office No. 205  Chordiya City, Kamla Nehru Nagar, Ajmer Road  Jaipur, Pin Code- 302021, Rajasthan, India",
+          "copyrightText": "© 2026 VEXO Music Entertainment Pvt. Ltd. All rights reserved.",
+          "socialSpotify": "https://spotify.com",
+          "socialYoutube": "https://youtube.com",
+          "socialInstagram": "https://instagram.com",
+          "socialTwitter": "https://twitter.com",
+          "socialAppleMusic": "https://music.apple.com",
+          "socialFacebook": "https://facebook.com",
+          "socialSoundcloud": "https://soundcloud.com",
+          "maintenanceMode": false,
+          "footerBio": "A premier music entertainment powerhouse & record label specializing in original sound engineering, global music distribution, artist management, and cinematic audio-visual production based in Jaipur, India.",
+          "footerQuickLinksHeading": "EXPLORE VEXO",
+          "footerQuickLinks": [
+            {
+              "id": "fn-1",
+              "label": "Home",
+              "path": "/"
+            },
+            {
+              "id": "fn-2",
+              "label": "Music",
+              "path": "/music"
+            },
+            {
+              "id": "fn-3",
+              "label": "Artists",
+              "path": "/artists"
+            },
+            {
+              "id": "fn-4",
+              "label": "Services",
+              "path": "/services"
+            },
+            {
+              "id": "fn-5",
+              "label": "Events",
+              "path": "/events"
+            },
+            {
+              "id": "fn-6",
+              "label": "Videos",
+              "path": "/videos"
+            },
+            {
+              "id": "fn-7",
+              "label": "About",
+              "path": "/about"
+            },
+            {
+              "id": "fn-8",
+              "label": "Contact",
+              "path": "/contact"
+            }
+          ],
+          "footerServicesHeading": "OUR CORE SERVICES",
+          "footerServicesLinks": [
+            {
+              "id": "fs-1",
+              "label": "Music Production",
+              "path": "/services"
+            },
+            {
+              "id": "fs-2",
+              "label": "Audio & Video Production",
+              "path": "/services"
+            },
+            {
+              "id": "fs-3",
+              "label": "Artist Management",
+              "path": "/services"
+            },
+            {
+              "id": "fs-4",
+              "label": "Music Distribution",
+              "path": "/services"
+            },
+            {
+              "id": "fs-5",
+              "label": "Digital Marketing",
+              "path": "/services"
+            },
+            {
+              "id": "fs-6",
+              "label": "Brand Collaborations",
+              "path": "/services"
+            },
+            {
+              "id": "fs-7",
+              "label": "Pre-Wedding Shoot",
+              "path": "/pre-wedding"
+            },
+            {
+              "id": "fs-1790076908691",
+              "label": "camera rental ",
+              "path": "/services",
+              "isExternal": false
+            }
+          ],
+          "footerContactHeading": "CONTACT US",
+          "footerStatusText": "STUDIO ACTIVE • JAIPUR HQ",
+          "footerStatusEnabled": true,
+          "footerBackToTopEnabled": true,
+          "footerAdminLinkEnabled": true,
+          "updatedAt": "2026-09-22T11:41:27.359Z",
+          "success": true,
+          "data": {
+            "id": "site-settings-singleton",
+            "siteName": "VEXO Music Entertainment Pvt. Ltd.",
+            "siteDescription": "Premier record label, studio production house, and artist management company.",
+            "logoUrl": "/logo.svg",
+            "faviconUrl": "/favicon.ico",
+            "contactEmail": "contact@vexomusic.com",
+            "contactPhone": "+91 72399 99966",
+            "officeAddress": "SKY CROWN, Office No. 205  Chordiya City, Kamla Nehru Nagar, Ajmer Road  Jaipur, Pin Code- 302021, Rajasthan, India",
+            "copyrightText": "© 2026 VEXO Music Entertainment Pvt. Ltd. All rights reserved.",
+            "socialSpotify": "https://spotify.com",
+            "socialYoutube": "https://youtube.com",
+            "socialInstagram": "https://instagram.com",
+            "socialTwitter": "https://twitter.com",
+            "socialAppleMusic": "https://music.apple.com",
+            "socialFacebook": "https://facebook.com",
+            "socialSoundcloud": "https://soundcloud.com",
+            "maintenanceMode": false,
+            "footerBio": "A premier music entertainment powerhouse & record label specializing in original sound engineering, global music distribution, artist management, and cinematic audio-visual production based in Jaipur, India.",
+            "footerQuickLinksHeading": "EXPLORE VEXO",
+            "footerQuickLinks": [
+              {
+                "id": "fn-1",
+                "label": "Home",
+                "path": "/"
+              },
+              {
+                "id": "fn-2",
+                "label": "Music",
+                "path": "/music"
+              },
+              {
+                "id": "fn-3",
+                "label": "Artists",
+                "path": "/artists"
+              },
+              {
+                "id": "fn-4",
+                "label": "Services",
+                "path": "/services"
+              },
+              {
+                "id": "fn-5",
+                "label": "Events",
+                "path": "/events"
+              },
+              {
+                "id": "fn-6",
+                "label": "Videos",
+                "path": "/videos"
+              },
+              {
+                "id": "fn-7",
+                "label": "About",
+                "path": "/about"
+              },
+              {
+                "id": "fn-8",
+                "label": "Contact",
+                "path": "/contact"
+              }
+            ],
+            "footerServicesHeading": "OUR CORE SERVICES",
+            "footerServicesLinks": [
+              {
+                "id": "fs-1",
+                "label": "Music Production",
+                "path": "/services"
+              },
+              {
+                "id": "fs-2",
+                "label": "Audio & Video Production",
+                "path": "/services"
+              },
+              {
+                "id": "fs-3",
+                "label": "Artist Management",
+                "path": "/services"
+              },
+              {
+                "id": "fs-4",
+                "label": "Music Distribution",
+                "path": "/services"
+              },
+              {
+                "id": "fs-5",
+                "label": "Digital Marketing",
+                "path": "/services"
+              },
+              {
+                "id": "fs-6",
+                "label": "Brand Collaborations",
+                "path": "/services"
+              },
+              {
+                "id": "fs-7",
+                "label": "Pre-Wedding Shoot",
+                "path": "/pre-wedding"
+              },
+              {
+                "id": "fs-1790076908691",
+                "label": "camera rental ",
+                "path": "/services",
+                "isExternal": false
+              }
+            ],
+            "footerContactHeading": "CONTACT US",
+            "footerStatusText": "STUDIO ACTIVE • JAIPUR HQ",
+            "footerStatusEnabled": true,
+            "footerBackToTopEnabled": true,
+            "footerAdminLinkEnabled": true,
+            "updatedAt": "2026-09-22T11:41:27.353Z",
+            "success": true,
+            "data": {
+              "id": "site-settings-singleton",
+              "siteName": "VEXO Music Entertainment Pvt. Ltd.",
+              "siteDescription": "Premier record label, studio production house, and artist management company.",
+              "logoUrl": "/logo.svg",
+              "faviconUrl": "/favicon.ico",
+              "contactEmail": "contact@vexomusic.com",
+              "contactPhone": "+91 72399 99966",
+              "officeAddress": "SKY CROWN, Office No. 205  Chordiya City, Kamla Nehru Nagar, Ajmer Road  Jaipur, Pin Code- 302021, Rajasthan, India",
+              "copyrightText": "© 2026 VEXO Music Entertainment Pvt. Ltd. All rights reserved.",
+              "socialSpotify": "https://spotify.com",
+              "socialYoutube": "https://youtube.com",
+              "socialInstagram": "https://instagram.com",
+              "socialTwitter": "https://twitter.com",
+              "socialAppleMusic": "https://music.apple.com",
+              "socialFacebook": "https://facebook.com",
+              "socialSoundcloud": "https://soundcloud.com",
+              "maintenanceMode": false,
+              "footerBio": "A premier music entertainment powerhouse & record label specializing in original sound engineering, global music distribution, artist management, and cinematic audio-visual production based in Jaipur, India.",
+              "footerQuickLinksHeading": "QUICK LINKS",
+              "footerQuickLinks": [
+                {
+                  "id": "fn-1",
+                  "label": "Home",
+                  "path": "/"
+                },
+                {
+                  "id": "fn-2",
+                  "label": "Music",
+                  "path": "/music"
+                },
+                {
+                  "id": "fn-3",
+                  "label": "Artists",
+                  "path": "/artists"
+                },
+                {
+                  "id": "fn-4",
+                  "label": "Services",
+                  "path": "/services"
+                },
+                {
+                  "id": "fn-5",
+                  "label": "Events",
+                  "path": "/events"
+                },
+                {
+                  "id": "fn-6",
+                  "label": "Videos",
+                  "path": "/videos"
+                },
+                {
+                  "id": "fn-7",
+                  "label": "About",
+                  "path": "/about"
+                },
+                {
+                  "id": "fn-8",
+                  "label": "Contact",
+                  "path": "/contact"
+                }
+              ],
+              "footerServicesHeading": "SERVICES",
+              "footerServicesLinks": [
+                {
+                  "id": "fs-1",
+                  "label": "Music Production",
+                  "path": "/services"
+                },
+                {
+                  "id": "fs-2",
+                  "label": "Audio & Video Production",
+                  "path": "/services"
+                },
+                {
+                  "id": "fs-3",
+                  "label": "Artist Management",
+                  "path": "/services"
+                },
+                {
+                  "id": "fs-4",
+                  "label": "Music Distribution",
+                  "path": "/services"
+                },
+                {
+                  "id": "fs-5",
+                  "label": "Digital Marketing",
+                  "path": "/services"
+                },
+                {
+                  "id": "fs-6",
+                  "label": "Brand Collaborations",
+                  "path": "/services"
+                },
+                {
+                  "id": "fs-7",
+                  "label": "Pre-Wedding Shoot",
+                  "path": "/pre-wedding"
+                },
+                {
+                  "id": "fs-1790076908691",
+                  "label": "camera rental ",
+                  "path": "/services",
+                  "isExternal": false
+                }
+              ],
+              "footerContactHeading": "CONTACT US",
+              "footerStatusText": "STUDIO ACTIVE • JAIPUR",
+              "footerStatusEnabled": true,
+              "footerBackToTopEnabled": true,
+              "footerAdminLinkEnabled": true,
+              "updatedAt": "2026-09-22T11:35:30.631Z"
+            }
+          }
+        }
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "",
+      "id": "log-5147ab55f10f7704",
+      "createdAt": "2026-09-22T11:41:43.802Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "ADMIN_LOGIN",
+      "entityType": "AdminUser",
+      "entityId": "admin-super-1",
+      "details": {
+        "email": "admin@vexomusic.com"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "",
+      "id": "log-52f9e289ce9b9116",
+      "createdAt": "2026-09-22T11:41:43.791Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_SITE_SETTINGS",
+      "entityType": "SiteSettings",
+      "entityId": "site-settings-singleton",
+      "details": {
+        "updates": {
+          "success": true,
+          "data": {
+            "id": "site-settings-singleton",
+            "siteName": "VEXO Music Entertainment Pvt. Ltd.",
+            "siteDescription": "Premier record label, studio production house, and artist management company.",
+            "logoUrl": "/logo.svg",
+            "faviconUrl": "/favicon.ico",
+            "contactEmail": "contact@vexomusic.com",
+            "contactPhone": "+91 72399 99966",
+            "officeAddress": "SKY CROWN, Office No. 205  Chordiya City, Kamla Nehru Nagar, Ajmer Road  Jaipur, Pin Code- 302021, Rajasthan, India",
+            "copyrightText": "© 2026 VEXO Music Entertainment Pvt. Ltd. All rights reserved.",
+            "socialSpotify": "https://spotify.com",
+            "socialYoutube": "https://youtube.com",
+            "socialInstagram": "https://instagram.com",
+            "socialTwitter": "https://twitter.com",
+            "socialAppleMusic": "https://music.apple.com",
+            "socialFacebook": "https://facebook.com",
+            "socialSoundcloud": "https://soundcloud.com",
+            "maintenanceMode": false,
+            "footerBio": "A premier music entertainment powerhouse & record label specializing in original sound engineering, global music distribution, artist management, and cinematic audio-visual production based in Jaipur, India.",
+            "footerQuickLinksHeading": "EXPLORE VEXO",
+            "footerQuickLinks": [
+              {
+                "id": "fn-1",
+                "label": "Home",
+                "path": "/"
+              },
+              {
+                "id": "fn-2",
+                "label": "Music",
+                "path": "/music"
+              },
+              {
+                "id": "fn-3",
+                "label": "Artists",
+                "path": "/artists"
+              },
+              {
+                "id": "fn-4",
+                "label": "Services",
+                "path": "/services"
+              },
+              {
+                "id": "fn-5",
+                "label": "Events",
+                "path": "/events"
+              },
+              {
+                "id": "fn-6",
+                "label": "Videos",
+                "path": "/videos"
+              },
+              {
+                "id": "fn-7",
+                "label": "About",
+                "path": "/about"
+              },
+              {
+                "id": "fn-8",
+                "label": "Contact",
+                "path": "/contact"
+              }
+            ],
+            "footerServicesHeading": "OUR CORE SERVICES",
+            "footerServicesLinks": [
+              {
+                "id": "fs-1",
+                "label": "Music Production",
+                "path": "/services"
+              },
+              {
+                "id": "fs-2",
+                "label": "Audio & Video Production",
+                "path": "/services"
+              },
+              {
+                "id": "fs-3",
+                "label": "Artist Management",
+                "path": "/services"
+              },
+              {
+                "id": "fs-4",
+                "label": "Music Distribution",
+                "path": "/services"
+              },
+              {
+                "id": "fs-5",
+                "label": "Digital Marketing",
+                "path": "/services"
+              },
+              {
+                "id": "fs-6",
+                "label": "Brand Collaborations",
+                "path": "/services"
+              },
+              {
+                "id": "fs-7",
+                "label": "Pre-Wedding Shoot",
+                "path": "/pre-wedding"
+              },
+              {
+                "id": "fs-1790076908691",
+                "label": "camera rental ",
+                "path": "/services",
+                "isExternal": false
+              }
+            ],
+            "footerContactHeading": "CONTACT US",
+            "footerStatusText": "STUDIO ACTIVE • JAIPUR HQ",
+            "footerStatusEnabled": true,
+            "footerBackToTopEnabled": true,
+            "footerAdminLinkEnabled": true,
+            "updatedAt": "2026-09-22T11:41:27.353Z",
+            "success": true,
+            "data": {
+              "id": "site-settings-singleton",
+              "siteName": "VEXO Music Entertainment Pvt. Ltd.",
+              "siteDescription": "Premier record label, studio production house, and artist management company.",
+              "logoUrl": "/logo.svg",
+              "faviconUrl": "/favicon.ico",
+              "contactEmail": "contact@vexomusic.com",
+              "contactPhone": "+91 72399 99966",
+              "officeAddress": "SKY CROWN, Office No. 205  Chordiya City, Kamla Nehru Nagar, Ajmer Road  Jaipur, Pin Code- 302021, Rajasthan, India",
+              "copyrightText": "© 2026 VEXO Music Entertainment Pvt. Ltd. All rights reserved.",
+              "socialSpotify": "https://spotify.com",
+              "socialYoutube": "https://youtube.com",
+              "socialInstagram": "https://instagram.com",
+              "socialTwitter": "https://twitter.com",
+              "socialAppleMusic": "https://music.apple.com",
+              "socialFacebook": "https://facebook.com",
+              "socialSoundcloud": "https://soundcloud.com",
+              "maintenanceMode": false,
+              "footerBio": "A premier music entertainment powerhouse & record label specializing in original sound engineering, global music distribution, artist management, and cinematic audio-visual production based in Jaipur, India.",
+              "footerQuickLinksHeading": "QUICK LINKS",
+              "footerQuickLinks": [
+                {
+                  "id": "fn-1",
+                  "label": "Home",
+                  "path": "/"
+                },
+                {
+                  "id": "fn-2",
+                  "label": "Music",
+                  "path": "/music"
+                },
+                {
+                  "id": "fn-3",
+                  "label": "Artists",
+                  "path": "/artists"
+                },
+                {
+                  "id": "fn-4",
+                  "label": "Services",
+                  "path": "/services"
+                },
+                {
+                  "id": "fn-5",
+                  "label": "Events",
+                  "path": "/events"
+                },
+                {
+                  "id": "fn-6",
+                  "label": "Videos",
+                  "path": "/videos"
+                },
+                {
+                  "id": "fn-7",
+                  "label": "About",
+                  "path": "/about"
+                },
+                {
+                  "id": "fn-8",
+                  "label": "Contact",
+                  "path": "/contact"
+                }
+              ],
+              "footerServicesHeading": "SERVICES",
+              "footerServicesLinks": [
+                {
+                  "id": "fs-1",
+                  "label": "Music Production",
+                  "path": "/services"
+                },
+                {
+                  "id": "fs-2",
+                  "label": "Audio & Video Production",
+                  "path": "/services"
+                },
+                {
+                  "id": "fs-3",
+                  "label": "Artist Management",
+                  "path": "/services"
+                },
+                {
+                  "id": "fs-4",
+                  "label": "Music Distribution",
+                  "path": "/services"
+                },
+                {
+                  "id": "fs-5",
+                  "label": "Digital Marketing",
+                  "path": "/services"
+                },
+                {
+                  "id": "fs-6",
+                  "label": "Brand Collaborations",
+                  "path": "/services"
+                },
+                {
+                  "id": "fs-7",
+                  "label": "Pre-Wedding Shoot",
+                  "path": "/pre-wedding"
+                },
+                {
+                  "id": "fs-1790076908691",
+                  "label": "camera rental ",
+                  "path": "/services",
+                  "isExternal": false
+                }
+              ],
+              "footerContactHeading": "CONTACT US",
+              "footerStatusText": "STUDIO ACTIVE • JAIPUR",
+              "footerStatusEnabled": true,
+              "footerBackToTopEnabled": true,
+              "footerAdminLinkEnabled": true,
+              "updatedAt": "2026-09-22T11:35:30.631Z"
+            }
+          },
+          "footerServicesHeading": "SERVICES",
+          "footerQuickLinksHeading": "QUICK LINKS",
+          "footerStatusText": "STUDIO ACTIVE • JAIPUR"
+        }
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "",
+      "id": "log-b1dea46c2974e6b2",
+      "createdAt": "2026-09-22T11:41:27.359Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_SITE_SETTINGS",
+      "entityType": "SiteSettings",
+      "entityId": "site-settings-singleton",
+      "details": {
+        "updates": {
+          "success": true,
+          "data": {
+            "id": "site-settings-singleton",
+            "siteName": "VEXO Music Entertainment Pvt. Ltd.",
+            "siteDescription": "Premier record label, studio production house, and artist management company.",
+            "logoUrl": "/logo.svg",
+            "faviconUrl": "/favicon.ico",
+            "contactEmail": "contact@vexomusic.com",
+            "contactPhone": "+91 72399 99966",
+            "officeAddress": "SKY CROWN, Office No. 205  Chordiya City, Kamla Nehru Nagar, Ajmer Road  Jaipur, Pin Code- 302021, Rajasthan, India",
+            "copyrightText": "© 2026 VEXO Music Entertainment Pvt. Ltd. All rights reserved.",
+            "socialSpotify": "https://spotify.com",
+            "socialYoutube": "https://youtube.com",
+            "socialInstagram": "https://instagram.com",
+            "socialTwitter": "https://twitter.com",
+            "socialAppleMusic": "https://music.apple.com",
+            "socialFacebook": "https://facebook.com",
+            "socialSoundcloud": "https://soundcloud.com",
+            "maintenanceMode": false,
+            "footerBio": "A premier music entertainment powerhouse & record label specializing in original sound engineering, global music distribution, artist management, and cinematic audio-visual production based in Jaipur, India.",
+            "footerQuickLinksHeading": "QUICK LINKS",
+            "footerQuickLinks": [
+              {
+                "id": "fn-1",
+                "label": "Home",
+                "path": "/"
+              },
+              {
+                "id": "fn-2",
+                "label": "Music",
+                "path": "/music"
+              },
+              {
+                "id": "fn-3",
+                "label": "Artists",
+                "path": "/artists"
+              },
+              {
+                "id": "fn-4",
+                "label": "Services",
+                "path": "/services"
+              },
+              {
+                "id": "fn-5",
+                "label": "Events",
+                "path": "/events"
+              },
+              {
+                "id": "fn-6",
+                "label": "Videos",
+                "path": "/videos"
+              },
+              {
+                "id": "fn-7",
+                "label": "About",
+                "path": "/about"
+              },
+              {
+                "id": "fn-8",
+                "label": "Contact",
+                "path": "/contact"
+              }
+            ],
+            "footerServicesHeading": "SERVICES",
+            "footerServicesLinks": [
+              {
+                "id": "fs-1",
+                "label": "Music Production",
+                "path": "/services"
+              },
+              {
+                "id": "fs-2",
+                "label": "Audio & Video Production",
+                "path": "/services"
+              },
+              {
+                "id": "fs-3",
+                "label": "Artist Management",
+                "path": "/services"
+              },
+              {
+                "id": "fs-4",
+                "label": "Music Distribution",
+                "path": "/services"
+              },
+              {
+                "id": "fs-5",
+                "label": "Digital Marketing",
+                "path": "/services"
+              },
+              {
+                "id": "fs-6",
+                "label": "Brand Collaborations",
+                "path": "/services"
+              },
+              {
+                "id": "fs-7",
+                "label": "Pre-Wedding Shoot",
+                "path": "/pre-wedding"
+              },
+              {
+                "id": "fs-1790076908691",
+                "label": "camera rental ",
+                "path": "/services",
+                "isExternal": false
+              }
+            ],
+            "footerContactHeading": "CONTACT US",
+            "footerStatusText": "STUDIO ACTIVE • JAIPUR",
+            "footerStatusEnabled": true,
+            "footerBackToTopEnabled": true,
+            "footerAdminLinkEnabled": true,
+            "updatedAt": "2026-09-22T11:35:30.631Z"
+          },
+          "footerServicesHeading": "OUR CORE SERVICES",
+          "footerQuickLinksHeading": "EXPLORE VEXO",
+          "footerStatusText": "STUDIO ACTIVE • JAIPUR HQ"
+        }
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "",
+      "id": "log-7509770b1dd9d33b",
+      "createdAt": "2026-09-22T11:41:27.353Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "ADMIN_LOGIN",
+      "entityType": "AdminUser",
+      "entityId": "admin-super-1",
+      "details": {
+        "email": "admin@vexomusic.com"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "",
+      "id": "log-775850739ae56968",
+      "createdAt": "2026-09-22T11:41:27.342Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "ADMIN_LOGIN",
+      "entityType": "AdminUser",
+      "entityId": "admin-super-1",
+      "details": {
+        "email": "admin@vexomusic.com"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "",
+      "id": "log-b5bb8f31d0d6e9d5",
+      "createdAt": "2026-09-22T11:41:03.223Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_SITE_SETTINGS",
+      "entityType": "SiteSettings",
+      "entityId": "site-settings-singleton",
+      "details": {
+        "updates": {
+          "id": "site-settings-singleton",
+          "siteName": "VEXO Music Entertainment Pvt. Ltd.",
+          "siteDescription": "Premier record label, studio production house, and artist management company.",
+          "logoUrl": "/logo.svg",
+          "faviconUrl": "/favicon.ico",
+          "contactEmail": "contact@vexomusic.com",
+          "contactPhone": "+91 72399 99966",
+          "officeAddress": "SKY CROWN, Office No. 205  Chordiya City, Kamla Nehru Nagar, Ajmer Road  Jaipur, Pin Code- 302021, Rajasthan, India",
+          "copyrightText": "© 2026 VEXO Music Entertainment Pvt. Ltd. All rights reserved.",
+          "socialSpotify": "https://spotify.com",
+          "socialYoutube": "https://youtube.com",
+          "socialInstagram": "https://instagram.com",
+          "socialTwitter": "https://twitter.com",
+          "socialAppleMusic": "https://music.apple.com",
+          "socialFacebook": "https://facebook.com",
+          "socialSoundcloud": "https://soundcloud.com",
+          "maintenanceMode": false,
+          "footerBio": "A premier music entertainment powerhouse & record label specializing in original sound engineering, global music distribution, artist management, and cinematic audio-visual production based in Jaipur, India.",
+          "footerQuickLinksHeading": "QUICK LINKS",
+          "footerQuickLinks": [
+            {
+              "id": "fn-1",
+              "label": "Home",
+              "path": "/"
+            },
+            {
+              "id": "fn-2",
+              "label": "Music",
+              "path": "/music"
+            },
+            {
+              "id": "fn-3",
+              "label": "Artists",
+              "path": "/artists"
+            },
+            {
+              "id": "fn-4",
+              "label": "Services",
+              "path": "/services"
+            },
+            {
+              "id": "fn-5",
+              "label": "Events",
+              "path": "/events"
+            },
+            {
+              "id": "fn-6",
+              "label": "Videos",
+              "path": "/videos"
+            },
+            {
+              "id": "fn-7",
+              "label": "About",
+              "path": "/about"
+            },
+            {
+              "id": "fn-8",
+              "label": "Contact",
+              "path": "/contact"
+            }
+          ],
+          "footerServicesHeading": "SERVICES",
+          "footerServicesLinks": [
+            {
+              "id": "fs-1",
+              "label": "Music Production",
+              "path": "/services"
+            },
+            {
+              "id": "fs-2",
+              "label": "Audio & Video Production",
+              "path": "/services"
+            },
+            {
+              "id": "fs-3",
+              "label": "Artist Management",
+              "path": "/services"
+            },
+            {
+              "id": "fs-4",
+              "label": "Music Distribution",
+              "path": "/services"
+            },
+            {
+              "id": "fs-5",
+              "label": "Digital Marketing",
+              "path": "/services"
+            },
+            {
+              "id": "fs-6",
+              "label": "Brand Collaborations",
+              "path": "/services"
+            },
+            {
+              "id": "fs-7",
+              "label": "Pre-Wedding Shoot",
+              "path": "/pre-wedding"
+            },
+            {
+              "id": "fs-1790076908691",
+              "label": "camera rental ",
+              "path": "/services",
+              "isExternal": false
+            }
+          ],
+          "footerContactHeading": "CONTACT US",
+          "footerStatusText": "STUDIO ACTIVE • JAIPUR",
+          "footerStatusEnabled": true,
+          "footerBackToTopEnabled": true,
+          "footerAdminLinkEnabled": true,
+          "updatedAt": "2026-09-22T06:32:35.903Z"
+        }
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-405e11b4ef27881d",
+      "createdAt": "2026-09-22T11:35:30.631Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_INQUIRY_STATUS",
+      "entityType": "ContactRequest",
+      "entityId": "cnt-1",
+      "details": {
+        "referenceId": "VXO-2026-8942",
+        "status": "CONTACTED"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-3981c097e135fae1",
+      "createdAt": "2026-09-22T11:31:36.996Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_HOMEPAGE_CMS",
+      "entityType": "Homepage",
+      "entityId": "homepage-singleton",
+      "details": {
+        "updates": {
+          "reviewsBadge": "TESTIMONIALS & TRUST",
+          "reviewsHeading": "VOICES OF EXCELLENCE",
+          "reviewsSubtitle": "What artists, visionary couples, and industry partners say about producing with VEXO.",
+          "reviews": [
+            {
+              "id": "rev-1",
+              "clientName": "Rashmi Nishad",
+              "roleOrProject": "Lead Vocalist • \"Satane Lage Ho\"",
+              "rating": 5,
+              "reviewText": "Working with VEXO Music on \"Satane Lage Ho\" was a transformative experience. Their studio engineering, arrangement sensibilities, and dedication to visual storytelling elevated our folk release to international chart standards.",
+              "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80",
+              "category": "Music Production",
+              "verified": true,
+              "date": "August 2026"
+            },
+            {
+              "id": "rev-2",
+              "clientName": "Aarav & Simran Rathore",
+              "roleOrProject": "Royal Pre-Wedding Shoot • Jaipur Forts",
+              "rating": 5,
+              "reviewText": "The cinematic pre-wedding film produced by VEXO looked like a Bollywood period epic. From synchronized drone choreography over Nahargarh Fort to the original background score they composed for us, it was beyond our wildest dreams.",
+              "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80",
+              "category": "Wedding & Film",
+              "verified": true,
+              "date": "September 2026"
+            },
+            {
+              "id": "rev-3",
+              "clientName": "Vikramaditya Sen",
+              "roleOrProject": "Executive Producer • Desert Storm Festival",
+              "rating": 5,
+              "reviewText": "VEXO handled live audio engineering, multi-camera 4K visual feeds, and headline artist management for our 15,000-attendee festival with surgical precision. The sound was pristine and unforgettable.",
+              "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80",
+              "category": "Artist Management",
+              "verified": true,
+              "date": "July 2026"
+            },
+            {
+              "id": "rev-4",
+              "clientName": "Kabir & Meera Singhania",
+              "roleOrProject": "Destination Pre-Wedding • Udaipur Lakes",
+              "rating": 5,
+              "reviewText": "Their signature package was worth every rupee. The team took care of luxury logistics, custom styling, multi-camera 4K drone reels, and delivered the finished cut in record time. Every guest was mesmerized.",
+              "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80",
+              "category": "Wedding & Film",
+              "verified": true,
+              "date": "June 2026"
+            },
+            {
+              "id": "rev-5",
+              "clientName": "R Beer",
+              "roleOrProject": "Singer-Songwriter • \"Bhartar\"",
+              "rating": 5,
+              "reviewText": "The creative freedom and sonic power VEXO brings is unmatched. The production on \"Bhartar\" hit millions of streams within weeks. Their mixing, mastering, and global DSP distribution network are best-in-class.",
+              "avatarUrl": "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=300&q=80",
+              "category": "Music Production",
+              "verified": true,
+              "date": "August 2026"
+            },
+            {
+              "id": "rev-6",
+              "clientName": "Ananya Deshmukh",
+              "roleOrProject": "Indie Artist • Debut EP Production",
+              "rating": 5,
+              "reviewText": "As an independent musician, finding a team that respects your vision while providing world-class Dolby Atmos mastering and visualizer production is rare. VEXO is the definitive home for serious artists.",
+              "avatarUrl": "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=300&q=80",
+              "category": "Music Production",
+              "verified": true,
+              "date": "May 2026"
+            }
+          ]
+        }
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "node",
+      "id": "log-bb72d57d5ef8350c",
+      "createdAt": "2026-09-22T11:18:42.291Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "ADMIN_LOGIN",
+      "entityType": "AdminUser",
+      "entityId": "admin-super-1",
+      "details": {
+        "email": "admin@vexomusic.com"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "node",
+      "id": "log-5c15463f5d10822f",
+      "createdAt": "2026-09-22T11:18:42.279Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_HOMEPAGE_CMS",
+      "entityType": "Homepage",
+      "entityId": "homepage-singleton",
+      "details": {
+        "updates": {
+          "heroTagline": "Pioneering Original Soundscapes & Entertainment",
+          "heroHeadline": "vexo entertainment pvt limited",
+          "heroSubtitle": "VEXO Music Entertainment is a global record label, high-end audio-visual production powerhouse, and artist development agency.",
+          "heroBgImage": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=2000&q=80",
+          "heroBgMedia": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=2000&q=80",
+          "featuredVideoId": "PsmXAUKjR5Y",
+          "heroCtaText": "EXPLORE RELEASES",
+          "heroCtaUrl": "/music",
+          "heroSecondaryCtaText": "STUDIO SERVICES",
+          "heroSecondaryCtaUrl": "/services",
+          "marqueeText": "LATEST RELEASE: \"BHARTAR\" BY R BEER & RASHMI NISHAD — STREAMING NOW ON ALL MAJOR DSPS",
+          "releasesHeading": "LATEST RELEASES",
+          "releasesSubtitle": "Explore the newest original tracks, singles, and full albums from VEXO Music Entertainment.",
+          "selectedAlbumIds": [
+            "alb-2",
+            "alb-bhartar",
+            "alb-1",
+            "alb-3"
+          ],
+          "releasesLimit": 4,
+          "artistsHeading": "FEATURED ARTISTS",
+          "artistsSubtitle": "Discover the visionary producers, vocalists, and composers driving our sonic movement.",
+          "featuredArtistIds": [
+            "art-2",
+            "art-rbeer",
+            "art-3",
+            "art-1"
+          ],
+          "eventsHeading": "FEATURED EVENTS & TOUR",
+          "eventsSubtitle": "Experience the raw energy of VEXO live across premier concert halls and festival stadiums globally.",
+          "featuredEventIds": [
+            "evt-1",
+            "evt-2",
+            "evt-3",
+            "evt-4"
+          ],
+          "videosHeading": "OFFICIAL VIDEO PRODUCTIONS",
+          "videosSubtitle": "Watch high-definition 4K music videos, studio recordings, live stadium performances, and visualizers.",
+          "featuredVideoIds": [
+            "vid-1",
+            "vid-bhartar",
+            "vid-2",
+            "vid-3"
+          ],
+          "statsArtistsCount": "10+",
+          "statsReleasesCount": "50+",
+          "statsProjectsCount": "100+",
+          "statsTotalStreams": "1.2M+",
+          "statsGlobalReach": "45+ Countries",
+          "aboutBadge": "ABOUT VEXO",
+          "aboutHeading": "VEXO MUSIC ENTERTAINMENT PVT. LTD.",
+          "aboutDescription": "Pioneering original soundscapes, artist management, and digital distribution for the next generation. VEXO Music Entertainment Pvt. Ltd. is a premier music agency and record label headquartered in Jaipur, Rajasthan. We specialize in producing chart-topping commercial tracks, high-concept audio visualizers, and empowering recording artists with global digital distribution.",
+          "aboutImage": "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1200&q=80",
+          "finalCtaBadge": "READY TO COLLABORATE?",
+          "finalCtaHeading": "LET'S CREATE SOMETHING ICONIC.",
+          "finalCtaDescription": "Ready to bring your sonic or visual project to life? Collaborate with our team of elite sound engineers, music directors, and producers.",
+          "finalCtaButtonLabel": "START A PROJECT",
+          "finalCtaButtonUrl": "/contact",
+          "finalCtaSecondaryLabel": "CONTACT VEXO",
+          "finalCtaSecondaryUrl": "/contact",
+          "reviewsBadge": "TESTIMONIALS & TRUST",
+          "reviewsHeading": "VOICES OF EXCELLENCE",
+          "reviewsSubtitle": "What artists, visionary couples, and industry partners say about producing with VEXO.",
+          "reviews": [
+            {
+              "id": "rev-1",
+              "clientName": "test review 1 ",
+              "roleOrProject": "Lead Vocalist • \"Satane Lage Ho\"",
+              "rating": 3,
+              "reviewText": "Working with VEXO Music on \"Satane Lage Ho\" was a transformative experience. Their studio engineering, arrangement sensibilities, and dedication to visual storytelling elevated our folk release to international chart standards.",
+              "avatarUrl": "",
+              "category": "Music Production",
+              "verified": true,
+              "date": "August 2026"
+            },
+            {
+              "id": "rev-2",
+              "clientName": "test review 2 ",
+              "roleOrProject": "Royal Pre-Wedding Shoot • Jaipur Forts",
+              "rating": 5,
+              "reviewText": "The cinematic pre-wedding film produced by VEXO looked like a Bollywood period epic. From synchronized drone choreography over Nahargarh Fort to the original background score they composed for us, it was beyond our wildest dreams.",
+              "avatarUrl": "",
+              "category": "Wedding & Film",
+              "verified": true,
+              "date": "September 2026"
+            },
+            {
+              "id": "rev-3",
+              "clientName": "test review 3",
+              "roleOrProject": "Executive Producer • Desert Storm Festival",
+              "rating": 5,
+              "reviewText": "VEXO handled live audio engineering, multi-camera 4K visual feeds, and headline artist management for our 15,000-attendee festival with surgical precision. The sound was pristine and unforgettable.",
+              "avatarUrl": "",
+              "category": "Artist Management",
+              "verified": true,
+              "date": "July 2026"
+            },
+            {
+              "id": "rev-4",
+              "clientName": "test review 4 ",
+              "roleOrProject": "Destination Pre-Wedding • Udaipur Lakes",
+              "rating": 5,
+              "reviewText": "Their signature package was worth every rupee. The team took care of luxury logistics, custom styling, multi-camera 4K drone reels, and delivered the finished cut in record time. Every guest was mesmerized.",
+              "avatarUrl": "",
+              "category": "Wedding & Film",
+              "verified": true,
+              "date": "June 2026"
+            },
+            {
+              "id": "rev-5",
+              "clientName": "test review 5 ",
+              "roleOrProject": "Singer-Songwriter • \"Bhartar\"",
+              "rating": 5,
+              "reviewText": "The creative freedom and sonic power VEXO brings is unmatched. The production on \"Bhartar\" hit millions of streams within weeks. Their mixing, mastering, and global DSP distribution network are best-in-class.",
+              "avatarUrl": "",
+              "category": "Music Production",
+              "verified": true,
+              "date": "August 2026"
+            },
+            {
+              "id": "rev-6",
+              "clientName": "test review 6",
+              "roleOrProject": "Indie Artist • Debut EP Production",
+              "rating": 5,
+              "reviewText": "As an independent musician, finding a team that respects your vision while providing world-class Dolby Atmos mastering and visualizer production is rare. VEXO is the definitive home for serious artists.",
+              "avatarUrl": "",
+              "category": "Music Production",
+              "verified": true,
+              "date": "May 2026"
+            }
+          ]
+        }
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-98fed3b3ba2dde91",
+      "createdAt": "2026-09-22T11:16:15.451Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_HOMEPAGE_CMS",
+      "entityType": "Homepage",
+      "entityId": "homepage-singleton",
+      "details": {
+        "updates": {
+          "heroTagline": "Pioneering Original Soundscapes & Entertainment",
+          "heroHeadline": "vexo entertainment pvt limited",
+          "heroSubtitle": "VEXO Music Entertainment is a global record label, high-end audio-visual production powerhouse, and artist development agency.",
+          "heroBgImage": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=2000&q=80",
+          "heroBgMedia": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=2000&q=80",
+          "featuredVideoId": "PsmXAUKjR5Y",
+          "heroCtaText": "EXPLORE RELEASES",
+          "heroCtaUrl": "/music",
+          "heroSecondaryCtaText": "STUDIO SERVICES",
+          "heroSecondaryCtaUrl": "/services",
+          "marqueeText": "LATEST RELEASE: \"BHARTAR\" BY R BEER & RASHMI NISHAD — STREAMING NOW ON ALL MAJOR DSPS",
+          "releasesHeading": "LATEST RELEASES",
+          "releasesSubtitle": "Explore the newest original tracks, singles, and full albums from VEXO Music Entertainment.",
+          "selectedAlbumIds": [
+            "alb-2",
+            "alb-bhartar",
+            "alb-1",
+            "alb-3"
+          ],
+          "releasesLimit": 4,
+          "artistsHeading": "FEATURED ARTISTS",
+          "artistsSubtitle": "Discover the visionary producers, vocalists, and composers driving our sonic movement.",
+          "featuredArtistIds": [
+            "art-2",
+            "art-rbeer",
+            "art-3",
+            "art-1"
+          ],
+          "eventsHeading": "FEATURED EVENTS & TOUR",
+          "eventsSubtitle": "Experience the raw energy of VEXO live across premier concert halls and festival stadiums globally.",
+          "featuredEventIds": [
+            "evt-1",
+            "evt-2",
+            "evt-3",
+            "evt-4"
+          ],
+          "videosHeading": "OFFICIAL VIDEO PRODUCTIONS",
+          "videosSubtitle": "Watch high-definition 4K music videos, studio recordings, live stadium performances, and visualizers.",
+          "featuredVideoIds": [
+            "vid-1",
+            "vid-bhartar",
+            "vid-2",
+            "vid-3"
+          ],
+          "statsArtistsCount": "10+",
+          "statsReleasesCount": "50+",
+          "statsProjectsCount": "100+",
+          "statsTotalStreams": "1.2M+",
+          "statsGlobalReach": "45+ Countries",
+          "aboutBadge": "ABOUT VEXO",
+          "aboutHeading": "VEXO MUSIC ENTERTAINMENT PVT. LTD.",
+          "aboutDescription": "Pioneering original soundscapes, artist management, and digital distribution for the next generation. VEXO Music Entertainment Pvt. Ltd. is a premier music agency and record label headquartered in Jaipur, Rajasthan. We specialize in producing chart-topping commercial tracks, high-concept audio visualizers, and empowering recording artists with global digital distribution.",
+          "aboutImage": "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1200&q=80",
+          "finalCtaBadge": "READY TO COLLABORATE?",
+          "finalCtaHeading": "LET'S CREATE SOMETHING ICONIC.",
+          "finalCtaDescription": "Ready to bring your sonic or visual project to life? Collaborate with our team of elite sound engineers, music directors, and producers.",
+          "finalCtaButtonLabel": "START A PROJECT",
+          "finalCtaButtonUrl": "/contact",
+          "finalCtaSecondaryLabel": "CONTACT VEXO",
+          "finalCtaSecondaryUrl": "/contact",
+          "reviewsBadge": "TESTIMONIALS & TRUST",
+          "reviewsHeading": "VOICES OF EXCELLENCE",
+          "reviewsSubtitle": "What artists, visionary couples, and industry partners say about producing with VEXO.",
+          "reviews": [
+            {
+              "id": "rev-1",
+              "clientName": "test review 1 ",
+              "roleOrProject": "Lead Vocalist • \"Satane Lage Ho\"",
+              "rating": 3,
+              "reviewText": "Working with VEXO Music on \"Satane Lage Ho\" was a transformative experience. Their studio engineering, arrangement sensibilities, and dedication to visual storytelling elevated our folk release to international chart standards.",
+              "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80",
+              "category": "Music Production",
+              "verified": true,
+              "date": "August 2026"
+            },
+            {
+              "id": "rev-2",
+              "clientName": "test review 2 ",
+              "roleOrProject": "Royal Pre-Wedding Shoot • Jaipur Forts",
+              "rating": 5,
+              "reviewText": "The cinematic pre-wedding film produced by VEXO looked like a Bollywood period epic. From synchronized drone choreography over Nahargarh Fort to the original background score they composed for us, it was beyond our wildest dreams.",
+              "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80",
+              "category": "Wedding & Film",
+              "verified": true,
+              "date": "September 2026"
+            },
+            {
+              "id": "rev-3",
+              "clientName": "test review 3",
+              "roleOrProject": "Executive Producer • Desert Storm Festival",
+              "rating": 5,
+              "reviewText": "VEXO handled live audio engineering, multi-camera 4K visual feeds, and headline artist management for our 15,000-attendee festival with surgical precision. The sound was pristine and unforgettable.",
+              "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80",
+              "category": "Artist Management",
+              "verified": true,
+              "date": "July 2026"
+            },
+            {
+              "id": "rev-4",
+              "clientName": "test review 4 ",
+              "roleOrProject": "Destination Pre-Wedding • Udaipur Lakes",
+              "rating": 5,
+              "reviewText": "Their signature package was worth every rupee. The team took care of luxury logistics, custom styling, multi-camera 4K drone reels, and delivered the finished cut in record time. Every guest was mesmerized.",
+              "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80",
+              "category": "Wedding & Film",
+              "verified": true,
+              "date": "June 2026"
+            },
+            {
+              "id": "rev-5",
+              "clientName": "test review 5 ",
+              "roleOrProject": "Singer-Songwriter • \"Bhartar\"",
+              "rating": 5,
+              "reviewText": "The creative freedom and sonic power VEXO brings is unmatched. The production on \"Bhartar\" hit millions of streams within weeks. Their mixing, mastering, and global DSP distribution network are best-in-class.",
+              "avatarUrl": "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=300&q=80",
+              "category": "Music Production",
+              "verified": true,
+              "date": "August 2026"
+            },
+            {
+              "id": "rev-6",
+              "clientName": "test review 6",
+              "roleOrProject": "Indie Artist • Debut EP Production",
+              "rating": 5,
+              "reviewText": "As an independent musician, finding a team that respects your vision while providing world-class Dolby Atmos mastering and visualizer production is rare. VEXO is the definitive home for serious artists.",
+              "avatarUrl": "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=300&q=80",
+              "category": "Music Production",
+              "verified": true,
+              "date": "May 2026"
+            }
+          ]
+        }
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-edb8e7adb9a32467",
+      "createdAt": "2026-09-22T11:15:24.184Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-45822bcfc340b129",
+      "createdAt": "2026-09-22T10:59:30.476Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-cf76c523f87c42f1",
+      "createdAt": "2026-09-22T10:56:19.056Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "node",
+      "id": "log-9f5c8e448dec1ad7",
+      "createdAt": "2026-09-22T10:49:34.170Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "ADMIN_LOGIN",
+      "entityType": "AdminUser",
+      "entityId": "admin-super-1",
+      "details": {
+        "email": "admin@vexomusic.com"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "node",
+      "id": "log-7dc248f0087ade95",
+      "createdAt": "2026-09-22T10:49:34.156Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-f15b221f1a4e7fc8",
+      "createdAt": "2026-09-22T10:46:25.767Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-ec56e0d98c12790b",
+      "createdAt": "2026-09-22T10:40:35.297Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "ADMIN_LOGIN",
+      "entityType": "AdminUser",
+      "entityId": "admin-super-1",
+      "details": {
+        "email": "admin@vexomusic.com"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "node",
+      "id": "log-9f7d0522cd35b888",
+      "createdAt": "2026-09-22T10:39:17.225Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "ADMIN_LOGIN",
+      "entityType": "AdminUser",
+      "entityId": "admin-super-1",
+      "details": {
+        "email": "admin@vexomusic.com"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "node",
+      "id": "log-4f8fb10828cffa12",
+      "createdAt": "2026-09-22T10:38:58.846Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "ADMIN_LOGIN",
+      "entityType": "AdminUser",
+      "entityId": "admin-super-1",
+      "details": {
+        "email": "admin@vexomusic.com"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "node",
+      "id": "log-b182310c05cfb991",
+      "createdAt": "2026-09-22T10:37:36.754Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "ADMIN_LOGIN",
+      "entityType": "AdminUser",
+      "entityId": "admin-super-1",
+      "details": {
+        "email": "admin@vexomusic.com"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "node",
+      "id": "log-ff0d2e63558053f4",
+      "createdAt": "2026-09-22T10:37:27.642Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "ADMIN_LOGIN",
+      "entityType": "AdminUser",
+      "entityId": "admin-super-1",
+      "details": {
+        "email": "admin@vexomusic.com"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "node",
+      "id": "log-052021109b524e54",
+      "createdAt": "2026-09-22T10:37:21.794Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-fc76c95416348439",
+      "createdAt": "2026-09-22T10:37:13.857Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-9fdf85c6183e107b",
+      "createdAt": "2026-09-22T10:35:25.065Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-37faae57841094f6",
+      "createdAt": "2026-09-22T10:23:52.091Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-836e12771293683f",
+      "createdAt": "2026-09-22T10:23:02.441Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "ADMIN_LOGIN",
+      "entityType": "AdminUser",
+      "entityId": "admin-super-1",
+      "details": {
+        "email": "admin@vexomusic.com"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT; Windows NT 10.0; en-US) WindowsPowerShell/5.1.26100.9444",
+      "id": "log-ab059bc51d07cd1b",
+      "createdAt": "2026-09-22T10:18:06.914Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_HOMEPAGE_CMS",
+      "entityType": "Homepage",
+      "entityId": "homepage-singleton",
+      "details": {
+        "updates": {
+          "heroTagline": "Pioneering Original Soundscapes & Entertainment",
+          "heroHeadline": "vexo entertainment pvt limited",
+          "heroSubtitle": "VEXO Music Entertainment is a global record label, high-end audio-visual production powerhouse, and artist development agency.",
+          "heroBgImage": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=2000&q=80",
+          "heroBgMedia": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=2000&q=80",
+          "featuredVideoId": "PsmXAUKjR5Y",
+          "heroCtaText": "EXPLORE RELEASES",
+          "heroCtaUrl": "/music",
+          "heroSecondaryCtaText": "STUDIO SERVICES",
+          "heroSecondaryCtaUrl": "/services",
+          "marqueeText": "LATEST RELEASE: \"BHARTAR\" BY R BEER & RASHMI NISHAD — STREAMING NOW ON ALL MAJOR DSPS",
+          "releasesHeading": "LATEST RELEASES",
+          "releasesSubtitle": "Explore the newest original tracks, singles, and full albums from VEXO Music Entertainment.",
+          "selectedAlbumIds": [
+            "alb-2",
+            "alb-bhartar",
+            "alb-1",
+            "alb-3"
+          ],
+          "releasesLimit": 4,
+          "artistsHeading": "FEATURED ARTISTS",
+          "artistsSubtitle": "Discover the visionary producers, vocalists, and composers driving our sonic movement.",
+          "featuredArtistIds": [
+            "art-2",
+            "art-rbeer",
+            "art-3",
+            "art-1"
+          ],
+          "eventsHeading": "FEATURED EVENTS & TOUR",
+          "eventsSubtitle": "Experience the raw energy of VEXO live across premier concert halls and festival stadiums globally.",
+          "featuredEventIds": [
+            "evt-1",
+            "evt-2",
+            "evt-3",
+            "evt-4"
+          ],
+          "videosHeading": "OFFICIAL VIDEO PRODUCTIONS",
+          "videosSubtitle": "Watch high-definition 4K music videos, studio recordings, live stadium performances, and visualizers.",
+          "featuredVideoIds": [
+            "vid-1",
+            "vid-bhartar",
+            "vid-2",
+            "vid-3"
+          ],
+          "statsArtistsCount": "10+",
+          "statsReleasesCount": "50+",
+          "statsProjectsCount": "100+",
+          "statsTotalStreams": "1.2M+",
+          "statsGlobalReach": "45+ Countries",
+          "aboutBadge": "ABOUT VEXO",
+          "aboutHeading": "VEXO MUSIC ENTERTAINMENT PVT. LTD.",
+          "aboutDescription": "Pioneering original soundscapes, artist management, and digital distribution for the next generation. VEXO Music Entertainment Pvt. Ltd. is a premier music agency and record label headquartered in Jaipur, Rajasthan. We specialize in producing chart-topping commercial tracks, high-concept audio visualizers, and empowering recording artists with global digital distribution.",
+          "aboutImage": "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1200&q=80",
+          "finalCtaBadge": "READY TO COLLABORATE?",
+          "finalCtaHeading": "LET'S CREATE SOMETHING ICONIC.",
+          "finalCtaDescription": "Ready to bring your sonic or visual project to life? Collaborate with our team of elite sound engineers, music directors, and producers.",
+          "finalCtaButtonLabel": "START A PROJECT",
+          "finalCtaButtonUrl": "/contact",
+          "finalCtaSecondaryLabel": "CONTACT VEXO",
+          "finalCtaSecondaryUrl": "/contact"
+        }
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-8291a74fdc3ac3c2",
+      "createdAt": "2026-09-22T09:46:34.812Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-5181ea8acffbd15c",
+      "createdAt": "2026-09-22T09:45:42.952Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-0728ef04c6f8ada0",
+      "createdAt": "2026-09-22T09:40:59.955Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-7fd9858544a60e51",
+      "createdAt": "2026-09-22T09:28:42.484Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-9d3241ec9b6373d6",
+      "createdAt": "2026-09-22T09:27:17.396Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-9bcd4ccf19a4515f",
+      "createdAt": "2026-09-22T09:24:36.753Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-69f915309d225aa4",
+      "createdAt": "2026-09-22T09:22:31.305Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-678a6faeab8c3be4",
+      "createdAt": "2026-09-22T09:21:49.312Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "ADMIN_LOGIN",
+      "entityType": "AdminUser",
+      "entityId": "admin-super-1",
+      "details": {
+        "email": "admin@vexomusic.com"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-dee1649f6cd176da",
+      "createdAt": "2026-09-22T09:21:40.958Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "node",
+      "id": "log-616073a2ab9c7ac4",
+      "createdAt": "2026-09-22T09:13:53.218Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "ADMIN_LOGIN",
+      "entityType": "AdminUser",
+      "entityId": "admin-super-1",
+      "details": {
+        "email": "admin@vexomusic.com"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "node",
+      "id": "log-f7cea3e078b41dc3",
+      "createdAt": "2026-09-22T09:13:53.206Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-5040f5b06cb8a291",
+      "createdAt": "2026-09-22T08:31:43.433Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-b447de6d0be48a61",
+      "createdAt": "2026-09-22T08:30:48.645Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-c3436016627588cd",
+      "createdAt": "2026-09-22T08:30:15.532Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-735b2e0768fa7c73",
+      "createdAt": "2026-09-22T08:29:47.950Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-1c5a30838950725b",
+      "createdAt": "2026-09-22T08:22:26.573Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-5724e9a14c1c84a3",
+      "createdAt": "2026-09-22T08:21:57.219Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-b62282d670f9c33e",
+      "createdAt": "2026-09-22T08:21:16.187Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-ca0a6210878f1835",
+      "createdAt": "2026-09-22T07:30:55.407Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-760f2b0672b10721",
+      "createdAt": "2026-09-22T07:14:14.858Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-be4fc0dd774e903a",
+      "createdAt": "2026-09-22T07:12:52.733Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-8e10ec211b73b576",
+      "createdAt": "2026-09-22T07:12:37.353Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "node",
+      "id": "log-4015e3752c3babae",
+      "createdAt": "2026-09-22T06:56:46.482Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "ADMIN_LOGIN",
+      "entityType": "AdminUser",
+      "entityId": "admin-super-1",
+      "details": {
+        "email": "admin@vexomusic.com"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "node",
+      "id": "log-a0593afbd48f8510",
+      "createdAt": "2026-09-22T06:56:46.467Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "node",
+      "id": "log-007ca53bf8a95ad0",
+      "createdAt": "2026-09-22T06:56:38.389Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "ADMIN_LOGIN",
+      "entityType": "AdminUser",
+      "entityId": "admin-super-1",
+      "details": {
+        "email": "admin@vexomusic.com"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "node",
+      "id": "log-2f37ca627a057a3c",
+      "createdAt": "2026-09-22T06:56:38.374Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "ADMIN_LOGIN",
+      "entityType": "AdminUser",
+      "entityId": "admin-super-1",
+      "details": {
+        "email": "admin@vexomusic.com"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "node",
+      "id": "log-45e740429946496f",
+      "createdAt": "2026-09-22T06:56:31.335Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "ADMIN_LOGIN",
+      "entityType": "AdminUser",
+      "entityId": "admin-super-1",
+      "details": {
+        "email": "admin@vexomusic.com"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "node",
+      "id": "log-270198c46b38088e",
+      "createdAt": "2026-09-22T06:56:25.014Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_SITE_SETTINGS",
+      "entityType": "SiteSettings",
+      "entityId": "site-settings-singleton",
+      "details": {
+        "updates": {
+          "id": "site-settings-singleton",
+          "siteName": "VEXO Music Entertainment Pvt. Ltd.",
+          "siteDescription": "Premier record label, studio production house, and artist management company.",
+          "logoUrl": "/logo.svg",
+          "faviconUrl": "/favicon.ico",
+          "contactEmail": "contact@vexomusic.com",
+          "contactPhone": "+91 72399 99966",
+          "officeAddress": "SKY CROWN, Office No. 205  Chordiya City, Kamla Nehru Nagar, Ajmer Road  Jaipur, Pin Code- 302021, Rajasthan, India",
+          "copyrightText": "© 2026 VEXO Music Entertainment Pvt. Ltd. All rights reserved.",
+          "socialSpotify": "https://spotify.com",
+          "socialYoutube": "https://youtube.com",
+          "socialInstagram": "https://instagram.com",
+          "socialTwitter": "https://twitter.com",
+          "maintenanceMode": false,
+          "updatedAt": "2026-08-18T05:58:38.923Z"
+        }
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-13535a97428aebb3",
+      "createdAt": "2026-09-22T06:32:35.903Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_SITE_SETTINGS",
+      "entityType": "SiteSettings",
+      "entityId": "site-settings-singleton",
+      "details": {
+        "updates": {
+          "id": "site-settings-singleton",
+          "siteName": "VEXO Music Entertainment Pvt. Ltd.",
+          "siteDescription": "Premier record label, studio production house, and artist management company.",
+          "logoUrl": "/logo.svg",
+          "faviconUrl": "/favicon.ico",
+          "contactEmail": "contact@vexomusic.com",
+          "contactPhone": "+91 72399 99966",
+          "officeAddress": "SKY CROWN, Office No. 205  Chordiya City, Kamla Nehru Nagar, Ajmer Road  Jaipur, Pin Code- 302021, Rajasthan, India",
+          "copyrightText": "© 2026 VEXO Music Entertainment Pvt. Ltd. All rights reserved.",
+          "socialSpotify": "https://spotify.com",
+          "socialYoutube": "https://youtube.com",
+          "socialInstagram": "https://instagram.com",
+          "socialTwitter": "https://twitter.com",
+          "maintenanceMode": false,
+          "updatedAt": "2026-08-18T05:58:38.923Z"
+        }
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-1ceba6f017ad5cc0",
+      "createdAt": "2026-09-22T06:30:38.918Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_SITE_SETTINGS",
+      "entityType": "SiteSettings",
+      "entityId": "site-settings-singleton",
+      "details": {
+        "updates": {
+          "id": "site-settings-singleton",
+          "siteName": "VEXO Music Entertainment Pvt. Ltd.",
+          "siteDescription": "Premier record label, studio production house, and artist management company.",
+          "logoUrl": "/logo.svg",
+          "faviconUrl": "/favicon.ico",
+          "contactEmail": "contact@vexomusic.com",
+          "contactPhone": "+91 72399 99966",
+          "officeAddress": "SKY CROWN, Office No. 205  Chordiya City, Kamla Nehru Nagar, Ajmer Road  Jaipur, Pin Code- 302021, Rajasthan, India",
+          "copyrightText": "© 2026 VEXO Music Entertainment Pvt. Ltd. All rights reserved.",
+          "socialSpotify": "https://spotify.com",
+          "socialYoutube": "https://youtube.com",
+          "socialInstagram": "https://instagram.com",
+          "socialTwitter": "https://twitter.com",
+          "maintenanceMode": false,
+          "updatedAt": "2026-08-18T05:58:38.923Z"
+        }
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-076bb81e1159104a",
+      "createdAt": "2026-09-22T06:29:08.438Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "UPDATE_SITE_SETTINGS",
+      "entityType": "SiteSettings",
+      "entityId": "site-settings-singleton",
+      "details": {
+        "updates": {
+          "id": "site-settings-singleton",
+          "siteName": "VEXO Music Entertainment Pvt. Ltd.",
+          "siteDescription": "Premier record label, studio production house, and artist management company.",
+          "logoUrl": "/logo.svg",
+          "faviconUrl": "/favicon.ico",
+          "contactEmail": "contact@vexomusic.com",
+          "contactPhone": "+91 72399 99966",
+          "officeAddress": "SKY CROWN, Office No. 205  Chordiya City, Kamla Nehru Nagar, Ajmer Road  Jaipur, Pin Code- 302021, Rajasthan, India",
+          "copyrightText": "© 2026 VEXO Music Entertainment Pvt. Ltd. All rights reserved.",
+          "socialSpotify": "https://spotify.com",
+          "socialYoutube": "https://youtube.com",
+          "socialInstagram": "https://instagram.com",
+          "socialTwitter": "https://twitter.com",
+          "maintenanceMode": false,
+          "updatedAt": "2026-08-18T05:58:38.923Z"
+        }
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-38cde0aa6fa7a593",
+      "createdAt": "2026-09-22T06:28:18.856Z"
+    },
+    {
+      "adminUserId": "admin-super-1",
+      "adminUserName": "VEXO Executive Admin",
+      "action": "ADMIN_LOGIN",
+      "entityType": "AdminUser",
+      "entityId": "admin-super-1",
+      "details": {
+        "email": "admin@vexomusic.com"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36 Edg/153.0.0.0",
+      "id": "log-9edfd19e2542cd51",
+      "createdAt": "2026-09-22T06:22:44.806Z"
+    },
     {
       "adminUserId": "admin-super-1",
       "adminUserName": "VEXO Executive Admin",
@@ -2193,7 +5158,8 @@
       "instagramUrl": "https://www.instagram.com/vexoweddingstudio",
       "location": "Jaipur • Udaipur • Destination Shoots Across India",
       "whatsappNumber": "917239999966",
-      "experienceYears": "8+ Years of Excellence"
+      "experienceYears": "8+ Years of Excellence",
+      "heroBgImage": "/images/pre-wedding/hero-bride.jpg"
     },
     "packages": [
       {
@@ -2207,7 +5173,7 @@
         "highlightText": "Ideal for intimate, heartfelt pre-wedding moments with cinematic finesse.",
         "photography": {
           "photographersCount": "1 Professional Photographer",
-          "cameraSetup": "1 Photography Camera Setup",
+          "cameraSetup": "",
           "details": [
             "1 Professional Photographer",
             "1 Photography Camera",
@@ -2216,7 +5182,7 @@
         },
         "cinematography": {
           "cinematographersCount": "1 Cinematographer",
-          "cameraSetup": "1 Professional Cinema Camera",
+          "cameraSetup": "",
           "details": [
             "1 Cinematographer",
             "1 Professional Cinema Camera",
@@ -2224,29 +5190,28 @@
           ]
         },
         "deliverables": [
-          "1 Pre-Wedding Cinematic Film",
-          "1 Highlight Video",
           "2 Instagram Reels",
           "Professionally Edited Photos",
           "Basic Colour Grading"
         ],
         "shoot": {
           "days": "1 Day Shoot",
-          "locations": "1 Location"
-        }
+          "locations": "Food, Travel — Paid By Client / Company"
+        },
+        "platinumExperience": []
       },
       {
         "id": "gold",
         "name": "GOLD",
         "tagline": "Our Most Popular Package",
-        "priceINR": 39999,
-        "priceDisplay": "₹39,999",
+        "priceINR": 59989,
+        "priceDisplay": "₹59,989",
         "badge": "MOST POPULAR",
         "isPopular": true,
         "highlightText": "The crowd favorite. Enhanced cinematic camera movements, sound design & bonus portraits.",
         "photography": {
           "photographersCount": "1 Professional Photographer",
-          "cameraSetup": "Premium Camera Setup",
+          "cameraSetup": "",
           "details": [
             "1 Professional Photographer",
             "Premium Camera Setup",
@@ -2255,7 +5220,7 @@
         },
         "cinematography": {
           "cinematographersCount": "1 Professional Cinematographer",
-          "cameraSetup": "Sony Cinema Camera Setup",
+          "cameraSetup": "",
           "details": [
             "1 Professional Cinematographer",
             "Sony Cinema Camera Setup",
@@ -2269,7 +5234,8 @@
           "4 Instagram Reels",
           "Professionally Edited Photos",
           "Premium Colour Grading",
-          "Cinematic Sound Design"
+          "Cinematic Sound Design",
+          "Food, Travel — Paid By Client / Company"
         ],
         "shoot": {
           "days": "1 Full Day Shoot",
@@ -2284,14 +5250,14 @@
         "id": "platinum",
         "name": "PLATINUM",
         "tagline": "THE COMPLETE PRE-WEDDING EXPERIENCE",
-        "priceINR": 59999,
-        "priceDisplay": "₹59,999",
+        "priceINR": 159999,
+        "priceDisplay": "₹1,59,999",
         "badge": "ROYAL EXPERIENCE",
         "isPopular": false,
         "highlightText": "For couples who want a premium cinematic experience with 2 shoot days & full creative direction.",
         "photography": {
           "photographersCount": "1 Professional Photographer",
-          "cameraSetup": "Premium Photography Setup",
+          "cameraSetup": "",
           "details": [
             "1 Professional Photographer",
             "Premium Photography Setup",
@@ -2301,11 +5267,10 @@
         },
         "cinematography": {
           "cinematographersCount": "2 Cinematographers",
-          "cameraSetup": "Sony Cinema Camera Setup",
+          "cameraSetup": "",
           "details": [
             "2 Cinematographers",
             "Sony Cinema Camera Setup",
-            "Gimbal Setup",
             "Cinematic Camera Movements",
             "Creative Storytelling Shots"
           ]
@@ -2315,9 +5280,9 @@
           "1 Cinematic Trailer",
           "6 Instagram Reels",
           "1 Couple Introduction Reel",
-          "Professionally Edited Photos",
           "Advanced Colour Grading",
-          "Professional Sound Design"
+          "Professional Sound Design",
+          "Food, Travel — Paid By Client / Company"
         ],
         "shoot": {
           "days": "2 Shoot Days",
@@ -2421,14 +5386,14 @@
         "category": "coverage",
         "startingPriceINR": 4000,
         "unit": "curated access",
-        "description": "Exclusive permissions, sunset scouting & hidden palace spots in Rajasthan."
+        "description": "Shoot at additional forts, lakeside pavilions or architectural wonders.(as per client requirement "
       },
       {
         "id": "opt-album",
         "name": "Album & Prints",
         "icon": "BookOpen",
         "category": "deliverable",
-        "startingPriceINR": 12000,
+        "startingPriceINR": 0,
         "unit": "per luxury book",
         "description": "Handcrafted flush-mount leather or acrylic photo book with matte Fuji crystal pages."
       }
@@ -2474,8 +5439,8 @@
       {
         "id": "addon-drone",
         "title": "Drone Coverage",
-        "priceDisplay": "Starting ₹5,000",
-        "priceINR": 5000,
+        "priceDisplay": "Starting ₹10,000",
+        "priceINR": 10000,
         "description": "Cinematic 4K aerial bird-eye views of your majestic venues and rituals.",
         "badge": "POPULAR"
       },
@@ -2498,13 +5463,13 @@
         "title": "Additional Location",
         "priceDisplay": "As per requirement",
         "priceINR": 4000,
-        "description": "Shoot at additional forts, lakeside pavilions or architectural wonders."
+        "description": "Shoot at additional forts, lakeside pavilions or architectural wonders.(as per client requirement "
       },
       {
         "id": "addon-album",
         "title": "Premium Album",
-        "priceDisplay": "As per selection",
-        "priceINR": 12000,
+        "priceDisplay": "As per requirement",
+        "priceINR": 0,
         "description": "Luxury handcrafted Italian leather album with HD non-tearable matte pages.",
         "badge": "KEEPSAKE"
       },
@@ -2537,6 +5502,371 @@
         "description": "Secondary Sony Cinema camera operator for multi-angle emotional cuts."
       }
     ],
-    "updatedAt": "2026-09-15T09:11:55.076Z"
+    "updatedAt": "2026-09-22T12:19:41.269Z",
+    "heroStats": [
+      {
+        "number": "01",
+        "title": "Fast Delivery",
+        "description": "Pre-wedding teaser within 72 hours, 4K master cinematic film & full color-graded stills in 3 weeks."
+      },
+      {
+        "number": "02",
+        "title": "Transparent Pricing",
+        "description": "Honest rates, zero hidden charges. Itemized cinema rig setups, deliverables & transparent contracts."
+      },
+      {
+        "number": "03",
+        "title": "Pan-India Coverage",
+        "description": "Destination shoots across Jaipur, Udaipur, Jodhpur, Goa, and breathtaking palace locales pan-India."
+      }
+    ],
+    "directorInfo": {
+      "name": "test 01",
+      "title": "Founder & Lead Cinematographer",
+      "quote": "I don't just capture photos: I preserve raw emotions, timeless light, and unforgettable stories.",
+      "bio": "With over 8 years of luxury wedding filmmaking across Rajasthan and royal destination palaces, our team crafts immortal cinematic stories with Hollywood DaVinci finishing and genuine human warmth.",
+      "image": "https://cdn.pixabay.com/photo/2023/06/28/11/25/man-8094211_1280.jpg",
+      "experienceYears": "8+ Years of Royal Cinema"
+    },
+    "processSteps": [
+      {
+        "step": "01",
+        "title": "Discovery Call",
+        "description": "We understand your story, fashion styling, music preferences, and curate heritage locations that resonate with your vibe."
+      },
+      {
+        "step": "02",
+        "title": "The Shoot Day",
+        "description": "A relaxed, fun, stress-free atmosphere guided with natural direction so your authentic connection shines effortlessly."
+      },
+      {
+        "step": "03",
+        "title": "The Final Art",
+        "description": "Meticulously edited, DaVinci color graded 4K cinematic film, vertical Instagram reels, and luxury flush-mount albums delivered."
+      }
+    ],
+    "videos": [
+      {
+        "id": "vid-1",
+        "title": "Royal Udaipur Romance — Pre-Wedding Film",
+        "category": "Pre-Wedding",
+        "couple": "Kabir & Meera",
+        "location": "Lake Pichola, Udaipur",
+        "videoUrl": "https://youtu.be/2HzcTCUqAEw?si=LYHyL8TL_tYA4m7h",
+        "thumbnailUrl": "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80",
+        "duration": "3:45",
+        "tag": "Cinematic 4K"
+      },
+      {
+        "id": "vid-2",
+        "title": "Jaipur Heritage Sunset — Teaser Film",
+        "category": "Teaser",
+        "couple": "Aarav & Simran",
+        "location": "Nahargarh Fort, Jaipur",
+        "videoUrl": "https://youtu.be/0R81I4JRQPc?si=2eSZzm_eZC-7Li-N",
+        "thumbnailUrl": "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=1200&q=80",
+        "duration": "1:15",
+        "tag": "Teaser"
+      },
+      {
+        "id": "vid-3",
+        "title": "Palace Symphony — Cinematic Wedding Highlights",
+        "category": "Cinematic Film",
+        "couple": "Rohan & Ananya",
+        "location": "Samode Palace, Rajasthan",
+        "videoUrl": "https://www.youtube.com/watch?v=HcEcM5AtEZ8",
+        "thumbnailUrl": "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=1200&q=80",
+        "duration": "4:20",
+        "tag": "Wedding Film"
+      },
+      {
+        "id": "vid-4",
+        "title": "Golden Hour Silhouette — Pre-Wedding Cut",
+        "category": "Pre-Wedding",
+        "couple": "Dev & Pooja",
+        "location": "Pushkar Dunes, Rajasthan",
+        "videoUrl": "https://www.youtube.com/watch?v=HcEcM5AtEZ8",
+        "thumbnailUrl": "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1200&q=80",
+        "duration": "1:00",
+        "tag": "Viral Cut"
+      }
+    ],
+    "portfolioGallery": [
+      {
+        "id": "gal-1",
+        "title": "Royal Palace Grandeur",
+        "category": "Pre-Wedding",
+        "couple": "test 1",
+        "location": "City Palace, Jaipur",
+        "imageUrl": "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=1000&q=80"
+      },
+      {
+        "id": "gal-2",
+        "title": "Sunset Silhouette by the Lake",
+        "category": "Pre-Wedding",
+        "couple": "test 2 ",
+        "location": "Jal Mahal, Jaipur",
+        "imageUrl": "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1000&q=80"
+      },
+      {
+        "id": "gal-3",
+        "title": "Intimate Vows & Marigold Rain",
+        "category": "Weddings",
+        "couple": "test 3",
+        "location": "Chomu Palace, Jaipur",
+        "imageUrl": "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=1000&q=80"
+      },
+      {
+        "id": "gal-4",
+        "title": "Monochrome Royal Portrait",
+        "category": "Portraits",
+        "couple": "test 4 ",
+        "location": "Amer Fort Courtyard",
+        "imageUrl": "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1000&q=80"
+      },
+      {
+        "id": "gal-5",
+        "title": "Candlelight Terrace Romance",
+        "category": "Pre-Wedding",
+        "couple": "test 5 ",
+        "location": "Neemrana Fort Palace",
+        "imageUrl": "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=1000&q=80"
+      },
+      {
+        "id": "gal-6",
+        "title": "The Royal Baraat Entry",
+        "category": "Weddings",
+        "couple": "test 6 ",
+        "location": "Rambagh Palace, Jaipur",
+        "imageUrl": "https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&w=1000&q=80"
+      },
+      {
+        "id": "gal-7",
+        "title": "Ethereal Bridal Grace",
+        "category": "Portraits",
+        "couple": "test 7",
+        "location": "Samode Haveli, Jaipur",
+        "imageUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=1000&q=80"
+      },
+      {
+        "id": "gal-8",
+        "title": "Timeless Twilight Walk",
+        "category": "Pre-Wedding",
+        "couple": "test 8 ",
+        "location": "Nahargarh Stepwell, Jaipur",
+        "imageUrl": "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1000&q=80"
+      }
+    ],
+    "coverageTypes": [
+      {
+        "id": "cov-1",
+        "title": "Wedding Photography",
+        "description": "Timeless candid frames, emotional rituals, and royal palace portraits captured with high-speed prime cinema glass.",
+        "tag": "Full Day Coverage",
+        "linkText": "Explore Wedding Photography"
+      },
+      {
+        "id": "cov-2",
+        "title": "Couple & Pre-Wedding",
+        "description": "Artistic couple shoots against Rajasthan heritage palaces, lakes, sand dunes, and exotic destination landscapes.",
+        "tag": "Scenic Destinations",
+        "linkText": "Explore Pre-Wedding Packages"
+      },
+      {
+        "id": "cov-3",
+        "title": "Drone & Aerial Cinematography",
+        "description": "Sweeping 4K cinematic bird-eye perspectives of majestic forts, royal processions, and lake palace sunsets.",
+        "tag": "4K Cinema Drone",
+        "linkText": "Learn About Drone Coverage"
+      }
+    ],
+    "coupleStories": [
+      {
+        "id": "story-1",
+        "title": "The Sunrise Stroll",
+        "couple": "Aarav & Simran",
+        "location": "Amer Fort, Jaipur",
+        "imageUrl": "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80",
+        "quote": "The calm morning light made us forget the cameras were even rolling."
+      },
+      {
+        "id": "story-2",
+        "title": "Candlelit Palace Courtyard",
+        "couple": "Kabir & Meera",
+        "location": "City Palace, Udaipur",
+        "imageUrl": "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80",
+        "quote": "Every frame felt like a scene straight out of a classic royal cinema film."
+      },
+      {
+        "id": "story-3",
+        "title": "Lakeside Whispers",
+        "couple": "Rohan & Ananya",
+        "location": "Lake Pichola, Udaipur",
+        "imageUrl": "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=800&q=80",
+        "quote": "VEXO turned our memories into timeless pieces of art we will treasure forever."
+      }
+    ],
+    "weddingDayStories": {
+      "eyebrow": "WEDDING DAY COVERAGE",
+      "heading": "Wedding Day Stories",
+      "supportingText": "Beyond the pre-wedding, we capture every emotion, ritual and celebration of your wedding day.",
+      "quote": "Every moment deserves its frame.",
+      "ctaText": "VIEW WEDDING STORIES →",
+      "ctaLink": "#portfolio-gallery",
+      "stories": [
+        {
+          "id": "wds-rituals",
+          "category": "Wedding Rituals",
+          "title": "The Sacred Varmala Symphony",
+          "location": "Rambagh Palace, Jaipur",
+          "couple": "Yuvraj & Aditi",
+          "imageUrl": "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=1400&q=85",
+          "featured": true
+        },
+        {
+          "id": "wds-candid",
+          "category": "Candid Moments",
+          "title": "Spontaneous Laughter & Joy",
+          "location": "Samode Palace Courtyard",
+          "couple": "Kabir & Radhika",
+          "imageUrl": "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=85"
+        },
+        {
+          "id": "wds-portraits",
+          "category": "Couple Portraits",
+          "title": "Heritage Palace Elegance",
+          "location": "Amer Fort, Jaipur",
+          "couple": "Aarav & Simran",
+          "imageUrl": "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=85"
+        },
+        {
+          "id": "wds-family",
+          "category": "Family & Celebrations",
+          "title": "Grand Baraat & Family Blessings",
+          "location": "Jagmandir Island, Udaipur",
+          "couple": "Kunal & Divya",
+          "imageUrl": "https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&w=800&q=85"
+        }
+      ]
+    },
+    "weddingPackages": [
+      {
+        "id": "wedding-essential",
+        "category": "WEDDING",
+        "name": "ESSENTIAL WEDDING",
+        "tagline": "For intimate wedding celebrations",
+        "priceINR": 0,
+        "priceDisplay": "Custom Quote",
+        "badge": "INTIMATE CELEBRATIONS",
+        "isPopular": false,
+        "highlightText": "Artfully curated coverage for close-knit and meaningful ceremonies.",
+        "foodTravel": "Food, Travel — Paid By Client / Company",
+        "ctaText": "Choose Essential Wedding",
+        "photography": {
+          "photographersCount": "Professional Wedding Photographer",
+          "cameraSetup": "High-Res Sony Cinema Still Rig",
+          "details": [
+            "Professional wedding photography",
+            "Candid photography",
+            "Traditional ceremony coverage"
+          ]
+        },
+        "cinematography": {
+          "cinematographersCount": "Professional Cinematographer",
+          "cameraSetup": "4K Cinema Camera Setup",
+          "details": [
+            "Wedding cinematography"
+          ]
+        },
+        "deliverables": [
+          "Professionally edited photographs",
+          "Highlight wedding film"
+        ],
+        "shoot": {
+          "days": "1 Shoot Day",
+          "locations": "Up to 1 Location"
+        }
+      },
+      {
+        "id": "wedding-signature",
+        "category": "WEDDING",
+        "name": "SIGNATURE WEDDING",
+        "tagline": "For complete wedding-day coverage",
+        "priceINR": 0,
+        "priceDisplay": "Custom Quote",
+        "badge": "MOST POPULAR",
+        "isPopular": true,
+        "highlightText": "The quintessential wedding day chronicle blending candid realism with cinema.",
+        "foodTravel": "Food, Travel — Paid By Client / Company",
+        "ctaText": "Choose Signature Wedding",
+        "photography": {
+          "photographersCount": "Professional Photographers Team",
+          "cameraSetup": "Dual Full-Frame Cinema Cameras",
+          "details": [
+            "Professional photographers",
+            "Candid + traditional photography"
+          ]
+        },
+        "cinematography": {
+          "cinematographersCount": "Professional Cinematographer",
+          "cameraSetup": "Gimbal + 4K Cinema Rig",
+          "details": [
+            "Professional cinematographer",
+            "Cinematic wedding coverage"
+          ]
+        },
+        "deliverables": [
+          "Professionally edited photos",
+          "Premium colour grading",
+          "Cinematic wedding film",
+          "Social media reels"
+        ],
+        "shoot": {
+          "days": "1–2 Shoot Days",
+          "locations": "Up to 2 Locations"
+        }
+      },
+      {
+        "id": "wedding-royal",
+        "category": "WEDDING",
+        "name": "ROYAL WEDDING",
+        "tagline": "For complete multi-event wedding coverage",
+        "priceINR": 0,
+        "priceDisplay": "Custom Quote",
+        "badge": "ROYAL LUXURY",
+        "isPopular": false,
+        "highlightText": "Multi-crew cinematic grandeur capturing every ritual and royal celebration.",
+        "foodTravel": "Food, Travel — Paid By Client / Company",
+        "ctaText": "Choose Royal Wedding",
+        "photography": {
+          "photographersCount": "Multiple Photographers Crew",
+          "cameraSetup": "Multi-Camera Sony Master Rig",
+          "details": [
+            "Multiple photographers",
+            "Premium candid photography",
+            "Traditional ceremony coverage"
+          ]
+        },
+        "cinematography": {
+          "cinematographersCount": "Multiple Cinematographers Crew",
+          "cameraSetup": "Multi-Angle Cinema & Drone Setup",
+          "details": [
+            "Multiple cinematographers",
+            "Full cinematic coverage"
+          ]
+        },
+        "deliverables": [
+          "Wedding teaser",
+          "Full wedding film",
+          "Multiple Instagram reels",
+          "Premium colour grading",
+          "Professional sound design"
+        ],
+        "shoot": {
+          "days": "2–3 Shoot Days",
+          "locations": "Multiple Locations"
+        }
+      }
+    ]
   }
 }

@@ -17,6 +17,10 @@ import {
   Eye,
   ChevronLeft,
   ChevronRight,
+  Star,
+  Plus,
+  Quote,
+  MessageSquareQuote,
 } from 'lucide-react';
 import {
   adminHomepageApi,
@@ -36,6 +40,7 @@ type TabKey =
   | 'events'
   | 'videos'
   | 'stats'
+  | 'reviews'
   | 'about'
   | 'finalCta';
 
@@ -170,6 +175,12 @@ export const AdminHomepagePage: React.FC = () => {
     finalCtaButtonUrl: '/contact',
     finalCtaSecondaryLabel: 'CONTACT VEXO',
     finalCtaSecondaryUrl: '/contact',
+
+    // Reviews
+    reviewsBadge: 'TESTIMONIALS & TRUST',
+    reviewsHeading: 'VOICES OF EXCELLENCE',
+    reviewsSubtitle: 'What artists, visionary couples, and industry partners say about producing with VEXO.',
+    reviews: [] as any[],
   });
 
   const fetchInitialData = async () => {
@@ -254,6 +265,11 @@ export const AdminHomepagePage: React.FC = () => {
           finalCtaButtonUrl: d.finalCtaButtonUrl || '/contact',
           finalCtaSecondaryLabel: d.finalCtaSecondaryLabel || 'CONTACT VEXO',
           finalCtaSecondaryUrl: d.finalCtaSecondaryUrl || '/contact',
+
+          reviewsBadge: d.reviewsBadge || 'TESTIMONIALS & TRUST',
+          reviewsHeading: d.reviewsHeading || 'VOICES OF EXCELLENCE',
+          reviewsSubtitle: d.reviewsSubtitle || 'What artists, visionary couples, and industry partners say about producing with VEXO.',
+          reviews: Array.isArray(d.reviews) ? d.reviews : [],
         });
       }
     } catch (err: any) {
@@ -314,6 +330,54 @@ export const AdminHomepagePage: React.FC = () => {
     });
   };
 
+  // Review CRUD handlers
+  const handleAddReview = () => {
+    setFormData((prev: any) => ({
+      ...prev,
+      reviews: [
+        ...(prev.reviews || []),
+        {
+          id: `rev-${Date.now()}`,
+          clientName: 'New Client / Artist',
+          roleOrProject: 'Music Single / Commercial Production',
+          rating: 5,
+          reviewText: 'Exceptional sonic craftsmanship and visual brilliance. Working with the VEXO team exceeded all of our expectations.',
+          avatarUrl: '',
+          category: 'Music Production',
+          verified: true,
+          date: new Date().toLocaleDateString('en-US', { month: 'long', year: 'numeric' }),
+        },
+      ],
+    }));
+  };
+
+  const handleUpdateReview = (index: number, field: string, value: any) => {
+    setFormData((prev: any) => {
+      const updated = [...(prev.reviews || [])];
+      updated[index] = { ...updated[index], [field]: value };
+      return { ...prev, reviews: updated };
+    });
+  };
+
+  const handleRemoveReview = (index: number) => {
+    setFormData((prev: any) => {
+      const updated = [...(prev.reviews || [])];
+      updated.splice(index, 1);
+      return { ...prev, reviews: updated };
+    });
+  };
+
+  const handleMoveReview = (index: number, direction: 'up' | 'down') => {
+    setFormData((prev: any) => {
+      const list = [...(prev.reviews || [])];
+      const target = direction === 'up' ? index - 1 : index + 1;
+      if (target < 0 || target >= list.length) return prev;
+      const [item] = list.splice(index, 1);
+      list.splice(target, 0, item);
+      return { ...prev, reviews: list };
+    });
+  };
+
   const tabs: { id: TabKey; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
     { id: 'hero', label: 'Hero Banner', icon: Disc3 },
     { id: 'releases', label: 'Latest Releases', icon: Music },
@@ -321,6 +385,7 @@ export const AdminHomepagePage: React.FC = () => {
     { id: 'events', label: 'Featured Events', icon: Calendar },
     { id: 'videos', label: 'Featured Videos', icon: Video },
     { id: 'stats', label: 'Live Statistics', icon: TrendingUp },
+    { id: 'reviews', label: 'Reviews & Testimonials', icon: Star },
     { id: 'about', label: 'About Section', icon: Sparkles },
     { id: 'finalCta', label: 'Final CTA', icon: Send },
   ];
@@ -1318,6 +1383,313 @@ export const AdminHomepagePage: React.FC = () => {
                   required
                 />
               </div>
+            </div>
+          </div>
+        )}
+
+        {/* 7. REVIEWS & TESTIMONIALS TAB */}
+        {activeTab === 'reviews' && (
+          <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-6 space-y-6 shadow-sm transition-colors">
+            <div className="border-b border-slate-200 dark:border-zinc-800/80 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white tracking-wide flex items-center gap-2">
+                  <Star className="w-4 h-4 text-amber-400 fill-amber-400" />
+                  <span>Client Reviews & Testimonials Carousel</span>
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-zinc-500 mt-1">
+                  Manage verified client reviews, ratings, and quotes displayed in the homepage carousel slider.
+                </p>
+              </div>
+
+              <button
+                type="button"
+                onClick={handleAddReview}
+                className="px-4 py-2 rounded-xl bg-vexo-red hover:bg-red-600 text-xs font-semibold text-white flex items-center gap-2 shadow-lg shadow-red-950/40 transition-all cursor-pointer hover:scale-[1.02] active:scale-[0.98] shrink-0"
+              >
+                <Plus className="w-4 h-4" />
+                <span>Add New Review</span>
+              </button>
+            </div>
+
+            {/* Section Header Controls */}
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-zinc-900/60 border border-slate-200 dark:border-zinc-800/80 space-y-4">
+              <span className="text-[11px] font-mono font-bold text-vexo-red uppercase tracking-wider block">
+                CAROUSEL SECTION HEADER
+              </span>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">
+                    BADGE TEXT
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.reviewsBadge || ''}
+                    onChange={(e) => setFormData({ ...formData, reviewsBadge: e.target.value })}
+                    placeholder="TESTIMONIALS & TRUST"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white focus:border-vexo-red focus:outline-none font-mono"
+                  />
+                </div>
+
+                <div className="space-y-1.5 sm:col-span-2">
+                  <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">
+                    HEADING TITLE *
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.reviewsHeading || ''}
+                    onChange={(e) => setFormData({ ...formData, reviewsHeading: e.target.value })}
+                    placeholder="VOICES OF EXCELLENCE"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white focus:border-vexo-red focus:outline-none font-bold"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">
+                  SUBTITLE DESCRIPTION
+                </label>
+                <input
+                  type="text"
+                  value={formData.reviewsSubtitle || ''}
+                  onChange={(e) => setFormData({ ...formData, reviewsSubtitle: e.target.value })}
+                  placeholder="What artists, visionary couples, and industry partners say about producing with VEXO."
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white focus:border-vexo-red focus:outline-none"
+                />
+              </div>
+            </div>
+
+            {/* Testimonials List */}
+            <div className="space-y-4">
+              <div className="flex items-center justify-between">
+                <span className="text-xs font-mono font-bold text-slate-800 dark:text-zinc-300">
+                  ALL TESTIMONIALS ({formData.reviews?.length || 0})
+                </span>
+                <span className="text-[11px] font-mono text-slate-500 dark:text-zinc-500">
+                  Items appear in the public carousel in this order
+                </span>
+              </div>
+
+              {(!formData.reviews || formData.reviews.length === 0) ? (
+                <div className="p-8 rounded-xl border border-dashed border-slate-300 dark:border-zinc-800 text-center space-y-3">
+                  <MessageSquareQuote className="w-8 h-8 text-zinc-600 mx-auto" />
+                  <p className="text-xs text-zinc-400 font-mono">No reviews found. Add your first testimonial to showcase client trust.</p>
+                  <button
+                    type="button"
+                    onClick={handleAddReview}
+                    className="px-4 py-2 rounded-xl bg-zinc-800 hover:bg-zinc-700 text-xs text-white inline-flex items-center gap-2 cursor-pointer"
+                  >
+                    <Plus className="w-3.5 h-3.5" />
+                    <span>Add First Review</span>
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {formData.reviews.map((rev: any, idx: number) => {
+                    const rating = typeof rev.rating === 'number' ? rev.rating : 5;
+                    return (
+                      <div
+                        key={rev.id || idx}
+                        className="p-5 rounded-xl bg-slate-50/70 dark:bg-zinc-900/70 border border-slate-200 dark:border-zinc-800/80 space-y-4 transition-all"
+                      >
+                        {/* Review Item Header */}
+                        <div className="flex items-center justify-between gap-2 pb-3 border-b border-slate-200 dark:border-zinc-800">
+                          <div className="flex items-center gap-3">
+                            <span className="w-6 h-6 rounded-lg bg-vexo-red/10 border border-vexo-red/30 text-vexo-red text-xs font-mono font-bold flex items-center justify-center">
+                              #{idx + 1}
+                            </span>
+                            <div className="flex items-center gap-2">
+                              <span className="text-xs font-bold text-slate-900 dark:text-white">
+                                {rev.clientName || 'Untitled Client'}
+                              </span>
+                              {rev.category && (
+                                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-slate-200 dark:bg-zinc-800 text-slate-700 dark:text-zinc-400">
+                                  {rev.category}
+                                </span>
+                              )}
+                              {rev.verified && (
+                                <span className="px-2 py-0.5 rounded-full text-[10px] font-mono bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 flex items-center gap-1">
+                                  <Check className="w-2.5 h-2.5" />
+                                  <span>Verified</span>
+                                </span>
+                              )}
+                            </div>
+                          </div>
+
+                          <div className="flex items-center gap-1.5">
+                            {/* Move Up */}
+                            <button
+                              type="button"
+                              onClick={() => handleMoveReview(idx, 'up')}
+                              disabled={idx === 0}
+                              title="Move Earlier"
+                              className="p-1.5 rounded-lg bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-600 dark:text-zinc-400 hover:text-white hover:bg-zinc-700 disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
+                            >
+                              <ArrowUp className="w-3.5 h-3.5" />
+                            </button>
+
+                            {/* Move Down */}
+                            <button
+                              type="button"
+                              onClick={() => handleMoveReview(idx, 'down')}
+                              disabled={idx === (formData.reviews?.length || 0) - 1}
+                              title="Move Later"
+                              className="p-1.5 rounded-lg bg-white dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 text-slate-600 dark:text-zinc-400 hover:text-white hover:bg-zinc-700 disabled:opacity-30 cursor-pointer disabled:cursor-not-allowed"
+                            >
+                              <ArrowDown className="w-3.5 h-3.5" />
+                            </button>
+
+                            {/* Delete */}
+                            <button
+                              type="button"
+                              onClick={() => handleRemoveReview(idx)}
+                              title="Delete Review"
+                              className="p-1.5 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 hover:bg-red-500/20 cursor-pointer"
+                            >
+                              <Trash2 className="w-3.5 h-3.5" />
+                            </button>
+                          </div>
+                        </div>
+
+                        {/* Fields Grid */}
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                          <div className="space-y-1">
+                            <label className="text-[11px] font-mono text-slate-600 dark:text-zinc-400">
+                              CLIENT / ARTIST NAME *
+                            </label>
+                            <input
+                              type="text"
+                              value={rev.clientName || ''}
+                              onChange={(e) => handleUpdateReview(idx, 'clientName', e.target.value)}
+                              placeholder="e.g. Rashmi Nishad"
+                              className="w-full px-3 py-2 rounded-lg bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white focus:border-vexo-red focus:outline-none font-bold"
+                              required
+                            />
+                          </div>
+
+                          <div className="space-y-1">
+                            <label className="text-[11px] font-mono text-slate-600 dark:text-zinc-400">
+                              ROLE OR PROJECT TAG *
+                            </label>
+                            <input
+                              type="text"
+                              value={rev.roleOrProject || ''}
+                              onChange={(e) => handleUpdateReview(idx, 'roleOrProject', e.target.value)}
+                              placeholder="e.g. Lead Vocalist • &quot;Satane Lage Ho&quot;"
+                              className="w-full px-3 py-2 rounded-lg bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white focus:border-vexo-red focus:outline-none"
+                              required
+                            />
+                          </div>
+
+                          <div className="space-y-1">
+                            <label className="text-[11px] font-mono text-slate-600 dark:text-zinc-400">
+                              SERVICE CATEGORY
+                            </label>
+                            <input
+                              type="text"
+                              value={rev.category || ''}
+                              onChange={(e) => handleUpdateReview(idx, 'category', e.target.value)}
+                              placeholder="Music Production / Wedding & Film / etc."
+                              list="categories-list"
+                              className="w-full px-3 py-2 rounded-lg bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white focus:border-vexo-red focus:outline-none"
+                            />
+                            <datalist id="categories-list">
+                              <option value="Music Production" />
+                              <option value="Wedding & Film" />
+                              <option value="Artist Management" />
+                              <option value="Live Audio & Staging" />
+                              <option value="Commercial Audio" />
+                            </datalist>
+                          </div>
+                        </div>
+
+                        {/* Rating, Verified, Date */}
+                        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-1">
+                          <div className="space-y-1.5">
+                            <label className="text-[11px] font-mono text-slate-600 dark:text-zinc-400">
+                              STAR RATING ({rating} / 5)
+                            </label>
+                            <div className="flex items-center gap-1.5 py-1">
+                              {[1, 2, 3, 4, 5].map((starVal) => (
+                                <button
+                                  key={starVal}
+                                  type="button"
+                                  onClick={() => handleUpdateReview(idx, 'rating', starVal)}
+                                  className="p-1 rounded hover:scale-125 transition-transform cursor-pointer"
+                                  title={`Set ${starVal} Star${starVal > 1 ? 's' : ''}`}
+                                >
+                                  <Star
+                                    className={`w-5 h-5 ${
+                                      starVal <= rating
+                                        ? 'text-amber-400 fill-amber-400'
+                                        : 'text-zinc-600'
+                                    }`}
+                                  />
+                                </button>
+                              ))}
+                            </div>
+                          </div>
+
+                          <div className="space-y-1">
+                            <label className="text-[11px] font-mono text-slate-600 dark:text-zinc-400">
+                              DATE / PERIOD
+                            </label>
+                            <input
+                              type="text"
+                              value={rev.date || ''}
+                              onChange={(e) => handleUpdateReview(idx, 'date', e.target.value)}
+                              placeholder="e.g. August 2026"
+                              className="w-full px-3 py-2 rounded-lg bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white focus:border-vexo-red focus:outline-none"
+                            />
+                          </div>
+
+                          <div className="space-y-1.5 flex flex-col justify-end">
+                            <label className="flex items-center gap-2 cursor-pointer select-none py-2">
+                              <input
+                                type="checkbox"
+                                checked={!!rev.verified}
+                                onChange={(e) => handleUpdateReview(idx, 'verified', e.target.checked)}
+                                className="rounded border-zinc-700 text-vexo-red focus:ring-vexo-red w-4 h-4 cursor-pointer"
+                              />
+                              <span className="text-xs font-mono text-slate-800 dark:text-zinc-300">
+                                Verified Client Badge
+                              </span>
+                            </label>
+                          </div>
+                        </div>
+
+                        {/* Avatar Image URL using MediaInput */}
+                        <div>
+                          <MediaInput
+                            label="CLIENT AVATAR / PHOTO (OPTIONAL)"
+                            value={rev.avatarUrl || ''}
+                            onChange={(url) => handleUpdateReview(idx, 'avatarUrl', url)}
+                            placeholder="https://... (or select from Media Library)"
+                            allowedTypes={['image']}
+                            helperText="High-res portrait photo or couple profile image"
+                          />
+                        </div>
+
+                        {/* Review Text */}
+                        <div className="space-y-1">
+                          <label className="text-[11px] font-mono text-slate-600 dark:text-zinc-400 flex items-center gap-1.5">
+                            <Quote className="w-3 h-3 text-vexo-red" />
+                            <span>TESTIMONIAL REVIEW TEXT *</span>
+                          </label>
+                          <textarea
+                            rows={3}
+                            value={rev.reviewText || ''}
+                            onChange={(e) => handleUpdateReview(idx, 'reviewText', e.target.value)}
+                            placeholder="Share client quote about production quality, service experience, and artistic delivery..."
+                            className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white focus:border-vexo-red focus:outline-none resize-none leading-relaxed"
+                            required
+                          />
+                        </div>
+                      </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
         )}

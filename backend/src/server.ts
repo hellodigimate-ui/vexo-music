@@ -29,7 +29,20 @@ async function start() {
   try {
     // CORS plugin registration
     await server.register(cors, {
-      origin: CORS_ORIGIN === '*' ? true : [CORS_ORIGIN, 'http://localhost:5173', 'http://127.0.0.1:5173'],
+      origin: (origin, cb) => {
+        if (!origin) return cb(null, true);
+        if (
+          CORS_ORIGIN === '*' ||
+          origin === CORS_ORIGIN ||
+          origin.startsWith('http://localhost:') ||
+          origin.startsWith('http://127.0.0.1:') ||
+          origin === 'http://localhost' ||
+          origin === 'http://127.0.0.1'
+        ) {
+          return cb(null, true);
+        }
+        return cb(null, false);
+      },
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
       allowedHeaders: ['Content-Type', 'Authorization'],
       credentials: true,
