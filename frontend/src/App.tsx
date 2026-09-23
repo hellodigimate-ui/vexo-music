@@ -1,7 +1,9 @@
+import { useState } from 'react';
 import { BrowserRouter, Routes, Route, Outlet, useLocation } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Navbar, Footer } from './components/layout';
 import { ScrollToTop } from './components/common/ScrollToTop';
+import { VexoLoader } from './components/ui/VexoLoader';
 
 import { HomePage } from './pages/HomePage';
 import { MusicPage } from './pages/MusicPage';
@@ -43,9 +45,16 @@ import { ThemeProvider, ThemeTransition } from './components/theme';
 
 function PublicLayout() {
   const location = useLocation();
+  const [hasInitialBooted, setHasInitialBooted] = useState(false);
 
   return (
     <div className="min-h-screen bg-[#f8fafc] dark:bg-[#050505] text-slate-900 dark:text-white font-sans selection:bg-vexo-red selection:text-white flex flex-col transition-colors duration-300">
+      {!hasInitialBooted && (
+        <VexoLoader
+          currentPath={location.pathname}
+          onComplete={() => setHasInitialBooted(true)}
+        />
+      )}
       <Navbar />
       <main className="flex-1">
         <motion.div

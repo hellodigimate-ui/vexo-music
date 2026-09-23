@@ -2,7 +2,7 @@ import React from 'react';
 
 interface VexoLogoProps {
   className?: string;
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'sm' | 'md' | 'lg' | 'xl';
 }
 
 export const VexoLogo: React.FC<VexoLogoProps> = ({ className = '', size = 'md' }) => {
@@ -10,6 +10,7 @@ export const VexoLogo: React.FC<VexoLogoProps> = ({ className = '', size = 'md' 
     sm: 'h-8',
     md: 'h-10 sm:h-11',
     lg: 'h-13 sm:h-15',
+    xl: 'h-18 sm:h-22 md:h-26',
   };
 
   return (
