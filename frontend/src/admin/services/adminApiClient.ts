@@ -4,8 +4,9 @@
  */
 
 import { adminMockStore } from './adminMockStore';
+import { API_BASE_URL, buildApiUrl } from '../../lib/api/client';
 
-export const API_BASE_URL = import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api';
+export { API_BASE_URL };
 
 export interface AdminApiResponse<T> {
   success: boolean;
@@ -32,7 +33,7 @@ export async function adminFetch<T>(
   options: RequestInit = {}
 ): Promise<AdminApiResponse<T>> {
   const token = getAdminToken();
-  const url = `${API_BASE_URL}${endpoint.startsWith('/') ? endpoint : `/${endpoint}`}`;
+  const url = buildApiUrl(endpoint);
 
   const headers: HeadersInit = {
     'Content-Type': 'application/json',

@@ -1,5 +1,6 @@
 import { type ClassValue, clsx } from 'clsx';
 import { twMerge } from 'tailwind-merge';
+import { API_BASE_URL } from './api/client';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -22,7 +23,7 @@ export function formatNumber(num: number): string {
   return num.toString();
 }
 
-const BACKEND_HOST = (import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || 'http://localhost:4000/api').replace(/\/api\/?$/, '');
+const BACKEND_HOST = API_BASE_URL.replace(/\/api\/?$/, '');
 
 export function getMediaUrl(url?: string | null): string {
   if (!url) return '';
