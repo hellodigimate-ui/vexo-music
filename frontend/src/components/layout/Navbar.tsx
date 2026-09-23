@@ -298,6 +298,18 @@ export const Navbar: React.FC = () => {
                 </svg>
               </a>
               <a
+                href="https://facebook.com"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="apple-control-btn apple-social-fb"
+                title="Facebook"
+                aria-label="Facebook"
+              >
+                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                  <path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.043-1.5-.14-2.75-.14-2.8 0-4.75 1.7-4.75 4.9v2.6H7v4h3.25V22h3.75v-8.5z" />
+                </svg>
+              </a>
+              <a
                 href="https://www.youtube.com/@vexomusicentertainment"
                 target="_blank"
                 rel="noopener noreferrer"

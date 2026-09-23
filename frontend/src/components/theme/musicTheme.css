@@ -250,6 +250,22 @@ html.light .apple-social-x:hover svg {
   fill: #000000 !important;
 }
 
+/* 5. Facebook: Iconic Royal Blue */
+.apple-social-fb:hover,
+html.light .apple-social-fb:hover {
+  background-color: #1877F2 !important;
+  background-image: none !important;
+  border-color: #1877F2 !important;
+  color: #ffffff !important;
+  box-shadow: 0 6px 20px rgba(24, 119, 242, 0.45) !important;
+}
+
+.apple-social-fb:hover svg,
+html.light .apple-social-fb:hover svg {
+  color: #ffffff !important;
+  fill: #ffffff !important;
+}
+
 /* Round Buttons (Search & Toggle legacy fallback) */
 .apple-btn-round {
   width: 36px;

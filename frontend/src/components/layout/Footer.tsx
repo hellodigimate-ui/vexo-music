@@ -45,12 +45,12 @@ export const Footer: React.FC = () => {
     contactPhone: '',
     officeAddress: '',
     copyrightText: '',
-    socialInstagram: '',
-    socialYoutube: '',
-    socialSpotify: '',
-    socialTwitter: '',
-    socialAppleMusic: '',
-    socialFacebook: '',
+    socialInstagram: 'https://www.instagram.com/vexomusicentertainment',
+    socialFacebook: 'https://facebook.com',
+    socialYoutube: 'https://youtube.com/@vexomusicentertainment',
+    socialSpotify: 'https://spotify.com',
+    socialTwitter: 'https://x.com/vexomusicentertainment',
+    socialAppleMusic: 'https://music.apple.com',
     socialSoundcloud: '',
     footerQuickLinksHeading: 'QUICK LINKS',
     footerQuickLinks: DEFAULT_NAV_LINKS,
@@ -82,11 +82,11 @@ export const Footer: React.FC = () => {
           officeAddress: data.officeAddress || 'SKY CROWN, Office No. 205, Chordiya City, Kamla Nehru Nagar, Ajmer Road, Jaipur, Pin Code- 302021, Rajasthan, India',
           copyrightText: data.copyrightText || prev.copyrightText,
           socialInstagram: data.socialInstagram || prev.socialInstagram,
+          socialFacebook: data.socialFacebook || prev.socialFacebook || 'https://facebook.com',
           socialYoutube: data.socialYoutube || prev.socialYoutube,
           socialSpotify: data.socialSpotify || prev.socialSpotify,
           socialTwitter: data.socialTwitter || prev.socialTwitter,
-          socialAppleMusic: data.socialAppleMusic || '',
-          socialFacebook: data.socialFacebook || '',
+          socialAppleMusic: data.socialAppleMusic || prev.socialAppleMusic || '',
           socialSoundcloud: data.socialSoundcloud || '',
           footerQuickLinksHeading: data.footerQuickLinksHeading || prev.footerQuickLinksHeading,
           footerQuickLinks:
@@ -203,6 +203,21 @@ export const Footer: React.FC = () => {
                     <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
                     <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
                     <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+                  </svg>
+                </a>
+              )}
+
+              {settings.socialFacebook && (
+                <a
+                  href={settings.socialFacebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  title="Facebook"
+                  aria-label="Facebook"
+                  className="apple-control-btn apple-social-fb"
+                >
+                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                    <path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.043-1.5-.14-2.75-.14-2.8 0-4.75 1.7-4.75 4.9v2.6H7v4h3.25V22h3.75v-8.5z" />
                   </svg>
                 </a>
               )}
