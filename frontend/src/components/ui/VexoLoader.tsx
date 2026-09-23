@@ -70,18 +70,27 @@ export const VexoLoader: React.FC<VexoLoaderProps> = ({ currentPath, onComplete 
     let isMounted = true;
     const criticalPromise = getCriticalInitialPromise(currentPath);
 
+    // Safety timeout: ensure loader dismisses within 600ms even if live backend is sleeping/slow
+    const safetyTimer = setTimeout(() => {
+      if (isMounted) {
+        setIsDataReady(true);
+      }
+    }, 600);
+
     Promise.resolve(criticalPromise)
       .catch((err) => {
         console.warn('Initial data preload caught:', err);
       })
       .finally(() => {
         if (isMounted) {
+          clearTimeout(safetyTimer);
           setIsDataReady(true);
         }
       });
 
     return () => {
       isMounted = false;
+      clearTimeout(safetyTimer);
     };
   }, [currentPath]);
 

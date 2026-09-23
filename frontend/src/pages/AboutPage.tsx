@@ -16,6 +16,7 @@ import {
   TrendingUp,
   Flame,
   Zap,
+  MapPin,
 } from 'lucide-react';
 
 export const AboutPage: React.FC = () => {
@@ -114,8 +115,11 @@ export const AboutPage: React.FC = () => {
                   <div className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-[11px] font-mono text-white bg-vexo-red mb-2.5 font-bold shadow-md">
                     <Zap className="w-3.5 h-3.5 text-white" /> State of the Art Facilities
                   </div>
-                  <h4 className="text-xl sm:text-2xl font-black text-white drop-shadow-md">VEXO Flagship Recording Studio</h4>
-                  <p className="text-xs sm:text-sm text-zinc-200 mt-1 font-mono drop-shadow-sm">Jaipur, Rajasthan, India</p>
+                  <h4 className="text-xl sm:text-2xl font-black text-white drop-shadow-md">VEXO Entertainment Pvt Limited</h4>
+                  <p className="text-xs sm:text-sm text-zinc-200 mt-1 font-mono drop-shadow-sm flex items-start gap-1.5 leading-relaxed">
+                    <MapPin className="w-4 h-4 text-vexo-red shrink-0 mt-0.5" />
+                    <span>SKY CROWN, Office No. 205, Chordiya City, Kamla Nehru Nagar, Ajmer Road, Jaipur, Pin Code- 302021, Rajasthan, India</span>
+                  </p>
                 </div>
               </div>
             </div>

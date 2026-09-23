@@ -81,17 +81,16 @@ export const AboutSection: React.FC = () => {
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-vexo-red/20 rounded-full blur-3xl pointer-events-none" />
 
           {/* Bottom Badge */}
-          <div className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-black/60 backdrop-blur-md border border-white/10 flex items-center justify-between">
-            <div className="flex items-center gap-3">
-              <div className="p-2.5 rounded-xl bg-vexo-red/20 text-vexo-red-bright border border-vexo-red/30">
-                <Disc className="w-5 h-5 animate-spin" />
-              </div>
-              <div>
-                <h4 className="text-sm font-bold text-white">VEXO Flagship Studio</h4>
-                <p className="text-xs text-vexo-muted flex items-center gap-1">
-                  <MapPin className="w-3 h-3 text-vexo-red" /> Jaipur, Rajasthan, India
-                </p>
-              </div>
+          <div className="absolute bottom-6 left-6 right-6 p-4 rounded-2xl bg-black/75 backdrop-blur-md border border-white/10 flex items-start sm:items-center gap-3">
+            <div className="p-2.5 rounded-xl bg-vexo-red/20 text-vexo-red-bright border border-vexo-red/30 shrink-0 mt-0.5 sm:mt-0">
+              <Disc className="w-5 h-5 animate-spin" />
+            </div>
+            <div className="min-w-0 flex-1">
+              <h4 className="text-sm font-bold text-white tracking-wide">VEXO Entertainment Pvt Limited</h4>
+              <p className="text-xs text-vexo-muted flex items-start gap-1.5 mt-0.5 leading-relaxed">
+                <MapPin className="w-3.5 h-3.5 text-vexo-red shrink-0 mt-0.5" />
+                <span>SKY CROWN, Office No. 205, Chordiya City, Kamla Nehru Nagar, Ajmer Road, Jaipur, Pin Code- 302021, Rajasthan, India</span>
+              </p>
             </div>
           </div>
         </div>

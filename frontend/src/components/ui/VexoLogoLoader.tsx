@@ -55,19 +55,20 @@ export const VexoLogoLoader: React.FC<VexoLogoLoaderProps> = ({ currentPath, onC
   // 0: hidden | 90: V | 145: VE | 224: VEX | 300: VEXO | 420: Complete
   const [revealWidth, setRevealWidth] = useState<number>(shouldReduceMotion ? 420 : 0);
   const [accentsOpacity, setAccentsOpacity] = useState<number>(shouldReduceMotion ? 1 : 0);
-  const [isAnimationFinished, setIsAnimationFinished] = useState<boolean>(!!shouldReduceMotion);
-  const [isDataReady, setIsDataReady] = useState(false);
+  const [isAnimationFinished, setIsAnimationFinished] = useState<boolean>(false);
   const [isVisible, setIsVisible] = useState(true);
 
   const onCompleteCalled = useRef(false);
 
-  // 1. Progressive Mask Reveal Sequence: V -> VE -> VEX -> VEXO -> Completed Logo
+  // 1. Fast, cinematic progressive mask reveal sequence (~950ms total)
   useEffect(() => {
     if (shouldReduceMotion) {
       setRevealWidth(420);
       setAccentsOpacity(1);
-      setIsAnimationFinished(true);
-      return;
+      const timer = setTimeout(() => {
+        setIsAnimationFinished(true);
+      }, 150);
+      return () => clearTimeout(timer);
     }
 
     const timers: Array<ReturnType<typeof setTimeout>> = [];
@@ -76,28 +77,28 @@ export const VexoLogoLoader: React.FC<VexoLogoLoaderProps> = ({ currentPath, onC
     timers.push(
       setTimeout(() => {
         setRevealWidth(90);
-      }, 100)
+      }, 50)
     );
 
-    // Stage 2: Reveal 'VE' (holds 'V' for 300ms)
+    // Stage 2: Reveal 'VE'
     timers.push(
       setTimeout(() => {
         setRevealWidth(145);
-      }, 400)
+      }, 200)
     );
 
-    // Stage 3: Reveal 'VEX' (holds 'VE' for 300ms)
+    // Stage 3: Reveal 'VEX'
     timers.push(
       setTimeout(() => {
         setRevealWidth(224);
-      }, 700)
+      }, 350)
     );
 
-    // Stage 4: Reveal 'VEXO' (holds 'VEX' for 300ms)
+    // Stage 4: Reveal 'VEXO'
     timers.push(
       setTimeout(() => {
         setRevealWidth(300);
-      }, 1000)
+      }, 500)
     );
 
     // Stage 5: Illuminate Crown Accents & Subtitle ("ENTERTAINMENT PRIVATE LIMITED")
@@ -105,14 +106,14 @@ export const VexoLogoLoader: React.FC<VexoLogoLoaderProps> = ({ currentPath, onC
       setTimeout(() => {
         setRevealWidth(420);
         setAccentsOpacity(1);
-      }, 1280)
+      }, 650)
     );
 
-    // Stage 6: Hold complete mark and text clearly before transition (~770ms hold)
+    // Stage 6: Hold complete mark briefly (~300ms) then trigger smooth dismissal
     timers.push(
       setTimeout(() => {
         setIsAnimationFinished(true);
-      }, 2050)
+      }, 950)
     );
 
     return () => {
@@ -120,34 +121,24 @@ export const VexoLogoLoader: React.FC<VexoLogoLoaderProps> = ({ currentPath, onC
     };
   }, [shouldReduceMotion]);
 
-  // 2. Fetch/await critical initial page data
+  // 2. Pre-warm / preload critical page data in the background without blocking the loader
   useEffect(() => {
-    let isMounted = true;
-    const criticalPromise = getCriticalInitialPromise(currentPath);
-
-    Promise.resolve(criticalPromise)
-      .catch((err) => {
-        console.warn('[VexoLogoLoader] Critical data preload caught:', err);
-      })
-      .finally(() => {
-        if (isMounted) {
-          setIsDataReady(true);
-        }
+    try {
+      const criticalPromise = getCriticalInitialPromise(currentPath);
+      Promise.resolve(criticalPromise).catch((err) => {
+        console.warn('[VexoLogoLoader] Background data preload note:', err);
       });
-
-    return () => {
-      isMounted = false;
-    };
+    } catch {
+      // Non-blocking
+    }
   }, [currentPath]);
 
-  // 3. Smooth exit once both visual reveal is finished AND critical data is ready
-  const isReadyToExit = isAnimationFinished && isDataReady;
-
+  // 3. Smooth exit once visual reveal is finished - NEVER blocked by live API latency
   useEffect(() => {
-    if (isReadyToExit && isVisible) {
+    if (isAnimationFinished && isVisible) {
       setIsVisible(false);
     }
-  }, [isReadyToExit, isVisible]);
+  }, [isAnimationFinished, isVisible]);
 
   // Prevent background scroll while loading
   useEffect(() => {
@@ -174,7 +165,7 @@ export const VexoLogoLoader: React.FC<VexoLogoLoaderProps> = ({ currentPath, onC
           exit={{
             opacity: 0,
             transition: {
-              duration: shouldReduceMotion ? 0.2 : 0.42,
+              duration: shouldReduceMotion ? 0.15 : 0.28,
               ease: [0.22, 1, 0.36, 1], // Smooth, gentle fade-out
             },
           }}
