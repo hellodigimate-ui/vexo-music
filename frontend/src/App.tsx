@@ -3,7 +3,7 @@ import { BrowserRouter, Routes, Route, Outlet, useLocation } from 'react-router-
 import { motion } from 'framer-motion';
 import { Navbar, Footer } from './components/layout';
 import { ScrollToTop } from './components/common/ScrollToTop';
-import { VexoLoader } from './components/ui/VexoLoader';
+import { VexoLogoLoader } from './components/ui/VexoLogoLoader';
 
 import { HomePage } from './pages/HomePage';
 import { MusicPage } from './pages/MusicPage';
@@ -50,7 +50,7 @@ function PublicLayout() {
   return (
     <div className="min-h-screen bg-[#f8fafc] dark:bg-[#050505] text-slate-900 dark:text-white font-sans selection:bg-vexo-red selection:text-white flex flex-col transition-colors duration-300">
       {!hasInitialBooted && (
-        <VexoLoader
+        <VexoLogoLoader
           currentPath={location.pathname}
           onComplete={() => setHasInitialBooted(true)}
         />
