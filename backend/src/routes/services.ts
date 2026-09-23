@@ -1,6 +1,17 @@
-import type { FastifyPluginAsync } from 'fastify';
-import { db } from '../db/index.js';
+import type { FastifyPluginAsync, FastifyRequest, FastifyReply } from 'fastify';
+import { db, onServicesChange } from '../db/index.js';
 import type { ApiResponse, ServiceItem } from '../types/index.js';
+
+let cachedDetailedResponse: ApiResponse<ServiceItem[]> | null = null;
+
+export function invalidateServicesCache() {
+  cachedDetailedResponse = null;
+}
+
+// Invalidate cache whenever CMS admin modifies services
+onServicesChange(() => {
+  invalidateServicesCache();
+});
 
 export const serviceRoutes: FastifyPluginAsync = async (fastify) => {
   // GET /api/services
@@ -36,8 +47,17 @@ export const serviceRoutes: FastifyPluginAsync = async (fastify) => {
     return response;
   });
 
-  // GET /api/services/detailed
-  fastify.get('/services/detailed', async () => {
+  const getDetailedServicesHandler = async (_request: FastifyRequest, reply: FastifyReply) => {
+    const startTime = process.hrtime();
+
+    if (cachedDetailedResponse) {
+      const diff = process.hrtime(startTime);
+      const ms = (diff[0] * 1000 + diff[1] / 1e6).toFixed(2);
+      reply.header('X-Response-Time', `${ms}ms`);
+      reply.header('X-Cache', 'HIT');
+      return cachedDetailedResponse;
+    }
+
     const list = db.services.findMany().filter((s) => s.isActive);
     const formatted: ServiceItem[] = list.map((s, idx) => ({
       id: s.id,
@@ -69,8 +89,21 @@ export const serviceRoutes: FastifyPluginAsync = async (fastify) => {
       data: formatted,
       total: formatted.length,
     };
+
+    cachedDetailedResponse = response;
+
+    const diff = process.hrtime(startTime);
+    const ms = (diff[0] * 1000 + diff[1] / 1e6).toFixed(2);
+    reply.header('X-Response-Time', `${ms}ms`);
+    reply.header('X-Cache', 'MISS');
     return response;
-  });
+  };
+
+  // GET /api/services/detailed
+  fastify.get('/services/detailed', getDetailedServicesHandler);
+
+  // GET /api/detailed (direct route / alias for compatibility)
+  fastify.get('/detailed', getDetailedServicesHandler);
 
   // GET /api/services/:id
   fastify.get<{

@@ -1352,6 +1352,7 @@ class DatabaseStore {
         this.data.services.push(service);
         this.persist();
         syncServiceToPostgres(service).catch(() => { });
+        notifyServicesChanged();
         return service;
       },
       update: (id: string, updates: Partial<Service>) => {
@@ -1364,6 +1365,7 @@ class DatabaseStore {
         };
         this.persist();
         syncServiceToPostgres(this.data.services[index]).catch(() => { });
+        notifyServicesChanged();
         return this.data.services[index];
       },
       reorder: (serviceIds: string[]) => {
@@ -1377,6 +1379,7 @@ class DatabaseStore {
             }
           });
           this.persist();
+          notifyServicesChanged();
         }
         return this.services.findMany();
       },
@@ -1386,6 +1389,7 @@ class DatabaseStore {
         this.data.services.splice(index, 1);
         this.persist();
         deleteServiceFromPostgres(id).catch(() => { });
+        notifyServicesChanged();
         return true;
       },
     };
@@ -1619,3 +1623,25 @@ class DatabaseStore {
 
 // Global Singleton Database Instance
 export const db = new DatabaseStore();
+
+type ServicesChangeListener = () => void;
+const servicesChangeListeners: ServicesChangeListener[] = [];
+
+export function onServicesChange(listener: ServicesChangeListener): () => void {
+  servicesChangeListeners.push(listener);
+  return () => {
+    const idx = servicesChangeListeners.indexOf(listener);
+    if (idx !== -1) {
+      servicesChangeListeners.splice(idx, 1);
+    }
+  };
+}
+
+export function notifyServicesChanged(): void {
+  servicesChangeListeners.forEach((fn) => {
+    try {
+      fn();
+    } catch { }
+  });
+}
+

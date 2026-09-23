@@ -73,13 +73,11 @@ export async function initPostgresSync(
   const client = getPostgresPool();
   if (!client) {
     if (!retryTimer) {
-      retryTimer = setInterval(async () => {
-        const ok = await initPostgresSync(cachedServices, cachedContacts, cachedArtists, cachedSocials);
-        if (ok && retryTimer) {
-          clearInterval(retryTimer);
-          retryTimer = null;
-        }
-      }, 3000);
+      retryTimer = setTimeout(async () => {
+        retryTimer = null;
+        await initPostgresSync(cachedServices, cachedContacts, cachedArtists, cachedSocials);
+      }, 10000);
+      retryTimer.unref?.();
     }
     return false;
   }
@@ -192,26 +190,24 @@ export async function initPostgresSync(
       artistColumns = new Set(artistColRes.rows.map((r: any) => r.column_name));
     }
 
-    // Sync all services
+    // Sync all services in parallel
     const servicesToSync = cachedServices.length > 0 ? cachedServices : initialServices;
-    for (const s of servicesToSync) {
-      await syncServiceToPostgres(s);
-    }
+    await Promise.all(servicesToSync.map((s) => syncServiceToPostgres(s)));
     console.log(`[PostgreSQL] ✅ Synced ${servicesToSync.length} services to public."${targetServiceTable}"!`);
 
-    // Sync all contact requests / inquiries
+    // Sync all contact requests / inquiries in parallel
     const contactsToSync = cachedContacts.length > 0 ? cachedContacts : initialContacts;
-    for (const c of contactsToSync) {
-      await syncContactRequestToPostgres(c);
-    }
+    await Promise.all(contactsToSync.map((c) => syncContactRequestToPostgres(c)));
     console.log(`[PostgreSQL] ✅ Synced ${contactsToSync.length} inquiries to public."${targetContactTable}"!`);
 
-    // Sync all artists
+    // Sync all artists in parallel
     const artistsToSync = cachedArtists.length > 0 ? cachedArtists : initialArtists;
-    for (const a of artistsToSync) {
-      const artSocials = cachedSocials.filter((s) => s.artistId === a.id);
-      await syncArtistToPostgres(a, artSocials);
-    }
+    await Promise.all(
+      artistsToSync.map((a) => {
+        const artSocials = cachedSocials.filter((s) => s.artistId === a.id);
+        return syncArtistToPostgres(a, artSocials);
+      })
+    );
     console.log(`[PostgreSQL] ✅ Synced ${artistsToSync.length} artists directly to public."${targetArtistTable}"!\n`);
 
     return true;
@@ -220,13 +216,11 @@ export async function initPostgresSync(
     isConnected = false;
     pool = null;
     if (!retryTimer) {
-      retryTimer = setInterval(async () => {
-        const ok = await initPostgresSync(cachedServices, cachedContacts, cachedArtists, cachedSocials);
-        if (ok && retryTimer) {
-          clearInterval(retryTimer);
-          retryTimer = null;
-        }
-      }, 3000);
+      retryTimer = setTimeout(async () => {
+        retryTimer = null;
+        await initPostgresSync(cachedServices, cachedContacts, cachedArtists, cachedSocials);
+      }, 10000);
+      retryTimer.unref?.();
     }
     return false;
   }
