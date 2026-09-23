@@ -18,24 +18,17 @@ import {
 } from '../components/wedding';
 import { WEDDING_STUDIO_INFO, DEFAULT_WEDDING_PLANS } from '../data/weddingData';
 import { API_BASE_URL, adminPreWeddingApi } from '../admin/services/adminApiClient';
-import { adminMockStore } from '../admin/services/adminMockStore';
+import { Skeleton } from '../components/ui/Skeleton';
 
 export const PackagesPage: React.FC = () => {
   const [selectedPackageId, setSelectedPackageId] = useState<string>('gold');
   const [selectedAddOnIds, setSelectedAddOnIds] = useState<string[]>([]);
   const [initialNotes, setInitialNotes] = useState<string>('');
   const [preWeddingData, setPreWeddingData] = useState<any>(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
-
-    // Fast initial load from local mock store cache
-    try {
-      const local = adminMockStore.getPreWedding()?.data;
-      if (isMounted && local && local.studioInfo) {
-        setPreWeddingData(local);
-      }
-    } catch {}
 
     // Fetch latest from public backend API endpoint (no auth required)
     fetch(`${API_BASE_URL}/pre-wedding`, { cache: 'no-store' })
@@ -43,13 +36,11 @@ export const PackagesPage: React.FC = () => {
       .then((res: any) => {
         if (isMounted && res.success && res.data) {
           setPreWeddingData(res.data);
-          try {
-            adminMockStore.updatePreWedding(res.data);
-          } catch {}
+          setIsLoading(false);
         }
       })
       .catch(() => {
-        // Fallback to adminPreWeddingApi
+        // Fallback to adminPreWeddingApi if backend request fails
         adminPreWeddingApi
           .get()
           .then((res: any) => {
@@ -57,7 +48,10 @@ export const PackagesPage: React.FC = () => {
               setPreWeddingData(res.data);
             }
           })
-          .catch(() => {});
+          .catch(() => {})
+          .finally(() => {
+            if (isMounted) setIsLoading(false);
+          });
       });
 
     return () => {
@@ -132,6 +126,39 @@ export const PackagesPage: React.FC = () => {
     );
     scrollToBooking();
   };
+
+  if (isLoading || !preWeddingData) {
+    return (
+      <div className="cinematic-dark bg-[#050505] text-white min-h-screen pt-24 pb-20 select-none">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          {/* Hero Skeleton */}
+          <div className="flex flex-col items-center text-center py-16 gap-6">
+            <Skeleton className="h-8 w-60 rounded-full" />
+            <Skeleton className="h-14 sm:h-20 w-3/4 max-w-2xl rounded-2xl" />
+            <Skeleton className="h-5 w-4/5 max-w-lg rounded-md" />
+            <div className="flex gap-4 mt-4">
+              <Skeleton className="h-12 w-44 rounded-xl" />
+              <Skeleton className="h-12 w-44 rounded-xl" />
+            </div>
+          </div>
+
+          {/* 3 Highlights Strip Skeleton */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-12">
+            <Skeleton className="h-28 rounded-2xl" />
+            <Skeleton className="h-28 rounded-2xl" />
+            <Skeleton className="h-28 rounded-2xl" />
+          </div>
+
+          {/* Package Cards Skeleton */}
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 my-16">
+            <Skeleton className="h-[520px] rounded-3xl" />
+            <Skeleton className="h-[560px] rounded-3xl" />
+            <Skeleton className="h-[520px] rounded-3xl" />
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <motion.div

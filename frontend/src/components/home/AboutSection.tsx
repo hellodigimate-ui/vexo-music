@@ -5,27 +5,17 @@ import { Button } from '../ui/Button';
 import { useNavigate } from 'react-router-dom';
 import { MapPin, Disc, ShieldCheck, ArrowRight } from 'lucide-react';
 import { homepageApi } from '../../lib/api';
-import { adminMockStore } from '../../admin/services/adminMockStore';
+import { Skeleton } from '../ui/Skeleton';
 
 export const AboutSection: React.FC = () => {
   const navigate = useNavigate();
-  const [aboutData, setAboutData] = useState(() => {
-    const d = adminMockStore.getHomepage().data || {};
-    return {
-      badge: d.aboutBadge || 'ABOUT VEXO',
-      heading: d.aboutHeading || 'VEXO MUSIC ENTERTAINMENT PVT. LTD.',
-      subtitle:
-        d.aboutHeading && d.aboutHeading !== 'VEXO MUSIC ENTERTAINMENT PVT. LTD.'
-          ? d.aboutHeading
-          : 'Pioneering original soundscapes, artist management, and digital distribution for the next generation.',
-      description:
-        d.aboutDescription ||
-        'VEXO Music Entertainment Pvt. Ltd. is a premier music agency and record label headquartered in Jaipur, Rajasthan. We specialize in producing chart-topping commercial tracks, high-concept audio visualizers, and empowering recording artists with global digital distribution.',
-      image:
-        d.aboutImage ||
-        'https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1200&q=80',
-    };
-  });
+  const [aboutData, setAboutData] = useState<{
+    badge: string;
+    heading: string;
+    subtitle: string;
+    description: string;
+    image: string;
+  } | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -52,6 +42,26 @@ export const AboutSection: React.FC = () => {
       isMounted = false;
     };
   }, []);
+
+  if (!aboutData) {
+    return (
+      <PageSection id="about" variant="bg" padding="lg">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-16 items-center">
+          <div className="lg:col-span-6">
+            <Skeleton className="w-full aspect-square sm:aspect-video lg:aspect-[4/5] rounded-3xl" />
+          </div>
+          <div className="lg:col-span-6 flex flex-col justify-center gap-4">
+            <Skeleton className="h-6 w-36 rounded-full" />
+            <Skeleton className="h-10 w-4/5 rounded-xl" />
+            <Skeleton className="h-4 w-full rounded-md" />
+            <Skeleton className="h-4 w-5/6 rounded-md" />
+            <Skeleton className="h-4 w-3/4 rounded-md" />
+            <Skeleton className="h-12 w-48 rounded-xl mt-4" />
+          </div>
+        </div>
+      </PageSection>
+    );
+  }
 
   const paragraphs: string[] = aboutData.description.split('\n\n').filter(Boolean);
 

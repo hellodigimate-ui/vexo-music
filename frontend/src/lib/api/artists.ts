@@ -34,7 +34,7 @@ export async function getArtists(): Promise<ApiResponse<Artist[]>> {
 
   try {
     const res = await apiFetch<Artist[]>('/artists');
-    if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+    if (res && res.success && Array.isArray(res.data)) {
       return res;
     }
     const raw = adminMockStore.getArtists().data || [];

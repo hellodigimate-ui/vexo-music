@@ -47,7 +47,7 @@ export async function getAlbums(): Promise<ApiResponse<Album[]>> {
 
   try {
     const res = await apiFetch<Album[]>('/albums');
-    if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+    if (res && res.success && Array.isArray(res.data)) {
       return res;
     }
     // If backend returns empty or invalid, fallback to client mock store
@@ -111,7 +111,7 @@ export async function getTracks(): Promise<ApiResponse<Track[]>> {
 
   try {
     const res = await apiFetch<Track[]>('/tracks');
-    if (res && res.success && Array.isArray(res.data) && res.data.length > 0) {
+    if (res && res.success && Array.isArray(res.data)) {
       return res;
     }
     const raw = adminMockStore.getTracks().data || [];

@@ -3,6 +3,7 @@ import { PageSection } from '../components/ui/PageSection';
 import { SectionHeading } from '../components/ui/SectionHeading';
 import { Container } from '../components/ui/Container';
 import { Button } from '../components/ui/Button';
+import { Skeleton } from '../components/ui/Skeleton';
 import { videosApi } from '../lib/api';
 import type { Video } from '../types';
 import { Play, Eye, Clock, Film, X, Search, Flame } from 'lucide-react';
@@ -15,18 +16,29 @@ export const VideosPage: React.FC = () => {
   const [selectedVideo, setSelectedVideo] = useState<Video | null>(null);
   const [activeCategory, setActiveCategory] = useState<string>('All');
   const [searchQuery, setSearchQuery] = useState<string>('');
+  const [isLoading, setIsLoading] = useState<boolean>(true);
 
   useEffect(() => {
     let isMounted = true;
-    videosApi.getVideos().then((res) => {
-      if (isMounted && res.data) setVideos(res.data);
-    });
-    videosApi.getFeaturedVideo().then((res) => {
-      if (isMounted && res.data) setFeaturedVideo(res.data);
-    });
-    videosApi.getLatestVideos(3).then((res) => {
-      if (isMounted && res.data) setLatestVideos(res.data);
-    });
+    setIsLoading(true);
+    Promise.all([
+      videosApi.getVideos(),
+      videosApi.getFeaturedVideo(),
+      videosApi.getLatestVideos(3),
+    ])
+      .then(([vRes, fRes, lRes]) => {
+        if (!isMounted) return;
+        if (vRes.data) setVideos(vRes.data);
+        if (fRes.data) setFeaturedVideo(fRes.data);
+        if (lRes.data) setLatestVideos(lRes.data);
+      })
+      .catch((err) => {
+        console.warn('Error loading videos:', err);
+      })
+      .finally(() => {
+        if (isMounted) setIsLoading(false);
+      });
+
     return () => {
       isMounted = false;
     };
@@ -54,7 +66,27 @@ export const VideosPage: React.FC = () => {
             subtitle="Watch high-definition 4K music videos, studio recordings, live stadium performances, and audio-reactive visualizers."
           />
 
-          {featuredVideo && (
+          {isLoading ? (
+            <div className="relative mt-8 rounded-3xl overflow-hidden bg-white dark:bg-[#0c0c10] border border-slate-200 dark:border-white/15 shadow-sm dark:shadow-xl">
+              <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[420px]">
+                <div className="lg:col-span-7 aspect-video lg:aspect-auto">
+                  <Skeleton className="w-full h-full min-h-[320px] rounded-none" />
+                </div>
+                <div className="lg:col-span-5 p-6 sm:p-10 flex flex-col justify-between">
+                  <div className="space-y-4">
+                    <Skeleton className="h-6 w-32 rounded-full" />
+                    <Skeleton className="h-9 w-3/4" />
+                    <Skeleton className="h-4 w-1/2" />
+                    <Skeleton className="h-16 w-full" />
+                  </div>
+                  <div className="pt-6 border-t border-slate-100 dark:border-white/10 flex items-center justify-between">
+                    <Skeleton className="h-4 w-28" />
+                    <Skeleton className="h-9 w-32 rounded-xl" />
+                  </div>
+                </div>
+              </div>
+            </div>
+          ) : featuredVideo ? (
             <div className="relative mt-8 rounded-3xl overflow-hidden bg-white dark:bg-[#0c0c10] border border-slate-200 dark:border-white/15 shadow-sm dark:shadow-xl group transition-all duration-300">
               <div className="grid grid-cols-1 lg:grid-cols-12 min-h-[420px]">
                 {/* Backdrop Video Thumbnail Container */}
@@ -126,7 +158,7 @@ export const VideosPage: React.FC = () => {
                 </div>
               </div>
             </div>
-          )}
+          ) : null}
         </Container>
       </PageSection>
 
@@ -143,41 +175,58 @@ export const VideosPage: React.FC = () => {
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {latestVideos.map((video) => (
-              <div
-                key={video.id}
-                onClick={() => setSelectedVideo(video)}
-                className="group rounded-2xl overflow-hidden bg-white dark:bg-[#0c0c10] border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-xl hover:border-vexo-red/50 hover:shadow-md transition-all duration-300 flex flex-col cursor-pointer"
-              >
-                <div className="relative aspect-video overflow-hidden bg-slate-100 dark:bg-neutral-900">
-                  <img
-                    src={video.thumbnailUrl}
-                    alt={video.title}
-                    className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                  />
-                  <div className="absolute inset-0 bg-black/40 group-hover:bg-black/60 transition-colors flex items-center justify-center">
-                    <div className="w-12 h-12 rounded-full bg-vexo-red text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
-                      <Play className="w-5 h-5 fill-current translate-x-0.5" />
+            {isLoading
+              ? Array.from({ length: 3 }).map((_, i) => (
+                  <div
+                    key={i}
+                    className="rounded-2xl overflow-hidden bg-white dark:bg-[#0c0c10] border border-slate-200 dark:border-white/10 flex flex-col"
+                  >
+                    <Skeleton className="aspect-video w-full rounded-none" />
+                    <div className="p-4 space-y-3">
+                      <Skeleton className="h-4 w-3/4" />
+                      <Skeleton className="h-3 w-1/2" />
+                      <div className="pt-2 border-t border-slate-100 dark:border-white/5 flex justify-between">
+                        <Skeleton className="h-3 w-16" />
+                        <Skeleton className="h-3 w-16" />
+                      </div>
                     </div>
                   </div>
-                  <div className="absolute bottom-2.5 right-2.5 bg-black/80 px-2 py-0.5 rounded text-[10px] font-mono text-white">
-                    {video.duration}
+                ))
+              : latestVideos.map((video) => (
+                  <div
+                    key={video.id}
+                    onClick={() => setSelectedVideo(video)}
+                    className="group rounded-2xl overflow-hidden bg-white dark:bg-[#0c0c10] border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-xl hover:border-vexo-red/50 hover:shadow-md transition-all duration-300 flex flex-col cursor-pointer"
+                  >
+                    <div className="relative aspect-video overflow-hidden bg-slate-100 dark:bg-neutral-900">
+                      <img
+                        src={video.thumbnailUrl}
+                        alt={video.title}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-black/40 group-hover:bg-black/60 transition-colors flex items-center justify-center">
+                        <div className="w-12 h-12 rounded-full bg-vexo-red text-white flex items-center justify-center shadow-lg group-hover:scale-110 transition-transform">
+                          <Play className="w-5 h-5 fill-current translate-x-0.5" />
+                        </div>
+                      </div>
+                      <div className="absolute bottom-2.5 right-2.5 bg-black/80 px-2 py-0.5 rounded text-[10px] font-mono text-white">
+                        {video.duration}
+                      </div>
+                    </div>
+                    <div className="p-4 flex flex-col justify-between flex-1">
+                      <div>
+                        <h4 className="font-bold text-sm text-slate-900 dark:text-white group-hover:text-vexo-red transition-colors line-clamp-1">
+                          {video.title}
+                        </h4>
+                        <p className="text-xs text-slate-500 dark:text-zinc-400 font-medium mt-0.5">{video.artist}</p>
+                      </div>
+                      <div className="flex items-center justify-between mt-3 pt-2 border-t border-slate-100 dark:border-white/5 text-[11px] font-mono text-slate-400 dark:text-zinc-500">
+                        <span>{formatNumber(video.views)} views</span>
+                        <span>{video.publishedAt}</span>
+                      </div>
+                    </div>
                   </div>
-                </div>
-                <div className="p-4 flex flex-col justify-between flex-1">
-                  <div>
-                    <h4 className="font-bold text-sm text-slate-900 dark:text-white group-hover:text-vexo-red transition-colors line-clamp-1">
-                      {video.title}
-                    </h4>
-                    <p className="text-xs text-slate-500 dark:text-zinc-400 font-medium mt-0.5">{video.artist}</p>
-                  </div>
-                  <div className="flex items-center justify-between mt-3 pt-2 border-t border-slate-100 dark:border-white/5 text-[11px] font-mono text-slate-400 dark:text-zinc-500">
-                    <span>{formatNumber(video.views)} views</span>
-                    <span>{video.publishedAt}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
+                ))}
           </div>
         </Container>
       </PageSection>
@@ -217,7 +266,26 @@ export const VideosPage: React.FC = () => {
           </div>
 
           {/* Video Grid */}
-          {filteredVideos.length === 0 ? (
+          {isLoading ? (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+              {Array.from({ length: 6 }).map((_, i) => (
+                <div
+                  key={i}
+                  className="rounded-2xl overflow-hidden bg-white dark:bg-[#0c0c10] border border-slate-200 dark:border-white/10 flex flex-col"
+                >
+                  <Skeleton className="aspect-video w-full rounded-none" />
+                  <div className="p-5 space-y-3">
+                    <Skeleton className="h-5 w-4/5" />
+                    <Skeleton className="h-3 w-1/3" />
+                    <div className="pt-3 border-t border-slate-100 dark:border-white/10 flex justify-between">
+                      <Skeleton className="h-3 w-20" />
+                      <Skeleton className="h-3 w-16" />
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          ) : filteredVideos.length === 0 ? (
             <div className="p-12 text-center bg-white dark:bg-[#0c0c10] rounded-3xl border border-slate-200 dark:border-white/10 text-slate-500 dark:text-zinc-400 shadow-sm">
               <Film className="w-10 h-10 mx-auto text-vexo-red/60 mb-3" />
               <p className="text-sm font-bold text-slate-900 dark:text-white mb-1">No videos found</p>

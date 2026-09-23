@@ -5,25 +5,20 @@ import { Button } from '../ui/Button';
 import { useNavigate } from 'react-router-dom';
 import { ArrowUpRight, Mail } from 'lucide-react';
 import { homepageApi } from '../../lib/api';
-import { adminMockStore } from '../../admin/services/adminMockStore';
+import { Skeleton } from '../ui/Skeleton';
 
 export const FinalCTASection: React.FC = () => {
   const navigate = useNavigate();
   const shouldReduceMotion = useReducedMotion();
-  const [ctaData, setCtaData] = useState(() => {
-    const d = adminMockStore.getHomepage().data || {};
-    return {
-      badge: d.finalCtaBadge || 'READY TO COLLABORATE?',
-      heading: d.finalCtaHeading || "LET'S CREATE SOMETHING ICONIC.",
-      description:
-        d.finalCtaDescription ||
-        'Ready to bring your sonic or visual project to life? Collaborate with our team of elite sound engineers, music directors, and producers.',
-      buttonLabel: d.finalCtaButtonLabel || 'START A PROJECT',
-      buttonUrl: d.finalCtaButtonUrl || '/contact',
-      secondaryLabel: d.finalCtaSecondaryLabel || 'CONTACT VEXO',
-      secondaryUrl: d.finalCtaSecondaryUrl || '/contact',
-    };
-  });
+  const [ctaData, setCtaData] = useState<{
+    badge: string;
+    heading: string;
+    description: string;
+    buttonLabel: string;
+    buttonUrl: string;
+    secondaryLabel: string;
+    secondaryUrl: string;
+  } | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -47,6 +42,25 @@ export const FinalCTASection: React.FC = () => {
       isMounted = false;
     };
   }, []);
+
+  if (!ctaData) {
+    return (
+      <section className="relative bg-slate-50 dark:bg-[#050505] py-24 sm:py-32 lg:py-40 overflow-hidden border-t border-slate-200 dark:border-white/10 select-none transition-colors duration-300">
+        <Container className="relative z-10 text-center flex flex-col items-center">
+          <Skeleton className="h-7 w-48 rounded-full mb-6" />
+          <div className="flex flex-col items-center gap-3 mb-6 w-full">
+            <Skeleton className="h-12 sm:h-20 w-3/4 max-w-xl rounded-2xl" />
+            <Skeleton className="h-12 sm:h-20 w-1/2 max-w-md rounded-2xl" />
+          </div>
+          <Skeleton className="h-5 w-4/5 max-w-lg rounded-md mb-10" />
+          <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+            <Skeleton className="h-14 w-44 rounded-xl" />
+            <Skeleton className="h-14 w-44 rounded-xl" />
+          </div>
+        </Container>
+      </section>
+    );
+  }
 
   // Format heading into 3 lines for high-impact typography
   const words = ctaData.heading.split(' ');

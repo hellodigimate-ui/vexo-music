@@ -6,16 +6,28 @@ import { eventsApi } from '../lib/api';
 import type { Event } from '../types';
 import { useNavigate } from 'react-router-dom';
 import { Calendar, MapPin, Ticket, ArrowUpRight, Flame, Music } from 'lucide-react';
+import { Skeleton } from '../components/ui/Skeleton';
 
 export const EventsPage: React.FC = () => {
   const [events, setEvents] = useState<Event[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(true);
   const navigate = useNavigate();
 
   useEffect(() => {
     let isMounted = true;
-    eventsApi.getEvents().then((res) => {
-      if (isMounted && res.data) setEvents(res.data);
-    });
+    setIsLoading(true);
+    eventsApi
+      .getEvents()
+      .then((res) => {
+        if (isMounted && res.data) setEvents(res.data);
+      })
+      .catch((err) => {
+        console.warn('Error loading events:', err);
+      })
+      .finally(() => {
+        if (isMounted) setIsLoading(false);
+      });
+
     return () => {
       isMounted = false;
     };
@@ -72,7 +84,29 @@ export const EventsPage: React.FC = () => {
       {/* 2. ALTERNATING TOUR & EVENTS EDITORIAL LIST */}
       <PageSection padding="lg">
         <Container size="lg" className="max-w-6xl mx-auto flex flex-col gap-20 sm:gap-28">
-          {events.map((event, idx) => {
+          {isLoading ? (
+            Array.from({ length: 2 }).map((_, idx) => (
+              <div
+                key={idx}
+                className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-14 items-center"
+              >
+                <div className={`lg:col-span-6 space-y-4 ${idx % 2 !== 0 ? 'lg:order-2' : 'lg:order-1'}`}>
+                  <Skeleton className="h-6 w-28 rounded-full" />
+                  <Skeleton className="h-10 w-3/4" />
+                  <Skeleton className="h-4 w-1/3" />
+                  <div className="grid grid-cols-2 gap-3 p-4 rounded-xl border border-slate-200 dark:border-white/10">
+                    <Skeleton className="h-4 w-full" />
+                    <Skeleton className="h-4 w-full" />
+                  </div>
+                  <Skeleton className="h-16 w-full" />
+                  <Skeleton className="h-12 w-44 rounded-xl" />
+                </div>
+                <div className={`lg:col-span-6 ${idx % 2 !== 0 ? 'lg:order-1' : 'lg:order-2'}`}>
+                  <Skeleton className="aspect-[16/10] sm:aspect-[16/9] w-full rounded-2xl" />
+                </div>
+              </div>
+            ))
+          ) : events.map((event, idx) => {
             const formattedNumber = idx + 1 < 10 ? `0${idx + 1}` : `${idx + 1}`;
             const imageFirst = idx % 2 !== 0;
             const description =

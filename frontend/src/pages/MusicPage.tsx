@@ -4,8 +4,9 @@ import { SectionHeading } from '../components/ui/SectionHeading';
 import { AlbumCard } from '../components/music/AlbumCard';
 import { albumsApi } from '../lib/api';
 import type { Album, Track } from '../types';
-import { Search, Play, X, Loader2, Music2 } from 'lucide-react';
+import { Search, Play, X, Music2 } from 'lucide-react';
 import { formatTime } from '../lib/utils';
+import { Skeleton } from '../components/ui/Skeleton';
 
 export const MusicPage: React.FC = () => {
   const [albums, setAlbums] = useState<Album[]>([]);
@@ -99,8 +100,8 @@ export const MusicPage: React.FC = () => {
                 onClick={() => setSelectedGenre(genre)}
                 className={`px-4 py-2 rounded-full text-xs font-bold transition-all duration-300 whitespace-nowrap cursor-pointer ${
                   selectedGenre === genre
-                    ? 'bg-vexo-red text-white shadow-[0_0_15px_rgba(224,0,0,0.4)]'
-                    : 'bg-vexo-surface text-vexo-muted hover:text-white hover:bg-white/5 border border-white/10'
+                    ? 'bg-vexo-red text-white shadow-lg shadow-vexo-red/30'
+                    : 'bg-white/5 text-vexo-muted hover:text-white hover:bg-white/10'
                 }`}
               >
                 {genre}
@@ -108,12 +109,12 @@ export const MusicPage: React.FC = () => {
             ))}
           </div>
 
-          {/* Search Input */}
+          {/* Search Box */}
           <div className="relative w-full md:w-72">
             <Search className="w-4 h-4 text-vexo-muted absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
-              placeholder="Search albums or artists..."
+              placeholder="Search albums or tracks..."
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               className="w-full bg-vexo-surface border border-white/10 rounded-full pl-10 pr-4 py-2 text-xs text-white placeholder-vexo-muted outline-none focus:border-vexo-red/50 transition-colors"
@@ -123,9 +124,16 @@ export const MusicPage: React.FC = () => {
 
         {/* Albums Grid */}
         {isLoading ? (
-          <div className="py-20 flex flex-col items-center justify-center gap-3 text-zinc-500">
-            <Loader2 className="w-8 h-8 animate-spin text-vexo-red-bright" />
-            <p className="text-xs font-mono tracking-wider uppercase">Loading Releases...</p>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+            {Array.from({ length: 4 }).map((_, i) => (
+              <div key={i} className="glass-card rounded-2xl overflow-hidden p-3 border border-white/10 flex flex-col gap-3">
+                <Skeleton className="aspect-square w-full rounded-xl" />
+                <div className="space-y-2 px-1 pb-1">
+                  <Skeleton className="h-4 w-3/4" />
+                  <Skeleton className="h-3 w-1/2" />
+                </div>
+              </div>
+            ))}
           </div>
         ) : filteredAlbums.length === 0 ? (
           <div className="py-20 flex flex-col items-center justify-center gap-3 text-center border border-dashed border-white/10 rounded-2xl p-8">
@@ -157,7 +165,27 @@ export const MusicPage: React.FC = () => {
         />
 
         <div className="flex flex-col gap-3">
-          {tracks.map((track, idx) => (
+          {isLoading ? (
+            Array.from({ length: 5 }).map((_, idx) => (
+              <div
+                key={idx}
+                className="glass-card p-3 sm:p-4 rounded-2xl flex items-center justify-between gap-3 border border-white/10"
+              >
+                <div className="flex items-center gap-3 sm:gap-4 flex-1">
+                  <Skeleton className="w-5 h-5 rounded" />
+                  <Skeleton className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl shrink-0" />
+                  <div className="space-y-2 flex-1 max-w-xs">
+                    <Skeleton className="h-4 w-3/4" />
+                    <Skeleton className="h-3 w-1/2" />
+                  </div>
+                </div>
+                <div className="flex items-center gap-4">
+                  <Skeleton className="h-4 w-12 hidden md:block" />
+                  <Skeleton className="w-9 h-9 rounded-full" />
+                </div>
+              </div>
+            ))
+          ) : tracks.map((track, idx) => (
             <div
               key={track.id}
               onClick={() => handlePlayTrack(track)}

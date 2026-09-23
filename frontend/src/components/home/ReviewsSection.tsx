@@ -2,8 +2,8 @@ import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { Star, ChevronLeft, ChevronRight, Quote, Check, Sparkles } from 'lucide-react';
 import { PageSection } from '../ui/PageSection';
 import { homepageApi } from '../../lib/api';
-import { adminMockStore } from '../../admin/services/adminMockStore';
 import type { ReviewItem } from '../../types';
+import { Skeleton } from '../ui/Skeleton';
 
 const DEFAULT_REVIEWS: ReviewItem[] = [
   {
@@ -80,17 +80,7 @@ export const ReviewsSection: React.FC = () => {
     heading: string;
     subtitle: string;
     reviews: ReviewItem[];
-  }>(() => {
-    const d = adminMockStore.getHomepage().data || {};
-    return {
-      badge: d.reviewsBadge || 'TESTIMONIALS & TRUST',
-      heading: d.reviewsHeading || 'VOICES OF EXCELLENCE',
-      subtitle:
-        d.reviewsSubtitle ||
-        'What artists, visionary couples, and industry partners say about producing with VEXO.',
-      reviews: Array.isArray(d.reviews) && d.reviews.length > 0 ? d.reviews : DEFAULT_REVIEWS,
-    };
-  });
+  } | null>(null);
 
   const [currentIndex, setCurrentIndex] = useState(0);
   const [itemsPerPage, setItemsPerPage] = useState(3);
@@ -135,7 +125,7 @@ export const ReviewsSection: React.FC = () => {
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  const totalReviews = reviewsData.reviews.length;
+  const totalReviews = reviewsData?.reviews?.length ?? 0;
   const maxIndex = Math.max(0, totalReviews - itemsPerPage);
 
   // Clamp currentIndex when itemsPerPage changes
@@ -174,6 +164,29 @@ export const ReviewsSection: React.FC = () => {
       .map((part) => part[0]?.toUpperCase())
       .join('');
   };
+
+  if (!reviewsData) {
+    return (
+      <PageSection
+        variant="bg"
+        padding="xl"
+        className="relative overflow-hidden bg-slate-50 dark:bg-black/80 transition-colors border-t border-slate-200 dark:border-white/5"
+      >
+        <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="space-y-4 max-w-2xl">
+            <Skeleton className="h-6 w-48 rounded-full" />
+            <Skeleton className="h-10 w-3/4 rounded-xl" />
+            <Skeleton className="h-4 w-full rounded-md" />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <Skeleton className="h-64 rounded-3xl" />
+            <Skeleton className="h-64 rounded-3xl" />
+            <Skeleton className="h-64 rounded-3xl" />
+          </div>
+        </div>
+      </PageSection>
+    );
+  }
 
   return (
     <PageSection

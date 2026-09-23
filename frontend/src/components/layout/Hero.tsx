@@ -6,11 +6,11 @@ import { Button } from '../ui/Button';
 import { Play, Music, ArrowRight } from 'lucide-react';
 
 import { homepageApi } from '../../lib/api';
-import { adminMockStore } from '../../admin/services/adminMockStore';
+import { Skeleton } from '../ui/Skeleton';
 
 const formatHeadline = (headline?: string) => {
-  if (!headline) return { h1: 'SONIC ARCHITECTURE', h2: 'FOR THE NEXT ERA' };
-  const words = headline.trim().split(/\s+/);
+  if (!headline) return { h1: '', h2: '' };
+  const words = headline.trim().split(' ');
   if (words.length > 2) {
     const mid = Math.ceil(words.length / 2);
     return {
@@ -25,38 +25,30 @@ export const Hero: React.FC = () => {
   const navigate = useNavigate();
   const shouldReduceMotion = useReducedMotion();
 
-  const [homepageData, setHomepageData] = React.useState(() => {
-    const initial = adminMockStore.getHomepage().data || {};
-    const { h1, h2 } = formatHeadline(initial.heroHeadline);
-    return {
-      heroTagline: initial.heroTagline || 'Pioneering Original Soundscapes & Entertainment',
-      heroHeadline1: h1,
-      heroHeadline2: h2,
-      heroSubtitle:
-        initial.heroSubtitle ||
-        'VEXO Music Entertainment is a global record label, high-end audio-visual production powerhouse, and artist development agency.',
-      heroBgImage: initial.heroBgImage || initial.heroBgMedia || '',
-      heroCtaText: initial.heroCtaText || 'EXPLORE RELEASES',
-      heroCtaUrl: initial.heroCtaUrl || '/music',
-      heroSecondaryCtaText: initial.heroSecondaryCtaText || 'STUDIO SERVICES',
-      heroSecondaryCtaUrl: initial.heroSecondaryCtaUrl || '/services',
-    };
-  });
+  const [homepageData, setHomepageData] = React.useState<{
+    heroTagline: string;
+    heroHeadline1: string;
+    heroHeadline2: string;
+    heroSubtitle: string;
+    heroBgImage: string;
+    heroCtaText: string;
+    heroCtaUrl: string;
+    heroSecondaryCtaText: string;
+    heroSecondaryCtaUrl: string;
+  } | null>(null);
 
   React.useEffect(() => {
     let isMounted = true;
     homepageApi.getHomepage().then((res) => {
       if (!isMounted || !res.data) return;
       const data = res.data;
-      const { h1, h2 } = formatHeadline(data.heroHeadline);
+      const { h1, h2 } = formatHeadline(data.heroHeadline || 'PIONEERING SOUND & CINEMA');
 
       setHomepageData({
-        heroTagline: data.heroTagline || 'Pioneering Original Soundscapes & Entertainment',
+        heroTagline: data.heroTagline || '',
         heroHeadline1: h1,
         heroHeadline2: h2,
-        heroSubtitle:
-          data.heroSubtitle ||
-          'VEXO Music Entertainment is a global record label, high-end audio-visual production powerhouse, and artist development agency.',
+        heroSubtitle: data.heroSubtitle || '',
         heroBgImage: data.heroBgImage || data.heroBgMedia || '',
         heroCtaText: data.heroCtaText || 'EXPLORE RELEASES',
         heroCtaUrl: data.heroCtaUrl || '/music',
@@ -121,7 +113,7 @@ export const Hero: React.FC = () => {
         <div className="absolute inset-0 bg-[#050505]" />
 
         {/* Optional Custom Background Media Layer */}
-        {homepageData.heroBgImage && (
+        {homepageData?.heroBgImage && (
           <div className="absolute inset-0 z-0 opacity-25">
             <img
               src={homepageData.heroBgImage}
@@ -256,72 +248,90 @@ export const Hero: React.FC = () => {
       </motion.div>
 
       {/* 2. Hero Content Container */}
-      <Container className="relative z-10 text-center flex flex-col items-center my-auto">
-        <motion.div
-          variants={containerVariants}
-          initial="hidden"
-          animate="visible"
-          className="max-w-4xl mx-auto flex flex-col items-center"
-        >
-          {/* Brand Badge */}
-          <motion.div variants={itemVariants} className="mb-6">
-            <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-vexo-red/10 text-vexo-red border border-vexo-red/30">
-              <Music className="w-3.5 h-3.5 text-vexo-red animate-pulse" />
-              {homepageData.heroTagline}
-            </span>
-          </motion.div>
-
-          {/* Headline Line-by-Line Reveal */}
-          <div className="overflow-hidden mb-6 max-w-5xl">
-            <motion.h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-white uppercase leading-[0.95] flex flex-col items-center select-none text-balance break-normal text-center">
-              <motion.span variants={lineVariants} className="block break-normal">
-                {homepageData.heroHeadline1}
-              </motion.span>
-              {homepageData.heroHeadline2 && (
-                <motion.span
-                  variants={lineVariants}
-                  className="block text-vexo-red break-normal"
-                >
-                  {homepageData.heroHeadline2}
-                </motion.span>
-              )}
-            </motion.h1>
+      <Container className="relative z-10 text-center flex flex-col items-center my-auto w-full">
+        {!homepageData ? (
+          <div className="max-w-4xl mx-auto flex flex-col items-center w-full py-8">
+            <Skeleton className="h-7 w-64 rounded-full mb-6" />
+            <div className="flex flex-col items-center gap-3 mb-6 w-full">
+              <Skeleton className="h-12 sm:h-16 w-3/4 max-w-xl rounded-xl" />
+              <Skeleton className="h-12 sm:h-16 w-1/2 max-w-md rounded-xl" />
+            </div>
+            <div className="flex flex-col items-center gap-2 mb-10 w-full">
+              <Skeleton className="h-4 w-4/5 max-w-lg rounded-md" />
+              <Skeleton className="h-4 w-2/3 max-w-md rounded-md" />
+            </div>
+            <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
+              <Skeleton className="h-12 w-44 rounded-xl" />
+              <Skeleton className="h-12 w-44 rounded-xl" />
+            </div>
           </div>
-
-          {/* Subtitle Description */}
-          <motion.p
-            variants={itemVariants}
-            className="text-zinc-400 text-base sm:text-lg lg:text-xl max-w-2xl font-normal leading-relaxed mb-10 text-balance"
-          >
-            {homepageData.heroSubtitle}
-          </motion.p>
-
-          {/* Action CTA Buttons */}
+        ) : (
           <motion.div
-            variants={itemVariants}
-            className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto"
+            variants={containerVariants}
+            initial="hidden"
+            animate="visible"
+            className="max-w-4xl mx-auto flex flex-col items-center"
           >
-            <Button
-              variant="primary"
-              size="lg"
-              onClick={() => navigate(homepageData.heroCtaUrl)}
-              leftIcon={<Play className="w-4 h-4 fill-white" />}
-              className="w-full sm:w-auto px-8 py-3.5 text-xs sm:text-sm font-bold tracking-wider uppercase rounded-xl shadow-md shadow-red-950/50 hover:scale-105 transition-all duration-300"
-            >
-              {homepageData.heroCtaText}
-            </Button>
+            {/* Brand Badge */}
+            <motion.div variants={itemVariants} className="mb-6">
+              <span className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-bold uppercase tracking-widest bg-vexo-red/10 text-vexo-red border border-vexo-red/30">
+                <Music className="w-3.5 h-3.5 text-vexo-red animate-pulse" />
+                {homepageData.heroTagline}
+              </span>
+            </motion.div>
 
-            <Button
-              variant="secondary"
-              size="lg"
-              onClick={() => navigate(homepageData.heroSecondaryCtaUrl)}
-              rightIcon={<ArrowRight className="w-4 h-4" />}
-              className="w-full sm:w-auto px-9 py-4 text-xs sm:text-sm font-extrabold tracking-wider uppercase rounded-xl bg-neutral-950/80 backdrop-blur-md border border-white/15 hover:bg-white/10 hover:border-white/30 transition-all duration-300"
+            {/* Headline Line-by-Line Reveal */}
+            <div className="overflow-hidden mb-6 max-w-5xl">
+              <motion.h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black tracking-tight text-white uppercase leading-[0.95] flex flex-col items-center select-none text-balance break-normal text-center">
+                <motion.span variants={lineVariants} className="block break-normal">
+                  {homepageData.heroHeadline1}
+                </motion.span>
+                {homepageData.heroHeadline2 && (
+                  <motion.span
+                    variants={lineVariants}
+                    className="block text-vexo-red break-normal"
+                  >
+                    {homepageData.heroHeadline2}
+                  </motion.span>
+                )}
+              </motion.h1>
+            </div>
+
+            {/* Subtitle Description */}
+            <motion.p
+              variants={itemVariants}
+              className="text-zinc-400 text-base sm:text-lg lg:text-xl max-w-2xl font-normal leading-relaxed mb-10 text-balance"
             >
-              {homepageData.heroSecondaryCtaText}
-            </Button>
+              {homepageData.heroSubtitle}
+            </motion.p>
+
+            {/* Action CTA Buttons */}
+            <motion.div
+              variants={itemVariants}
+              className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto"
+            >
+              <Button
+                variant="primary"
+                size="lg"
+                onClick={() => navigate(homepageData.heroCtaUrl)}
+                leftIcon={<Play className="w-4 h-4 fill-white" />}
+                className="w-full sm:w-auto px-8 py-3.5 text-xs sm:text-sm font-bold tracking-wider uppercase rounded-xl shadow-md shadow-red-950/50 hover:scale-105 transition-all duration-300"
+              >
+                {homepageData.heroCtaText}
+              </Button>
+
+              <Button
+                variant="secondary"
+                size="lg"
+                onClick={() => navigate(homepageData.heroSecondaryCtaUrl)}
+                rightIcon={<ArrowRight className="w-4 h-4" />}
+                className="w-full sm:w-auto px-9 py-4 text-xs sm:text-sm font-extrabold tracking-wider uppercase rounded-xl bg-neutral-950/80 backdrop-blur-md border border-white/15 hover:bg-white/10 hover:border-white/30 transition-all duration-300"
+              >
+                {homepageData.heroSecondaryCtaText}
+              </Button>
+            </motion.div>
           </motion.div>
-        </motion.div>
+        )}
       </Container>
 
       {/* 3. Non-Overlapping Scroll Indicator */}

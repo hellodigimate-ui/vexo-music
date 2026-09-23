@@ -7,6 +7,7 @@ import { ArtistCard } from './ArtistCard';
 import { artistsApi, homepageApi } from '../../lib/api';
 import type { Artist } from '../../types';
 import { Users } from 'lucide-react';
+import { Skeleton } from '../ui/Skeleton';
 
 export const FeaturedArtists: React.FC = () => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ export const FeaturedArtists: React.FC = () => {
   });
 
   const [artists, setArtists] = useState<Artist[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
@@ -52,6 +54,9 @@ export const FeaturedArtists: React.FC = () => {
       } else {
         setArtists(allArtists.slice(0, 4));
       }
+      setIsLoading(false);
+    }).catch(() => {
+      if (isMounted) setIsLoading(false);
     });
 
     return () => {
@@ -79,9 +84,19 @@ export const FeaturedArtists: React.FC = () => {
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {artists.map((artist) => (
-          <ArtistCard key={artist.id} artist={artist} />
-        ))}
+        {isLoading ? (
+          Array.from({ length: 4 }).map((_, idx) => (
+            <div key={idx} className="flex flex-col gap-3">
+              <Skeleton className="aspect-[3/4] w-full rounded-2xl" />
+              <Skeleton className="h-5 w-3/4 rounded-md" />
+              <Skeleton className="h-4 w-1/2 rounded-md" />
+            </div>
+          ))
+        ) : (
+          artists.map((artist) => (
+            <ArtistCard key={artist.id} artist={artist} />
+          ))
+        )}
       </div>
     </PageSection>
   );

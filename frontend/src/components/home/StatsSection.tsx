@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useState } from 'react';
 import { useInView } from 'framer-motion';
 import { PageSection } from '../ui/PageSection';
 import { homepageApi } from '../../lib/api';
-import { adminMockStore } from '../../admin/services/adminMockStore';
+import { Skeleton } from '../ui/Skeleton';
 
 interface StatItemProps {
   target: number;
@@ -32,14 +32,13 @@ const StatCounterItem: React.FC<StatItemProps> = ({ target, suffix = '+', label 
     if (!isInView) return;
 
     const duration = 2000; // 2 seconds
-    const frameTime = 1000 / 60; // 60fps
+    const frameTime = 1000 / 60;
     const totalFrames = Math.round(duration / frameTime);
     let frame = 0;
 
     const timer = setInterval(() => {
       frame++;
       const progress = frame / totalFrames;
-      // Easing out curve
       const currentCount = Math.round(target * (1 - Math.pow(1 - progress, 3)));
 
       if (frame >= totalFrames) {
@@ -56,11 +55,11 @@ const StatCounterItem: React.FC<StatItemProps> = ({ target, suffix = '+', label 
   return (
     <div
       ref={ref}
-      className="p-8 sm:p-10 rounded-3xl bg-white dark:bg-[#0c0c10] border border-slate-200 dark:border-white/10 shadow-sm dark:shadow-xl flex flex-col items-center justify-center text-center hover:border-vexo-red/50 hover:shadow-md transition-all duration-300 group"
+      className="relative flex flex-col items-center justify-center p-6 sm:p-8 rounded-3xl bg-slate-50 dark:bg-white/5 border border-slate-200 dark:border-white/10 hover:border-vexo-red/50 transition-all duration-300 group shadow-xs"
     >
-      <div className="font-mono text-5xl sm:text-6xl lg:text-7xl font-black tracking-tight text-slate-950 dark:text-white mb-2 transition-colors">
+      <div className="text-4xl sm:text-5xl lg:text-6xl font-black font-mono tracking-tight text-slate-950 dark:text-white mb-2 flex items-baseline">
         <span>{count}</span>
-        <span className="text-vexo-red ml-0.5">{suffix}</span>
+        <span className="text-vexo-red font-sans">{suffix}</span>
       </div>
 
       <p className="text-xs sm:text-sm font-extrabold uppercase tracking-[0.2em] text-slate-600 dark:text-zinc-400 group-hover:text-slate-950 dark:group-hover:text-white transition-colors">
@@ -71,14 +70,11 @@ const StatCounterItem: React.FC<StatItemProps> = ({ target, suffix = '+', label 
 };
 
 export const StatsSection: React.FC = () => {
-  const [stats, setStats] = useState(() => {
-    const d = adminMockStore.getHomepage().data || {};
-    return {
-      artistsCount: d.statsArtistsCount !== undefined && d.statsArtistsCount !== null ? String(d.statsArtistsCount) : '10+',
-      releasesCount: d.statsReleasesCount !== undefined && d.statsReleasesCount !== null ? String(d.statsReleasesCount) : '50+',
-      projectsCount: d.statsProjectsCount !== undefined && d.statsProjectsCount !== null ? String(d.statsProjectsCount) : '100+',
-    };
-  });
+  const [stats, setStats] = useState<{
+    artistsCount: string;
+    releasesCount: string;
+    projectsCount: string;
+  } | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -96,6 +92,18 @@ export const StatsSection: React.FC = () => {
       isMounted = false;
     };
   }, []);
+
+  if (!stats) {
+    return (
+      <PageSection variant="surface" padding="lg">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 sm:gap-8 max-w-5xl mx-auto">
+          <Skeleton className="h-32 rounded-3xl" />
+          <Skeleton className="h-32 rounded-3xl" />
+          <Skeleton className="h-32 rounded-3xl" />
+        </div>
+      </PageSection>
+    );
+  }
 
   const artistsParsed = parseStatValue(stats.artistsCount, 10, '+');
   const releasesParsed = parseStatValue(stats.releasesCount, 50, '+');

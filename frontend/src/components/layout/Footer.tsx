@@ -5,6 +5,7 @@ import { Container } from '../ui/Container';
 import { VexoLogo } from '../ui/VexoLogo';
 import { MapPin, Phone, Mail, ArrowUp, ChevronRight } from 'lucide-react';
 import { API_BASE_URL } from '../../admin/services/adminApiClient';
+import { Skeleton } from '../ui/Skeleton';
 
 interface FooterLinkItem {
   id?: string;
@@ -35,19 +36,19 @@ const DEFAULT_SERVICES_LIST: FooterLinkItem[] = [
 ];
 
 export const Footer: React.FC = () => {
+  const [isLoaded, setIsLoaded] = React.useState(false);
   const [settings, setSettings] = React.useState({
     siteName: 'VEXO Music Entertainment',
-    siteDescription:
-      'A premier music entertainment powerhouse & record label specializing in original sound engineering, global music distribution, artist management, and cinematic audio-visual production based in Jaipur, India.',
+    siteDescription: '',
     footerBio: '',
-    contactEmail: 'Contact@vexomusic.in',
-    contactPhone: '+91 72399 99966',
-    officeAddress: 'SKY CROWN, Office No. 205, Chordiya City, Kamla Nehru Nagar, Ajmer Road, Jaipur, Pin Code- 302021, Rajasthan, India',
-    copyrightText: '© 2026 VEXO Music Entertainment Pvt. Ltd. All rights reserved.',
-    socialInstagram: 'https://www.instagram.com/vexomusicentertainment',
-    socialYoutube: 'https://youtube.com/@vexomusicentertainment',
-    socialSpotify: 'https://spotify.com',
-    socialTwitter: 'https://x.com/vexomusicentertainment',
+    contactEmail: '',
+    contactPhone: '',
+    officeAddress: '',
+    copyrightText: '',
+    socialInstagram: '',
+    socialYoutube: '',
+    socialSpotify: '',
+    socialTwitter: '',
     socialAppleMusic: '',
     socialFacebook: '',
     socialSoundcloud: '',
@@ -73,12 +74,12 @@ export const Footer: React.FC = () => {
         const cleanPhone = rawPhone.includes('98290') ? '+91 72399 99966' : rawPhone;
         setSettings((prev) => ({
           ...prev,
-          siteName: data.siteName || prev.siteName,
-          siteDescription: data.siteDescription || prev.siteDescription,
-          footerBio: data.footerBio || data.siteDescription || prev.siteDescription,
-          contactEmail: data.contactEmail || prev.contactEmail,
+          siteName: data.siteName || 'VEXO Music Entertainment',
+          siteDescription: data.siteDescription || 'A premier music entertainment powerhouse & record label specializing in original sound engineering, global music distribution, artist management, and cinematic audio-visual production based in Jaipur, India.',
+          footerBio: data.footerBio || data.siteDescription || 'A premier music entertainment powerhouse & record label specializing in original sound engineering, global music distribution, artist management, and cinematic audio-visual production based in Jaipur, India.',
+          contactEmail: data.contactEmail || 'Contact@vexomusic.in',
           contactPhone: cleanPhone,
-          officeAddress: data.officeAddress || prev.officeAddress,
+          officeAddress: data.officeAddress || 'SKY CROWN, Office No. 205, Chordiya City, Kamla Nehru Nagar, Ajmer Road, Jaipur, Pin Code- 302021, Rajasthan, India',
           copyrightText: data.copyrightText || prev.copyrightText,
           socialInstagram: data.socialInstagram || prev.socialInstagram,
           socialYoutube: data.socialYoutube || prev.socialYoutube,
@@ -108,7 +109,17 @@ export const Footer: React.FC = () => {
         }));
       })
       .catch(() => {
-        // Silently keep default values
+        // Fallback on network error
+        setSettings((prev) => ({
+          ...prev,
+          siteDescription: 'A premier music entertainment powerhouse & record label specializing in original sound engineering, global music distribution, artist management, and cinematic audio-visual production based in Jaipur, India.',
+          contactEmail: 'Contact@vexomusic.in',
+          contactPhone: '+91 72399 99966',
+          officeAddress: 'SKY CROWN, Office No. 205, Chordiya City, Kamla Nehru Nagar, Ajmer Road, Jaipur, Pin Code- 302021, Rajasthan, India',
+        }));
+      })
+      .finally(() => {
+        setIsLoaded(true);
       });
   }, []);
 
@@ -165,9 +176,17 @@ export const Footer: React.FC = () => {
               <VexoLogo size="lg" />
             </Link>
 
-            <p className="text-sm leading-relaxed text-slate-600 dark:text-zinc-400 max-w-sm">
-              {settings.footerBio || settings.siteDescription}
-            </p>
+            {!isLoaded ? (
+              <div className="space-y-2 max-w-sm py-1">
+                <Skeleton className="h-4 w-full" />
+                <Skeleton className="h-4 w-5/6" />
+                <Skeleton className="h-4 w-3/4" />
+              </div>
+            ) : (
+              <p className="text-sm leading-relaxed text-slate-600 dark:text-zinc-400 max-w-sm">
+                {settings.footerBio || settings.siteDescription}
+              </p>
+            )}
 
             {/* Social Links with Tactile Bordered Buttons & Brand Themes */}
             <div className="flex flex-wrap items-center gap-2 pt-2">
@@ -336,27 +355,39 @@ export const Footer: React.FC = () => {
             <div className="flex flex-col gap-3.5 text-xs text-slate-600 dark:text-zinc-400">
               <div className="flex items-start gap-2.5 group">
                 <MapPin className="w-4 h-4 text-vexo-red shrink-0 mt-0.5 transition-transform duration-200 group-hover:scale-110" />
-                <span className="leading-relaxed">{settings.officeAddress}</span>
+                {!isLoaded ? (
+                  <Skeleton className="h-4 w-48" />
+                ) : (
+                  <span className="leading-relaxed">{settings.officeAddress}</span>
+                )}
               </div>
 
               <div className="flex items-center gap-2.5 group">
                 <Phone className="w-4 h-4 text-vexo-red shrink-0 transition-transform duration-200 group-hover:scale-110" />
-                <a
-                  href={`tel:${settings.contactPhone}`}
-                  className="text-slate-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors font-mono"
-                >
-                  {settings.contactPhone}
-                </a>
+                {!isLoaded ? (
+                  <Skeleton className="h-4 w-32" />
+                ) : (
+                  <a
+                    href={`tel:${settings.contactPhone}`}
+                    className="text-slate-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors font-mono"
+                  >
+                    {settings.contactPhone}
+                  </a>
+                )}
               </div>
 
               <div className="flex items-center gap-2.5 group">
                 <Mail className="w-4 h-4 text-vexo-red shrink-0 transition-transform duration-200 group-hover:scale-110" />
-                <a
-                  href={`mailto:${settings.contactEmail}`}
-                  className="text-slate-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors font-mono"
-                >
-                  {settings.contactEmail}
-                </a>
+                {!isLoaded ? (
+                  <Skeleton className="h-4 w-36" />
+                ) : (
+                  <a
+                    href={`mailto:${settings.contactEmail}`}
+                    className="text-slate-600 dark:text-zinc-400 hover:text-black dark:hover:text-white transition-colors font-mono"
+                  >
+                    {settings.contactEmail}
+                  </a>
+                )}
               </div>
 
               {/* Minimalist Live Status Badge */}

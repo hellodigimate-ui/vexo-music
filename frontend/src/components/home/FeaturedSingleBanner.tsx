@@ -19,6 +19,7 @@ import {
 } from 'lucide-react';
 
 import { homepageApi, videosApi } from '../../lib/api';
+import { Skeleton } from '../ui/Skeleton';
 
 // YouTube IFrame Player type shim
 declare global {
@@ -30,22 +31,21 @@ declare global {
 
 export const FeaturedSingleBanner: React.FC = () => {
   // Video Details from YouTube link & synced store
-  const [videoDetails, setVideoDetails] = useState({
-    title: 'BHARTAR',
-    artists: 'R Beer & Rashmi Nishad',
-    label: 'Vexo Entertainment Pvt. Ltd.',
-    youtubeId: 'PsmXAUKjR5Y',
-    youtubeUrl: 'https://youtu.be/PsmXAUKjR5Y?si=WpdguDVkiQZkI0j6',
-    thumbnailUrl: 'https://img.youtube.com/vi/PsmXAUKjR5Y/maxresdefault.jpg',
-    fallbackThumbnail: 'https://img.youtube.com/vi/PsmXAUKjR5Y/hqdefault.jpg',
-    likes: '68',
-    views: '553',
-    releaseDate: '24 Aug 2026',
-    hashtags: ['#RajasthaniMusic', '#RashmiNishad', '#NewRajasthaniSong', '#Bhartar', '#VexoMusic'],
-    descriptionHeader: '🎵 BHARTAR (Official Music Video)',
-    descriptionText:
-      'Ajay Sharma & Vexo Entertainment Pvt Ltd Presents "BHARTAR"\nStarring: Mohit Arora & Shivya Arora\nSinger: R Beer & Rashmi Nishad\nLyrics: R Beer | Music: GR Music | Director: R Beer\nArtwork: Poster Factory\n🔥 Vibrant folk rhythms, traditional melodies, and electrifying beats — presenting “BHARTAR” 💗',
-  });
+  const [videoDetails, setVideoDetails] = useState<{
+    title: string;
+    artists: string;
+    label: string;
+    youtubeId: string;
+    youtubeUrl: string;
+    thumbnailUrl: string;
+    fallbackThumbnail: string;
+    likes: string;
+    views: string;
+    releaseDate: string;
+    hashtags: string[];
+    descriptionHeader: string;
+    descriptionText: string;
+  } | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -65,16 +65,16 @@ export const FeaturedSingleBanner: React.FC = () => {
       if (featured) {
         setVideoDetails({
           title: featured.title,
-          artists: featured.artist || 'R Beer & Rashmi Nishad',
+          artists: featured.artist || 'VEXO Recording Artist',
           label: 'Vexo Entertainment Pvt. Ltd.',
           youtubeId: featured.youtubeId || 'PsmXAUKjR5Y',
           youtubeUrl: `https://youtu.be/${featured.youtubeId || 'PsmXAUKjR5Y'}`,
           thumbnailUrl: featured.thumbnailUrl || `https://img.youtube.com/vi/${featured.youtubeId || 'PsmXAUKjR5Y'}/maxresdefault.jpg`,
           fallbackThumbnail: `https://img.youtube.com/vi/${featured.youtubeId || 'PsmXAUKjR5Y'}/hqdefault.jpg`,
-          likes: String(featured.likes || '68'),
-          views: String(featured.views || '553'),
-          releaseDate: featured.publishedAt || '24 Aug 2026',
-          hashtags: featured.tags && featured.tags.length > 0 ? featured.tags : ['#RajasthaniMusic', '#RashmiNishad', '#Bhartar', '#VexoMusic'],
+          likes: String(featured.likes || '0'),
+          views: String(featured.views || '0'),
+          releaseDate: featured.publishedAt || '',
+          hashtags: featured.tags && featured.tags.length > 0 ? featured.tags : ['#VexoMusic', '#OfficialVideo'],
           descriptionHeader: `🎵 ${featured.title}`,
           descriptionText: featured.description || 'Presenting the Official Song by Vexo Entertainment Pvt. Ltd.',
         });
@@ -127,7 +127,7 @@ export const FeaturedSingleBanner: React.FC = () => {
 
   // Initialize hidden preview player once YT API is ready
   useEffect(() => {
-    if (!ytReady || !previewContainerRef.current) return;
+    if (!ytReady || !previewContainerRef.current || !videoDetails?.youtubeId) return;
     if (previewPlayerRef.current) return; // Already initialized
 
     previewPlayerRef.current = new window.YT.Player(previewContainerRef.current, {
@@ -157,7 +157,7 @@ export const FeaturedSingleBanner: React.FC = () => {
         },
       },
     });
-  }, [ytReady, videoDetails.youtubeId]);
+  }, [ytReady, videoDetails?.youtubeId]);
 
   // Toggle real YouTube audio preview
   const toggleAudioPreview = useCallback(() => {
@@ -175,7 +175,7 @@ export const FeaturedSingleBanner: React.FC = () => {
       try {
         player.pauseVideo();
         setIsPlayingAudio(false);
-      } catch (e) {
+      } catch {
         setIsPlayingAudio(false);
       }
     }
@@ -187,9 +187,9 @@ export const FeaturedSingleBanner: React.FC = () => {
       try {
         previewPlayerRef.current?.pauseVideo();
         setIsPlayingAudio(false);
-      } catch (_) { }
+      } catch { }
     }
-  }, [isVideoModalOpen]);
+  }, [isVideoModalOpen, isPlayingAudio]);
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
     if (!cardRef.current) return;
@@ -207,6 +207,42 @@ export const FeaturedSingleBanner: React.FC = () => {
     setRotateX(0);
     setRotateY(0);
   };
+
+  if (!videoDetails) {
+    return (
+      <section className="relative py-16 sm:py-24 bg-[#050505] overflow-hidden border-y border-white/10 select-none">
+        <Container className="relative z-10">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+            {/* Left Column Skeleton */}
+            <div className="lg:col-span-7 flex flex-col items-start gap-6">
+              <Skeleton className="h-7 w-48 rounded-full" />
+              <div className="space-y-3 w-full">
+                <Skeleton className="h-4 w-40 rounded-md" />
+                <Skeleton className="h-12 sm:h-14 w-3/4 max-w-lg rounded-xl" />
+                <Skeleton className="h-4 w-32 rounded-md" />
+              </div>
+              <div className="grid grid-cols-3 gap-3 w-full max-w-lg">
+                <Skeleton className="h-20 rounded-2xl" />
+                <Skeleton className="h-20 rounded-2xl" />
+                <Skeleton className="h-20 rounded-2xl" />
+              </div>
+              <div className="flex gap-2">
+                <Skeleton className="h-6 w-20 rounded-full" />
+                <Skeleton className="h-6 w-24 rounded-full" />
+                <Skeleton className="h-6 w-20 rounded-full" />
+              </div>
+              <Skeleton className="h-28 w-full max-w-xl rounded-2xl" />
+            </div>
+
+            {/* Right Column Skeleton */}
+            <div className="lg:col-span-5 flex justify-center w-full">
+              <Skeleton className="w-full max-w-[440px] aspect-[4/5] rounded-3xl" />
+            </div>
+          </div>
+        </Container>
+      </section>
+    );
+  }
 
   return (
     <section className="cinematic-dark relative py-16 sm:py-24 bg-[#050505] overflow-hidden border-y border-white/10 select-none">

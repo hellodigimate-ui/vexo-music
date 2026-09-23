@@ -7,6 +7,7 @@ import { AlbumCard } from './AlbumCard';
 import { albumsApi, homepageApi } from '../../lib/api';
 import type { Album } from '../../types';
 import { ArrowRight } from 'lucide-react';
+import { Skeleton } from '../ui/Skeleton';
 
 export const LatestReleases: React.FC = () => {
   const navigate = useNavigate();
@@ -16,6 +17,7 @@ export const LatestReleases: React.FC = () => {
   });
 
   const [albums, setAlbums] = useState<Album[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
     let isMounted = true;
@@ -56,6 +58,9 @@ export const LatestReleases: React.FC = () => {
       } else {
         setAlbums(allAlbums.slice(0, 4));
       }
+      setIsLoading(false);
+    }).catch(() => {
+      if (isMounted) setIsLoading(false);
     });
 
     return () => {
@@ -83,9 +88,19 @@ export const LatestReleases: React.FC = () => {
       />
 
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-        {albums.map((album) => (
-          <AlbumCard key={album.id} album={album} />
-        ))}
+        {isLoading ? (
+          Array.from({ length: 4 }).map((_, idx) => (
+            <div key={idx} className="flex flex-col gap-3">
+              <Skeleton className="aspect-square w-full rounded-2xl" />
+              <Skeleton className="h-5 w-3/4 rounded-md" />
+              <Skeleton className="h-4 w-1/2 rounded-md" />
+            </div>
+          ))
+        ) : (
+          albums.map((album) => (
+            <AlbumCard key={album.id} album={album} />
+          ))
+        )}
       </div>
     </PageSection>
   );
