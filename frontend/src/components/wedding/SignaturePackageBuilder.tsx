@@ -117,7 +117,11 @@ export const SignaturePackageBuilder: React.FC<SignaturePackageBuilderProps> = (
 
   const handleWhatsAppQuote = () => {
     const serviceList = selectedServices
-      .map((s: CustomServiceOption) => `• ${s.name} - ₹${s.startingPriceINR.toLocaleString('en-IN')}`)
+      .map((s: CustomServiceOption) =>
+        s.startingPriceINR > 0
+          ? `• ${s.name} - ₹${s.startingPriceINR.toLocaleString('en-IN')}`
+          : `• ${s.name} - Per client requirement`
+      )
       .join('%0A');
 
     const msg =
@@ -271,14 +275,24 @@ export const SignaturePackageBuilder: React.FC<SignaturePackageBuilderProps> = (
 
                   {/* Pricing footer */}
                   <div className="pt-3 border-t border-white/10 flex items-baseline justify-between text-xs">
-                    <span className="text-zinc-400 font-mono">Starting</span>
+                    <span className="text-zinc-400 font-mono">
+                      {service.startingPriceINR > 0 ? 'Starting' : 'Pricing'}
+                    </span>
                     <div className="text-right">
-                      <span className="text-sm font-bold text-vexo-red">
-                        ₹{service.startingPriceINR.toLocaleString('en-IN')}
-                      </span>
-                      <span className="text-[10px] text-zinc-400 ml-1">
-                        / {service.unit}
-                      </span>
+                      {service.startingPriceINR > 0 ? (
+                        <>
+                          <span className="text-sm font-bold text-vexo-red">
+                            ₹{service.startingPriceINR.toLocaleString('en-IN')}
+                          </span>
+                          <span className="text-[10px] text-zinc-400 ml-1">
+                            / {service.unit}
+                          </span>
+                        </>
+                      ) : (
+                        <span className="text-xs sm:text-sm font-bold text-vexo-red">
+                          Per client requirement
+                        </span>
+                      )}
                     </div>
                   </div>
                 </motion.div>
@@ -330,9 +344,15 @@ export const SignaturePackageBuilder: React.FC<SignaturePackageBuilderProps> = (
                       >
                         <span className="text-zinc-200 truncate mr-2">{s.name}</span>
                         <div className="flex items-center gap-2 shrink-0">
-                          <span className="text-vexo-red font-semibold">
-                            ₹{s.startingPriceINR.toLocaleString('en-IN')}
-                          </span>
+                          {s.startingPriceINR > 0 ? (
+                            <span className="text-vexo-red font-semibold">
+                              ₹{s.startingPriceINR.toLocaleString('en-IN')}
+                            </span>
+                          ) : (
+                            <span className="text-vexo-red font-medium text-[11px]">
+                              Per client requirement
+                            </span>
+                          )}
                           <button
                             type="button"
                             onClick={(e) => {

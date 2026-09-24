@@ -5646,8 +5646,8 @@
         "id": "addon-location",
         "title": "Additional Location",
         "priceINR": 4000,
-        "description": "Shoot at additional forts, lakeside pavilions or architectural wonders.(as per client requirement ",
-        "priceDisplay": "As per requirement"
+        "description": "Shoot at additional forts, lakeside pavilions or architectural wonders (as per client requirement).",
+        "priceDisplay": "Per client requirement"
       },
       {
         "id": "addon-album",
@@ -5655,7 +5655,7 @@
         "title": "Premium Album",
         "priceINR": 0,
         "description": "Luxury handcrafted Italian leather album with HD non-tearable matte pages.",
-        "priceDisplay": "As per requirement"
+        "priceDisplay": "Per client requirement"
       },
       {
         "id": "addon-makeup",

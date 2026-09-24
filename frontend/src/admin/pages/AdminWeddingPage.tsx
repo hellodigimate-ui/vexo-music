@@ -1525,7 +1525,11 @@ export const AdminWeddingPage: React.FC = () => {
                 </div>
                 <div className="flex items-center justify-between text-xs font-mono">
                   <span className="text-slate-500">Starting Rate:</span>
-                  <span className="font-bold text-amber-500">₹{Number(cs.startingPriceINR || 0).toLocaleString('en-IN')} {cs.unit}</span>
+                  <span className="font-bold text-amber-500">
+                    {Number(cs.startingPriceINR || 0) > 0
+                      ? `₹${Number(cs.startingPriceINR).toLocaleString('en-IN')} ${cs.unit || ''}`
+                      : 'Per client requirement'}
+                  </span>
                 </div>
                 <p className="text-[11px] text-slate-500 dark:text-zinc-400">{cs.description}</p>
               </div>
