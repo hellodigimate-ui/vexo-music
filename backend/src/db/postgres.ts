@@ -96,11 +96,14 @@ export function isPostgresConnected(): boolean {
   return isConnected;
 }
 
+const DEFAULT_SUPABASE_DATABASE_URL =
+  'postgresql://postgres.fxfmictwosbwjeoumyny:Chinmay0009!@aws-0-ap-southeast-1.pooler.supabase.com:5432/postgres';
+
 export function getPostgresPool(): pg.Pool | null {
   reloadEnv();
-  const dbUrl = process.env.DATABASE_URL;
-  if (!dbUrl || !dbUrl.startsWith('postgres')) {
-    return null;
+  let dbUrl = process.env.DATABASE_URL;
+  if (!dbUrl || !dbUrl.startsWith('postgres') || dbUrl.includes('dev.db')) {
+    dbUrl = DEFAULT_SUPABASE_DATABASE_URL;
   }
 
   if (dbUrl.includes('YOUR_PASSWORD')) {

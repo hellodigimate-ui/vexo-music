@@ -7,6 +7,11 @@ import type { ApiResponse } from './types';
  */
 
 function resolveApiBaseUrl(): string {
+  // If running in browser on localhost / 127.0.0.1, always connect to local backend on port 4000
+  if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
+    return 'http://localhost:4000/api';
+  }
+
   // Use ONE consistent production API source: import.meta.env.VITE_API_URL
   // Fall back to VITE_API_BASE_URL (if provided)
   const envUrl = (import.meta.env.VITE_API_URL || import.meta.env.VITE_API_BASE_URL || '').trim();

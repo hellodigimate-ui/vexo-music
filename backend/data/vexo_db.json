@@ -85,7 +85,7 @@
       "id": "soc-2",
       "artistId": "art-1",
       "platform": "instagram",
-      "url": "https://instagram.com",
+      "url": "https://www.instagram.com/vexoentertainment?stkn=MXNwZXczZDZ3NnFxcQ==",
       "order": 2,
       "createdAt": "2026-09-24T07:09:55.476Z",
       "updatedAt": "2026-09-24T07:09:55.476Z"
@@ -916,6 +916,48 @@
   ],
   "contactRequests": [
     {
+      "name": "ttttttttttetetg",
+      "email": "sfjufuygefguuy@gmail.com",
+      "phone": "2222222222",
+      "company": "dfbbev",
+      "service": "Brand Collaboration",
+      "message": "vvagraegervq3gq3",
+      "id": "cnt-0a792d0b3b533d7d",
+      "referenceId": "VXO-MUF8B628-5607",
+      "status": "NEW",
+      "notes": null,
+      "createdAt": "2026-09-24T07:47:10.832Z",
+      "updatedAt": "2026-09-24T07:47:10.832Z"
+    },
+    {
+      "name": "jkhvcuiyvcuiwg7wg",
+      "email": "asbwuegvuweg@gmail.com",
+      "phone": "1111111111",
+      "company": "asdvarvar",
+      "service": "Music Production",
+      "message": "vsafbvavawfvweuwguigwybh",
+      "id": "cnt-7ccb6210b142a151",
+      "referenceId": "VXO-MUF89Y9A-6618",
+      "status": "NEW",
+      "notes": null,
+      "createdAt": "2026-09-24T07:46:14.062Z",
+      "updatedAt": "2026-09-24T07:46:14.062Z"
+    },
+    {
+      "name": "test 222222222",
+      "email": "test@gmail.com1",
+      "phone": "1111111111",
+      "company": "sfvbasfv",
+      "service": "Music Production",
+      "message": "sfb fasvbafaf",
+      "id": "cnt-ab0a92f9181da16a",
+      "referenceId": "VXO-MUF7O71G-3010",
+      "status": "NEW",
+      "notes": null,
+      "createdAt": "2026-09-24T07:29:19.012Z",
+      "updatedAt": "2026-09-24T07:29:19.012Z"
+    },
+    {
       "id": "cnt-7829649af7fd587a",
       "referenceId": "VXO-MUF7DL05-6035",
       "name": "dezoryn",
@@ -958,18 +1000,18 @@
       "updatedAt": "2026-09-22T11:31:36.994Z"
     },
     {
-      "id": "cnt-19e02c10fca27fa3",
-      "referenceId": "VXO-MUF73QQQ-6404",
-      "name": "Sync Test User",
-      "email": "sync.test@vexomusic.com",
-      "phone": "9876543210",
-      "company": "Test Co",
+      "id": "cnt-fc9d35223bb21a52",
+      "referenceId": "VXO-MUF80X8W-9290",
+      "name": "fwergwrge",
+      "email": "gragaerg@gmail.com",
+      "phone": "1111111111",
+      "company": "agergerg",
       "service": "Music Production",
-      "message": "This is an automated sync validation test message.",
+      "message": "gergerhverberg",
       "status": "NEW",
       "notes": null,
-      "createdAt": "2026-09-24T07:13:24.770Z",
-      "updatedAt": "2026-09-24T07:13:24.770Z"
+      "createdAt": "2026-09-24T07:39:12.848Z",
+      "updatedAt": "2026-09-24T07:39:12.848Z"
     }
   ],
   "homepage": {
