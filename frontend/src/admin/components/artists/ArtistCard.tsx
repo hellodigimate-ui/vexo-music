@@ -101,11 +101,10 @@ export const AdminArtistCard: React.FC<AdminArtistCardProps> = ({
           <button
             onClick={() => onToggleFeatured(artist)}
             title={artist.featured ? 'Remove from Featured' : 'Mark as Featured'}
-            className={`p-1.5 rounded-lg text-xs font-mono transition-colors cursor-pointer ${
-              artist.featured
+            className={`p-1.5 rounded-lg text-xs font-mono transition-colors cursor-pointer ${artist.featured
                 ? 'bg-amber-500/15 text-amber-400 border border-amber-500/30'
                 : 'bg-zinc-900 text-zinc-600 hover:text-zinc-300 border border-zinc-800'
-            }`}
+              }`}
           >
             <Star className={`w-3.5 h-3.5 ${artist.featured ? 'fill-amber-400' : ''}`} />
           </button>
@@ -114,11 +113,10 @@ export const AdminArtistCard: React.FC<AdminArtistCardProps> = ({
           <button
             onClick={() => onTogglePublished(artist)}
             title={isPublished ? 'Unpublish' : 'Publish'}
-            className={`p-1.5 rounded-lg text-xs font-mono transition-colors cursor-pointer ${
-              isPublished
+            className={`p-1.5 rounded-lg text-xs font-mono transition-colors cursor-pointer ${isPublished
                 ? 'bg-emerald-500/15 text-emerald-400 border border-emerald-500/30'
                 : 'bg-indigo-500/15 text-indigo-400 border border-indigo-500/30'
-            }`}
+              }`}
           >
             {isPublished ? <Eye className="w-3.5 h-3.5" /> : <EyeOff className="w-3.5 h-3.5" />}
           </button>
