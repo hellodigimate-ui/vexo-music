@@ -7,11 +7,17 @@ import type { PreWeddingCoverageType } from '../../data/weddingData';
 interface CoverageCategoriesSectionProps {
   coverageTypes?: PreWeddingCoverageType[];
   onSelectCoverage?: (type: string) => void;
+  title?: React.ReactNode;
+  subtitle?: string;
+  scrollTargetId?: string;
 }
 
 export const CoverageCategoriesSection: React.FC<CoverageCategoriesSectionProps> = ({
   coverageTypes = [],
   onSelectCoverage,
+  title,
+  subtitle = 'Specialized cinema teams and prime gear calibrated for each special chapter of your wedding celebration.',
+  scrollTargetId,
 }) => {
   if (!coverageTypes || coverageTypes.length === 0) return null;
 
@@ -27,7 +33,14 @@ export const CoverageCategoriesSection: React.FC<CoverageCategoriesSectionProps>
   };
 
   const scrollToPackages = () => {
-    const el = document.getElementById('pre-wedding-packages') || document.getElementById('packages');
+    if (scrollTargetId) {
+      const el = document.getElementById(scrollTargetId);
+      if (el) {
+        el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        return;
+      }
+    }
+    const el = document.getElementById('pre-wedding-packages') || document.getElementById('wedding-plans') || document.getElementById('packages');
     if (el) {
       el.scrollIntoView({ behavior: 'smooth', block: 'start' });
     }
@@ -44,7 +57,11 @@ export const CoverageCategoriesSection: React.FC<CoverageCategoriesSectionProps>
             transition={{ duration: 0.5 }}
             className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white mb-3"
           >
-            COVERAGE DESIGNED <span className="text-vexo-red">AROUND YOUR DAY.</span>
+            {title || (
+              <>
+                COVERAGE DESIGNED <span className="text-vexo-red">AROUND YOUR DAY.</span>
+              </>
+            )}
           </motion.h2>
           <motion.p
             initial={{ opacity: 0, y: 15 }}
@@ -53,7 +70,7 @@ export const CoverageCategoriesSection: React.FC<CoverageCategoriesSectionProps>
             transition={{ duration: 0.5, delay: 0.1 }}
             className="text-sm sm:text-base text-zinc-400 max-w-xl mx-auto"
           >
-            Specialized cinema teams and prime gear calibrated for each special chapter of your wedding celebration.
+            {subtitle}
           </motion.p>
         </div>
 

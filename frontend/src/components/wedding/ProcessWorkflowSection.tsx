@@ -2,14 +2,23 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { Container } from '../ui/Container';
 import { Compass, Sparkles } from 'lucide-react';
-import type { PreWeddingProcessStep } from '../../data/weddingData';
+import { DEFAULT_PRE_WEDDING_PROCESS_STEPS, type PreWeddingProcessStep } from '../../data/weddingData';
 
 interface ProcessWorkflowSectionProps {
   processSteps?: PreWeddingProcessStep[];
+  badgeText?: string;
+  heading?: React.ReactNode;
+  subtitle?: string;
 }
 
-export const ProcessWorkflowSection: React.FC<ProcessWorkflowSectionProps> = ({ processSteps = [] }) => {
-  if (!processSteps || processSteps.length === 0) return null;
+export const ProcessWorkflowSection: React.FC<ProcessWorkflowSectionProps> = ({
+  processSteps,
+  badgeText = 'THE EXPERIENCE',
+  heading,
+  subtitle = 'From the very first phone call to delivering your final handcrafted cinema cut, we keep every detail seamless, calm, and tailored to you.',
+}) => {
+  const steps = processSteps && processSteps.length > 0 ? processSteps : DEFAULT_PRE_WEDDING_PROCESS_STEPS;
+  if (!steps || steps.length === 0) return null;
 
   return (
     <section className="relative py-20 sm:py-28 bg-[#050508] text-white overflow-hidden">
@@ -24,7 +33,7 @@ export const ProcessWorkflowSection: React.FC<ProcessWorkflowSectionProps> = ({ 
             className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-vexo-red/10 border border-vexo-red/30 text-vexo-red text-xs font-mono font-bold tracking-widest uppercase mb-4"
           >
             <Compass className="w-3.5 h-3.5 text-vexo-red" />
-            <span>THE EXPERIENCE</span>
+            <span>{badgeText}</span>
           </motion.div>
 
           <motion.h2
@@ -34,7 +43,11 @@ export const ProcessWorkflowSection: React.FC<ProcessWorkflowSectionProps> = ({ 
             transition={{ duration: 0.55, delay: 0.1 }}
             className="text-3xl sm:text-5xl md:text-6xl font-black uppercase tracking-tight text-white mb-4"
           >
-            A CLEAR PROCESS. <span className="text-vexo-red">A CALM SHOOT DAY.</span> ART THAT LASTS.
+            {heading || (
+              <>
+                A CLEAR PROCESS. <span className="text-vexo-red">A CALM SHOOT DAY.</span> ART THAT LASTS.
+              </>
+            )}
           </motion.h2>
 
           <motion.p
@@ -44,13 +57,13 @@ export const ProcessWorkflowSection: React.FC<ProcessWorkflowSectionProps> = ({ 
             transition={{ duration: 0.5, delay: 0.2 }}
             className="text-sm sm:text-base text-zinc-400 max-w-2xl mx-auto leading-relaxed"
           >
-            From the very first phone call to delivering your final handcrafted cinema cut, we keep every detail seamless, calm, and tailored to you.
+            {subtitle}
           </motion.p>
         </div>
 
         {/* 3 Step Process Cards */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 lg:gap-8 max-w-6xl mx-auto">
-          {processSteps.map((step, idx) => (
+          {steps.map((step, idx) => (
             <motion.div
               key={step.step || idx}
               initial={{ opacity: 0, y: 30 }}

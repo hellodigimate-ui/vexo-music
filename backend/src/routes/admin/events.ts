@@ -83,7 +83,7 @@ export const adminEventRoutes: FastifyPluginAsync = async (fastify) => {
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/^-|-$/g, '');
 
-      const created = db.events.create(
+      const created = await db.events.create(
         {
           title: body.title,
           slug,
@@ -144,7 +144,7 @@ export const adminEventRoutes: FastifyPluginAsync = async (fastify) => {
         });
       }
 
-      const updated = db.events.update(id, updates, artistIds);
+      const updated = await db.events.update(id, updates, artistIds);
 
       db.activityLogs.log({
         adminUserId: user.id,
@@ -183,7 +183,7 @@ export const adminEventRoutes: FastifyPluginAsync = async (fastify) => {
         });
       }
 
-      db.events.delete(id);
+      await db.events.delete(id);
 
       db.activityLogs.log({
         adminUserId: user.id,

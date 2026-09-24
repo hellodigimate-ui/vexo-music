@@ -21,16 +21,26 @@ import { InstagramIcon } from '../common/InstagramIcon';
 
 type FilterCategory = 'All' | 'Cinematic Film' | 'Pre-Wedding' | 'Instagram Reel';
 
-export const FilmsReelsShowcase: React.FC = () => {
-  const [activeTab, setActiveTab] = useState<FilterCategory>('All');
+export interface FilmsReelsShowcaseProps {
+  videos?: WeddingFilmItem[];
+  defaultCategory?: FilterCategory;
+}
+
+export const FilmsReelsShowcase: React.FC<FilmsReelsShowcaseProps> = ({
+  videos,
+  defaultCategory = 'All',
+}) => {
+  const [activeTab, setActiveTab] = useState<FilterCategory>(defaultCategory);
   const [activeVideo, setActiveVideo] = useState<WeddingFilmItem | null>(null);
 
+  const allFilms = videos && videos.length > 0 ? videos : FEATURED_WEDDING_FILMS;
+
   const filteredFilms = useMemo(() => {
-    if (activeTab === 'All') return FEATURED_WEDDING_FILMS;
-    return FEATURED_WEDDING_FILMS.filter(
+    if (activeTab === 'All') return allFilms;
+    return allFilms.filter(
       (item: WeddingFilmItem) => item.category === activeTab
     );
-  }, [activeTab]);
+  }, [activeTab, allFilms]);
 
   const tabs: FilterCategory[] = ['All', 'Cinematic Film', 'Pre-Wedding', 'Instagram Reel'];
 
@@ -74,28 +84,41 @@ export const FilmsReelsShowcase: React.FC = () => {
           </motion.p>
         </div>
 
-        {/* Filter Tabs */}
+        {/* Filter Tabs with Animated Sliding Pill */}
         <div className="flex flex-wrap items-center justify-center gap-2.5 mb-12">
-          {tabs.map((tab: FilterCategory) => (
-            <button
-              key={tab}
-              type="button"
-              onClick={() => setActiveTab(tab)}
-              className={`px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-all duration-200 cursor-pointer ${activeTab === tab
-                  ? 'bg-amber-400 text-black shadow-md shadow-amber-400/25'
-                  : 'bg-white/5 text-gray-400 hover:text-white hover:bg-white/10 border border-white/5'
+          {tabs.map((tab: FilterCategory) => {
+            const isActive = activeTab === tab;
+            return (
+              <button
+                key={tab}
+                type="button"
+                onClick={() => setActiveTab(tab)}
+                className={`relative px-5 py-2.5 rounded-full text-xs sm:text-sm font-semibold transition-colors duration-200 cursor-pointer ${
+                  isActive
+                    ? 'text-black font-bold'
+                    : 'text-gray-400 hover:text-white hover:bg-white/5 border border-white/5'
                 }`}
-            >
-              {tab === 'Instagram Reel' ? (
-                <span className="flex items-center gap-1.5">
-                  <InstagramIcon className="w-3.5 h-3.5" />
-                  Instagram Reels
+              >
+                {isActive && (
+                  <motion.div
+                    layoutId="activeFilmTabPill"
+                    transition={{ type: 'spring', stiffness: 450, damping: 32 }}
+                    className="absolute inset-0 bg-amber-400 rounded-full shadow-md shadow-amber-400/30"
+                  />
+                )}
+                <span className="relative z-10">
+                  {tab === 'Instagram Reel' ? (
+                    <span className="flex items-center gap-1.5">
+                      <InstagramIcon className="w-3.5 h-3.5" />
+                      Instagram Reels
+                    </span>
+                  ) : (
+                    tab
+                  )}
                 </span>
-              ) : (
-                tab
-              )}
-            </button>
-          ))}
+              </button>
+            );
+          })}
         </div>
 
         {/* Films Grid */}
@@ -106,12 +129,13 @@ export const FilmsReelsShowcase: React.FC = () => {
             return (
               <motion.div
                 key={film.id}
-                initial={{ opacity: 0, y: 20 }}
+                initial={{ opacity: 0, y: 25 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                transition={{ duration: 0.4, delay: idx * 0.05 }}
+                transition={{ duration: 0.5, delay: idx * 0.06 }}
+                whileHover={{ y: -8, transition: { duration: 0.25 } }}
                 onClick={() => setActiveVideo(film)}
-                className="group relative rounded-2xl overflow-hidden bg-[#111018] border border-white/10 hover:border-amber-400/40 transition-all duration-300 cursor-pointer shadow-lg hover:shadow-2xl hover:shadow-black/60 flex flex-col"
+                className="group relative rounded-2xl overflow-hidden bg-[#111018] border border-white/10 hover:border-amber-400/50 transition-all duration-300 cursor-pointer shadow-lg hover:shadow-2xl hover:shadow-black/70 flex flex-col"
               >
                 {/* Thumbnail Container */}
                 <div
@@ -121,7 +145,7 @@ export const FilmsReelsShowcase: React.FC = () => {
                   <img
                     src={film.thumbnailUrl}
                     alt={film.title}
-                    className="w-full h-full object-cover object-center group-hover:scale-105 transition-transform duration-500"
+                    className="w-full h-full object-cover object-center group-hover:scale-108 transition-transform duration-700 ease-out"
                     loading="lazy"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-transparent" />
@@ -137,10 +161,13 @@ export const FilmsReelsShowcase: React.FC = () => {
                     </span>
                   </div>
 
-                  {/* Centered Play Button Overlay */}
+                  {/* Centered Play Button with Ripple Glow Overlay */}
                   <div className="absolute inset-0 flex items-center justify-center">
-                    <div className="w-14 h-14 rounded-full bg-amber-400/90 text-black flex items-center justify-center shadow-lg shadow-black/40 group-hover:scale-110 group-hover:bg-amber-400 transition-all duration-300">
-                      <Play className="w-6 h-6 fill-black ml-1" />
+                    <div className="relative">
+                      <div className="absolute inset-0 rounded-full bg-amber-400/30 blur-md scale-125 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
+                      <div className="relative w-14 h-14 rounded-full bg-amber-400/90 text-black flex items-center justify-center shadow-lg shadow-black/40 group-hover:scale-115 group-hover:bg-amber-400 transition-all duration-300">
+                        <Play className="w-6 h-6 fill-black ml-1" />
+                      </div>
                     </div>
                   </div>
 

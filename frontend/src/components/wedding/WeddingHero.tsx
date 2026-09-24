@@ -11,6 +11,14 @@ export interface WeddingHeroProps {
   heroStats?: PreWeddingHeroStat[];
   onExplorePackages?: () => void;
   onBookDate?: () => void;
+  tagline?: string;
+  headline?: React.ReactNode;
+  subHeadlineHindi?: string;
+  storyBadgeText?: string;
+  exploreText?: string;
+  exploreIcon?: React.ReactNode;
+  featurePills?: Array<{ icon?: React.ReactNode; text: string }>;
+  bgImage?: string;
 }
 
 export const WeddingHero: React.FC<WeddingHeroProps> = ({
@@ -18,6 +26,14 @@ export const WeddingHero: React.FC<WeddingHeroProps> = ({
   heroStats,
   onExplorePackages,
   onBookDate,
+  tagline,
+  headline,
+  subHeadlineHindi,
+  storyBadgeText,
+  exploreText,
+  exploreIcon,
+  featurePills,
+  bgImage: customBgImage,
 }) => {
   const shouldReduceMotion = useReducedMotion();
 
@@ -33,7 +49,7 @@ export const WeddingHero: React.FC<WeddingHeroProps> = ({
   const handleExplore = () => {
     if (onExplorePackages) {
       onExplorePackages();
-    } else if (!scrollToSection('pre-wedding-packages')) {
+    } else if (!scrollToSection('pre-wedding-packages') && !scrollToSection('wedding-plans')) {
       scrollToSection('packages');
     }
   };
@@ -48,10 +64,11 @@ export const WeddingHero: React.FC<WeddingHeroProps> = ({
 
   // Dynamic Background Image from studioInfo, resolved through getMediaUrl
   const rawBg =
+    customBgImage ||
     studioInfo?.heroBgImage ||
     WEDDING_STUDIO_INFO.heroBgImage ||
     'https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=2000&q=85';
-  const bgImage = getMediaUrl(rawBg);
+  const resolvedBgImage = getMediaUrl(rawBg);
 
   // Statistics: use heroStats if provided with data, otherwise fall back to WEDDING_STUDIO_INFO.stats
   const statsList =
@@ -72,7 +89,7 @@ export const WeddingHero: React.FC<WeddingHeroProps> = ({
           transition={{ duration: 24, repeat: Infinity, ease: 'linear' }}
           className="absolute inset-0 bg-cover bg-center"
           style={{
-            backgroundImage: `url('${bgImage}')`,
+            backgroundImage: `url('${resolvedBgImage}')`,
             filter: 'brightness(0.55) contrast(1.08) saturate(1.15)',
           }}
         />
@@ -80,7 +97,50 @@ export const WeddingHero: React.FC<WeddingHeroProps> = ({
         {/* Deep Gradient Overlays & Gold Radial Halo */}
         <div className="absolute inset-0 bg-gradient-to-t from-[#050508] via-[#050508]/50 to-[#050508]/80 pointer-events-none" />
         <div className="absolute inset-0 bg-radial-gold opacity-50 pointer-events-none" />
-        <div className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-[#D4AF37]/10 rounded-full blur-[160px] pointer-events-none" />
+        <motion.div
+          animate={shouldReduceMotion ? undefined : { opacity: [0.4, 0.7, 0.4], scale: [1, 1.1, 1] }}
+          transition={{ duration: 7, repeat: Infinity, ease: 'easeInOut' }}
+          className="absolute top-1/4 left-1/2 -translate-x-1/2 w-[700px] h-[500px] bg-[#D4AF37]/15 rounded-full blur-[160px] pointer-events-none"
+        />
+
+        {/* Floating Golden Stardust Particles */}
+        {!shouldReduceMotion && (
+          <div className="absolute inset-0 pointer-events-none overflow-hidden">
+            {[
+              { top: '15%', left: '10%', size: 4, delay: 0, dur: 5 },
+              { top: '25%', left: '85%', size: 6, delay: 1, dur: 6.5 },
+              { top: '45%', left: '18%', size: 3, delay: 2, dur: 4.5 },
+              { top: '60%', left: '80%', size: 5, delay: 0.5, dur: 6 },
+              { top: '35%', left: '70%', size: 4, delay: 1.5, dur: 5.5 },
+              { top: '75%', left: '25%', size: 5, delay: 2.5, dur: 7 },
+              { top: '20%', left: '50%', size: 3, delay: 3, dur: 4 },
+              { top: '70%', left: '60%', size: 4, delay: 1.2, dur: 5.2 },
+            ].map((pt, i) => (
+              <motion.div
+                key={i}
+                animate={{
+                  y: [0, -25, 0],
+                  x: [0, 10, 0],
+                  opacity: [0.15, 0.8, 0.15],
+                  scale: [0.9, 1.3, 0.9],
+                }}
+                transition={{
+                  duration: pt.dur,
+                  repeat: Infinity,
+                  delay: pt.delay,
+                  ease: 'easeInOut',
+                }}
+                className="absolute rounded-full bg-[#D4AF37] shadow-[0_0_8px_#D4AF37]"
+                style={{
+                  top: pt.top,
+                  left: pt.left,
+                  width: `${pt.size}px`,
+                  height: `${pt.size}px`,
+                }}
+              />
+            ))}
+          </div>
+        )}
       </div>
 
       {/* 2. Hero Content Container */}
@@ -95,7 +155,7 @@ export const WeddingHero: React.FC<WeddingHeroProps> = ({
             className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full gold-badge text-xs sm:text-sm font-semibold tracking-widest uppercase mb-6 shadow-lg shadow-[#D4AF37]/10"
           >
             <Sparkles className="w-3.5 h-3.5 text-[#D4AF37]" />
-            <span>{studioInfo?.tagline || WEDDING_STUDIO_INFO.tagline}</span>
+            <span>{tagline || studioInfo?.tagline || WEDDING_STUDIO_INFO.tagline}</span>
           </motion.div>
 
           {/* Main Royal Cinematic Headline */}
@@ -106,9 +166,13 @@ export const WeddingHero: React.FC<WeddingHeroProps> = ({
             className="text-4xl sm:text-6xl md:text-7xl font-bold tracking-tight text-white mb-6 leading-[1.1]"
             style={{ fontFamily: "'Playfair Display', 'Cormorant Garamond', Georgia, serif" }}
           >
-            Your Story.{' '}
-            <span className="text-gradient-gold italic font-normal">Our Frames.</span>{' '}
-            Forever.
+            {headline || (
+              <>
+                Your Story.{' '}
+                <span className="text-gradient-gold italic font-normal">Our Frames.</span>{' '}
+                Forever.
+              </>
+            )}
           </motion.h1>
 
           {/* Emotional Story Hook */}
@@ -119,10 +183,10 @@ export const WeddingHero: React.FC<WeddingHeroProps> = ({
             className="relative px-6 py-4 rounded-2xl bg-white/[0.04] border border-vexo-red/30 backdrop-blur-md mb-8 max-w-2xl shadow-xl text-center"
           >
             <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-0.5 bg-[#0A0A0E] border border-vexo-red/50 rounded-full text-[10px] font-semibold text-vexo-red tracking-wider uppercase flex items-center gap-1 shadow-md">
-              <Heart className="w-2.5 h-2.5 fill-vexo-red text-vexo-red" /> FROM THE HEART
+              <Heart className="w-2.5 h-2.5 fill-vexo-red text-vexo-red" /> {storyBadgeText || 'FROM THE HEART'}
             </div>
             <p className="text-base sm:text-lg md:text-xl text-zinc-200 font-medium leading-relaxed">
-              &ldquo;{studioInfo?.subHeadlineHindi || WEDDING_STUDIO_INFO.subHeadlineHindi}&rdquo;
+              &ldquo;{subHeadlineHindi || studioInfo?.subHeadlineHindi || WEDDING_STUDIO_INFO.subHeadlineHindi}&rdquo;
             </p>
           </motion.div>
 
@@ -138,8 +202,8 @@ export const WeddingHero: React.FC<WeddingHeroProps> = ({
               onClick={handleExplore}
               className="w-full sm:w-auto px-8 py-4 bg-vexo-red hover:bg-[#ff1a1a] text-white font-bold tracking-wider rounded-xl shadow-lg shadow-red-600/30 hover:scale-[1.02] hover:shadow-red-600/50 transition-all text-sm uppercase flex items-center justify-center gap-2 cursor-pointer font-mono"
             >
-              <Camera className="w-4 h-4" />
-              <span>EXPLORE PACKAGES</span>
+              {exploreIcon || <Camera className="w-4 h-4" />}
+              <span>{exploreText || 'EXPLORE PACKAGES'}</span>
             </Button>
 
             <Button
@@ -160,18 +224,21 @@ export const WeddingHero: React.FC<WeddingHeroProps> = ({
             transition={{ duration: 0.9, delay: 0.45 }}
             className="flex flex-wrap items-center justify-center gap-3 sm:gap-6 mt-10 text-xs sm:text-sm text-zinc-400 font-medium"
           >
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-black/50 border border-white/10">
-              <Film className="w-3.5 h-3.5 text-[#D4AF37]" />
-              <span>Sony Cinema Rig (FX3 & FX6)</span>
-            </div>
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-black/50 border border-white/10">
-              <Award className="w-3.5 h-3.5 text-[#D4AF37]" />
-              <span>Hollywood DaVinci Colour Grading</span>
-            </div>
-            <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-black/50 border border-white/10">
-              <Play className="w-3.5 h-3.5 text-[#D4AF37]" />
-              <span>Cinematic Storytelling</span>
-            </div>
+            {(featurePills || [
+              { icon: <Film className="w-3.5 h-3.5 text-[#D4AF37]" />, text: 'Sony Cinema Rig (FX3 & FX6)' },
+              { icon: <Award className="w-3.5 h-3.5 text-[#D4AF37]" />, text: 'Hollywood DaVinci Colour Grading' },
+              { icon: <Play className="w-3.5 h-3.5 text-[#D4AF37]" />, text: 'Cinematic Storytelling' },
+            ]).map((pill, idx) => (
+              <motion.div
+                key={idx}
+                whileHover={{ scale: 1.06, y: -2 }}
+                transition={{ type: 'spring', stiffness: 400, damping: 20 }}
+                className="flex items-center gap-2 px-3.5 py-1.5 rounded-lg bg-black/60 border border-white/10 hover:border-[#D4AF37]/50 shadow-xs cursor-default backdrop-blur-sm transition-colors"
+              >
+                {pill.icon}
+                <span>{pill.text}</span>
+              </motion.div>
+            ))}
           </motion.div>
 
         </div>
@@ -182,14 +249,25 @@ export const WeddingHero: React.FC<WeddingHeroProps> = ({
         <Container>
           <div className="grid grid-cols-2 md:grid-cols-4 divide-y md:divide-y-0 md:divide-x divide-[#D4AF37]/15 py-6">
             {statsList.map((stat: { value: string; label: string }, idx: number) => (
-              <div key={idx} className="px-4 py-3 sm:py-2 text-center flex flex-col items-center justify-center">
-                <span className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gradient-gold font-serif">
+              <motion.div
+                key={idx}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                className="px-4 py-3 sm:py-2 text-center flex flex-col items-center justify-center group"
+              >
+                <motion.span
+                  whileHover={{ scale: 1.1 }}
+                  transition={{ type: 'spring', stiffness: 350 }}
+                  className="text-2xl sm:text-3xl lg:text-4xl font-extrabold text-gradient-gold font-serif cursor-default inline-block"
+                >
                   {stat.value}
-                </span>
-                <span className="text-xs sm:text-sm text-zinc-400 font-medium uppercase tracking-wider mt-1">
+                </motion.span>
+                <span className="text-xs sm:text-sm text-zinc-400 font-medium uppercase tracking-wider mt-1 group-hover:text-zinc-200 transition-colors">
                   {stat.label}
                 </span>
-              </div>
+              </motion.div>
             ))}
           </div>
         </Container>

@@ -36,7 +36,7 @@ export const adminServiceRoutes: FastifyPluginAsync = async (fastify) => {
         });
       }
 
-      const reordered = db.services.reorder(serviceIds);
+      const reordered = await db.services.reorder(serviceIds);
 
       db.activityLogs.log({
         adminUserId: user.id,
@@ -142,7 +142,7 @@ export const adminServiceRoutes: FastifyPluginAsync = async (fastify) => {
 
       const number = body.number || (order < 10 ? `0${order}` : `${order}`);
 
-      const created = db.services.create({
+      const created = await db.services.create({
         number,
         title,
         slug,
@@ -210,7 +210,7 @@ export const adminServiceRoutes: FastifyPluginAsync = async (fastify) => {
           ? Boolean(request.body.published)
           : !existing.isActive;
 
-      const updated = db.services.update(id, { isActive: newStatus });
+      const updated = await db.services.update(id, { isActive: newStatus });
 
       db.activityLogs.log({
         adminUserId: user.id,
@@ -298,7 +298,7 @@ export const adminServiceRoutes: FastifyPluginAsync = async (fastify) => {
       if ((body as any).deliverables !== undefined) updates.deliverables = (body as any).deliverables;
       if ((body as any).faqs !== undefined) updates.faqs = (body as any).faqs;
 
-      const updated = db.services.update(id, updates);
+      const updated = await db.services.update(id, updates);
 
       db.activityLogs.log({
         adminUserId: user.id,
@@ -337,7 +337,7 @@ export const adminServiceRoutes: FastifyPluginAsync = async (fastify) => {
         });
       }
 
-      db.services.delete(id);
+      await db.services.delete(id);
 
       db.activityLogs.log({
         adminUserId: user.id,

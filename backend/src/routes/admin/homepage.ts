@@ -26,7 +26,7 @@ export const adminHomepageRoutes: FastifyPluginAsync = async (fastify) => {
       const user = request.adminUser!;
       const updates = request.body;
 
-      const updated = db.homepage.update(updates);
+      const updated = await db.homepage.update(updates);
 
       db.activityLogs.log({
         adminUserId: user.id,

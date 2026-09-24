@@ -84,7 +84,7 @@ export const adminMediaRoutes: FastifyPluginAsync = async (fastify) => {
           category,
         });
 
-        const created = db.media.create({
+        const created = await db.media.create({
           filename: uploadResult.filename,
           originalName: uploadResult.originalName,
           mimeType: uploadResult.mimeType,
@@ -152,7 +152,7 @@ export const adminMediaRoutes: FastifyPluginAsync = async (fastify) => {
         });
       }
 
-      const created = db.media.create({
+      const created = await db.media.create({
         filename: body.filename,
         originalName: body.originalName || body.filename,
         mimeType: body.mimeType || 'image/jpeg',
@@ -210,7 +210,7 @@ export const adminMediaRoutes: FastifyPluginAsync = async (fastify) => {
       }
 
       // Delete record from database
-      db.media.delete(id);
+      await db.media.delete(id);
 
       db.activityLogs.log({
         adminUserId: user.id,

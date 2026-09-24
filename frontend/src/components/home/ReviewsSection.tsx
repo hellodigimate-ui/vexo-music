@@ -5,75 +5,6 @@ import { homepageApi } from '../../lib/api';
 import type { ReviewItem } from '../../types';
 import { Skeleton } from '../ui/Skeleton';
 
-const DEFAULT_REVIEWS: ReviewItem[] = [
-  {
-    id: 'rev-1',
-    clientName: 'Rashmi Nishad',
-    roleOrProject: 'Lead Vocalist • "Satane Lage Ho"',
-    rating: 5,
-    reviewText: 'Working with VEXO Music on "Satane Lage Ho" was a transformative experience. Their studio engineering, arrangement sensibilities, and dedication to visual storytelling elevated our folk release to international chart standards.',
-    avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80',
-    category: 'Music Production',
-    verified: true,
-    date: 'August 2026',
-  },
-  {
-    id: 'rev-2',
-    clientName: 'Aarav & Simran Rathore',
-    roleOrProject: 'Royal Pre-Wedding Shoot • Jaipur Forts',
-    rating: 5,
-    reviewText: 'The cinematic pre-wedding film produced by VEXO looked like a Bollywood period epic. From synchronized drone choreography over Nahargarh Fort to the original background score they composed for us, it was beyond our wildest dreams.',
-    avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80',
-    category: 'Wedding & Film',
-    verified: true,
-    date: 'September 2026',
-  },
-  {
-    id: 'rev-3',
-    clientName: 'Vikramaditya Sen',
-    roleOrProject: 'Executive Producer • Desert Storm Festival',
-    rating: 5,
-    reviewText: 'VEXO handled live audio engineering, multi-camera 4K visual feeds, and headline artist management for our 15,000-attendee festival with surgical precision. The sound was pristine and unforgettable.',
-    avatarUrl: 'https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80',
-    category: 'Artist Management',
-    verified: true,
-    date: 'July 2026',
-  },
-  {
-    id: 'rev-4',
-    clientName: 'Kabir & Meera Singhania',
-    roleOrProject: 'Destination Pre-Wedding • Udaipur Lakes',
-    rating: 5,
-    reviewText: 'Their signature package was worth every rupee. The team took care of luxury logistics, custom styling, multi-camera 4K drone reels, and delivered the finished cut in record time. Every guest was mesmerized.',
-    avatarUrl: 'https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80',
-    category: 'Wedding & Film',
-    verified: true,
-    date: 'June 2026',
-  },
-  {
-    id: 'rev-5',
-    clientName: 'R Beer',
-    roleOrProject: 'Singer-Songwriter • "Bhartar"',
-    rating: 5,
-    reviewText: 'The creative freedom and sonic power VEXO brings is unmatched. The production on "Bhartar" hit millions of streams within weeks. Their mixing, mastering, and global DSP distribution network are best-in-class.',
-    avatarUrl: 'https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=300&q=80',
-    category: 'Music Production',
-    verified: true,
-    date: 'August 2026',
-  },
-  {
-    id: 'rev-6',
-    clientName: 'Ananya Deshmukh',
-    roleOrProject: 'Indie Artist • Debut EP Production',
-    rating: 5,
-    reviewText: 'As an independent musician, finding a team that respects your vision while providing world-class Dolby Atmos mastering and visualizer production is rare. VEXO is the definitive home for serious artists.',
-    avatarUrl: 'https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=300&q=80',
-    category: 'Music Production',
-    verified: true,
-    date: 'May 2026',
-  },
-];
-
 export const ReviewsSection: React.FC = () => {
   const [reviewsData, setReviewsData] = useState<{
     badge: string;
@@ -99,7 +30,7 @@ export const ReviewsSection: React.FC = () => {
         subtitle:
           d.reviewsSubtitle ||
           'What artists, visionary couples, and industry partners say about producing with VEXO.',
-        reviews: Array.isArray(d.reviews) && d.reviews.length > 0 ? d.reviews : DEFAULT_REVIEWS,
+        reviews: Array.isArray(d.reviews) ? d.reviews : [],
       });
     });
 
@@ -245,8 +176,15 @@ export const ReviewsSection: React.FC = () => {
         </div>
 
         {/* Carousel Slider Track Container */}
-        <div
-          ref={containerRef}
+        {reviewsData.reviews.length === 0 ? (
+          <div className="py-12 text-center rounded-2xl border border-dashed border-slate-300 dark:border-white/10 p-8">
+            <p className="text-sm font-mono text-slate-500 dark:text-zinc-500 uppercase tracking-wider">
+              No verified client reviews currently published.
+            </p>
+          </div>
+        ) : (
+          <div
+            ref={containerRef}
           onMouseEnter={() => setIsPaused(true)}
           onMouseLeave={() => setIsPaused(false)}
           onTouchStart={() => setIsPaused(true)}
@@ -347,6 +285,7 @@ export const ReviewsSection: React.FC = () => {
             })}
           </div>
         </div>
+        )}
 
         {/* Dot Pagination Controls */}
         {maxIndex > 0 && (

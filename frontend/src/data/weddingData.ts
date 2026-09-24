@@ -784,3 +784,39 @@ export const DEFAULT_WEDDING_PLANS: PreWeddingPackage[] = [
   },
 ];
 
+export const DEFAULT_PRE_WEDDING_PROCESS_STEPS: PreWeddingProcessStep[] = [
+  {
+    step: '01',
+    title: 'Concept & Moodboard',
+    description: 'We sit down with you to explore your unique love story, romantic themes, scenic locations, and styling aesthetics.',
+  },
+  {
+    step: '02',
+    title: 'The Cinematic Shoot Day',
+    description: 'A relaxed, fun shoot with natural couple guidance, candid romance prompts, and breathtaking 4K Sony Cinema drone angles.',
+  },
+  {
+    step: '03',
+    title: 'DaVinci Colour & Master Film',
+    description: 'Hollywood-standard colour grading, cinematic sound design, and rapid delivery of viral Instagram reels & 4K teaser film.',
+  },
+];
+
+export const DEFAULT_WEDDING_PROCESS_STEPS: PreWeddingProcessStep[] = [
+  {
+    step: '01',
+    title: 'Ritual Timeline & Consultation',
+    description: 'Coordinating key ceremony moments — from Haldi laughter and Sangeet performances to the sacred Pheras and Grand Reception.',
+  },
+  {
+    step: '02',
+    title: 'Multi-Crew Day Coverage',
+    description: 'Synchronized cinematography and candid photography crews capturing emotions, family blessings, and royal grandeur in raw 4K.',
+  },
+  {
+    step: '03',
+    title: 'Documentary Master & Heirloom Delivery',
+    description: 'Crafting the 15-20 min master wedding documentary, viral celebration reels, and handcrafted luxury crystal albums.',
+  },
+];
+

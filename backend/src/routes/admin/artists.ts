@@ -83,7 +83,7 @@ export const adminArtistRoutes: FastifyPluginAsync = async (fastify) => {
         ? (body.genres as string).split(',').map((g) => g.trim()).filter(Boolean)
         : ['Various'];
 
-      const created = db.artists.create(
+      const created = await db.artists.create(
         {
           name: body.name,
           slug,
@@ -147,7 +147,7 @@ export const adminArtistRoutes: FastifyPluginAsync = async (fastify) => {
         updates.isComingSoon = !published;
       }
 
-      const updated = db.artists.update(id, updates, socials);
+      const updated = await db.artists.update(id, updates, socials);
 
       db.activityLogs.log({
         adminUserId: user.id,
@@ -186,7 +186,7 @@ export const adminArtistRoutes: FastifyPluginAsync = async (fastify) => {
         });
       }
 
-      db.artists.delete(id);
+      await db.artists.delete(id);
 
       db.activityLogs.log({
         adminUserId: user.id,

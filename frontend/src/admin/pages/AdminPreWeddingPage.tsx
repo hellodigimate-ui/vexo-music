@@ -1,4 +1,5 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
+import { Link } from 'react-router-dom';
 import {
   Save,
   ExternalLink,
@@ -9,7 +10,6 @@ import {
   Building,
   Layers,
   Award,
-  ChevronLeft,
   ChevronRight,
   Camera,
   Film,
@@ -27,7 +27,8 @@ import { MediaInput } from '../components/media/MediaInput';
 import { adminPreWeddingApi, adminMediaApi } from '../services/adminApiClient';
 import { useAdminToast } from '../context/AdminToastContext';
 import { getMediaUrl } from '../../lib/utils';
-import { DEFAULT_WEDDING_PLANS } from '../../data/weddingData';
+import { DEFAULT_WEDDING_PLANS, ADD_ON_SERVICES } from '../../data/weddingData';
+import { AdminCmsTabsSlider } from '../components/AdminCmsTabsSlider';
 
 type TabKey =
   | 'info'
@@ -45,39 +46,6 @@ export const AdminPreWeddingPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabKey>('info');
   const [packageSubTab, setPackageSubTab] = useState<'pre-wedding' | 'wedding'>('pre-wedding');
 
-  // Tabs Slider ref and scroll state
-  const tabsContainerRef = useRef<HTMLDivElement>(null);
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  const [canScrollRight, setCanScrollRight] = useState(false);
-
-  const checkTabsScroll = useCallback(() => {
-    const el = tabsContainerRef.current;
-    if (!el) return;
-    setCanScrollLeft(el.scrollLeft > 6);
-    setCanScrollRight(el.scrollLeft + el.clientWidth < el.scrollWidth - 6);
-  }, []);
-
-  useEffect(() => {
-    checkTabsScroll();
-    const el = tabsContainerRef.current;
-    if (!el) return;
-    el.addEventListener('scroll', checkTabsScroll, { passive: true });
-    window.addEventListener('resize', checkTabsScroll);
-    return () => {
-      el.removeEventListener('scroll', checkTabsScroll);
-      window.removeEventListener('resize', checkTabsScroll);
-    };
-  }, [checkTabsScroll]);
-
-  const slideTabs = (direction: 'left' | 'right') => {
-    const el = tabsContainerRef.current;
-    if (!el) return;
-    const distance = 260;
-    el.scrollBy({
-      left: direction === 'left' ? -distance : distance,
-      behavior: 'smooth',
-    });
-  };
 
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
@@ -619,21 +587,25 @@ export const AdminPreWeddingPage: React.FC = () => {
   };
 
   const addAddOn = () => {
-    setData((prev: any) => ({
-      ...prev,
-      addOns: [
-        ...prev.addOns,
-        {
-          id: `addon-${Date.now()}`,
-          title: 'New Add-On Service',
-          priceDisplay: 'Starting ₹5,000',
-          priceINR: 5000,
-          description: 'Description of the add-on service.',
-          badge: '',
-        },
-      ],
-    }));
+    setData((prev: any) => {
+      const currentList = Array.isArray(prev?.addOns) && prev.addOns.length > 0
+        ? [...prev.addOns]
+        : [...(ADD_ON_SERVICES || [])];
+      const newAddon = {
+        id: `addon-${Date.now()}`,
+        title: 'New Add-On Service',
+        priceDisplay: 'Starting ₹5,000',
+        priceINR: 5000,
+        description: 'Description of the add-on service.',
+        badge: 'NEW',
+      };
+      return {
+        ...prev,
+        addOns: [newAddon, ...currentList],
+      };
+    });
     setIsDirty(true);
+    toast.success('Service Add-On Created', 'New add-on added at the top.');
   };
 
   const removeAddOn = (index: number) => {
@@ -794,66 +766,40 @@ export const AdminPreWeddingPage: React.FC = () => {
         </div>
       </div>
 
-      {/* Navigation Tabs Slider with Left/Right Arrows */}
-      <div className="relative flex items-center gap-2">
-        <button
-          type="button"
-          onClick={() => slideTabs('left')}
-          disabled={!canScrollLeft}
-          title="Scroll Left"
-          aria-label="Scroll tabs left"
-          className="w-8 h-8 rounded-xl bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800 flex items-center justify-center text-slate-700 dark:text-zinc-300 hover:text-white hover:bg-vexo-red hover:border-vexo-red dark:hover:bg-vexo-red dark:hover:border-vexo-red transition-all shadow-xs shrink-0 cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
-        >
-          <ChevronLeft className="w-4 h-4" />
-        </button>
-
-        <div
-          ref={tabsContainerRef}
-          className="flex-1 flex items-center gap-2 border-b border-slate-200 dark:border-zinc-800/80 overflow-x-auto pb-px scroll-smooth"
-          style={{ scrollbarWidth: 'none', msOverflowStyle: 'none' }}
-        >
-          {[
-            { id: 'info', label: 'Studio & Hero', icon: Building },
-            { id: 'packages', label: `Packages & Plans (${packages.length + weddingPackages.length})`, icon: Crown },
-            { id: 'gallery', label: `Portfolio Photos (${portfolioGallery.length})`, icon: Camera },
-            { id: 'videos', label: `Video Teasers (${videos.length})`, icon: Film },
-            { id: 'director', label: 'Director & Workflow', icon: User },
-            { id: 'stories', label: `Couple Stories (${coupleStories.length})`, icon: Heart },
-            { id: 'addons', label: `Add-Ons (${addOns.length})`, icon: Layers },
-            { id: 'customServices', label: `Signature Builder (${customServices.length})`, icon: Sliders },
-            { id: 'pillars', label: 'Why VEXO Pillars', icon: Award },
-          ].map((t) => {
-            const Icon = t.icon;
-            const isTabActive = activeTab === t.id;
-            return (
-              <button
-                key={t.id}
-                type="button"
-                onClick={() => setActiveTab(t.id as TabKey)}
-                className={`flex items-center gap-2 px-4 py-3 text-xs font-bold rounded-t-xl transition-all border-b-2 cursor-pointer shrink-0 ${
-                  isTabActive
-                    ? 'bg-red-50/80 text-vexo-red border-vexo-red dark:bg-vexo-red/10 dark:text-white dark:border-vexo-red shadow-2xs'
-                    : 'text-slate-600 hover:text-slate-950 dark:text-zinc-400 dark:hover:text-white border-transparent'
-                }`}
-              >
-                <Icon className="w-3.5 h-3.5" />
-                <span>{t.label}</span>
-              </button>
-            );
-          })}
+      {/* Switcher Banner between Pre-Wedding and Wedding CMS */}
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3.5 rounded-xl bg-gradient-to-r from-red-500/10 via-red-500/5 to-transparent border border-vexo-red/20 text-xs">
+        <div className="flex items-center gap-2">
+          <Camera className="w-4 h-4 text-vexo-red shrink-0" />
+          <span className="text-slate-700 dark:text-zinc-300">
+            You are currently managing <strong>Pre-Wedding Studio</strong> (Romance Shoots, Packages & Teasers).
+          </span>
         </div>
-
-        <button
-          type="button"
-          onClick={() => slideTabs('right')}
-          disabled={!canScrollRight}
-          title="Scroll Right"
-          aria-label="Scroll tabs right"
-          className="w-8 h-8 rounded-xl bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800 flex items-center justify-center text-slate-700 dark:text-zinc-300 hover:text-white hover:bg-vexo-red hover:border-vexo-red dark:hover:bg-vexo-red dark:hover:border-vexo-red transition-all shadow-xs shrink-0 cursor-pointer disabled:opacity-30 disabled:cursor-not-allowed"
+        <Link
+          to="/admin/wedding"
+          className="inline-flex items-center gap-1.5 font-bold text-vexo-red hover:text-red-700 dark:hover:text-red-400 font-mono uppercase tracking-wider text-[11px]"
         >
-          <ChevronRight className="w-4 h-4" />
-        </button>
+          <span>Switch to Wedding Studio CMS</span>
+          <ChevronRight className="w-3.5 h-3.5" />
+        </Link>
       </div>
+
+      {/* Unique Animated Tabs Slider */}
+      <AdminCmsTabsSlider
+        activeTab={activeTab}
+        onChangeTab={(tId) => setActiveTab(tId as TabKey)}
+        accentColor="red"
+        tabs={[
+          { id: 'info', label: 'Studio & Hero', icon: Building },
+          { id: 'packages', label: 'Packages & Plans', count: packages.length + weddingPackages.length, icon: Crown },
+          { id: 'gallery', label: 'Portfolio Photos', count: portfolioGallery.length, icon: Camera },
+          { id: 'videos', label: 'Video Teasers', count: videos.length, icon: Film },
+          { id: 'director', label: 'Director & Workflow', icon: User },
+          { id: 'stories', label: 'Couple Stories', count: coupleStories.length, icon: Heart },
+          { id: 'addons', label: 'Add-Ons', count: addOns.length, icon: Layers },
+          { id: 'customServices', label: 'Signature Builder', count: customServices.length, icon: Sliders },
+          { id: 'pillars', label: 'Why VEXO Pillars', count: whyUsPillars.length, icon: Award },
+        ]}
+      />
 
       {/* ======================================================== */}
       {/* TAB 1: STUDIO INFO & HERO */}
@@ -2208,8 +2154,12 @@ export const AdminPreWeddingPage: React.FC = () => {
             </div>
             <button
               type="button"
-              onClick={addAddOn}
-              className="px-4 py-2 rounded-xl bg-red-50 dark:bg-vexo-red/10 border border-red-200 dark:border-vexo-red/30 text-vexo-red text-xs font-bold hover:bg-red-100 dark:hover:bg-vexo-red/20 transition-all flex items-center gap-1.5 cursor-pointer"
+              onClick={(e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                addAddOn();
+              }}
+              className="px-4 py-2.5 rounded-xl bg-vexo-red text-white text-xs font-bold hover:bg-red-600 active:scale-95 transition-all flex items-center gap-1.5 cursor-pointer shadow-md shadow-red-600/30 hover:scale-[1.02]"
             >
               <Plus className="w-4 h-4" />
               <span>Add New Add-On</span>

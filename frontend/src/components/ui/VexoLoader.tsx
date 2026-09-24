@@ -41,7 +41,7 @@ function getCriticalInitialPromise(pathname: string): Promise<any> {
   if (cleanPath === '/videos') {
     return videosApi.getVideos();
   }
-  if (cleanPath === '/packages' || cleanPath === '/pre-wedding') {
+  if (cleanPath === '/packages' || cleanPath === '/pre-wedding' || cleanPath === '/wedding') {
     return fetch(`${API_BASE_URL}/pre-wedding`, { cache: 'no-store' }).catch(() => {});
   }
   // Default for static or contact pages: ensure site settings are ready

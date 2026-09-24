@@ -70,7 +70,7 @@ export const adminUserManagementRoutes: FastifyPluginAsync = async (fastify) => 
         });
       }
 
-      const created = db.adminUsers.create({
+      const created = await db.adminUsers.create({
         email,
         passwordHash: hashPassword(password),
         name,
@@ -135,7 +135,7 @@ export const adminUserManagementRoutes: FastifyPluginAsync = async (fastify) => 
         });
       }
 
-      const updated = db.adminUsers.update(id, { isActive: !target.isActive });
+      const updated = await db.adminUsers.update(id, { isActive: !target.isActive });
 
       db.activityLogs.log({
         adminUserId: current.id,

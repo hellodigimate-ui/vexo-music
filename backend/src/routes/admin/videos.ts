@@ -80,7 +80,7 @@ export const adminVideoRoutes: FastifyPluginAsync = async (fastify) => {
       const thumbUrl =
         body.thumbnailUrl || `https://img.youtube.com/vi/${body.youtubeId}/maxresdefault.jpg`;
 
-      const created = db.videos.create({
+      const created = await db.videos.create({
         title: body.title,
         artist: body.artist,
         youtubeId: body.youtubeId,
@@ -147,7 +147,7 @@ export const adminVideoRoutes: FastifyPluginAsync = async (fastify) => {
           .filter(Boolean);
       }
 
-      const updated = db.videos.update(id, updates);
+      const updated = await db.videos.update(id, updates);
 
       db.activityLogs.log({
         adminUserId: user.id,
@@ -186,7 +186,7 @@ export const adminVideoRoutes: FastifyPluginAsync = async (fastify) => {
         });
       }
 
-      db.videos.delete(id);
+      await db.videos.delete(id);
 
       db.activityLogs.log({
         adminUserId: user.id,

@@ -49,7 +49,7 @@ export const contactRoutes: FastifyPluginAsync = async (fastify) => {
     }
 
     // Persist to database
-    const saved = db.contactRequests.create({
+    const saved = await db.contactRequests.create({
       name: name.trim(),
       email: email.trim(),
       phone: phone?.trim() ? phone.trim().replace(/\D/g, '').slice(0, 10) : null,

@@ -32,7 +32,7 @@ export const adminPreWeddingRoutes: FastifyPluginAsync = async (fastify) => {
       }
       const updates = request.body;
 
-      const updated = db.preWedding.update(updates);
+      const updated = await db.preWedding.update(updates);
 
       db.activityLogs.log({
         adminUserId: user.id,

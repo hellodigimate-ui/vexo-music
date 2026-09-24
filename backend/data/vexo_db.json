@@ -7,12 +7,29 @@
       "name": "VEXO Executive Admin",
       "role": "SUPER_ADMIN",
       "isActive": true,
-      "lastLoginAt": "2026-09-22T16:43:54.445Z",
+      "lastLoginAt": null,
       "createdAt": "2026-08-18T05:58:38.923Z",
       "updatedAt": "2026-09-22T16:43:54.446Z"
     }
   ],
   "artists": [
+    {
+      "id": "art-2a3bc82d0525e14b",
+      "name": "artst is coming here",
+      "slug": "artst-is-coming-here",
+      "role": "singer",
+      "avatarUrl": "https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80",
+      "coverUrl": null,
+      "bio": null,
+      "monthlyListeners": 0,
+      "genres": [],
+      "featured": false,
+      "isComingSoon": false,
+      "order": 0,
+      "createdAt": "2026-09-12T09:17:38.384Z",
+      "updatedAt": "2026-09-12T09:17:38.384Z",
+      "socials": []
+    },
     {
       "id": "art-rbeer",
       "name": "R Beer",
@@ -31,23 +48,18 @@
       "isComingSoon": false,
       "order": 4,
       "createdAt": "2026-08-24T13:55:46.230Z",
-      "updatedAt": "2026-08-24T13:55:46.230Z"
-    },
-    {
-      "name": "artst is coming here",
-      "slug": "artst-is-coming-here",
-      "role": "singer",
-      "avatarUrl": "",
-      "coverUrl": null,
-      "bio": null,
-      "monthlyListeners": 0,
-      "genres": [],
-      "featured": false,
-      "isComingSoon": false,
-      "order": 0,
-      "id": "art-2a3bc82d0525e14b",
-      "createdAt": "2026-09-12T09:17:38.384Z",
-      "updatedAt": "2026-09-12T09:17:38.384Z"
+      "updatedAt": "2026-08-24T13:55:46.230Z",
+      "socials": [
+        {
+          "id": "soc-rbeer-yt",
+          "artistId": "art-rbeer",
+          "platform": "youtube",
+          "url": "https://youtu.be/PsmXAUKjR5Y?si=WpdguDVkiQZkI0j6",
+          "order": 1,
+          "createdAt": "2026-08-24T13:55:46.230Z",
+          "updatedAt": "2026-08-24T13:55:46.230Z"
+        }
+      ]
     }
   ],
   "artistSocials": [
@@ -59,105 +71,6 @@
       "order": 1,
       "createdAt": "2026-08-24T13:55:46.230Z",
       "updatedAt": "2026-08-24T13:55:46.230Z"
-    },
-    {
-      "id": "soc-1",
-      "artistId": "art-1",
-      "platform": "spotify",
-      "url": "https://spotify.com",
-      "order": 1,
-      "createdAt": "2026-09-12T09:24:50.022Z",
-      "updatedAt": "2026-09-12T09:24:50.022Z"
-    },
-    {
-      "id": "soc-2",
-      "artistId": "art-1",
-      "platform": "instagram",
-      "url": "https://instagram.com",
-      "order": 2,
-      "createdAt": "2026-09-12T09:24:50.022Z",
-      "updatedAt": "2026-09-12T09:24:50.022Z"
-    },
-    {
-      "id": "soc-3",
-      "artistId": "art-1",
-      "platform": "youtube",
-      "url": "https://youtube.com",
-      "order": 3,
-      "createdAt": "2026-09-12T09:24:50.022Z",
-      "updatedAt": "2026-09-12T09:24:50.022Z"
-    },
-    {
-      "id": "soc-10",
-      "artistId": "art-5",
-      "platform": "spotify",
-      "url": "https://spotify.com",
-      "order": 1,
-      "createdAt": "2026-09-12T09:24:50.022Z",
-      "updatedAt": "2026-09-12T09:24:50.022Z"
-    },
-    {
-      "id": "soc-11",
-      "artistId": "art-5",
-      "platform": "instagram",
-      "url": "https://instagram.com",
-      "order": 2,
-      "createdAt": "2026-09-12T09:24:50.022Z",
-      "updatedAt": "2026-09-12T09:24:50.022Z"
-    },
-    {
-      "id": "soc-12",
-      "artistId": "art-6",
-      "platform": "spotify",
-      "url": "https://spotify.com",
-      "order": 1,
-      "createdAt": "2026-09-12T09:24:50.022Z",
-      "updatedAt": "2026-09-12T09:24:50.022Z"
-    },
-    {
-      "id": "soc-13",
-      "artistId": "art-6",
-      "platform": "soundcloud",
-      "url": "https://soundcloud.com",
-      "order": 2,
-      "createdAt": "2026-09-12T09:24:50.022Z",
-      "updatedAt": "2026-09-12T09:24:50.022Z"
-    },
-    {
-      "id": "soc-4",
-      "artistId": "art-2",
-      "platform": "youtube",
-      "url": "https://youtu.be/HcEcM5AtEZ8?si=cJi8p33qsdjoBI02",
-      "order": 1,
-      "createdAt": "2026-09-12T09:46:47.517Z",
-      "updatedAt": "2026-09-12T09:46:47.517Z"
-    },
-    {
-      "id": "soc-5",
-      "artistId": "art-2",
-      "platform": "instagram",
-      "url": "https://instagram.com",
-      "order": 2,
-      "createdAt": "2026-09-12T09:46:47.517Z",
-      "updatedAt": "2026-09-12T09:46:47.517Z"
-    },
-    {
-      "id": "soc-6",
-      "artistId": "art-3",
-      "platform": "youtube",
-      "url": "https://youtu.be/HcEcM5AtEZ8?si=cJi8p33qsdjoBI02",
-      "order": 1,
-      "createdAt": "2026-09-12T09:46:47.517Z",
-      "updatedAt": "2026-09-12T09:46:47.517Z"
-    },
-    {
-      "id": "soc-7",
-      "artistId": "art-3",
-      "platform": "instagram",
-      "url": "https://instagram.com",
-      "order": 2,
-      "createdAt": "2026-09-12T09:46:47.517Z",
-      "updatedAt": "2026-09-12T09:46:47.517Z"
     }
   ],
   "albums": [
@@ -166,9 +79,9 @@
       "title": "Satane Lage Ho",
       "slug": "satane-lage-ho",
       "artistName": "Rashmi Nishad & Sonu Charan Bhatt",
-      "artistId": "art-2",
+      "artistId": null,
       "coverUrl": "https://img.youtube.com/vi/HcEcM5AtEZ8/maxresdefault.jpg",
-      "releaseDate": "2026-08-04",
+      "releaseDate": "2026-08-04T05:30:00.000+05:30",
       "year": 2026,
       "genre": "Rajasthani Traditional / Modern Folk",
       "trackCount": 1,
@@ -187,7 +100,7 @@
       "artistName": "R Beer & Rashmi Nishad",
       "artistId": "art-rbeer",
       "coverUrl": "https://img.youtube.com/vi/PsmXAUKjR5Y/maxresdefault.jpg",
-      "releaseDate": "2026-08-24",
+      "releaseDate": "2026-08-24T05:30:00.000+05:30",
       "year": 2026,
       "genre": "Rajasthani Traditional / Beat Song",
       "trackCount": 1,
@@ -205,13 +118,14 @@
       "id": "trk-1",
       "title": "Satane Lage Ho (Official Single)",
       "artistName": "Rashmi Nishad & Sonu Charan Bhatt",
-      "artistId": "art-2",
+      "artistId": null,
       "albumId": "alb-2",
       "duration": 254,
       "coverUrl": "https://img.youtube.com/vi/HcEcM5AtEZ8/maxresdefault.jpg",
-      "genre": "Rajasthani Folk / Contemporary",
+      "audioUrl": null,
       "spotifyUrl": "https://spotify.com",
       "youtubeUrl": "https://youtu.be/HcEcM5AtEZ8?si=cJi8p33qsdjoBI02",
+      "genre": "Rajasthani Folk / Contemporary",
       "plays": 185000,
       "isPopular": true,
       "order": 1,
@@ -226,9 +140,10 @@
       "albumId": "alb-bhartar",
       "duration": 236,
       "coverUrl": "https://img.youtube.com/vi/PsmXAUKjR5Y/maxresdefault.jpg",
-      "genre": "Rajasthani Traditional / Beat Song",
+      "audioUrl": null,
       "spotifyUrl": "https://spotify.com",
       "youtubeUrl": "https://youtu.be/PsmXAUKjR5Y?si=WpdguDVkiQZkI0j6",
+      "genre": "Rajasthani Traditional / Beat Song",
       "plays": 215000,
       "isPopular": true,
       "order": 2,
@@ -256,7 +171,8 @@
       "featured": true,
       "order": 1,
       "createdAt": "2026-08-18T05:58:38.923Z",
-      "updatedAt": "2026-08-18T05:58:38.923Z"
+      "updatedAt": "2026-08-18T05:58:38.923Z",
+      "eventArtists": []
     },
     {
       "id": "e-2",
@@ -277,7 +193,8 @@
       "featured": true,
       "order": 2,
       "createdAt": "2026-08-18T05:58:38.923Z",
-      "updatedAt": "2026-08-18T05:58:38.923Z"
+      "updatedAt": "2026-08-18T05:58:38.923Z",
+      "eventArtists": []
     },
     {
       "id": "e-3",
@@ -298,7 +215,8 @@
       "featured": true,
       "order": 3,
       "createdAt": "2026-08-18T05:58:38.923Z",
-      "updatedAt": "2026-08-18T05:58:38.923Z"
+      "updatedAt": "2026-08-18T05:58:38.923Z",
+      "eventArtists": []
     },
     {
       "id": "e-4",
@@ -319,7 +237,8 @@
       "featured": false,
       "order": 4,
       "createdAt": "2026-08-18T05:58:38.923Z",
-      "updatedAt": "2026-08-18T05:58:38.923Z"
+      "updatedAt": "2026-08-18T05:58:38.923Z",
+      "eventArtists": []
     }
   ],
   "eventArtists": [],
@@ -453,89 +372,7 @@
       ],
       "ctaText": "INITIATE PROJECT",
       "pricingRange": "Starting from $1,200 / ₹95,000",
-      "order": 1,
-      "isActive": true,
-      "createdAt": "2026-08-18T05:58:38.923Z",
-      "updatedAt": "2026-08-18T05:58:38.923Z",
-      "plans": [
-        {
-          "id": "mp-plan-1",
-          "name": "Starter Single / Beat",
-          "badge": "ESSENTIAL",
-          "tagline": "Ideal for independent artists seeking professional vocal tuning, stem mix, and radio master.",
-          "priceUSD": "$450",
-          "priceINR": "₹35,000",
-          "duration": "3–5 Days Turnaround",
-          "revisions": "3 Free Revisions Included",
-          "isPopular": false,
-          "features": [
-            "Full Vocal Pitch Correction & Melodyne Tuning",
-            "Stereo Stem Mixing (up to 24 tracks)",
-            "High-Res 24-bit 96kHz Radio Master",
-            "Loudness Optimization (-14 LUFS Streaming Target)",
-            "Analog Tube Warmth Processing"
-          ],
-          "deliverables": [
-            "Master WAV (24-bit)",
-            "Master MP3 (320kbps)",
-            "Instrumental Mix"
-          ],
-          "ctaText": "BOOK STARTER"
-        },
-        {
-          "id": "mp-plan-2",
-          "name": "Commercial Master Single",
-          "badge": "MOST POPULAR",
-          "tagline": "Full-scale custom arrangement, live analog instruments, SSL console mix, and Dolby Atmos.",
-          "priceUSD": "$1,200",
-          "priceINR": "₹95,000",
-          "duration": "5–7 Days Turnaround",
-          "revisions": "Unlimited Mix Revisions",
-          "isPopular": true,
-          "features": [
-            "Custom Original Composition & Beat Production",
-            "Live Session Instruments (Guitars / Keys / Folk)",
-            "Solid State Logic 4000E Analog Console Mix",
-            "Dolby Atmos 7.1.4 Spatial Audio Master",
-            "Vocal Production, Harmony Stacks & FX Design",
-            "Dedicated Senior Music Producer"
-          ],
-          "deliverables": [
-            "Master Stereo WAV & Dolby Atmos ADM BWF",
-            "Full Multi-track Stems Archive",
-            "Instrumental, Acapella & TV Mixes",
-            "DSP Distribution Metadata Guide"
-          ],
-          "ctaText": "BOOK COMMERCIAL"
-        },
-        {
-          "id": "mp-plan-3",
-          "name": "Full Studio EP Production",
-          "badge": "FLAGSHIP",
-          "tagline": "Comprehensive 4 to 6 track executive EP production with complete sonic identity sculpting.",
-          "priceUSD": "$3,500",
-          "priceINR": "₹2,80,000",
-          "duration": "3–4 Weeks Turnaround",
-          "revisions": "VIP Priority Unlimited Revisions",
-          "isPopular": false,
-          "features": [
-            "Up to 5 Complete Tracks Written & Produced",
-            "Full In-Studio or Remote Producer Sessions",
-            "Neve 1073 & Telefunken U47 Vocal Chain",
-            "Dolby Atmos Spatial Audio for All Tracks",
-            "Orchestral / Folk Instrumentalist Coordination",
-            "Mastering for Vinyl, Streaming & Broadcast sync",
-            "Full Master Copyright & Sync Licensing Rights"
-          ],
-          "deliverables": [
-            "Complete Album Stems & Multi-tracks",
-            "Dolby Atmos Masters for Apple Music",
-            "Vinyl-Ready DDP / High-Res WAVs",
-            "Instrumental & Performance Backing Tracks"
-          ],
-          "ctaText": "BOOK STUDIO EP"
-        }
-      ],
+      "plans": [],
       "specs": [
         "Solid State Logic (SSL) 4000E 48-Channel Analog Console",
         "Neve 1073 Microphone Preamps & Pultec EQP-1A EQs",
@@ -544,28 +381,15 @@
         "Moog One Polyphonic Analog Synthesizer & Dave Smith Prophet-6",
         "Dolby Atmos Certified 7.1.4 Immersive Mixing Suite"
       ],
-      "processSteps": [
-        {
-          "step": "01",
-          "title": "Creative Brief & Sonic Direction",
-          "desc": "We analyze your musical influences, vocal range, tempo, and target vibe to establish a custom sonic moodboard."
-        },
-        {
-          "step": "02",
-          "title": "Composition & Live Tracking",
-          "desc": "Our composers build the harmonic bedrock and track lead vocals and live instrumentation using world-class analog chains."
-        },
-        {
-          "step": "03",
-          "title": "SSL Stem Mixing & Processing",
-          "desc": "Each individual track is balanced, EQ’d, and routed through our SSL 4000E analog console and vintage outboard gear."
-        },
-        {
-          "step": "04",
-          "title": "Dolby Atmos & Final Master Delivery",
-          "desc": "Precision spatial mastering prepares your audio for global DSP streaming, radio broadcast, and club sound systems."
-        }
+      "specifications": [
+        "Solid State Logic (SSL) 4000E 48-Channel Analog Console",
+        "Neve 1073 Microphone Preamps & Pultec EQP-1A EQs",
+        "Telefunken U47 & Neumann U87 Ai Microphones",
+        "Genelec 8351B SAM Spatial Monitors & 7380A Subwoofer",
+        "Moog One Polyphonic Analog Synthesizer & Dave Smith Prophet-6",
+        "Dolby Atmos Certified 7.1.4 Immersive Mixing Suite"
       ],
+      "processSteps": [],
       "deliverables": [
         "24-bit / 96kHz Uncompressed Master WAV",
         "Dolby Atmos ADM BWF Master File for Apple Music & Tidal",
@@ -573,20 +397,18 @@
         "Radio Edit, Clean Edit, Instrumental, and Acapella exports",
         "Commercial Certificate of 100% Master Royalty Ownership"
       ],
-      "faqs": [
-        {
-          "q": "Do I retain 100% of my master rights?",
-          "a": "Yes. Every project produced under VEXO Music production services provides the client with 100% commercial master ownership and rights upon completion."
-        },
-        {
-          "q": "Can I attend the studio session in person or work remotely?",
-          "a": "Both! You are welcome to record live in our Jaipur studio or collaborate remotely with our engineers via real-time high-fidelity streaming sessions."
-        },
-        {
-          "q": "How are revisions handled if I want adjustments?",
-          "a": "We provide structured revision rounds with time-stamped feedback. Revisions are completed rapidly until you are 100% satisfied with the mix and master."
-        }
-      ]
+      "equipmentList": [
+        "24-bit / 96kHz Uncompressed Master WAV",
+        "Dolby Atmos ADM BWF Master File for Apple Music & Tidal",
+        "Full Multi-Track Stems Archive (Dry & Wet)",
+        "Radio Edit, Clean Edit, Instrumental, and Acapella exports",
+        "Commercial Certificate of 100% Master Royalty Ownership"
+      ],
+      "faqs": [],
+      "order": 1,
+      "isActive": true,
+      "createdAt": "2026-08-18T05:58:38.923Z",
+      "updatedAt": "2026-09-24T05:56:27.682Z"
     },
     {
       "id": "srv-2",
@@ -606,90 +428,7 @@
       ],
       "ctaText": "START VIDEO SHOOT",
       "pricingRange": "Starting from $2,500 / ₹1,90,000",
-      "order": 2,
-      "isActive": true,
-      "createdAt": "2026-08-18T05:58:38.923Z",
-      "updatedAt": "2026-08-18T05:58:38.923Z",
-      "plans": [
-        {
-          "id": "av-plan-1",
-          "name": "Studio Performance & Visualizer",
-          "badge": "ESSENTIAL",
-          "tagline": "High-aesthetic studio live performance shoot with audio-reactive graphics for YouTube and Reels.",
-          "priceUSD": "$950",
-          "priceINR": "₹75,000",
-          "duration": "5–7 Days Delivery",
-          "revisions": "2 Video Edit Revisions",
-          "isPopular": false,
-          "features": [
-            "1-Day Studio Shoot with Acoustic Mood Lighting",
-            "2-Camera 4K Sony FX6 Rigging Setup",
-            "Audio-Reactive 3D Graphic Visualizer Elements",
-            "DaVinci Resolve Cinematic Color Grade",
-            "2 Short-Form Vertical Cuts for Instagram Reels / TikTok"
-          ],
-          "deliverables": [
-            "4K UHD Master Video (ProRes / MP4)",
-            "2 Vertical Promo Reels",
-            "10 Behind-The-Scenes Stills"
-          ],
-          "ctaText": "BOOK VISUALIZER"
-        },
-        {
-          "id": "av-plan-2",
-          "name": "Cinematic Music Video",
-          "badge": "MOST POPULAR",
-          "tagline": "Complete cinematic story concept, on-location shoot, cinema camera crew, and drone cinematography.",
-          "priceUSD": "$2,500",
-          "priceINR": "₹1,90,000",
-          "duration": "10–14 Days Delivery",
-          "revisions": "3 Comprehensive Cut Revisions",
-          "isPopular": true,
-          "features": [
-            "Full Creative Treatment & Storyboard Direction",
-            "RED V-Raptor / ARRI Alexa Mini LF Cinema Package",
-            "Director, Cinematographer, Gaffer & Stylist Team",
-            "Licensed Drone Pilot Aerial 4K Cinematography",
-            "High-End Hollywood Color Grading & Visual Effects",
-            "Official 4K YouTube Music Video Master",
-            "5 Social Media Teasers & Story Countdowns"
-          ],
-          "deliverables": [
-            "4K DCI Cinema Master (ProRes 422 HQ)",
-            "Official YouTube Optimized 4K MP4",
-            "Vertical 9:16 Cuts for Reels / Shorts",
-            "High-Resolution Movie Poster Artwork"
-          ],
-          "ctaText": "BOOK CINEMATIC VIDEO"
-        },
-        {
-          "id": "av-plan-3",
-          "name": "Signature High-Concept Film",
-          "badge": "FLAGSHIP",
-          "tagline": "Grand scale multi-day production with custom art direction, narrative cast, CGI, and trailer blitz.",
-          "priceUSD": "$6,500",
-          "priceINR": "₹5,20,000",
-          "duration": "3–4 Weeks Delivery",
-          "revisions": "Director Collaboration / VIP Revisions",
-          "isPopular": false,
-          "features": [
-            "Multi-Location 2 to 3 Day Production Schedule",
-            "Cine Anamorphic Lenses & High-Speed Phantom Camera",
-            "Cast & Actor Auditions, Wardrobe & Production Design",
-            "Custom 3D CGI / Unreal Engine Virtual Set Integration",
-            "Full Film Crew (15+ Technical & Creative Staff)",
-            "Theatrical Trailer & Behind-The-Scenes Documentary",
-            "Cinema Theater & Television Broadcast Delivery Package"
-          ],
-          "deliverables": [
-            "Apple ProRes 4444 XQ Cinema Master",
-            "Theatrical Teaser & Official Trailer",
-            "Mini-Doc Behind The Scenes Featurette",
-            "Full Publicity Photo Stills Package"
-          ],
-          "ctaText": "BOOK SIGNATURE FILM"
-        }
-      ],
+      "plans": [],
       "specs": [
         "RED V-Raptor 8K VV & ARRI Alexa Mini LF Cinema Systems",
         "Cooke Anamorphic /i & Zeiss Supreme Prime Cine Lenses",
@@ -698,48 +437,32 @@
         "DaVinci Resolve Studio Advanced Color Grading Suite with Flanders Scientific Monitors",
         "Dedicated Sound Design & Dolby Atmos Video Sync Mixing"
       ],
-      "processSteps": [
-        {
-          "step": "01",
-          "title": "Story Treatment & Pre-Production",
-          "desc": "Our visual director prepares narrative scripts, storyboards, location scouts, casting, and wardrobe styling."
-        },
-        {
-          "step": "02",
-          "title": "Principal Photography",
-          "desc": "We film on location or in studio using multi-camera cinema rigs, professional lighting, and gimbal choreography."
-        },
-        {
-          "step": "03",
-          "title": "Editorial Cut & Motion VFX",
-          "desc": "Syncing every frame to the beat, our editors craft pacing, visual effects, transitions, and text typography."
-        },
-        {
-          "step": "04",
-          "title": "Color Grading & 4K Export",
-          "desc": "Color scientists apply rich film emulation and deliver pristine 4K Masters formatted for YouTube, Apple Music, and TV."
-        }
+      "specifications": [
+        "RED V-Raptor 8K VV & ARRI Alexa Mini LF Cinema Systems",
+        "Cooke Anamorphic /i & Zeiss Supreme Prime Cine Lenses",
+        "DJI Ronin 4D 4-Axis Stabilized Gimbal System & DJI Inspire 3 Drone",
+        "Aputure Electro Storm & Nanlite Forza High-Output LED Studio Lighting",
+        "DaVinci Resolve Studio Advanced Color Grading Suite with Flanders Scientific Monitors",
+        "Dedicated Sound Design & Dolby Atmos Video Sync Mixing"
       ],
+      "processSteps": [],
       "deliverables": [
         "4K Cinema Master ProRes 422 HQ & Web-Optimized MP4",
         "Vertical 9:16 Cutdowns with Animated Captions for Social Virality",
         "Behind-The-Scenes Video & High-Res Production Stills",
         "Custom YouTube Thumbnail Designs & Poster Artwork"
       ],
-      "faqs": [
-        {
-          "q": "Where do the video shoots take place?",
-          "a": "We shoot across breathtaking locations in Rajasthan (heritage forts, palaces, sand dunes), our dedicated studio sets, or any national/international destination required."
-        },
-        {
-          "q": "Do you provide models, actors, and styling?",
-          "a": "Yes, our production team handles complete casting, makeup artists, wardrobe stylists, and set decorators tailored to your concept."
-        },
-        {
-          "q": "Can we release the video on our own YouTube channel?",
-          "a": "Absolutely! You receive the full master video file to upload directly to your channel, or you may choose to co-premiere through VEXO Entertainment."
-        }
-      ]
+      "equipmentList": [
+        "4K Cinema Master ProRes 422 HQ & Web-Optimized MP4",
+        "Vertical 9:16 Cutdowns with Animated Captions for Social Virality",
+        "Behind-The-Scenes Video & High-Res Production Stills",
+        "Custom YouTube Thumbnail Designs & Poster Artwork"
+      ],
+      "faqs": [],
+      "order": 2,
+      "isActive": true,
+      "createdAt": "2026-08-18T05:58:38.923Z",
+      "updatedAt": "2026-08-18T05:58:38.923Z"
     },
     {
       "id": "srv-3",
@@ -759,87 +482,7 @@
       ],
       "ctaText": "JOIN ROSTER",
       "pricingRange": "Retainer & Commission Based",
-      "order": 3,
-      "isActive": true,
-      "createdAt": "2026-08-18T05:58:38.923Z",
-      "updatedAt": "2026-08-18T05:58:38.923Z",
-      "plans": [
-        {
-          "id": "am-plan-1",
-          "name": "Emerging Talent Advisory",
-          "badge": "ESSENTIAL",
-          "tagline": "Strategic mentorship, release roadmaps, EPK branding overhaul, and digital optimization.",
-          "priceUSD": "$600/mo",
-          "priceINR": "₹45,000/mo",
-          "duration": "Monthly Retainer",
-          "revisions": "Bi-Weekly Strategy Calls",
-          "isPopular": false,
-          "features": [
-            "Bi-Weekly 1-on-1 Career Strategy Sessions",
-            "Professional Electronic Press Kit (EPK) Overhaul",
-            "DSP Artist Profile Verification & Optimization",
-            "Rollout Strategy & Release Calendar Planning",
-            "Music Publishing & Copyright Setup Guidance"
-          ],
-          "deliverables": [
-            "Custom Electronic Press Kit (EPK)",
-            "Quarterly Release Roadmap",
-            "Platform Audit Report"
-          ],
-          "ctaText": "APPLY FOR ADVISORY"
-        },
-        {
-          "id": "am-plan-2",
-          "name": "Active Roster Representation",
-          "badge": "MOST POPULAR",
-          "tagline": "Dedicated talent manager, live performance bookings, contract negotiations, and brand deals.",
-          "priceUSD": "$1,500/mo",
-          "priceINR": "₹1,20,000/mo",
-          "duration": "Quarterly Agreement (+15% Booking)",
-          "revisions": "Daily Dedicated Manager Support",
-          "isPopular": true,
-          "features": [
-            "Dedicated Artist Talent Manager & Booking Agent",
-            "Live Concert, College Festival & Club Tour Bookings",
-            "Commercial Brand Endorsements & Sponsorship Pitching",
-            "Music Contract Legal Review & Royalty Auditing",
-            "Press, Media Interviews & Music PR Management",
-            "Merchandise Production & Direct-to-Fan Strategy"
-          ],
-          "deliverables": [
-            "Active Booking Representation Roster",
-            "Commercial Sponsor Deck & Rate Card",
-            "Monthly Performance Analytics & Revenue Statements"
-          ],
-          "ctaText": "APPLY FOR ROSTER"
-        },
-        {
-          "id": "am-plan-3",
-          "name": "360° Career Architecture",
-          "badge": "FLAGSHIP",
-          "tagline": "Full agency representation: global headline tours, international showcase pitches, and major partnerships.",
-          "priceUSD": "$3,500/mo",
-          "priceINR": "₹2,80,000/mo",
-          "duration": "Annual Management Agreement",
-          "revisions": "VIP 24/7 Executive Team",
-          "isPopular": false,
-          "features": [
-            "Full-Spectrum Global Tour Routing & Festival Headlining",
-            "Direct Liaison with Global Labels, DSPs & Publishers",
-            "Private Entertainment Legal Counsel Representation",
-            "Multi-Market International Showcase Submissions",
-            "Dedicated Publicist & High-Impact Media Features",
-            "Sync Licensing Placement Team for OTT, Film & TV",
-            "Capital Investment & Tour Financing Guidance"
-          ],
-          "deliverables": [
-            "Full Enterprise Management Suite",
-            "Custom Tour Rider & Production Contract Templates",
-            "Global Sync Licensing Catalogue Representation"
-          ],
-          "ctaText": "APPLY FOR 360°"
-        }
-      ],
+      "plans": [],
       "specs": [
         "Global Booking Network across India, UAE, UK, and US festival circuits",
         "In-House Legal Entertainment Counsel for IP Protection and Contracts",
@@ -847,48 +490,31 @@
         "Direct Pitching Access to Spotify, Apple Music & Amazon Editorial Curators",
         "Live Touring Production Staff, Sound Engineers & Visual Designers"
       ],
-      "processSteps": [
-        {
-          "step": "01",
-          "title": "Talent Audit & Positioning",
-          "desc": "We evaluate your catalogue, streaming audience demographics, stage presence, and unique visual identity."
-        },
-        {
-          "step": "02",
-          "title": "Materials & Brand Kit Creation",
-          "desc": "We produce an industry-grade Electronic Press Kit (EPK), technical stage rider, and commercial sponsorship pitch deck."
-        },
-        {
-          "step": "03",
-          "title": "Booking & Brand Pitching",
-          "desc": "Our booking agents pitch your act to promoters, festival organizers, corporate clients, and commercial sponsors."
-        },
-        {
-          "step": "04",
-          "title": "Touring, Legal & Scale",
-          "desc": "We manage contract execution, travel logistics, rider compliance, stage production, and royalty collection."
-        }
+      "specifications": [
+        "Global Booking Network across India, UAE, UK, and US festival circuits",
+        "In-House Legal Entertainment Counsel for IP Protection and Contracts",
+        "Exclusive Access to Corporate Brand Endorsement Databases",
+        "Direct Pitching Access to Spotify, Apple Music & Amazon Editorial Curators",
+        "Live Touring Production Staff, Sound Engineers & Visual Designers"
       ],
+      "processSteps": [],
       "deliverables": [
         "Professional Electronic Press Kit (EPK) with Press Photos",
         "Technical Audio Rider & Hospitality Stage Documentation",
         "Commercial Brand Sponsorship Deck & Rate Card",
         "Transparent Monthly Accounting & Booking Revenue Reports"
       ],
-      "faqs": [
-        {
-          "q": "What genres do you represent?",
-          "a": "We manage visionary artists across electronic, hip-hop, contemporary folk fusion, pop, cinematic scores, and experimental genres."
-        },
-        {
-          "q": "Do you take a percentage of my music royalties?",
-          "a": "No! Unlike traditional predatory labels, our management plans are structured transparently with fixed retainers or standard booking commissions on gigs we secure for you."
-        },
-        {
-          "q": "How do I know if I qualify for roster management?",
-          "a": "We review existing music releases, streaming momentum, live performance videos, and work ethic. Submit your portfolio to schedule an audition."
-        }
-      ]
+      "equipmentList": [
+        "Professional Electronic Press Kit (EPK) with Press Photos",
+        "Technical Audio Rider & Hospitality Stage Documentation",
+        "Commercial Brand Sponsorship Deck & Rate Card",
+        "Transparent Monthly Accounting & Booking Revenue Reports"
+      ],
+      "faqs": [],
+      "order": 3,
+      "isActive": true,
+      "createdAt": "2026-08-18T05:58:38.923Z",
+      "updatedAt": "2026-08-18T05:58:38.923Z"
     },
     {
       "id": "srv-4",
@@ -908,86 +534,7 @@
       ],
       "ctaText": "PUBLISH MUSIC",
       "pricingRange": "Single & Album Packages",
-      "order": 4,
-      "isActive": true,
-      "createdAt": "2026-08-18T05:58:38.923Z",
-      "updatedAt": "2026-08-18T05:58:38.923Z",
-      "plans": [
-        {
-          "id": "md-plan-1",
-          "name": "Single Release Tier",
-          "badge": "ESSENTIAL",
-          "tagline": "Fast delivery of 1 single release to 150+ digital streaming platforms worldwide.",
-          "priceUSD": "$49",
-          "priceINR": "₹3,999",
-          "duration": "Lifetime on Stores",
-          "revisions": "Free Metadata Updates",
-          "isPopular": false,
-          "features": [
-            "Direct Ingestion to Spotify, Apple, YouTube, Amazon, Tidal & 150+ stores",
-            "Keep 100% of Your Royalties Forever",
-            "Free ISRC Codes and UPC Barcode Generation",
-            "Official Artist Channel (OAC) Verification",
-            "Pre-Save Smart Link Landing Page"
-          ],
-          "deliverables": [
-            "Lifetime Store Distribution",
-            "ISRC & UPC Codes",
-            "Pre-Save Landing Page URL"
-          ],
-          "ctaText": "DISTRIBUTE SINGLE"
-        },
-        {
-          "id": "md-plan-2",
-          "name": "Pro Artist Annual Pass",
-          "badge": "MOST POPULAR",
-          "tagline": "Unlimited single and album releases for 12 months with editorial playlist pitching support.",
-          "priceUSD": "$199/yr",
-          "priceINR": "₹15,999/yr",
-          "duration": "Unlimited Releases / 1 Year",
-          "revisions": "Priority 24h Delivery",
-          "isPopular": true,
-          "features": [
-            "Unlimited Single, EP, and Album Releases for 1 Artist",
-            "Editorial Playlist Pitching Support (Spotify & Apple Music)",
-            "YouTube Content ID & Meta Fingerprint Audio Protection",
-            "Dolby Atmos Spatial Audio Ingestion Support",
-            "Real-time Stream Analytics & Monthly Transparent Payouts",
-            "Custom Pre-Release Teaser & Pre-Save Tools"
-          ],
-          "deliverables": [
-            "Unlimited Annual DSP Distribution",
-            "YouTube Content ID Monetization",
-            "Monthly Royalty Payouts via Direct Bank Transfer"
-          ],
-          "ctaText": "GET PRO ANNUAL"
-        },
-        {
-          "id": "md-plan-3",
-          "name": "Record Label / Imprint Tier",
-          "badge": "FLAGSHIP",
-          "tagline": "Multi-artist catalog distribution for independent labels with split payouts and sync licensing.",
-          "priceUSD": "$699/yr",
-          "priceINR": "₹55,000/yr",
-          "duration": "Enterprise Label Account",
-          "revisions": "Dedicated Distribution Agent",
-          "isPopular": false,
-          "features": [
-            "Unlimited Releases for up to 10 Roster Artists under Custom Label Name",
-            "Expedited 24-Hour DSP Ingestion Pipeline",
-            "Automated Royalty Split Payouts to Collaborators & Producers",
-            "Global Sync Licensing Catalog Inclusion (Film/TV/Ads)",
-            "Dedicated Label Account Manager & DSP Pitching Specialist",
-            "Custom Metadata Management & Catalog Bulk Import"
-          ],
-          "deliverables": [
-            "Custom Label Imprint Branding on all Stores",
-            "Automated Royalty Split Payout Engine",
-            "Global Sync Representation Agreement"
-          ],
-          "ctaText": "GET LABEL TIER"
-        }
-      ],
+      "plans": [],
       "specs": [
         "Direct API DDEX Ingestion to 150+ Digital Streaming Providers",
         "Official Spotify for Artists & Apple Music for Artists Instant Verification",
@@ -995,48 +542,31 @@
         "Dolby Atmos & Hi-Res Lossless 24-bit 192kHz Streaming Pipeline",
         "Automated Payout Engine supporting Bank Wire, UPI, and PayPal"
       ],
-      "processSteps": [
-        {
-          "step": "01",
-          "title": "Master Audio & Metadata Upload",
-          "desc": "Submit your lossless WAV files, high-res cover art (3000x3000px), lyrics, and artist metadata."
-        },
-        {
-          "step": "02",
-          "title": "Quality Check & Ingestion",
-          "desc": "Our metadata team verifies audio specs, copyright compliance, and pushes the release via DDEX."
-        },
-        {
-          "step": "03",
-          "title": "Editorial Playlist Pitching",
-          "desc": "We pitch your upcoming release to Spotify, Apple, and Amazon Music editorial curators weeks prior to drop date."
-        },
-        {
-          "step": "04",
-          "title": "Global Go-Live & Royalty Accounting",
-          "desc": "Your music streams worldwide at midnight in each territory. Royalties accumulate with transparent monthly reporting."
-        }
+      "specifications": [
+        "Direct API DDEX Ingestion to 150+ Digital Streaming Providers",
+        "Official Spotify for Artists & Apple Music for Artists Instant Verification",
+        "YouTube Official Artist Channel (OAC) Music Note Badge Integration",
+        "Dolby Atmos & Hi-Res Lossless 24-bit 192kHz Streaming Pipeline",
+        "Automated Payout Engine supporting Bank Wire, UPI, and PayPal"
       ],
+      "processSteps": [],
       "deliverables": [
         "Active Release on 150+ Worldwide Streaming Platforms",
         "Official ISRC & UPC Metadata Registry Certificates",
         "YouTube Content ID Audio Fingerprint Protection",
         "Monthly Royalty Earnings Dashboard with 100% Payouts"
       ],
-      "faqs": [
-        {
-          "q": "Do you take a cut of my streaming earnings?",
-          "a": "No! You retain 100% of your net royalties earned across all digital streaming platforms."
-        },
-        {
-          "q": "How long does it take for my song to appear on Spotify and Apple Music?",
-          "a": "Usually 48–72 hours. However, we recommend submitting at least 2 weeks in advance so we can submit your track to official playlist editors."
-        },
-        {
-          "q": "Can I keep my music online even if my subscription expires?",
-          "a": "Yes, your music stays permanently active on DSP stores with no takedown penalties."
-        }
-      ]
+      "equipmentList": [
+        "Active Release on 150+ Worldwide Streaming Platforms",
+        "Official ISRC & UPC Metadata Registry Certificates",
+        "YouTube Content ID Audio Fingerprint Protection",
+        "Monthly Royalty Earnings Dashboard with 100% Payouts"
+      ],
+      "faqs": [],
+      "order": 4,
+      "isActive": true,
+      "createdAt": "2026-08-18T05:58:38.923Z",
+      "updatedAt": "2026-08-18T05:58:38.923Z"
     },
     {
       "id": "srv-5",
@@ -1056,86 +586,7 @@
       ],
       "ctaText": "AMPLIFY BRAND",
       "pricingRange": "Custom Campaign Budgets",
-      "order": 5,
-      "isActive": true,
-      "createdAt": "2026-08-18T05:58:38.923Z",
-      "updatedAt": "2026-08-18T05:58:38.923Z",
-      "plans": [
-        {
-          "id": "dm-plan-1",
-          "name": "Single Launch Boost",
-          "badge": "ESSENTIAL",
-          "tagline": "Targeted Instagram & YouTube ad campaigns to drive genuine listeners to your new release.",
-          "priceUSD": "$550",
-          "priceINR": "₹42,000",
-          "duration": "14-Day Campaign",
-          "revisions": "Weekly Optimization Calls",
-          "isPopular": false,
-          "features": [
-            "High-Converting Meta (Instagram/Facebook) Video Ad Setup",
-            "Targeted YouTube In-Feed Discovery Ad Strategy",
-            "Audience Demographic & Genre Affinity Targeting",
-            "Conversion Pixel Tracking & Retargeting Funnel Setup",
-            "End-of-Campaign Performance & ROI Analytics Report"
-          ],
-          "deliverables": [
-            "Custom Ad Video Creatives",
-            "Targeting Audience Blueprint",
-            "Weekly Analytics Report"
-          ],
-          "ctaText": "LAUNCH CAMPAIGN"
-        },
-        {
-          "id": "dm-plan-2",
-          "name": "Viral Momentum Blitz",
-          "badge": "MOST POPULAR",
-          "tagline": "Creator influencer seeding on Reels/TikTok, independent Spotify playlist push, and music PR.",
-          "priceUSD": "$1,400",
-          "priceINR": "₹1,10,000",
-          "duration": "30-Day Campaign",
-          "revisions": "Dedicated Campaign Growth Lead",
-          "isPopular": true,
-          "features": [
-            "15+ Verified Creator Activations on Instagram Reels & TikTok",
-            "Pitching to 50+ Top Independent Spotify Curators",
-            "Press Release Distributed to 40+ Music Blogs & Indie Webzines",
-            "Ad Spend Management with Continuous A/B Creative Testing",
-            "Algorithm Trigger Strategy to Boost Release Radar & Discover Weekly",
-            "Weekly Growth Metric Dashboard & Real-Time Optimization"
-          ],
-          "deliverables": [
-            "Live Creator Video Links Archive",
-            "Spotify Playlist Placement Proof Report",
-            "Syndicated Press Clippings Dossier"
-          ],
-          "ctaText": "SCALE VIRALITY"
-        },
-        {
-          "id": "dm-plan-3",
-          "name": "Global Breakthrough Blitz",
-          "badge": "FLAGSHIP",
-          "tagline": "Comprehensive 360° marketing offensive: Tier-1 creators, national music press, and radio syndication.",
-          "priceUSD": "$3,200",
-          "priceINR": "₹2,50,000",
-          "duration": "60-Day Campaign",
-          "revisions": "Full Dedicated Marketing Cell",
-          "isPopular": false,
-          "features": [
-            "Tier-1 Influencer & Celebrity Dance/Reels Campaign (1M+ Reach)",
-            "National & Global Press Placement (Rolling Stone India, Homegrown, etc.)",
-            "Multi-Platform Ad Campaigns (Meta, TikTok, YouTube & Spotify Ads)",
-            "College Radio & Regional Radio Plugger Submissions",
-            "Custom Street Marketing, QR Poster Placement & Guerilla Stunts",
-            "Full-Time Campaign Director with Daily Monitoring"
-          ],
-          "deliverables": [
-            "Tier-1 Media Interview & Article Links",
-            "Comprehensive 60-Day Growth Case Study",
-            "Custom Re-Targetable Fan Email & Pixel Database"
-          ],
-          "ctaText": "GO FOR BREAKTHROUGH"
-        }
-      ],
+      "plans": [],
       "specs": [
         "Meta Business Suite Advanced Advertising & Pixel Funnel Optimization",
         "Google Ads & YouTube Music Video Discovery Targeting Network",
@@ -1143,48 +594,31 @@
         "Direct Connections with 100+ Independent Spotify & Apple Curators",
         "Verified Music Journalist & PR Wire Syndication Network"
       ],
-      "processSteps": [
-        {
-          "step": "01",
-          "title": "Audience Research & Strategy",
-          "desc": "We map out your sonic genre, comparable artist audiences, and design high-converting hook video creatives."
-        },
-        {
-          "step": "02",
-          "title": "Ad Setup & Influencer Seeding",
-          "desc": "We launch precision hyper-targeted ad funnels and seed your track audio with vetted trend-setting content creators."
-        },
-        {
-          "step": "03",
-          "title": "PR & Playlist Syndication",
-          "desc": "Our PR specialists distribute your electronic press release to music editors and pitch your track to independent playlist curators."
-        },
-        {
-          "step": "04",
-          "title": "Optimization & Retargeting",
-          "desc": "We scale high-performing ad variations, build custom lookalike audiences, and provide full transparent ROI dashboards."
-        }
+      "specifications": [
+        "Meta Business Suite Advanced Advertising & Pixel Funnel Optimization",
+        "Google Ads & YouTube Music Video Discovery Targeting Network",
+        "Vetted Network of 500+ Organic Instagram & TikTok Music Creators",
+        "Direct Connections with 100+ Independent Spotify & Apple Curators",
+        "Verified Music Journalist & PR Wire Syndication Network"
       ],
+      "processSteps": [],
       "deliverables": [
         "Engaging High-CTR Video Ad Creatives in 9:16 and 1:1 Formats",
         "Playlist Placement Verification Report with Listener Metrics",
         "Published Press Release Articles across Reputable Music Portals",
         "Comprehensive Final Campaign Growth Report & Fan Pixel Assets"
       ],
-      "faqs": [
-        {
-          "q": "Do you use bots or artificial stream generation?",
-          "a": "NEVER! We only run 100% compliant, organic marketing strategies via official Meta/Google advertising, genuine content creator seeding, and vetted curators."
-        },
-        {
-          "q": "How many streams can I expect?",
-          "a": "While streams depend on the track’s natural appeal, our campaigns consistently achieve thousands of real engaged listeners and activate Spotify algorithmic playlists."
-        },
-        {
-          "q": "Does the package price include advertising budget?",
-          "a": "The package covers complete creative production, strategy, influencer fees, and campaign management. Direct ad spend can be integrated or scaled based on your budget."
-        }
-      ]
+      "equipmentList": [
+        "Engaging High-CTR Video Ad Creatives in 9:16 and 1:1 Formats",
+        "Playlist Placement Verification Report with Listener Metrics",
+        "Published Press Release Articles across Reputable Music Portals",
+        "Comprehensive Final Campaign Growth Report & Fan Pixel Assets"
+      ],
+      "faqs": [],
+      "order": 5,
+      "isActive": true,
+      "createdAt": "2026-08-18T05:58:38.923Z",
+      "updatedAt": "2026-08-18T05:58:38.923Z"
     },
     {
       "id": "srv-6",
@@ -1204,86 +638,7 @@
       ],
       "ctaText": "PARTNER WITH US",
       "pricingRange": "Bespoke Brand Deals",
-      "order": 6,
-      "isActive": true,
-      "createdAt": "2026-08-18T05:58:38.923Z",
-      "updatedAt": "2026-08-18T05:58:38.923Z",
-      "plans": [
-        {
-          "id": "bc-plan-1",
-          "name": "Sonic Identity & Commercial Jingle",
-          "badge": "ESSENTIAL",
-          "tagline": "Custom audio mnemonic, brand anthem, or commercial jingle for ads, apps, and video campaigns.",
-          "priceUSD": "$1,100",
-          "priceINR": "₹85,000",
-          "duration": "7–10 Days Delivery",
-          "revisions": "3 Revisions Included",
-          "isPopular": false,
-          "features": [
-            "Custom 15s, 30s & 60s Brand Audio Identity",
-            "Full Sonic Brand Guidelines & Moodboard",
-            "World-Class Studio Recording & Vocal Hook",
-            "Commercial Synchronization License for Digital & Social Media",
-            "Broadcast-Ready Mix & Master"
-          ],
-          "deliverables": [
-            "15s, 30s, 60s Cutdowns (WAV)",
-            "Sonic Logo Audio Mnemonic",
-            "Perpetual Digital Commercial License"
-          ],
-          "ctaText": "COMMISSION JINGLE"
-        },
-        {
-          "id": "bc-plan-2",
-          "name": "Co-Branded Music Campaign",
-          "badge": "MOST POPULAR",
-          "tagline": "Original song collaboration with prominent VEXO artists with organic product placement in official video.",
-          "priceUSD": "$3,800",
-          "priceINR": "₹3,00,000",
-          "duration": "3–4 Weeks Execution",
-          "revisions": "Collaborative Storyboard Approval",
-          "isPopular": true,
-          "features": [
-            "Original Track Produced featuring Roster Music Artists",
-            "Natural Product Placement inside Official 4K Music Video",
-            "Co-Branded Social Media Reels & TikTok Integration",
-            "Digital & Commercial Broadcast Usage License Rights",
-            "Brand Logo Placement in YouTube Credits & Promo Posters",
-            "Dedicated Brand Campaign Coordinator"
-          ],
-          "deliverables": [
-            "Official 4K Music Video with Brand Placement",
-            "Co-Branded Social Promotional Assets",
-            "Standard Commercial Synchronization Agreement"
-          ],
-          "ctaText": "PARTNER WITH US"
-        },
-        {
-          "id": "bc-plan-3",
-          "name": "360° Brand Partnership",
-          "badge": "FLAGSHIP",
-          "tagline": "Comprehensive seasonal brand anthem, celebrity artist endorsement, tour title sponsorship, and TV buyout.",
-          "priceUSD": "$9,500",
-          "priceINR": "₹7,50,000",
-          "duration": "Full Campaign Lifecycle",
-          "revisions": "Executive Tailored Package",
-          "isPopular": false,
-          "features": [
-            "Exclusive Brand Anthem Produced for TV, OTT, Cinema & Digital Ads",
-            "Artist Brand Ambassador Rights & In-Person Event Appearances",
-            "Stage Title Sponsorship at VEXO Live Concerts & Tours",
-            "Worldwide TV & OTT Commercial Buyout Rights",
-            "Cross-Promotional PR Campaign with Major Media Outlets",
-            "Executive Brand Director & Creative Team Access"
-          ],
-          "deliverables": [
-            "Full Commercial Master Audio & Video Buyout",
-            "Live Event Title Sponsorship Branding Package",
-            "Worldwide Comprehensive Synchronization Agreement"
-          ],
-          "ctaText": "CUSTOM BRAND DEAL"
-        }
-      ],
+      "plans": [],
       "specs": [
         "Industry-Standard Synchronization Licensing Agreements and Legal Buyouts",
         "Broadcast-Compliant Audio Mastering (-24 LKFS / EBU R128 for TV/OTT)",
@@ -1291,48 +646,31 @@
         "Direct Access to Leading Indian and Global Lifestyle Brands Roster",
         "Full Commercial Production & 4K Cinema Shooting Capabilities"
       ],
-      "processSteps": [
-        {
-          "step": "01",
-          "title": "Brand Brief & Creative Ideation",
-          "desc": "We analyze your target demographics, marketing campaign objectives, and craft matching musical and visual concepts."
-        },
-        {
-          "step": "02",
-          "title": "Artist Matching & Composition",
-          "desc": "We pair your brand with the ideal music artist and compose original hooks, melodies, and lyrics aligned with your brand voice."
-        },
-        {
-          "step": "03",
-          "title": "Production & Video Integration",
-          "desc": "We shoot the visuals, integrating your product and branding seamlessly into the narrative without feeling like a generic ad."
-        },
-        {
-          "step": "04",
-          "title": "Licensing, Delivery & Amplification",
-          "desc": "We execute commercial sync agreements, deliver final masters, and launch co-branded social media campaigns."
-        }
+      "specifications": [
+        "Industry-Standard Synchronization Licensing Agreements and Legal Buyouts",
+        "Broadcast-Compliant Audio Mastering (-24 LKFS / EBU R128 for TV/OTT)",
+        "High-Impact Natural Product Placement Integration Framework",
+        "Direct Access to Leading Indian and Global Lifestyle Brands Roster",
+        "Full Commercial Production & 4K Cinema Shooting Capabilities"
       ],
+      "processSteps": [],
       "deliverables": [
         "Broadcast-Ready Audio Files in WAV, AIFF, and MP3 Formats",
         "Comprehensive Commercial Synchronization & Copyright License",
         "Short-Form Social Cutdowns for Reels, Shorts, and TikTok Ads",
         "Campaign Reach and Engagement Impact Analytics Report"
       ],
-      "faqs": [
-        {
-          "q": "What types of brands do you collaborate with?",
-          "a": "We work with fashion, luxury beverage, automotive, consumer tech, lifestyle, hospitality, and entertainment brands seeking culturally resonant music partnerships."
-        },
-        {
-          "q": "Are the songs licensed for television and cinema advertising?",
-          "a": "Yes! Depending on your chosen plan, we provide full synchronization rights for digital, social, television, OTT, and cinema broadcast."
-        },
-        {
-          "q": "Can our marketing team be involved in the creative process?",
-          "a": "Definitely. We collaborate closely with brand marketing teams from moodboarding to final script and audio approvals."
-        }
-      ]
+      "equipmentList": [
+        "Broadcast-Ready Audio Files in WAV, AIFF, and MP3 Formats",
+        "Comprehensive Commercial Synchronization & Copyright License",
+        "Short-Form Social Cutdowns for Reels, Shorts, and TikTok Ads",
+        "Campaign Reach and Engagement Impact Analytics Report"
+      ],
+      "faqs": [],
+      "order": 6,
+      "isActive": true,
+      "createdAt": "2026-08-18T05:58:38.923Z",
+      "updatedAt": "2026-08-18T05:58:38.923Z"
     },
     {
       "id": "srv-7",
@@ -1352,105 +690,7 @@
       ],
       "ctaText": "EXPLORE PACKAGES",
       "pricingRange": "Starting from ₹24,999",
-      "order": 7,
-      "isActive": true,
-      "createdAt": "2026-08-18T05:58:38.923Z",
-      "updatedAt": "2026-08-18T05:58:38.923Z",
-      "plans": [
-        {
-          "id": "pw-plan-1",
-          "name": "Silver Pre-Wedding Package",
-          "badge": "CLASSIC ELEGANCE",
-          "tagline": "Perfect for a Simple & Elegant Pre-Wedding with candid photography & cinematic film.",
-          "priceUSD": "$300",
-          "priceINR": "₹24,999",
-          "duration": "1-Day Shoot / 7-Day Delivery",
-          "revisions": "2 Video Edit Revisions",
-          "isPopular": false,
-          "features": [
-            "1 Professional Photographer (Candid & Portrait Photography)",
-            "1 Photography Camera Setup",
-            "1 Cinematographer with Professional Cinema Camera",
-            "Cinematic Video Coverage",
-            "1 Pre-Wedding Cinematic Film",
-            "1 Highlight Video",
-            "2 Instagram Reels (9:16 vertical cuts)",
-            "Professionally Edited High-Res Photos with Basic Colour Grading",
-            "1 Day Shoot at 1 Curated Location"
-          ],
-          "deliverables": [
-            "1 Pre-Wedding Cinematic Film",
-            "1 Highlight Video",
-            "2 Instagram Reels",
-            "Professionally Edited Photos",
-            "Basic Colour Grading"
-          ],
-          "ctaText": "BOOK SILVER"
-        },
-        {
-          "id": "pw-plan-2",
-          "name": "Gold Pre-Wedding Package",
-          "badge": "MOST POPULAR",
-          "tagline": "Our Most Popular Package with Sony Cinema camera, gimbal movements, sound design & bonus portraits.",
-          "priceUSD": "$480",
-          "priceINR": "₹39,999",
-          "duration": "1 Full Day Shoot / 10-Day Delivery",
-          "revisions": "3 Video Edit Revisions",
-          "isPopular": true,
-          "features": [
-            "1 Professional Photographer with Premium Camera Setup",
-            "Candid + Creative Couple Portraits",
-            "1 Professional Cinematographer with Sony Cinema Rig",
-            "Gimbal Cinematography & Creative Cinematic Movements",
-            "1 Cinematic Pre-Wedding Film & 1 Trailer / Teaser",
-            "4 Instagram Reels with Trending Music Sync",
-            "Professionally Edited Photos with Premium Colour Grading",
-            "Cinematic Sound Design & Audio Mastering",
-            "1 Full Day Shoot across up to 2 Locations",
-            "Bonus: Couple Portrait Session & Creative Reel Concepts"
-          ],
-          "deliverables": [
-            "1 Cinematic Pre-Wedding Film",
-            "1 Trailer / Teaser",
-            "4 Instagram Reels",
-            "Professionally Edited Photos",
-            "Premium Colour Grading",
-            "Cinematic Sound Design"
-          ],
-          "ctaText": "BOOK GOLD"
-        },
-        {
-          "id": "pw-plan-3",
-          "name": "Platinum Pre-Wedding Experience",
-          "badge": "ROYAL EXPERIENCE",
-          "tagline": "The Complete Pre-Wedding Experience with 2 Shoot Days, 2 Cinematographers, and dedicated Creative Direction.",
-          "priceUSD": "$720",
-          "priceINR": "₹59,999",
-          "duration": "2 Shoot Days / 14-Day Delivery",
-          "revisions": "VIP Preview & Unlimited Revisions",
-          "isPopular": false,
-          "features": [
-            "1 Professional Photographer with Premium Photography Setup",
-            "Candid Photography & Creative Couple Portraits",
-            "2 Cinematographers with Dual Sony Cinema Camera Systems",
-            "Gimbal Setup, Cinematic Camera Movements & Creative Storytelling",
-            "1 Premium Cinematic Pre-Wedding Film & 1 Cinematic Trailer",
-            "6 Instagram Reels + 1 Couple Introduction Reel",
-            "Professionally Edited Photos with Advanced Colour Grading & Sound Design",
-            "2 Shoot Days across up to 3 Locations",
-            "Platinum VIP Experience: Dedicated Creative Direction, Concept & Shot Planning, Location Guidance & Outfit Coordination"
-          ],
-          "deliverables": [
-            "1 Premium Cinematic Pre-Wedding Film",
-            "1 Cinematic Trailer",
-            "6 Instagram Reels + 1 Couple Introduction Reel",
-            "Professionally Edited Photos",
-            "Advanced Colour Grading & Professional Sound Design",
-            "Complete Cloud Gallery with High-Resolution Archive"
-          ],
-          "ctaText": "BOOK PLATINUM"
-        }
-      ],
+      "plans": [],
       "specs": [
         "Sony FX6 & FX3 Cinema Line with G-Master Primes and Cinema Zooms",
         "DJI Inspire 3 & Mavic 3 Pro Cine Aerial Drone Systems",
@@ -1458,50 +698,34 @@
         "Custom Recording Studio Session with Live Acoustic Guitars, Flute & Vocals",
         "Aputure High-CRI Cinema Lighting for Dreamy Sunset and Twilight Golden Hour Shoots"
       ],
-      "processSteps": [
-        {
-          "step": "01",
-          "title": "Couple Interview & Story Concept",
-          "desc": "We meet with you to discover how you met, your personal vibe, music preferences, and vision for the film."
-        },
-        {
-          "step": "02",
-          "title": "Custom Song Composition",
-          "desc": "Our music directors write and record an original romantic song with custom lyrics incorporating your story."
-        },
-        {
-          "step": "03",
-          "title": "On-Location Cinematic Shoot",
-          "desc": "We travel to picturesque royal locations, directing natural, emotional moments with drone aerials and warm lighting."
-        },
-        {
-          "step": "04",
-          "title": "Editing, Color & Grand Delivery",
-          "desc": "We edit the film to your custom song, apply film color grading, and deliver the 4K video ready for wedding screen premieres."
-        }
+      "specifications": [
+        "Sony FX6 & FX3 Cinema Line with G-Master Primes and Cinema Zooms",
+        "DJI Inspire 3 & Mavic 3 Pro Cine Aerial Drone Systems",
+        "Pro Hollywood DaVinci Resolve Color Grading with Kodak Film Emulations",
+        "Custom Recording Studio Session with Live Acoustic Guitars, Flute & Vocals",
+        "Aputure High-CRI Cinema Lighting for Dreamy Sunset and Twilight Golden Hour Shoots"
       ],
+      "processSteps": [],
       "deliverables": [
         "4K UHD Master Video Film for Big-Screen Wedding Displays",
         "Original Custom Love Song Master Audio File (24-bit WAV)",
         "Social-Media Optimized Vertical Reels & WhatsApp Wedding Save-The-Date Teasers",
         "Curated Online Photo Gallery with High-Resolution Download Access"
       ],
-      "faqs": [
-        {
-          "q": "Do you compose a completely new song for us?",
-          "a": "Yes! In our OST and Royal plans, our studio composers write and record an entirely original song with your personal love story woven into the lyrics."
-        },
-        {
-          "q": "Are location entry fees included in the package?",
-          "a": "Location shooting permits and tickets vary by heritage property and are paid directly by the couple, though we provide full location guidance and booking support."
-        },
-        {
-          "q": "How far in advance should we book?",
-          "a": "Because of bespoke song composition and prime wedding season dates, we recommend reserving your dates 4 to 8 weeks in advance."
-        }
-      ]
+      "equipmentList": [
+        "4K UHD Master Video Film for Big-Screen Wedding Displays",
+        "Original Custom Love Song Master Audio File (24-bit WAV)",
+        "Social-Media Optimized Vertical Reels & WhatsApp Wedding Save-The-Date Teasers",
+        "Curated Online Photo Gallery with High-Resolution Download Access"
+      ],
+      "faqs": [],
+      "order": 7,
+      "isActive": true,
+      "createdAt": "2026-08-18T05:58:38.923Z",
+      "updatedAt": "2026-08-18T05:58:38.923Z"
     },
     {
+      "id": "srv-a39e1355c4698ff9",
       "number": "08",
       "title": "camera rental",
       "slug": "camera-rental",
@@ -1518,133 +742,50 @@
       ],
       "ctaText": "INITIATE PROJECT",
       "pricingRange": "Starting from $450 / ₹35,000",
-      "plans": [
-        {
-          "id": "plan-1",
-          "name": "Starter / Essential",
-          "badge": "ESSENTIAL",
-          "tagline": "Ideal for independent artists seeking foundational production.",
-          "priceUSD": "$450",
-          "priceINR": "₹35,000",
-          "duration": "3–5 Days Turnaround",
-          "revisions": "3 Free Revisions Included",
-          "isPopular": false,
-          "features": [
-            "Vocal Tuning & Stem Alignment",
-            "Stereo Stem Mixdown",
-            "24-bit 96kHz Radio Master",
-            "Standard Streaming Target"
-          ],
-          "deliverables": [
-            "Master WAV",
-            "Master MP3",
-            "Instrumental Track"
-          ],
-          "ctaText": "BOOK STARTER"
-        },
-        {
-          "id": "plan-2",
-          "name": "Commercial Standard Single",
-          "badge": "MOST POPULAR",
-          "tagline": "Full analog SSL tracking, custom arrangement, and Dolby Atmos.",
-          "priceUSD": "$1,200",
-          "priceINR": "₹95,000",
-          "duration": "5–7 Days Turnaround",
-          "revisions": "Unlimited Mix Revisions",
-          "isPopular": true,
-          "features": [
-            "Custom Beat Composition",
-            "Analog SSL 4000E Console Mixdown",
-            "Dolby Atmos Spatial Master",
-            "Full Multi-track Stems Archive",
-            "Dedicated Producer Support"
-          ],
-          "deliverables": [
-            "Master Stereo WAV",
-            "Dolby Atmos ADM BWF",
-            "Full Stems Archive",
-            "Instrumental & Acapella"
-          ],
-          "ctaText": "BOOK COMMERCIAL"
-        },
-        {
-          "id": "plan-3",
-          "name": "Studio Master / Full EP",
-          "badge": "FLAGSHIP",
-          "tagline": "Comprehensive multi-track executive production with VIP priority.",
-          "priceUSD": "$3,500",
-          "priceINR": "₹2,80,000",
-          "duration": "3–4 Weeks Turnaround",
-          "revisions": "VIP Priority Unlimited",
-          "isPopular": false,
-          "features": [
-            "Up to 5 Tracks Written & Produced",
-            "Live Session Musicians",
-            "Neve & Telefunken Outboard Chain",
-            "Dolby Atmos Spatial for All Tracks",
-            "Vinyl DDP & Broadcast Sync Licensing"
-          ],
-          "deliverables": [
-            "Complete Album Multi-Tracks",
-            "Dolby Atmos Master Suite",
-            "Vinyl Master Files",
-            "100% Commercial Rights Certificate"
-          ],
-          "ctaText": "BOOK STUDIO EP"
-        }
-      ],
+      "plans": [],
       "specs": [
         "Solid State Logic 4000E Analog Console",
         "Neve 1073 Preamps",
         "Dolby Atmos 7.1.4 Monitoring"
-      ],
-      "processSteps": [
-        {
-          "step": "01",
-          "title": "Creative Brief & Concept",
-          "desc": "Discovery session to map out sonic vibe, references, and milestones."
-        },
-        {
-          "step": "02",
-          "title": "Tracking & Composition",
-          "desc": "Arranging hooks, beats, instrumentation, and tracking vocal stems."
-        },
-        {
-          "step": "03",
-          "title": "Stem Mixing & Processing",
-          "desc": "Routing audio through analog gear, hardware EQs, and spatial summing."
-        },
-        {
-          "step": "04",
-          "title": "Dolby Atmos & Master Release",
-          "desc": "Final loudness mastering and delivering pristine broadcast assets."
-        }
-      ],
-      "deliverables": [
-        "Master WAV (24-bit)",
-        "Multi-Track Stems",
-        "Commercial Rights Certificate"
-      ],
-      "faqs": [
-        {
-          "q": "Do I retain 100% of my master rights?",
-          "a": "Yes, you keep 100% of master royalties and rights."
-        }
       ],
       "specifications": [
         "Solid State Logic 4000E Analog Console",
         "Neve 1073 Preamps",
         "Dolby Atmos 7.1.4 Monitoring"
       ],
-      "equipmentList": [],
+      "processSteps": [],
+      "deliverables": [
+        "Master WAV (24-bit)",
+        "Multi-Track Stems",
+        "Commercial Rights Certificate"
+      ],
+      "equipmentList": [
+        "Master WAV (24-bit)",
+        "Multi-Track Stems",
+        "Commercial Rights Certificate"
+      ],
+      "faqs": [],
       "order": 8,
       "isActive": true,
-      "id": "srv-a39e1355c4698ff9",
       "createdAt": "2026-09-12T05:32:28.699Z",
       "updatedAt": "2026-09-12T05:43:15.398Z"
     }
   ],
   "media": [
+    {
+      "id": "med-388678bbe4e292dd",
+      "filename": "vexo-1789191015895-oip-1--a9e6b34e.webp",
+      "originalName": "OIP (1).webp",
+      "mimeType": "image/webp",
+      "size": 12336,
+      "url": "/uploads/image/vexo-1789191015895-oip-1--a9e6b34e.webp",
+      "path": "image/vexo-1789191015895-oip-1--a9e6b34e.webp",
+      "altText": "OIP (1).webp",
+      "category": "image",
+      "uploadedBy": "admin-super-1",
+      "createdAt": "2026-09-12T05:30:15.899Z",
+      "updatedAt": "2026-09-12T05:30:15.899Z"
+    },
     {
       "id": "med-1",
       "filename": "satane-lage-ho-thumb.jpg",
@@ -1652,8 +793,9 @@
       "mimeType": "image/jpeg",
       "size": 452000,
       "url": "https://img.youtube.com/vi/HcEcM5AtEZ8/maxresdefault.jpg",
-      "category": "image",
+      "path": null,
       "altText": "Official cover art for Satane Lage Ho",
+      "category": "image",
       "uploadedBy": "admin-super-1",
       "createdAt": "2026-08-18T05:58:38.923Z",
       "updatedAt": "2026-08-18T05:58:38.923Z"
@@ -1665,25 +807,12 @@
       "mimeType": "image/jpeg",
       "size": 890000,
       "url": "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=1200&q=80",
-      "category": "image",
+      "path": null,
       "altText": "VEXO Studio SSL 4000 Console",
+      "category": "image",
       "uploadedBy": "admin-super-1",
       "createdAt": "2026-08-18T05:58:38.923Z",
       "updatedAt": "2026-08-18T05:58:38.923Z"
-    },
-    {
-      "filename": "vexo-1789191015895-oip-1--a9e6b34e.webp",
-      "originalName": "OIP (1).webp",
-      "mimeType": "image/webp",
-      "size": 12336,
-      "url": "/uploads/image/vexo-1789191015895-oip-1--a9e6b34e.webp",
-      "path": "image/vexo-1789191015895-oip-1--a9e6b34e.webp",
-      "altText": "OIP (1).webp",
-      "category": "image",
-      "uploadedBy": "admin-super-1",
-      "id": "med-388678bbe4e292dd",
-      "createdAt": "2026-09-12T05:30:15.899Z",
-      "updatedAt": "2026-09-12T05:30:15.899Z"
     }
   ],
   "contactRequests": [
@@ -1704,7 +833,7 @@
   ],
   "homepage": {
     "id": "homepage-singleton",
-    "heroTagline": "Pioneering Original Soundscapes & Entertainment ",
+    "heroTagline": "THE SOUND OF THE FUTURE",
     "heroHeadline": "vexo entertainment pvt limited ",
     "heroSubtitle": "VEXO Music Entertainment is a global record label, high-end audio-visual production powerhouse, and artist development agency.",
     "heroBgImage": "https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=2000&q=80",
@@ -1763,79 +892,79 @@
     "finalCtaButtonUrl": "/contact",
     "finalCtaSecondaryLabel": "CONTACT VEXO",
     "finalCtaSecondaryUrl": "/contact",
+    "marqueeText": "LATEST RELEASE: \"BHARTAR\" BY R BEER & RASHMI NISHAD — STREAMING NOW ON ALL MAJOR DSPS",
     "reviewsBadge": "TESTIMONIALS & TRUST",
     "reviewsHeading": "VOICES OF EXCELLENCE",
     "reviewsSubtitle": "What artists, visionary couples, and industry partners say about producing with VEXO.",
     "reviews": [
       {
         "id": "rev-1",
-        "clientName": "Rashmi Nishad",
-        "roleOrProject": "Lead Vocalist • \"Satane Lage Ho\"",
+        "date": "August 2026",
         "rating": 5,
-        "reviewText": "Working with VEXO Music on \"Satane Lage Ho\" was a transformative experience. Their studio engineering, arrangement sensibilities, and dedication to visual storytelling elevated our folk release to international chart standards.",
-        "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80",
         "category": "Music Production",
         "verified": true,
-        "date": "August 2026"
+        "avatarUrl": "https://images.unsplash.com/photo-1534528741775-53994a69daeb?auto=format&fit=crop&w=300&q=80",
+        "clientName": "Rashmi Nishad",
+        "reviewText": "Working with VEXO Music on \"Satane Lage Ho\" was a transformative experience. Their studio engineering, arrangement sensibilities, and dedication to visual storytelling elevated our folk release to international chart standards.",
+        "roleOrProject": "Lead Vocalist • \"Satane Lage Ho\""
       },
       {
         "id": "rev-2",
-        "clientName": "Aarav & Simran Rathore",
-        "roleOrProject": "Royal Pre-Wedding Shoot • Jaipur Forts",
+        "date": "September 2026",
         "rating": 5,
-        "reviewText": "The cinematic pre-wedding film produced by VEXO looked like a Bollywood period epic. From synchronized drone choreography over Nahargarh Fort to the original background score they composed for us, it was beyond our wildest dreams.",
-        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80",
         "category": "Wedding & Film",
         "verified": true,
-        "date": "September 2026"
+        "avatarUrl": "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&w=300&q=80",
+        "clientName": "Aarav & Simran Rathore",
+        "reviewText": "The cinematic pre-wedding film produced by VEXO looked like a Bollywood period epic. From synchronized drone choreography over Nahargarh Fort to the original background score they composed for us, it was beyond our wildest dreams.",
+        "roleOrProject": "Royal Pre-Wedding Shoot • Jaipur Forts"
       },
       {
         "id": "rev-3",
-        "clientName": "Vikramaditya Sen",
-        "roleOrProject": "Executive Producer • Desert Storm Festival",
+        "date": "July 2026",
         "rating": 5,
-        "reviewText": "VEXO handled live audio engineering, multi-camera 4K visual feeds, and headline artist management for our 15,000-attendee festival with surgical precision. The sound was pristine and unforgettable.",
-        "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80",
         "category": "Artist Management",
         "verified": true,
-        "date": "July 2026"
+        "avatarUrl": "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?auto=format&fit=crop&w=300&q=80",
+        "clientName": "Vikramaditya Sen",
+        "reviewText": "VEXO handled live audio engineering, multi-camera 4K visual feeds, and headline artist management for our 15,000-attendee festival with surgical precision. The sound was pristine and unforgettable.",
+        "roleOrProject": "Executive Producer • Desert Storm Festival"
       },
       {
         "id": "rev-4",
-        "clientName": "Kabir & Meera Singhania",
-        "roleOrProject": "Destination Pre-Wedding • Udaipur Lakes",
+        "date": "June 2026",
         "rating": 5,
-        "reviewText": "Their signature package was worth every rupee. The team took care of luxury logistics, custom styling, multi-camera 4K drone reels, and delivered the finished cut in record time. Every guest was mesmerized.",
-        "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80",
         "category": "Wedding & Film",
         "verified": true,
-        "date": "June 2026"
+        "avatarUrl": "https://images.unsplash.com/photo-1494790108377-be9c29b29330?auto=format&fit=crop&w=300&q=80",
+        "clientName": "Kabir & Meera Singhania",
+        "reviewText": "Their signature package was worth every rupee. The team took care of luxury logistics, custom styling, multi-camera 4K drone reels, and delivered the finished cut in record time. Every guest was mesmerized.",
+        "roleOrProject": "Destination Pre-Wedding • Udaipur Lakes"
       },
       {
         "id": "rev-5",
-        "clientName": "R Beer",
-        "roleOrProject": "Singer-Songwriter • \"Bhartar\"",
+        "date": "August 2026",
         "rating": 5,
-        "reviewText": "The creative freedom and sonic power VEXO brings is unmatched. The production on \"Bhartar\" hit millions of streams within weeks. Their mixing, mastering, and global DSP distribution network are best-in-class.",
-        "avatarUrl": "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=300&q=80",
         "category": "Music Production",
         "verified": true,
-        "date": "August 2026"
+        "avatarUrl": "https://images.unsplash.com/photo-1522075469751-3a6694fb2f61?auto=format&fit=crop&w=300&q=80",
+        "clientName": "R Beer",
+        "reviewText": "The creative freedom and sonic power VEXO brings is unmatched. The production on \"Bhartar\" hit millions of streams within weeks. Their mixing, mastering, and global DSP distribution network are best-in-class.",
+        "roleOrProject": "Singer-Songwriter • \"Bhartar\""
       },
       {
         "id": "rev-6",
-        "clientName": "Ananya Deshmukh",
-        "roleOrProject": "Indie Artist • Debut EP Production",
+        "date": "May 2026",
         "rating": 5,
-        "reviewText": "As an independent musician, finding a team that respects your vision while providing world-class Dolby Atmos mastering and visualizer production is rare. VEXO is the definitive home for serious artists.",
-        "avatarUrl": "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=300&q=80",
         "category": "Music Production",
         "verified": true,
-        "date": "May 2026"
+        "avatarUrl": "https://images.unsplash.com/photo-1517841905240-472988babdf9?auto=format&fit=crop&w=300&q=80",
+        "clientName": "Ananya Deshmukh",
+        "reviewText": "As an independent musician, finding a team that respects your vision while providing world-class Dolby Atmos mastering and visualizer production is rare. VEXO is the definitive home for serious artists.",
+        "roleOrProject": "Indie Artist • Debut EP Production"
       }
     ],
-    "marqueeText": "LATEST RELEASE: \"BHARTAR\" BY R BEER & RASHMI NISHAD — STREAMING NOW ON ALL MAJOR DSPS",
-    "updatedAt": "2026-09-22T16:45:10.047Z"
+    "updatedAt": "2026-09-24T06:27:33.416Z"
   },
   "siteSettings": {
     "id": "site-settings-singleton",
@@ -1851,95 +980,109 @@
     "socialYoutube": "https://youtube.com",
     "socialInstagram": "https://instagram.com",
     "socialTwitter": "https://twitter.com",
-    "socialAppleMusic": "https://music.apple.com",
-    "socialFacebook": "https://facebook.com",
-    "socialSoundcloud": "https://soundcloud.com",
-    "maintenanceMode": false,
-    "footerBio": "A premier music entertainment powerhouse & record label specializing in original sound engineering, global music distribution, artist management, and cinematic audio-visual production based in Jaipur, India.",
+    "socialAppleMusic": null,
+    "socialFacebook": null,
+    "socialSoundcloud": null,
+    "footerBio": null,
     "footerQuickLinksHeading": "QUICK LINKS",
     "footerQuickLinks": [
       {
         "id": "fn-1",
-        "label": "Home",
-        "path": "/"
+        "path": "/",
+        "label": "Home"
       },
       {
         "id": "fn-2",
-        "label": "Music",
-        "path": "/music"
+        "path": "/music",
+        "label": "Music"
       },
       {
         "id": "fn-3",
-        "label": "Artists",
-        "path": "/artists"
+        "path": "/artists",
+        "label": "Artists"
       },
       {
         "id": "fn-4",
-        "label": "Services",
-        "path": "/services"
+        "path": "/services",
+        "label": "Services"
       },
       {
         "id": "fn-5",
-        "label": "Events",
-        "path": "/events"
+        "path": "/pre-wedding",
+        "label": "Pre-Wedding"
       },
       {
         "id": "fn-6",
-        "label": "Videos",
-        "path": "/videos"
+        "path": "/wedding",
+        "label": "Wedding"
       },
       {
         "id": "fn-7",
-        "label": "About",
-        "path": "/about"
+        "path": "/events",
+        "label": "Events"
       },
       {
         "id": "fn-8",
-        "label": "Contact",
-        "path": "/contact"
+        "path": "/videos",
+        "label": "Videos"
+      },
+      {
+        "id": "fn-9",
+        "path": "/about",
+        "label": "About"
+      },
+      {
+        "id": "fn-10",
+        "path": "/contact",
+        "label": "Contact"
       }
     ],
     "footerServicesHeading": "SERVICES",
     "footerServicesLinks": [
       {
         "id": "fs-1",
-        "label": "Music Production",
-        "path": "/services"
+        "path": "/services",
+        "label": "Music Production"
       },
       {
         "id": "fs-2",
-        "label": "Audio & Video Production",
-        "path": "/services"
+        "path": "/services",
+        "label": "Audio & Video Production"
       },
       {
         "id": "fs-3",
-        "label": "Artist Management",
-        "path": "/services"
+        "path": "/services",
+        "label": "Artist Management"
       },
       {
         "id": "fs-4",
-        "label": "Music Distribution",
-        "path": "/services"
+        "path": "/services",
+        "label": "Music Distribution"
       },
       {
         "id": "fs-5",
-        "label": "Digital Marketing",
-        "path": "/services"
+        "path": "/services",
+        "label": "Digital Marketing"
       },
       {
         "id": "fs-6",
-        "label": "Brand Collaborations",
-        "path": "/services"
+        "path": "/services",
+        "label": "Brand Collaborations"
       },
       {
         "id": "fs-7",
-        "label": "Pre-Wedding Shoot",
-        "path": "/pre-wedding"
+        "path": "/pre-wedding",
+        "label": "Pre-Wedding Shoot"
+      },
+      {
+        "id": "fs-wedding",
+        "path": "/wedding",
+        "label": "Wedding Cinematography"
       },
       {
         "id": "fs-1790076908691",
-        "label": "camera rental ",
         "path": "/services",
+        "label": "camera rental ",
         "isExternal": false
       }
     ],
@@ -1948,235 +1091,8 @@
     "footerStatusEnabled": true,
     "footerBackToTopEnabled": true,
     "footerAdminLinkEnabled": true,
-    "updatedAt": "2026-09-22T11:41:43.807Z",
-    "success": true,
-    "data": {
-      "id": "site-settings-singleton",
-      "siteName": "VEXO Music Entertainment Pvt. Ltd.",
-      "siteDescription": "Premier record label, studio production house, and artist management company.",
-      "logoUrl": "/logo.svg",
-      "faviconUrl": "/favicon.ico",
-      "contactEmail": "contact@vexomusic.com",
-      "contactPhone": "+91 72399 99966",
-      "officeAddress": "SKY CROWN, Office No. 205  Chordiya City, Kamla Nehru Nagar, Ajmer Road  Jaipur, Pin Code- 302021, Rajasthan, India",
-      "copyrightText": "© 2026 VEXO Music Entertainment Pvt. Ltd. All rights reserved.",
-      "socialSpotify": "https://spotify.com",
-      "socialYoutube": "https://youtube.com",
-      "socialInstagram": "https://instagram.com",
-      "socialTwitter": "https://twitter.com",
-      "socialAppleMusic": "https://music.apple.com",
-      "socialFacebook": "https://facebook.com",
-      "socialSoundcloud": "https://soundcloud.com",
-      "maintenanceMode": false,
-      "footerBio": "A premier music entertainment powerhouse & record label specializing in original sound engineering, global music distribution, artist management, and cinematic audio-visual production based in Jaipur, India.",
-      "footerQuickLinksHeading": "EXPLORE VEXO",
-      "footerQuickLinks": [
-        {
-          "id": "fn-1",
-          "label": "Home",
-          "path": "/"
-        },
-        {
-          "id": "fn-2",
-          "label": "Music",
-          "path": "/music"
-        },
-        {
-          "id": "fn-3",
-          "label": "Artists",
-          "path": "/artists"
-        },
-        {
-          "id": "fn-4",
-          "label": "Services",
-          "path": "/services"
-        },
-        {
-          "id": "fn-5",
-          "label": "Events",
-          "path": "/events"
-        },
-        {
-          "id": "fn-6",
-          "label": "Videos",
-          "path": "/videos"
-        },
-        {
-          "id": "fn-7",
-          "label": "About",
-          "path": "/about"
-        },
-        {
-          "id": "fn-8",
-          "label": "Contact",
-          "path": "/contact"
-        }
-      ],
-      "footerServicesHeading": "OUR CORE SERVICES",
-      "footerServicesLinks": [
-        {
-          "id": "fs-1",
-          "label": "Music Production",
-          "path": "/services"
-        },
-        {
-          "id": "fs-2",
-          "label": "Audio & Video Production",
-          "path": "/services"
-        },
-        {
-          "id": "fs-3",
-          "label": "Artist Management",
-          "path": "/services"
-        },
-        {
-          "id": "fs-4",
-          "label": "Music Distribution",
-          "path": "/services"
-        },
-        {
-          "id": "fs-5",
-          "label": "Digital Marketing",
-          "path": "/services"
-        },
-        {
-          "id": "fs-6",
-          "label": "Brand Collaborations",
-          "path": "/services"
-        },
-        {
-          "id": "fs-7",
-          "label": "Pre-Wedding Shoot",
-          "path": "/pre-wedding"
-        },
-        {
-          "id": "fs-1790076908691",
-          "label": "camera rental ",
-          "path": "/services",
-          "isExternal": false
-        }
-      ],
-      "footerContactHeading": "CONTACT US",
-      "footerStatusText": "STUDIO ACTIVE • JAIPUR HQ",
-      "footerStatusEnabled": true,
-      "footerBackToTopEnabled": true,
-      "footerAdminLinkEnabled": true,
-      "updatedAt": "2026-09-22T11:41:27.353Z",
-      "success": true,
-      "data": {
-        "id": "site-settings-singleton",
-        "siteName": "VEXO Music Entertainment Pvt. Ltd.",
-        "siteDescription": "Premier record label, studio production house, and artist management company.",
-        "logoUrl": "/logo.svg",
-        "faviconUrl": "/favicon.ico",
-        "contactEmail": "contact@vexomusic.com",
-        "contactPhone": "+91 72399 99966",
-        "officeAddress": "SKY CROWN, Office No. 205  Chordiya City, Kamla Nehru Nagar, Ajmer Road  Jaipur, Pin Code- 302021, Rajasthan, India",
-        "copyrightText": "© 2026 VEXO Music Entertainment Pvt. Ltd. All rights reserved.",
-        "socialSpotify": "https://spotify.com",
-        "socialYoutube": "https://youtube.com",
-        "socialInstagram": "https://instagram.com",
-        "socialTwitter": "https://twitter.com",
-        "socialAppleMusic": "https://music.apple.com",
-        "socialFacebook": "https://facebook.com",
-        "socialSoundcloud": "https://soundcloud.com",
-        "maintenanceMode": false,
-        "footerBio": "A premier music entertainment powerhouse & record label specializing in original sound engineering, global music distribution, artist management, and cinematic audio-visual production based in Jaipur, India.",
-        "footerQuickLinksHeading": "QUICK LINKS",
-        "footerQuickLinks": [
-          {
-            "id": "fn-1",
-            "label": "Home",
-            "path": "/"
-          },
-          {
-            "id": "fn-2",
-            "label": "Music",
-            "path": "/music"
-          },
-          {
-            "id": "fn-3",
-            "label": "Artists",
-            "path": "/artists"
-          },
-          {
-            "id": "fn-4",
-            "label": "Services",
-            "path": "/services"
-          },
-          {
-            "id": "fn-5",
-            "label": "Events",
-            "path": "/events"
-          },
-          {
-            "id": "fn-6",
-            "label": "Videos",
-            "path": "/videos"
-          },
-          {
-            "id": "fn-7",
-            "label": "About",
-            "path": "/about"
-          },
-          {
-            "id": "fn-8",
-            "label": "Contact",
-            "path": "/contact"
-          }
-        ],
-        "footerServicesHeading": "SERVICES",
-        "footerServicesLinks": [
-          {
-            "id": "fs-1",
-            "label": "Music Production",
-            "path": "/services"
-          },
-          {
-            "id": "fs-2",
-            "label": "Audio & Video Production",
-            "path": "/services"
-          },
-          {
-            "id": "fs-3",
-            "label": "Artist Management",
-            "path": "/services"
-          },
-          {
-            "id": "fs-4",
-            "label": "Music Distribution",
-            "path": "/services"
-          },
-          {
-            "id": "fs-5",
-            "label": "Digital Marketing",
-            "path": "/services"
-          },
-          {
-            "id": "fs-6",
-            "label": "Brand Collaborations",
-            "path": "/services"
-          },
-          {
-            "id": "fs-7",
-            "label": "Pre-Wedding Shoot",
-            "path": "/pre-wedding"
-          },
-          {
-            "id": "fs-1790076908691",
-            "label": "camera rental ",
-            "path": "/services",
-            "isExternal": false
-          }
-        ],
-        "footerContactHeading": "CONTACT US",
-        "footerStatusText": "STUDIO ACTIVE • JAIPUR",
-        "footerStatusEnabled": true,
-        "footerBackToTopEnabled": true,
-        "footerAdminLinkEnabled": true,
-        "updatedAt": "2026-09-22T11:35:30.631Z"
-      }
-    }
+    "maintenanceMode": false,
+    "updatedAt": "2026-09-24T06:27:33.125Z"
   },
   "activityLogs": [
     {
@@ -5903,387 +4819,45 @@
   "preWedding": {
     "id": "pre-wedding-singleton",
     "studioInfo": {
-      "name": "VEXO WEDDING STUDIO",
+      "name": "VEXO WEDDING STUDIO ELITE [TEST_E]",
+      "email": "contact@vexoweddingstudio.com",
+      "phone": "+91 72399 99966",
       "tagline": "WEDDING • PRE-WEDDING • CINEMATOGRAPHY",
       "headline": "Your Story. Our Frames. Forever.",
-      "subHeadlineHindi": "Every couple has a story of their own — and we don't just capture it, we turn it into a beautiful memory that lasts forever.",
-      "storyHook": "Every couple has a story of their own — and we don't just capture it, we turn it into a beautiful memory that lasts forever.",
-      "signatureIntro": "If you're looking for a customised package based on your budget and requirements, our team will create a personalised experience for you.",
-      "phone": "+91 72399 99966",
-      "displayPhone": "+91 72399 99966",
-      "email": "contact@vexoweddingstudio.com",
-      "instagramHandle": "@vexoweddingstudio",
-      "instagramUrl": "https://www.instagram.com/vexoweddingstudio",
       "location": "Jaipur • Udaipur • Destination Shoots Across India",
+      "storyHook": "Every couple has a story of their own — and we don't just capture it, we turn it into a beautiful memory that lasts forever.",
+      "heroBgImage": "/images/pre-wedding/hero-bride.jpg",
+      "displayPhone": "+91 72399 99966",
+      "instagramUrl": "https://www.instagram.com/vexoweddingstudio",
+      "signatureIntro": "If you're looking for a customised package based on your budget and requirements, our team will create a personalised experience for you.",
       "whatsappNumber": "917239999966",
       "experienceYears": "8+ Years of Excellence",
-      "heroBgImage": "/images/pre-wedding/hero-bride.jpg"
+      "instagramHandle": "@vexoweddingstudio",
+      "subHeadlineHindi": "Every couple has a story of their own — and we don't just capture it, we turn it into a beautiful memory that lasts forever."
     },
-    "packages": [
-      {
-        "id": "silver",
-        "name": "SILVER",
-        "tagline": "Perfect for a Simple & Elegant Pre-Wedding",
-        "priceINR": 24999,
-        "priceDisplay": "₹24,999",
-        "badge": "CLASSIC ELEGANCE",
-        "isPopular": false,
-        "highlightText": "Ideal for intimate, heartfelt pre-wedding moments with cinematic finesse.",
-        "photography": {
-          "photographersCount": "1 Professional Photographer",
-          "cameraSetup": "",
-          "details": [
-            "1 Professional Photographer",
-            "1 Photography Camera",
-            "Candid & Portrait Photography"
-          ]
-        },
-        "cinematography": {
-          "cinematographersCount": "1 Cinematographer",
-          "cameraSetup": "",
-          "details": [
-            "1 Cinematographer",
-            "1 Professional Cinema Camera",
-            "Cinematic Video Coverage"
-          ]
-        },
-        "deliverables": [
-          "2 Instagram Reels",
-          "Professionally Edited Photos",
-          "Basic Colour Grading"
-        ],
-        "shoot": {
-          "days": "1 Day Shoot",
-          "locations": "Food, Travel — Paid By Client / Company"
-        },
-        "platinumExperience": []
-      },
-      {
-        "id": "gold",
-        "name": "GOLD",
-        "tagline": "Our Most Popular Package",
-        "priceINR": 59989,
-        "priceDisplay": "₹59,989",
-        "badge": "MOST POPULAR",
-        "isPopular": true,
-        "highlightText": "The crowd favorite. Enhanced cinematic camera movements, sound design & bonus portraits.",
-        "photography": {
-          "photographersCount": "1 Professional Photographer",
-          "cameraSetup": "",
-          "details": [
-            "1 Professional Photographer",
-            "Premium Camera Setup",
-            "Candid + Creative Portraits"
-          ]
-        },
-        "cinematography": {
-          "cinematographersCount": "1 Professional Cinematographer",
-          "cameraSetup": "",
-          "details": [
-            "1 Professional Cinematographer",
-            "Sony Cinema Camera Setup",
-            "Gimbal Cinematography",
-            "Creative Cinematic Shots"
-          ]
-        },
-        "deliverables": [
-          "1 Cinematic Pre-Wedding Film",
-          "1 Trailer / Teaser",
-          "4 Instagram Reels",
-          "Professionally Edited Photos",
-          "Premium Colour Grading",
-          "Cinematic Sound Design",
-          "Food, Travel — Paid By Client / Company"
-        ],
-        "shoot": {
-          "days": "1 Full Day Shoot",
-          "locations": "Up to 2 Locations"
-        },
-        "bonus": [
-          "Couple Portrait Session",
-          "Creative Reel Concepts"
-        ]
-      },
-      {
-        "id": "platinum",
-        "name": "PLATINUM",
-        "tagline": "THE COMPLETE PRE-WEDDING EXPERIENCE",
-        "priceINR": 159999,
-        "priceDisplay": "₹1,59,999",
-        "badge": "ROYAL EXPERIENCE",
-        "isPopular": false,
-        "highlightText": "For couples who want a premium cinematic experience with 2 shoot days & full creative direction.",
-        "photography": {
-          "photographersCount": "1 Professional Photographer",
-          "cameraSetup": "",
-          "details": [
-            "1 Professional Photographer",
-            "Premium Photography Setup",
-            "Candid Photography",
-            "Creative Couple Portraits"
-          ]
-        },
-        "cinematography": {
-          "cinematographersCount": "2 Cinematographers",
-          "cameraSetup": "",
-          "details": [
-            "2 Cinematographers",
-            "Sony Cinema Camera Setup",
-            "Cinematic Camera Movements",
-            "Creative Storytelling Shots"
-          ]
-        },
-        "deliverables": [
-          "1 Premium Cinematic Pre-Wedding Film",
-          "1 Cinematic Trailer",
-          "6 Instagram Reels",
-          "1 Couple Introduction Reel",
-          "Advanced Colour Grading",
-          "Professional Sound Design",
-          "Food, Travel — Paid By Client / Company"
-        ],
-        "shoot": {
-          "days": "2 Shoot Days",
-          "locations": "Up to 3 Locations"
-        },
-        "platinumExperience": [
-          "Concept Planning",
-          "Shot Planning",
-          "Location Guidance",
-          "Outfit Coordination Guidance",
-          "Dedicated Creative Direction"
-        ]
-      }
-    ],
-    "customServices": [
-      {
-        "id": "opt-photography",
-        "name": "Photography",
-        "icon": "Camera",
-        "category": "core",
-        "startingPriceINR": 15000,
-        "unit": "per day",
-        "description": "Candid & traditional portrait photography with prime lens aesthetics."
-      },
-      {
-        "id": "opt-cinematography",
-        "name": "Cinematography",
-        "icon": "Video",
-        "category": "core",
-        "startingPriceINR": 20000,
-        "unit": "per day",
-        "description": "High-speed Sony Cinema Rig with gimbal movements & storytelling angles."
-      },
-      {
-        "id": "opt-wedding-film",
-        "name": "Wedding Film",
-        "icon": "Film",
-        "category": "deliverable",
-        "startingPriceINR": 18000,
-        "unit": "per film",
-        "description": "Full-length 15-20 min master wedding documentary with vows & celebration highlights."
-      },
-      {
-        "id": "opt-pre-wedding",
-        "name": "Pre-Wedding Shoot",
-        "icon": "Heart",
-        "category": "core",
-        "startingPriceINR": 24999,
-        "unit": "package starting",
-        "description": "Scenic outdoor romance shoot at heritage forts, lakes or scenic destinations."
-      },
-      {
-        "id": "opt-reels",
-        "name": "Instagram Reels",
-        "icon": "Smartphone",
-        "category": "deliverable",
-        "startingPriceINR": 2000,
-        "unit": "per reel",
-        "description": "Trending 9:16 vertical cuts tailored for viral social media audio & aesthetics."
-      },
-      {
-        "id": "opt-drone",
-        "name": "Drone Coverage",
-        "icon": "Plane",
-        "category": "coverage",
-        "startingPriceINR": 5000,
-        "unit": "per session",
-        "description": "Sweeping 4K aerial shots of palace venues, processions & landscape romance."
-      },
-      {
-        "id": "opt-trailer",
-        "name": "Trailer & Teaser",
-        "icon": "Clapperboard",
-        "category": "deliverable",
-        "startingPriceINR": 8000,
-        "unit": "per cut",
-        "description": "Fast-paced 60-90 second cinematic movie trailer for instant sharing."
-      },
-      {
-        "id": "opt-makeup",
-        "name": "Makeup & Styling",
-        "icon": "Sparkles",
-        "category": "styling",
-        "startingPriceINR": 7000,
-        "unit": "per look",
-        "description": "Certified bridal makeup artists for glowing, camera-ready glamour."
-      },
-      {
-        "id": "opt-costume",
-        "name": "Costume / Styling Assistance",
-        "icon": "Shirt",
-        "category": "styling",
-        "startingPriceINR": 5000,
-        "unit": "per shoot",
-        "description": "Color palette coordination, royal drapery & couple outfit harmony guidance."
-      },
-      {
-        "id": "opt-location",
-        "name": "Location Assistance",
-        "icon": "MapPin",
-        "category": "coverage",
-        "startingPriceINR": 4000,
-        "unit": "curated access",
-        "description": "Shoot at additional forts, lakeside pavilions or architectural wonders.(as per client requirement "
-      },
-      {
-        "id": "opt-album",
-        "name": "Album & Prints",
-        "icon": "BookOpen",
-        "category": "deliverable",
-        "startingPriceINR": 0,
-        "unit": "per luxury book",
-        "description": "Handcrafted flush-mount leather or acrylic photo book with matte Fuji crystal pages."
-      }
-    ],
-    "whyUsPillars": [
-      {
-        "id": "pillar-1",
-        "title": "CINEMATIC STORYTELLING",
-        "description": "Your wedding isn't just recorded — it's crafted into a cinematic story that you can relive for years to come.",
-        "icon": "Film",
-        "tag": "FILMIC NARRATIVE"
-      },
-      {
-        "id": "pillar-2",
-        "title": "PROFESSIONAL EQUIPMENT",
-        "description": "High-quality production powered by professional Sony camera systems, premium lenses, lighting and stabilisation equipment.",
-        "icon": "Camera",
-        "tag": "SONY CINEMA FX LINE"
-      },
-      {
-        "id": "pillar-3",
-        "title": "PREMIUM EDITING & DI",
-        "description": "Professional editing, colour grading and cinematic finishing that bring every frame to life.",
-        "icon": "Palette",
-        "tag": "DAVINCI RESOLVE COLOR"
-      },
-      {
-        "id": "pillar-4",
-        "title": "CREATIVE DIRECTION",
-        "description": "Creative concepts, shot planning and direction designed to make every shoot visually unique and memorable.",
-        "icon": "Compass",
-        "tag": "BESPOKE CONCEPTS"
-      },
-      {
-        "id": "pillar-5",
-        "title": "PERSONAL ATTENTION",
-        "description": "Every couple receives a personalised approach so your personality, connection and story naturally shine through on screen.",
-        "icon": "HeartHandshake",
-        "tag": "DEDICATED TEAM"
-      }
-    ],
-    "addOns": [
-      {
-        "id": "addon-drone",
-        "title": "Drone Coverage",
-        "priceDisplay": "Starting ₹10,000",
-        "priceINR": 10000,
-        "description": "Cinematic 4K aerial bird-eye views of your majestic venues and rituals.",
-        "badge": "POPULAR"
-      },
-      {
-        "id": "addon-reel",
-        "title": "Additional Reel",
-        "priceDisplay": "Starting ₹2,000",
-        "priceINR": 2000,
-        "description": "Tailored 9:16 vertical video cut with trending music for Instagram & YouTube Shorts."
-      },
-      {
-        "id": "addon-shoot-day",
-        "title": "Additional Shoot Day",
-        "priceDisplay": "Starting ₹10,000",
-        "priceINR": 10000,
-        "description": "Extra day of full coverage for extended celebrations, Mehendi, Sangeet or post-wedding."
-      },
-      {
-        "id": "addon-location",
-        "title": "Additional Location",
-        "priceDisplay": "As per requirement",
-        "priceINR": 4000,
-        "description": "Shoot at additional forts, lakeside pavilions or architectural wonders.(as per client requirement "
-      },
-      {
-        "id": "addon-album",
-        "title": "Premium Album",
-        "priceDisplay": "As per requirement",
-        "priceINR": 0,
-        "description": "Luxury handcrafted Italian leather album with HD non-tearable matte pages.",
-        "badge": "KEEPSAKE"
-      },
-      {
-        "id": "addon-makeup",
-        "title": "Makeup Artist",
-        "priceDisplay": "As per requirement",
-        "priceINR": 8000,
-        "description": "Celebrity-grade bridal makeup & hair artist on set during shoot sessions."
-      },
-      {
-        "id": "addon-costume",
-        "title": "Costume / Styling",
-        "priceDisplay": "As per requirement",
-        "priceINR": 5000,
-        "description": "Personalized wardrobe selection & traditional royal Rajasthani attire assistance."
-      },
-      {
-        "id": "addon-extra-photo",
-        "title": "Additional Photography",
-        "priceDisplay": "As per requirement",
-        "priceINR": 12000,
-        "description": "Dedicated second candid photographer capturing candid guests & family smiles."
-      },
-      {
-        "id": "addon-extra-cinema",
-        "title": "Additional Cinematographer",
-        "priceDisplay": "As per requirement",
-        "priceINR": 15000,
-        "description": "Secondary Sony Cinema camera operator for multi-angle emotional cuts."
-      }
-    ],
-    "updatedAt": "2026-09-22T12:47:28.466Z",
     "heroStats": [
       {
-        "number": "01",
         "title": "Fast Delivery",
+        "number": "01",
         "description": "Pre-wedding teaser within 72 hours, 4K master cinematic film & full color-graded stills in 3 weeks."
       },
       {
-        "number": "02",
         "title": "Transparent Pricing",
+        "number": "02",
         "description": "Honest rates, zero hidden charges. Itemized cinema rig setups, deliverables & transparent contracts."
       },
       {
-        "number": "03",
         "title": "Pan-India Coverage",
+        "number": "03",
         "description": "Destination shoots across Jaipur, Udaipur, Jodhpur, Goa, and breathtaking palace locales pan-India."
       }
     ],
     "directorInfo": {
-      "name": "test 01",
-      "title": "Founder & Lead Cinematographer",
-      "quote": "I don't just capture photos: I preserve raw emotions, timeless light, and unforgettable stories.",
       "bio": "With over 8 years of luxury wedding filmmaking across Rajasthan and royal destination palaces, our team crafts immortal cinematic stories with Hollywood DaVinci finishing and genuine human warmth.",
+      "name": "test 01",
       "image": "https://cdn.pixabay.com/photo/2023/06/28/11/25/man-8094211_1280.jpg",
+      "quote": "I don't just capture photos: I preserve raw emotions, timeless light, and unforgettable stories.",
+      "title": "Founder & Lead Cinematographer",
       "experienceYears": "8+ Years of Royal Cinema"
     },
     "processSteps": [
@@ -6306,272 +4880,359 @@
     "videos": [
       {
         "id": "vid-1",
+        "tag": "Cinematic 4K",
         "title": "Royal Udaipur Romance — Pre-Wedding Film",
-        "category": "Pre-Wedding",
         "couple": "Kabir & Meera",
+        "category": "Pre-Wedding",
+        "duration": "3:45",
         "location": "Lake Pichola, Udaipur",
         "videoUrl": "https://youtu.be/2HzcTCUqAEw?si=LYHyL8TL_tYA4m7h",
-        "thumbnailUrl": "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80",
-        "duration": "3:45",
-        "tag": "Cinematic 4K"
+        "thumbnailUrl": "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=80"
       },
       {
         "id": "vid-2",
+        "tag": "Teaser",
         "title": "Jaipur Heritage Sunset — Teaser Film",
-        "category": "Teaser",
         "couple": "Aarav & Simran",
+        "category": "Teaser",
+        "duration": "1:15",
         "location": "Nahargarh Fort, Jaipur",
         "videoUrl": "https://youtu.be/0R81I4JRQPc?si=2eSZzm_eZC-7Li-N",
-        "thumbnailUrl": "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=1200&q=80",
-        "duration": "1:15",
-        "tag": "Teaser"
+        "thumbnailUrl": "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=1200&q=80"
       },
       {
         "id": "vid-3",
+        "tag": "Wedding Film",
         "title": "Palace Symphony — Cinematic Wedding Highlights",
-        "category": "Cinematic Film",
         "couple": "Rohan & Ananya",
+        "category": "Cinematic Film",
+        "duration": "4:20",
         "location": "Samode Palace, Rajasthan",
         "videoUrl": "https://www.youtube.com/watch?v=HcEcM5AtEZ8",
-        "thumbnailUrl": "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=1200&q=80",
-        "duration": "4:20",
-        "tag": "Wedding Film"
+        "thumbnailUrl": "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=1200&q=80"
       },
       {
         "id": "vid-4",
+        "tag": "Viral Cut",
         "title": "Golden Hour Silhouette — Pre-Wedding Cut",
-        "category": "Pre-Wedding",
         "couple": "Dev & Pooja",
+        "category": "Pre-Wedding",
+        "duration": "1:00",
         "location": "Pushkar Dunes, Rajasthan",
         "videoUrl": "https://www.youtube.com/watch?v=HcEcM5AtEZ8",
-        "thumbnailUrl": "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1200&q=80",
-        "duration": "1:00",
-        "tag": "Viral Cut"
+        "thumbnailUrl": "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1200&q=80"
       }
     ],
     "portfolioGallery": [
       {
         "id": "gal-1",
         "title": "Royal Palace Grandeur",
-        "category": "Pre-Wedding",
         "couple": "test 1",
-        "location": "City Palace, Jaipur",
-        "imageUrl": "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=1000&q=80"
+        "category": "Pre-Wedding",
+        "imageUrl": "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=1000&q=80",
+        "location": "City Palace, Jaipur"
       },
       {
         "id": "gal-2",
         "title": "Sunset Silhouette by the Lake",
-        "category": "Pre-Wedding",
         "couple": "test 2 ",
-        "location": "Jal Mahal, Jaipur",
-        "imageUrl": "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1000&q=80"
+        "category": "Pre-Wedding",
+        "imageUrl": "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1000&q=80",
+        "location": "Jal Mahal, Jaipur"
       },
       {
         "id": "gal-3",
         "title": "Intimate Vows & Marigold Rain",
-        "category": "Weddings",
         "couple": "test 3",
-        "location": "Chomu Palace, Jaipur",
-        "imageUrl": "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=1000&q=80"
+        "category": "Weddings",
+        "imageUrl": "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=1000&q=80",
+        "location": "Chomu Palace, Jaipur"
       },
       {
         "id": "gal-4",
         "title": "Monochrome Royal Portrait",
-        "category": "Portraits",
         "couple": "test 4 ",
-        "location": "Amer Fort Courtyard",
-        "imageUrl": "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1000&q=80"
+        "category": "Portraits",
+        "imageUrl": "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1000&q=80",
+        "location": "Amer Fort Courtyard"
       },
       {
         "id": "gal-5",
         "title": "Candlelight Terrace Romance",
-        "category": "Pre-Wedding",
         "couple": "test 5 ",
-        "location": "Neemrana Fort Palace",
-        "imageUrl": "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=1000&q=80"
+        "category": "Pre-Wedding",
+        "imageUrl": "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=1000&q=80",
+        "location": "Neemrana Fort Palace"
       },
       {
         "id": "gal-6",
         "title": "The Royal Baraat Entry",
-        "category": "Weddings",
         "couple": "test 6 ",
-        "location": "Rambagh Palace, Jaipur",
-        "imageUrl": "https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&w=1000&q=80"
+        "category": "Weddings",
+        "imageUrl": "https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&w=1000&q=80",
+        "location": "Rambagh Palace, Jaipur"
       },
       {
         "id": "gal-7",
         "title": "Ethereal Bridal Grace",
-        "category": "Portraits",
         "couple": "test 7",
-        "location": "Samode Haveli, Jaipur",
-        "imageUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=1000&q=80"
+        "category": "Portraits",
+        "imageUrl": "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&w=1000&q=80",
+        "location": "Samode Haveli, Jaipur"
       },
       {
         "id": "gal-8",
         "title": "Timeless Twilight Walk",
-        "category": "Pre-Wedding",
         "couple": "test 8 ",
-        "location": "Nahargarh Stepwell, Jaipur",
-        "imageUrl": "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1000&q=80"
+        "category": "Pre-Wedding",
+        "imageUrl": "https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1000&q=80",
+        "location": "Nahargarh Stepwell, Jaipur"
       }
     ],
     "coverageTypes": [
       {
         "id": "cov-1",
-        "title": "Wedding Photography",
-        "description": "Timeless candid frames, emotional rituals, and royal palace portraits captured with high-speed prime cinema glass.",
         "tag": "Full Day Coverage",
-        "linkText": "Explore Wedding Photography"
+        "title": "Wedding Photography",
+        "linkText": "Explore Wedding Photography",
+        "description": "Timeless candid frames, emotional rituals, and royal palace portraits captured with high-speed prime cinema glass."
       },
       {
         "id": "cov-2",
-        "title": "Couple & Pre-Wedding",
-        "description": "Artistic couple shoots against Rajasthan heritage palaces, lakes, sand dunes, and exotic destination landscapes.",
         "tag": "Scenic Destinations",
-        "linkText": "Explore Pre-Wedding Packages"
+        "title": "Couple & Pre-Wedding",
+        "linkText": "Explore Pre-Wedding Packages",
+        "description": "Artistic couple shoots against Rajasthan heritage palaces, lakes, sand dunes, and exotic destination landscapes."
       },
       {
         "id": "cov-3",
-        "title": "Drone & Aerial Cinematography",
-        "description": "Sweeping 4K cinematic bird-eye perspectives of majestic forts, royal processions, and lake palace sunsets.",
         "tag": "4K Cinema Drone",
-        "linkText": "Learn About Drone Coverage"
+        "title": "Drone & Aerial Cinematography",
+        "linkText": "Learn About Drone Coverage",
+        "description": "Sweeping 4K cinematic bird-eye perspectives of majestic forts, royal processions, and lake palace sunsets."
       }
     ],
     "coupleStories": [
       {
         "id": "story-1",
+        "quote": "The calm morning light made us forget the cameras were even rolling.",
         "title": "The Sunrise Stroll",
         "couple": "Aarav & Simran",
-        "location": "Amer Fort, Jaipur",
         "imageUrl": "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=80",
-        "quote": "The calm morning light made us forget the cameras were even rolling."
+        "location": "Amer Fort, Jaipur"
       },
       {
         "id": "story-2",
+        "quote": "Every frame felt like a scene straight out of a classic royal cinema film.",
         "title": "Candlelit Palace Courtyard",
         "couple": "Kabir & Meera",
-        "location": "City Palace, Udaipur",
         "imageUrl": "https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80",
-        "quote": "Every frame felt like a scene straight out of a classic royal cinema film."
+        "location": "City Palace, Udaipur"
       },
       {
         "id": "story-3",
+        "quote": "VEXO turned our memories into timeless pieces of art we will treasure forever.",
         "title": "Lakeside Whispers",
         "couple": "Rohan & Ananya",
-        "location": "Lake Pichola, Udaipur",
         "imageUrl": "https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=800&q=80",
-        "quote": "VEXO turned our memories into timeless pieces of art we will treasure forever."
+        "location": "Lake Pichola, Udaipur"
       }
     ],
-    "weddingDayStories": {
-      "eyebrow": "WEDDING DAY COVERAGE",
-      "heading": "Wedding Day Stories",
-      "supportingText": "Beyond the pre-wedding, we capture every emotion, ritual and celebration of your wedding day.",
-      "quote": "Every moment deserves its frame.",
-      "ctaText": "VIEW WEDDING STORIES →",
-      "ctaLink": "#portfolio-gallery",
-      "stories": [
-        {
-          "id": "wds-rituals",
-          "category": "Wedding Rituals",
-          "title": "The Sacred Varmala Symphony",
-          "location": "Rambagh Palace, Jaipur",
-          "couple": "Yuvraj & Aditi",
-          "imageUrl": "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=1400&q=85",
-          "featured": true
+    "packages": [
+      {
+        "id": "silver",
+        "name": "SILVER",
+        "badge": "CLASSIC ELEGANCE",
+        "shoot": {
+          "days": "1 Day Shoot",
+          "locations": "Food, Travel — Paid By Client / Company"
         },
-        {
-          "id": "wds-candid",
-          "category": "Candid Moments",
-          "title": "Spontaneous Laughter & Joy",
-          "location": "Samode Palace Courtyard",
-          "couple": "Kabir & Radhika",
-          "imageUrl": "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=85"
+        "tagline": "Perfect for a Simple & Elegant Pre-Wedding",
+        "priceINR": 24999,
+        "isPopular": false,
+        "photography": {
+          "details": [
+            "1 Professional Photographer",
+            "1 Photography Camera",
+            "Candid & Portrait Photography"
+          ],
+          "cameraSetup": "",
+          "photographersCount": "1 Professional Photographer"
         },
-        {
-          "id": "wds-portraits",
-          "category": "Couple Portraits",
-          "title": "Heritage Palace Elegance",
-          "location": "Amer Fort, Jaipur",
-          "couple": "Aarav & Simran",
-          "imageUrl": "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=85"
+        "deliverables": [
+          "2 Instagram Reels",
+          "Professionally Edited Photos",
+          "Basic Colour Grading"
+        ],
+        "priceDisplay": "₹24,999",
+        "highlightText": "Ideal for intimate, heartfelt pre-wedding moments with cinematic finesse.",
+        "cinematography": {
+          "details": [
+            "1 Cinematographer",
+            "1 Professional Cinema Camera",
+            "Cinematic Video Coverage"
+          ],
+          "cameraSetup": "",
+          "cinematographersCount": "1 Cinematographer"
         },
-        {
-          "id": "wds-family",
-          "category": "Family & Celebrations",
-          "title": "Grand Baraat & Family Blessings",
-          "location": "Jagmandir Island, Udaipur",
-          "couple": "Kunal & Divya",
-          "imageUrl": "https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&w=800&q=85"
+        "platinumExperience": []
+      },
+      {
+        "id": "gold",
+        "name": "GOLD",
+        "badge": "MOST POPULAR",
+        "bonus": [
+          "Couple Portrait Session",
+          "Creative Reel Concepts"
+        ],
+        "shoot": {
+          "days": "1 Full Day Shoot",
+          "locations": "Up to 2 Locations"
+        },
+        "tagline": "Our Most Popular Package",
+        "priceINR": 59989,
+        "isPopular": true,
+        "photography": {
+          "details": [
+            "1 Professional Photographer",
+            "Premium Camera Setup",
+            "Candid + Creative Portraits"
+          ],
+          "cameraSetup": "",
+          "photographersCount": "1 Professional Photographer"
+        },
+        "deliverables": [
+          "1 Cinematic Pre-Wedding Film",
+          "1 Trailer / Teaser",
+          "4 Instagram Reels",
+          "Professionally Edited Photos",
+          "Premium Colour Grading",
+          "Cinematic Sound Design",
+          "Food, Travel — Paid By Client / Company"
+        ],
+        "priceDisplay": "₹59,989",
+        "highlightText": "The crowd favorite. Enhanced cinematic camera movements, sound design & bonus portraits.",
+        "cinematography": {
+          "details": [
+            "1 Professional Cinematographer",
+            "Sony Cinema Camera Setup",
+            "Gimbal Cinematography",
+            "Creative Cinematic Shots"
+          ],
+          "cameraSetup": "",
+          "cinematographersCount": "1 Professional Cinematographer"
         }
-      ]
-    },
+      },
+      {
+        "id": "platinum",
+        "name": "PLATINUM",
+        "badge": "ROYAL EXPERIENCE",
+        "shoot": {
+          "days": "2 Shoot Days",
+          "locations": "Up to 3 Locations"
+        },
+        "tagline": "THE COMPLETE PRE-WEDDING EXPERIENCE",
+        "priceINR": 159999,
+        "isPopular": false,
+        "photography": {
+          "details": [
+            "1 Professional Photographer",
+            "Premium Photography Setup",
+            "Candid Photography",
+            "Creative Couple Portraits"
+          ],
+          "cameraSetup": "",
+          "photographersCount": "1 Professional Photographer"
+        },
+        "deliverables": [
+          "1 Premium Cinematic Pre-Wedding Film",
+          "1 Cinematic Trailer",
+          "6 Instagram Reels",
+          "1 Couple Introduction Reel",
+          "Advanced Colour Grading",
+          "Professional Sound Design",
+          "Food, Travel — Paid By Client / Company"
+        ],
+        "priceDisplay": "₹1,59,999",
+        "highlightText": "For couples who want a premium cinematic experience with 2 shoot days & full creative direction.",
+        "cinematography": {
+          "details": [
+            "2 Cinematographers",
+            "Sony Cinema Camera Setup",
+            "Cinematic Camera Movements",
+            "Creative Storytelling Shots"
+          ],
+          "cameraSetup": "",
+          "cinematographersCount": "2 Cinematographers"
+        },
+        "platinumExperience": [
+          "Concept Planning",
+          "Shot Planning",
+          "Location Guidance",
+          "Outfit Coordination Guidance",
+          "Dedicated Creative Direction"
+        ]
+      }
+    ],
     "weddingPackages": [
       {
         "id": "wedding-essential",
-        "category": "WEDDING",
         "name": "ESSENTIAL WEDDING",
-        "tagline": "For intimate wedding celebrations",
-        "priceINR": 0,
-        "priceDisplay": "Custom Quote",
         "badge": "INTIMATE CELEBRATIONS",
-        "isPopular": false,
-        "highlightText": "Artfully curated coverage for close-knit and meaningful ceremonies.",
-        "foodTravel": "Food, Travel — Paid By Client / Company",
+        "shoot": {
+          "days": "1 Shoot Day",
+          "locations": "Up to 1 Location"
+        },
         "ctaText": "Choose Essential Wedding",
+        "tagline": "For intimate wedding celebrations",
+        "category": "WEDDING",
+        "priceINR": 0,
+        "isPopular": false,
+        "foodTravel": "Food, Travel — Paid By Client / Company",
         "photography": {
-          "photographersCount": "Professional Wedding Photographer",
-          "cameraSetup": "High-Res Sony Cinema Still Rig",
           "details": [
             "Professional wedding photography",
             "Candid photography",
             "Traditional ceremony coverage"
-          ]
-        },
-        "cinematography": {
-          "cinematographersCount": "Professional Cinematographer",
-          "cameraSetup": "4K Cinema Camera Setup",
-          "details": [
-            "Wedding cinematography"
-          ]
+          ],
+          "cameraSetup": "High-Res Sony Cinema Still Rig",
+          "photographersCount": "Professional Wedding Photographer"
         },
         "deliverables": [
           "Professionally edited photographs",
           "Highlight wedding film"
         ],
-        "shoot": {
-          "days": "1 Shoot Day",
-          "locations": "Up to 1 Location"
+        "priceDisplay": "Custom Quote",
+        "highlightText": "Artfully curated coverage for close-knit and meaningful ceremonies.",
+        "cinematography": {
+          "details": [
+            "Wedding cinematography"
+          ],
+          "cameraSetup": "4K Cinema Camera Setup",
+          "cinematographersCount": "Professional Cinematographer"
         }
       },
       {
         "id": "wedding-signature",
-        "category": "WEDDING",
         "name": "SIGNATURE WEDDING",
-        "tagline": "For complete wedding-day coverage",
-        "priceINR": 0,
-        "priceDisplay": "Custom Quote",
         "badge": "MOST POPULAR",
-        "isPopular": true,
-        "highlightText": "The quintessential wedding day chronicle blending candid realism with cinema.",
-        "foodTravel": "Food, Travel — Paid By Client / Company",
+        "shoot": {
+          "days": "1–2 Shoot Days",
+          "locations": "Up to 2 Locations"
+        },
         "ctaText": "Choose Signature Wedding",
+        "tagline": "For complete wedding-day coverage",
+        "category": "WEDDING",
+        "priceINR": 0,
+        "isPopular": true,
+        "foodTravel": "Food, Travel — Paid By Client / Company",
         "photography": {
-          "photographersCount": "Professional Photographers Team",
-          "cameraSetup": "Dual Full-Frame Cinema Cameras",
           "details": [
             "Professional photographers",
             "Candid + traditional photography"
-          ]
-        },
-        "cinematography": {
-          "cinematographersCount": "Professional Cinematographer",
-          "cameraSetup": "Gimbal + 4K Cinema Rig",
-          "details": [
-            "Professional cinematographer",
-            "Cinematic wedding coverage"
-          ]
+          ],
+          "cameraSetup": "Dual Full-Frame Cinema Cameras",
+          "photographersCount": "Professional Photographers Team"
         },
         "deliverables": [
           "Professionally edited photos",
@@ -6579,39 +5240,39 @@
           "Cinematic wedding film",
           "Social media reels"
         ],
-        "shoot": {
-          "days": "1–2 Shoot Days",
-          "locations": "Up to 2 Locations"
+        "priceDisplay": "Custom Quote",
+        "highlightText": "The quintessential wedding day chronicle blending candid realism with cinema.",
+        "cinematography": {
+          "details": [
+            "Professional cinematographer",
+            "Cinematic wedding coverage"
+          ],
+          "cameraSetup": "Gimbal + 4K Cinema Rig",
+          "cinematographersCount": "Professional Cinematographer"
         }
       },
       {
         "id": "wedding-royal",
-        "category": "WEDDING",
         "name": "ROYAL WEDDING",
-        "tagline": "For complete multi-event wedding coverage",
-        "priceINR": 0,
-        "priceDisplay": "Custom Quote",
         "badge": "ROYAL LUXURY",
-        "isPopular": false,
-        "highlightText": "Multi-crew cinematic grandeur capturing every ritual and royal celebration.",
-        "foodTravel": "Food, Travel — Paid By Client / Company",
+        "shoot": {
+          "days": "2–3 Shoot Days",
+          "locations": "Multiple Locations"
+        },
         "ctaText": "Choose Royal Wedding",
+        "tagline": "For complete multi-event wedding coverage",
+        "category": "WEDDING",
+        "priceINR": 0,
+        "isPopular": false,
+        "foodTravel": "Food, Travel — Paid By Client / Company",
         "photography": {
-          "photographersCount": "Multiple Photographers Crew",
-          "cameraSetup": "Multi-Camera Sony Master Rig",
           "details": [
             "Multiple photographers",
             "Premium candid photography",
             "Traditional ceremony coverage"
-          ]
-        },
-        "cinematography": {
-          "cinematographersCount": "Multiple Cinematographers Crew",
-          "cameraSetup": "Multi-Angle Cinema & Drone Setup",
-          "details": [
-            "Multiple cinematographers",
-            "Full cinematic coverage"
-          ]
+          ],
+          "cameraSetup": "Multi-Camera Sony Master Rig",
+          "photographersCount": "Multiple Photographers Crew"
         },
         "deliverables": [
           "Wedding teaser",
@@ -6620,11 +5281,266 @@
           "Premium colour grading",
           "Professional sound design"
         ],
-        "shoot": {
-          "days": "2–3 Shoot Days",
-          "locations": "Multiple Locations"
+        "priceDisplay": "Custom Quote",
+        "highlightText": "Multi-crew cinematic grandeur capturing every ritual and royal celebration.",
+        "cinematography": {
+          "details": [
+            "Multiple cinematographers",
+            "Full cinematic coverage"
+          ],
+          "cameraSetup": "Multi-Angle Cinema & Drone Setup",
+          "cinematographersCount": "Multiple Cinematographers Crew"
         }
       }
-    ]
+    ],
+    "customServices": [
+      {
+        "id": "opt-photography",
+        "icon": "Camera",
+        "name": "Photography",
+        "unit": "per day",
+        "category": "core",
+        "description": "Candid & traditional portrait photography with prime lens aesthetics.",
+        "startingPriceINR": 15000
+      },
+      {
+        "id": "opt-cinematography",
+        "icon": "Video",
+        "name": "Cinematography",
+        "unit": "per day",
+        "category": "core",
+        "description": "High-speed Sony Cinema Rig with gimbal movements & storytelling angles.",
+        "startingPriceINR": 20000
+      },
+      {
+        "id": "opt-wedding-film",
+        "icon": "Film",
+        "name": "Wedding Film",
+        "unit": "per film",
+        "category": "deliverable",
+        "description": "Full-length 15-20 min master wedding documentary with vows & celebration highlights.",
+        "startingPriceINR": 18000
+      },
+      {
+        "id": "opt-pre-wedding",
+        "icon": "Heart",
+        "name": "Pre-Wedding Shoot",
+        "unit": "package starting",
+        "category": "core",
+        "description": "Scenic outdoor romance shoot at heritage forts, lakes or scenic destinations.",
+        "startingPriceINR": 24999
+      },
+      {
+        "id": "opt-reels",
+        "icon": "Smartphone",
+        "name": "Instagram Reels",
+        "unit": "per reel",
+        "category": "deliverable",
+        "description": "Trending 9:16 vertical cuts tailored for viral social media audio & aesthetics.",
+        "startingPriceINR": 2000
+      },
+      {
+        "id": "opt-drone",
+        "icon": "Plane",
+        "name": "Drone Coverage",
+        "unit": "per session",
+        "category": "coverage",
+        "description": "Sweeping 4K aerial shots of palace venues, processions & landscape romance.",
+        "startingPriceINR": 5000
+      },
+      {
+        "id": "opt-trailer",
+        "icon": "Clapperboard",
+        "name": "Trailer & Teaser",
+        "unit": "per cut",
+        "category": "deliverable",
+        "description": "Fast-paced 60-90 second cinematic movie trailer for instant sharing.",
+        "startingPriceINR": 8000
+      },
+      {
+        "id": "opt-makeup",
+        "icon": "Sparkles",
+        "name": "Makeup & Styling",
+        "unit": "per look",
+        "category": "styling",
+        "description": "Certified bridal makeup artists for glowing, camera-ready glamour.",
+        "startingPriceINR": 7000
+      },
+      {
+        "id": "opt-costume",
+        "icon": "Shirt",
+        "name": "Costume / Styling Assistance",
+        "unit": "per shoot",
+        "category": "styling",
+        "description": "Color palette coordination, royal drapery & couple outfit harmony guidance.",
+        "startingPriceINR": 5000
+      },
+      {
+        "id": "opt-location",
+        "icon": "MapPin",
+        "name": "Location Assistance",
+        "unit": "curated access",
+        "category": "coverage",
+        "description": "Shoot at additional forts, lakeside pavilions or architectural wonders.(as per client requirement ",
+        "startingPriceINR": 4000
+      },
+      {
+        "id": "opt-album",
+        "icon": "BookOpen",
+        "name": "Album & Prints",
+        "unit": "per luxury book",
+        "category": "deliverable",
+        "description": "Handcrafted flush-mount leather or acrylic photo book with matte Fuji crystal pages.",
+        "startingPriceINR": 0
+      }
+    ],
+    "addOns": [
+      {
+        "id": "addon-drone",
+        "badge": "POPULAR",
+        "title": "Drone Coverage",
+        "priceINR": 10000,
+        "description": "Cinematic 4K aerial bird-eye views of your majestic venues and rituals.",
+        "priceDisplay": "Starting ₹10,000"
+      },
+      {
+        "id": "addon-reel",
+        "title": "Additional Reel",
+        "priceINR": 2000,
+        "description": "Tailored 9:16 vertical video cut with trending music for Instagram & YouTube Shorts.",
+        "priceDisplay": "Starting ₹2,000"
+      },
+      {
+        "id": "addon-shoot-day",
+        "title": "Additional Shoot Day",
+        "priceINR": 10000,
+        "description": "Extra day of full coverage for extended celebrations, Mehendi, Sangeet or post-wedding.",
+        "priceDisplay": "Starting ₹10,000"
+      },
+      {
+        "id": "addon-location",
+        "title": "Additional Location",
+        "priceINR": 4000,
+        "description": "Shoot at additional forts, lakeside pavilions or architectural wonders.(as per client requirement ",
+        "priceDisplay": "As per requirement"
+      },
+      {
+        "id": "addon-album",
+        "badge": "KEEPSAKE",
+        "title": "Premium Album",
+        "priceINR": 0,
+        "description": "Luxury handcrafted Italian leather album with HD non-tearable matte pages.",
+        "priceDisplay": "As per requirement"
+      },
+      {
+        "id": "addon-makeup",
+        "title": "Makeup Artist",
+        "priceINR": 8000,
+        "description": "Celebrity-grade bridal makeup & hair artist on set during shoot sessions.",
+        "priceDisplay": "As per requirement"
+      },
+      {
+        "id": "addon-costume",
+        "title": "Costume / Styling",
+        "priceINR": 5000,
+        "description": "Personalized wardrobe selection & traditional royal Rajasthani attire assistance.",
+        "priceDisplay": "As per requirement"
+      },
+      {
+        "id": "addon-extra-photo",
+        "title": "Additional Photography",
+        "priceINR": 12000,
+        "description": "Dedicated second candid photographer capturing candid guests & family smiles.",
+        "priceDisplay": "As per requirement"
+      },
+      {
+        "id": "addon-extra-cinema",
+        "title": "Additional Cinematographer",
+        "priceINR": 15000,
+        "description": "Secondary Sony Cinema camera operator for multi-angle emotional cuts.",
+        "priceDisplay": "As per requirement"
+      }
+    ],
+    "whyUsPillars": [
+      {
+        "id": "pillar-1",
+        "tag": "FILMIC NARRATIVE",
+        "icon": "Film",
+        "title": "CINEMATIC STORYTELLING",
+        "description": "Your wedding isn't just recorded — it's crafted into a cinematic story that you can relive for years to come."
+      },
+      {
+        "id": "pillar-2",
+        "tag": "SONY CINEMA FX LINE",
+        "icon": "Camera",
+        "title": "PROFESSIONAL EQUIPMENT",
+        "description": "High-quality production powered by professional Sony camera systems, premium lenses, lighting and stabilisation equipment."
+      },
+      {
+        "id": "pillar-3",
+        "tag": "DAVINCI RESOLVE COLOR",
+        "icon": "Palette",
+        "title": "PREMIUM EDITING & DI",
+        "description": "Professional editing, colour grading and cinematic finishing that bring every frame to life."
+      },
+      {
+        "id": "pillar-4",
+        "tag": "BESPOKE CONCEPTS",
+        "icon": "Compass",
+        "title": "CREATIVE DIRECTION",
+        "description": "Creative concepts, shot planning and direction designed to make every shoot visually unique and memorable."
+      },
+      {
+        "id": "pillar-5",
+        "tag": "DEDICATED TEAM",
+        "icon": "HeartHandshake",
+        "title": "PERSONAL ATTENTION",
+        "description": "Every couple receives a personalised approach so your personality, connection and story naturally shine through on screen."
+      }
+    ],
+    "weddingDayStories": {
+      "quote": "Every moment deserves its frame.",
+      "ctaLink": "#portfolio-gallery",
+      "ctaText": "VIEW WEDDING STORIES →",
+      "eyebrow": "WEDDING DAY COVERAGE",
+      "heading": "Wedding Day Stories",
+      "stories": [
+        {
+          "id": "wds-rituals",
+          "title": "The Sacred Varmala Symphony",
+          "couple": "Yuvraj & Aditi",
+          "category": "Wedding Rituals",
+          "featured": true,
+          "imageUrl": "https://images.unsplash.com/photo-1606800052052-a08af7148866?auto=format&fit=crop&w=1400&q=85",
+          "location": "Rambagh Palace, Jaipur"
+        },
+        {
+          "id": "wds-candid",
+          "title": "Spontaneous Laughter & Joy",
+          "couple": "Kabir & Radhika",
+          "category": "Candid Moments",
+          "imageUrl": "https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=85",
+          "location": "Samode Palace Courtyard"
+        },
+        {
+          "id": "wds-portraits",
+          "title": "Heritage Palace Elegance",
+          "couple": "Aarav & Simran",
+          "category": "Couple Portraits",
+          "imageUrl": "https://images.unsplash.com/photo-1583939003579-730e3918a45a?auto=format&fit=crop&w=800&q=85",
+          "location": "Amer Fort, Jaipur"
+        },
+        {
+          "id": "wds-family",
+          "title": "Grand Baraat & Family Blessings",
+          "couple": "Kunal & Divya",
+          "category": "Family & Celebrations",
+          "imageUrl": "https://images.unsplash.com/photo-1532712938310-34cb3982ef74?auto=format&fit=crop&w=800&q=85",
+          "location": "Jagmandir Island, Udaipur"
+        }
+      ],
+      "supportingText": "Beyond the pre-wedding, we capture every emotion, ritual and celebration of your wedding day."
+    },
+    "updatedAt": "2026-09-24T06:27:33.516Z"
   }
 }

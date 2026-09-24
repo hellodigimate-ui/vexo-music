@@ -44,7 +44,7 @@ export const adminAuthRoutes: FastifyPluginAsync = async (fastify) => {
 
     // Update lastLoginAt
     const now = new Date().toISOString();
-    db.adminUsers.update(user.id, { lastLoginAt: now });
+    await db.adminUsers.update(user.id, { lastLoginAt: now });
 
     const token = signJwt(
       {
@@ -161,7 +161,7 @@ export const adminAuthRoutes: FastifyPluginAsync = async (fastify) => {
       }
 
       const newHash = hashPassword(newPassword);
-      db.adminUsers.update(user.id, { passwordHash: newHash });
+      await db.adminUsers.update(user.id, { passwordHash: newHash });
 
       db.activityLogs.log({
         adminUserId: user.id,

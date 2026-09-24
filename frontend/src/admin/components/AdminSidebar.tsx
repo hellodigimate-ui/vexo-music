@@ -25,6 +25,7 @@ import {
   Link as LinkIcon,
   MapPin,
   Share2,
+  Crown,
 } from 'lucide-react';
 import { useAdminAuth } from '../context/AdminAuthContext';
 import { adminMockStore } from '../services/adminMockStore';
@@ -145,6 +146,7 @@ export const AdminSidebar: React.FC<SidebarProps> = ({
       items: [
         { name: 'Homepage', path: '/admin/homepage', icon: Globe },
         { name: 'Pre-Wedding Studio', path: '/admin/pre-wedding', icon: Camera },
+        { name: 'Wedding Studio', path: '/admin/wedding', icon: Crown },
         { name: 'Artists', path: '/admin/artists', icon: Users },
         { name: 'Albums', path: '/admin/music', icon: Disc3 },
         { name: 'Tracks', path: '/admin/music?tab=tracks', icon: Music },

@@ -293,6 +293,12 @@ model Homepage {
   finalCtaSecondaryLabel String? @default("CONTACT VEXO")
   finalCtaSecondaryUrl   String? @default("/contact")
 
+  // Reviews / Testimonials Section
+  reviewsBadge    String?  @default("TESTIMONIALS & TRUST")
+  reviewsHeading  String?  @default("VOICES OF EXCELLENCE")
+  reviewsSubtitle String?  @default("What artists, visionary couples, and industry partners say about producing with VEXO.")
+  reviews         Json?
+
   marqueeText String?
   updatedAt   DateTime @updatedAt
 
@@ -314,7 +320,23 @@ model SiteSettings {
   socialYoutube   String?
   socialInstagram String?
   socialTwitter   String?
+  socialAppleMusic String?
+  socialFacebook  String?
+  socialSoundcloud String?
   maintenanceMode Boolean  @default(false)
+
+  // Footer Customization
+  footerBio               String?
+  footerQuickLinksHeading String?  @default("QUICK LINKS")
+  footerQuickLinks        Json?
+  footerServicesHeading   String?  @default("SERVICES")
+  footerServicesLinks     Json?
+  footerContactHeading    String?  @default("CONTACT US")
+  footerStatusText        String?  @default("STUDIO ACTIVE • JAIPUR")
+  footerStatusEnabled     Boolean? @default(true)
+  footerBackToTopEnabled  Boolean? @default(true)
+  footerAdminLinkEnabled  Boolean? @default(true)
+
   updatedAt       DateTime @updatedAt
 
   @@map("site_settings")
@@ -334,4 +356,26 @@ model ActivityLog {
   createdAt   DateTime   @default(now())
 
   @@map("activity_logs")
+}
+
+// 15. Pre-Wedding Studio Singleton Model
+model PreWedding {
+  id                String   @id @default("pre-wedding-singleton")
+  studioInfo        Json?
+  heroStats         Json?
+  directorInfo      Json?
+  processSteps      Json?
+  videos            Json?
+  portfolioGallery  Json?
+  coverageTypes     Json?
+  coupleStories     Json?
+  packages          Json?
+  weddingPackages   Json?
+  customServices    Json?
+  addOns            Json?
+  whyUsPillars      Json?
+  weddingDayStories Json?
+  updatedAt         DateTime @updatedAt
+
+  @@map("pre_wedding")
 }

@@ -62,9 +62,9 @@ export const adminTrackRoutes: FastifyPluginAsync = async (fastify) => {
     async (request, reply) => {
       const { trackIds } = request.body;
       if (Array.isArray(trackIds)) {
-        trackIds.forEach((id, index) => {
-          db.tracks.update(id, { order: index + 1 });
-        });
+        await Promise.all(
+          trackIds.map((id, index) => db.tracks.update(id, { order: index + 1 }))
+        );
       }
       return reply.send({
         success: true,
@@ -120,7 +120,7 @@ export const adminTrackRoutes: FastifyPluginAsync = async (fastify) => {
         }
       }
 
-      const created = db.tracks.create({
+      const created = await db.tracks.create({
         title: body.title,
         artistName,
         artistId: body.artistId || null,
@@ -139,7 +139,7 @@ export const adminTrackRoutes: FastifyPluginAsync = async (fastify) => {
       // Update parent album track count
       if (body.albumId) {
         const albumTracks = db.tracks.findMany().filter((t) => t.albumId === body.albumId);
-        db.albums.update(body.albumId, { trackCount: albumTracks.length });
+        await db.albums.update(body.albumId, { trackCount: albumTracks.length });
       }
 
       db.activityLogs.log({
@@ -181,7 +181,7 @@ export const adminTrackRoutes: FastifyPluginAsync = async (fastify) => {
         });
       }
 
-      const updated = db.tracks.update(id, updates);
+      const updated = await db.tracks.update(id, updates);
 
       db.activityLogs.log({
         adminUserId: user.id,
@@ -221,12 +221,12 @@ export const adminTrackRoutes: FastifyPluginAsync = async (fastify) => {
       }
 
       const albumId = existing.albumId;
-      db.tracks.delete(id);
+      await db.tracks.delete(id);
 
       // Update parent album track count
       if (albumId) {
         const albumTracks = db.tracks.findMany().filter((t) => t.albumId === albumId);
-        db.albums.update(albumId, { trackCount: albumTracks.length });
+        await db.albums.update(albumId, { trackCount: albumTracks.length });
       }
 
       db.activityLogs.log({

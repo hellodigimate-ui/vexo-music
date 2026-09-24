@@ -56,7 +56,7 @@ export const adminAlbumRoutes: FastifyPluginAsync = async (fastify) => {
           .replace(/[^a-z0-9]+/g, '-')
           .replace(/^-|-$/g, '');
 
-      const created = db.albums.create({
+      const created = await db.albums.create({
         title: body.title,
         slug,
         artistName: body.artistName,
@@ -112,7 +112,7 @@ export const adminAlbumRoutes: FastifyPluginAsync = async (fastify) => {
         });
       }
 
-      const updated = db.albums.update(id, updates);
+      const updated = await db.albums.update(id, updates);
 
       db.activityLogs.log({
         adminUserId: user.id,
@@ -151,7 +151,7 @@ export const adminAlbumRoutes: FastifyPluginAsync = async (fastify) => {
         });
       }
 
-      db.albums.delete(id);
+      await db.albums.delete(id);
 
       db.activityLogs.log({
         adminUserId: user.id,

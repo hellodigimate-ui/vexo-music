@@ -112,28 +112,31 @@ export const WeddingPlansSection: React.FC<WeddingPlansSectionProps> = ({
             return (
               <motion.div
                 key={pkg.id || idx}
-                initial={shouldReduceMotion ? undefined : { opacity: 0, y: 30 }}
+                initial={shouldReduceMotion ? undefined : { opacity: 0, y: 35 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.5, delay: idx * 0.1 }}
+                viewport={{ once: true, margin: '-50px' }}
+                transition={{ duration: 0.6, delay: idx * 0.12, ease: [0.22, 1, 0.36, 1] }}
+                whileHover={shouldReduceMotion ? undefined : { y: -10, transition: { duration: 0.25 } }}
                 className={`relative rounded-3xl flex flex-col justify-between transition-all duration-300 ${
                   isFeatured
-                    ? 'bg-gradient-to-b from-[#180a0c] via-[#120708] to-[#0a0a0c] border-2 border-vexo-red shadow-[0_0_40px_rgba(224,0,0,0.22)] lg:-translate-y-3'
-                    : 'bg-[#0c0c0f] border border-white/10 hover:border-vexo-red/40 hover:shadow-lg'
+                    ? 'bg-gradient-to-b from-[#1c0c0e] via-[#140809] to-[#0a0a0c] border-2 border-vexo-red shadow-[0_0_40px_rgba(224,0,0,0.28)] lg:-translate-y-3'
+                    : 'bg-[#0c0c0f] border border-white/10 hover:border-vexo-red/50 hover:shadow-xl hover:shadow-black/70'
                 }`}
               >
-                {/* Badge for Featured/Special Plan */}
+                {/* Badge for Featured/Special Plan with subtle pulse */}
                 {pkg.badge && (
-                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2">
-                    <span
-                      className={`px-4 py-1 rounded-full text-xs font-bold tracking-wider uppercase shadow-lg ${
+                  <div className="absolute -top-3.5 left-1/2 -translate-x-1/2 z-20">
+                    <motion.span
+                      animate={isFeatured && !shouldReduceMotion ? { scale: [1, 1.04, 1] } : undefined}
+                      transition={{ duration: 3, repeat: Infinity, ease: 'easeInOut' }}
+                      className={`inline-block px-4 py-1 rounded-full text-xs font-bold tracking-wider uppercase shadow-lg ${
                         isFeatured
-                          ? 'bg-gradient-to-r from-vexo-red to-vexo-red-bright text-white shadow-vexo-red/40'
-                          : 'bg-white/10 text-white border border-white/20'
+                          ? 'bg-gradient-to-r from-vexo-red to-vexo-red-bright text-white shadow-vexo-red/50'
+                          : 'bg-white/10 text-white border border-white/20 backdrop-blur-sm'
                       }`}
                     >
                       ✦ {pkg.badge}
-                    </span>
+                    </motion.span>
                   </div>
                 )}
 

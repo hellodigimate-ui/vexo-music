@@ -55,7 +55,7 @@ export const adminInquiryRoutes: FastifyPluginAsync = async (fastify) => {
     if (status) updates.status = status;
     if (notes !== undefined) updates.notes = notes;
 
-    const updated = db.contactRequests.update(id, updates);
+    const updated = await db.contactRequests.update(id, updates);
 
     db.activityLogs.log({
       adminUserId: user.id,
@@ -92,7 +92,7 @@ export const adminInquiryRoutes: FastifyPluginAsync = async (fastify) => {
       });
     }
 
-    db.contactRequests.delete(id);
+    await db.contactRequests.delete(id);
 
     db.activityLogs.log({
       adminUserId: user.id,

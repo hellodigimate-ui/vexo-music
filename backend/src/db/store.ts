@@ -25,12 +25,28 @@ import { mockServices } from '../data/services.js';
 import { initialPreWeddingData } from '../data/preWedding.js';
 import {
   initPostgresSync,
+  syncHomepageToPostgres,
+  syncSiteSettingsToPostgres,
   syncServiceToPostgres,
   deleteServiceFromPostgres,
   syncContactRequestToPostgres,
   deleteContactRequestFromPostgres,
   syncArtistToPostgres,
   deleteArtistFromPostgres,
+  syncAlbumToPostgres,
+  deleteAlbumFromPostgres,
+  syncTrackToPostgres,
+  deleteTrackFromPostgres,
+  syncVideoToPostgres,
+  deleteVideoFromPostgres,
+  syncEventToPostgres,
+  deleteEventFromPostgres,
+  syncMediaToPostgres,
+  deleteMediaFromPostgres,
+  syncAdminUserToPostgres,
+  deleteAdminUserFromPostgres,
+  syncActivityLogToPostgres,
+  syncPreWeddingToPostgres,
 } from './postgres.js';
 
 const __filename = fileURLToPath(import.meta.url);
@@ -810,12 +826,62 @@ class DatabaseStore {
   constructor() {
     ensureDataDirectory();
     this.data = this.load();
-    initPostgresSync(
-      this.data.services,
-      this.data.contactRequests,
-      this.data.artists,
-      this.data.artistSocials
-    ).catch(() => { });
+    initPostgresSync(this.data, (authoritativeData) => {
+      this.hydrateFromPostgres(authoritativeData);
+    }).catch((err) => {
+      console.warn('[DatabaseStore] PostgreSQL init background error:', err?.message || err);
+    });
+  }
+
+  public hydrateFromPostgres(pgData: Partial<DatabaseSchema>) {
+    if (pgData.homepage) {
+      this.data.homepage = pgData.homepage;
+    }
+    if (pgData.siteSettings) {
+      this.data.siteSettings = pgData.siteSettings;
+    }
+    if (pgData.preWedding) {
+      this.data.preWedding = pgData.preWedding;
+    }
+    if (pgData.services && pgData.services.length > 0) {
+      this.data.services = pgData.services;
+    }
+    if (pgData.contactRequests && pgData.contactRequests.length > 0) {
+      this.data.contactRequests = pgData.contactRequests;
+    }
+    if (pgData.artists && pgData.artists.length > 0) {
+      this.data.artists = pgData.artists;
+    }
+    if (pgData.artistSocials && pgData.artistSocials.length > 0) {
+      this.data.artistSocials = pgData.artistSocials;
+    }
+    if (pgData.albums && pgData.albums.length > 0) {
+      this.data.albums = pgData.albums;
+    }
+    if (pgData.tracks && pgData.tracks.length > 0) {
+      this.data.tracks = pgData.tracks;
+    }
+    if (pgData.events && pgData.events.length > 0) {
+      this.data.events = pgData.events;
+    }
+    if (pgData.eventArtists && pgData.eventArtists.length > 0) {
+      this.data.eventArtists = pgData.eventArtists;
+    }
+    if (pgData.videos && pgData.videos.length > 0) {
+      this.data.videos = pgData.videos;
+    }
+    if (pgData.media && pgData.media.length > 0) {
+      this.data.media = pgData.media;
+    }
+    if (pgData.adminUsers && pgData.adminUsers.length > 0) {
+      this.data.adminUsers = pgData.adminUsers;
+    }
+    if (pgData.activityLogs && pgData.activityLogs.length > 0) {
+      this.data.activityLogs = pgData.activityLogs;
+    }
+
+    this.persistSync(this.data);
+    console.log('[DatabaseStore] ✅ In-memory store successfully hydrated from PostgreSQL authoritative source of truth.');
   }
 
   private load(): DatabaseSchema {
@@ -947,7 +1013,7 @@ class DatabaseStore {
       findById: (id: string) => this.data.adminUsers.find((u) => u.id === id) || null,
       findByEmail: (email: string) =>
         this.data.adminUsers.find((u) => u.email.toLowerCase() === email.toLowerCase()) || null,
-      create: (item: Omit<AdminUser, 'id' | 'createdAt' | 'updatedAt'>) => {
+      create: async (item: Omit<AdminUser, 'id' | 'createdAt' | 'updatedAt'>) => {
         const now = new Date().toISOString();
         const user: AdminUser = {
           ...item,
@@ -956,10 +1022,11 @@ class DatabaseStore {
           updatedAt: now,
         };
         this.data.adminUsers.push(user);
+        await syncAdminUserToPostgres(user);
         this.persist();
         return user;
       },
-      update: (id: string, updates: Partial<AdminUser>) => {
+      update: async (id: string, updates: Partial<AdminUser>) => {
         const index = this.data.adminUsers.findIndex((u) => u.id === id);
         if (index === -1) return null;
         this.data.adminUsers[index] = {
@@ -967,13 +1034,15 @@ class DatabaseStore {
           ...updates,
           updatedAt: new Date().toISOString(),
         };
+        await syncAdminUserToPostgres(this.data.adminUsers[index]);
         this.persist();
         return this.data.adminUsers[index];
       },
-      delete: (id: string) => {
+      delete: async (id: string) => {
         const index = this.data.adminUsers.findIndex((u) => u.id === id);
         if (index === -1) return false;
         this.data.adminUsers.splice(index, 1);
+        await deleteAdminUserFromPostgres(id);
         this.persist();
         return true;
       },
@@ -1005,7 +1074,7 @@ class DatabaseStore {
           socials: this.data.artistSocials.filter((s) => s.artistId === artist.id),
         };
       },
-      create: (item: Omit<Artist, 'id' | 'createdAt' | 'updatedAt'>, socials?: Array<{ platform: string; url: string }>) => {
+      create: async (item: Omit<Artist, 'id' | 'createdAt' | 'updatedAt'>, socials?: Array<{ platform: string; url: string }>) => {
         const now = new Date().toISOString();
         const id = generateId('art');
         const artist: Artist = {
@@ -1030,14 +1099,14 @@ class DatabaseStore {
           });
         }
 
-        this.persist();
         const createdArtist = this.artists.findById(id);
         if (createdArtist) {
-          syncArtistToPostgres(createdArtist, createdArtist.socials).catch(() => { });
+          await syncArtistToPostgres(createdArtist, createdArtist.socials);
         }
+        this.persist();
         return createdArtist;
       },
-      update: (id: string, updates: Partial<Artist>, socials?: Array<{ platform: string; url: string }>) => {
+      update: async (id: string, updates: Partial<Artist>, socials?: Array<{ platform: string; url: string }>) => {
         const index = this.data.artists.findIndex((a) => a.id === id);
         if (index === -1) return null;
         const now = new Date().toISOString();
@@ -1065,21 +1134,21 @@ class DatabaseStore {
           });
         }
 
-        this.persist();
         const updatedArtist = this.artists.findById(id);
         if (updatedArtist) {
-          syncArtistToPostgres(updatedArtist, updatedArtist.socials).catch(() => { });
+          await syncArtistToPostgres(updatedArtist, updatedArtist.socials);
         }
+        this.persist();
         return updatedArtist;
       },
-      delete: (id: string) => {
+      delete: async (id: string) => {
         const index = this.data.artists.findIndex((a) => a.id === id);
         if (index === -1) return false;
         this.data.artists.splice(index, 1);
         this.data.artistSocials = this.data.artistSocials.filter((s) => s.artistId !== id);
         this.data.eventArtists = this.data.eventArtists.filter((ea) => ea.artistId !== id);
+        await deleteArtistFromPostgres(id);
         this.persist();
-        deleteArtistFromPostgres(id).catch(() => { });
         return true;
       },
     };
@@ -1112,7 +1181,7 @@ class DatabaseStore {
           tracks: this.data.tracks.filter((t) => t.albumId === album.id),
         };
       },
-      create: (item: Omit<Album, 'id' | 'createdAt' | 'updatedAt'>) => {
+      create: async (item: Omit<Album, 'id' | 'createdAt' | 'updatedAt'>) => {
         const now = new Date().toISOString();
         const album: Album = {
           ...item,
@@ -1121,10 +1190,11 @@ class DatabaseStore {
           updatedAt: now,
         };
         this.data.albums.push(album);
+        await syncAlbumToPostgres(album);
         this.persist();
         return album;
       },
-      update: (id: string, updates: Partial<Album>) => {
+      update: async (id: string, updates: Partial<Album>) => {
         const index = this.data.albums.findIndex((a) => a.id === id);
         if (index === -1) return null;
         this.data.albums[index] = {
@@ -1132,16 +1202,21 @@ class DatabaseStore {
           ...updates,
           updatedAt: new Date().toISOString(),
         };
+        const updated = this.albums.findById(id);
+        if (updated) {
+          await syncAlbumToPostgres(updated);
+        }
         this.persist();
-        return this.albums.findById(id);
+        return updated;
       },
-      delete: (id: string) => {
+      delete: async (id: string) => {
         const index = this.data.albums.findIndex((a) => a.id === id);
         if (index === -1) return false;
         this.data.albums.splice(index, 1);
         this.data.tracks.forEach((t) => {
           if (t.albumId === id) t.albumId = null;
         });
+        await deleteAlbumFromPostgres(id);
         this.persist();
         return true;
       },
@@ -1155,7 +1230,7 @@ class DatabaseStore {
       findById: (id: string) => this.data.tracks.find((t) => t.id === id) || null,
       findByAlbumId: (albumId: string) => this.data.tracks.filter((t) => t.albumId === albumId),
       findByArtistId: (artistId: string) => this.data.tracks.filter((t) => t.artistId === artistId),
-      create: (item: Omit<Track, 'id' | 'createdAt' | 'updatedAt'>) => {
+      create: async (item: Omit<Track, 'id' | 'createdAt' | 'updatedAt'>) => {
         const now = new Date().toISOString();
         const track: Track = {
           ...item,
@@ -1164,17 +1239,19 @@ class DatabaseStore {
           updatedAt: now,
         };
         this.data.tracks.push(track);
+        await syncTrackToPostgres(track);
         // Update album trackCount
         if (track.albumId) {
           const album = this.data.albums.find((a) => a.id === track.albumId);
           if (album) {
             album.trackCount = this.data.tracks.filter((t) => t.albumId === album.id).length;
+            await syncAlbumToPostgres(album);
           }
         }
         this.persist();
         return track;
       },
-      update: (id: string, updates: Partial<Track>) => {
+      update: async (id: string, updates: Partial<Track>) => {
         const index = this.data.tracks.findIndex((t) => t.id === id);
         if (index === -1) return null;
         this.data.tracks[index] = {
@@ -1182,18 +1259,21 @@ class DatabaseStore {
           ...updates,
           updatedAt: new Date().toISOString(),
         };
+        await syncTrackToPostgres(this.data.tracks[index]);
         this.persist();
         return this.data.tracks[index];
       },
-      delete: (id: string) => {
+      delete: async (id: string) => {
         const index = this.data.tracks.findIndex((t) => t.id === id);
         if (index === -1) return false;
         const albumId = this.data.tracks[index].albumId;
         this.data.tracks.splice(index, 1);
+        await deleteTrackFromPostgres(id);
         if (albumId) {
           const album = this.data.albums.find((a) => a.id === albumId);
           if (album) {
             album.trackCount = this.data.tracks.filter((t) => t.albumId === album.id).length;
+            await syncAlbumToPostgres(album);
           }
         }
         this.persist();
@@ -1229,7 +1309,7 @@ class DatabaseStore {
             })),
         };
       },
-      create: (item: Omit<Event, 'id' | 'createdAt' | 'updatedAt'>, artistIds?: string[]) => {
+      create: async (item: Omit<Event, 'id' | 'createdAt' | 'updatedAt'>, artistIds?: string[]) => {
         const now = new Date().toISOString();
         const id = generateId('e');
         const event: Event = {
@@ -1254,10 +1334,14 @@ class DatabaseStore {
           });
         }
 
+        const createdEvent = this.events.findById(id);
+        if (createdEvent) {
+          await syncEventToPostgres(createdEvent, createdEvent.eventArtists);
+        }
         this.persist();
-        return this.events.findById(id);
+        return createdEvent;
       },
-      update: (id: string, updates: Partial<Event>, artistIds?: string[]) => {
+      update: async (id: string, updates: Partial<Event>, artistIds?: string[]) => {
         const index = this.data.events.findIndex((e) => e.id === id);
         if (index === -1) return null;
         const now = new Date().toISOString();
@@ -1283,14 +1367,19 @@ class DatabaseStore {
           });
         }
 
+        const updatedEvent = this.events.findById(id);
+        if (updatedEvent) {
+          await syncEventToPostgres(updatedEvent, updatedEvent.eventArtists);
+        }
         this.persist();
-        return this.events.findById(id);
+        return updatedEvent;
       },
-      delete: (id: string) => {
+      delete: async (id: string) => {
         const index = this.data.events.findIndex((e) => e.id === id);
         if (index === -1) return false;
         this.data.events.splice(index, 1);
         this.data.eventArtists = this.data.eventArtists.filter((ea) => ea.eventId !== id);
+        await deleteEventFromPostgres(id);
         this.persist();
         return true;
       },
@@ -1302,7 +1391,7 @@ class DatabaseStore {
     return {
       findMany: () => this.data.videos,
       findById: (id: string) => this.data.videos.find((v) => v.id === id) || null,
-      create: (item: Omit<Video, 'id' | 'createdAt' | 'updatedAt'>) => {
+      create: async (item: Omit<Video, 'id' | 'createdAt' | 'updatedAt'>) => {
         const now = new Date().toISOString();
         const video: Video = {
           ...item,
@@ -1311,10 +1400,11 @@ class DatabaseStore {
           updatedAt: now,
         };
         this.data.videos.push(video);
+        await syncVideoToPostgres(video);
         this.persist();
         return video;
       },
-      update: (id: string, updates: Partial<Video>) => {
+      update: async (id: string, updates: Partial<Video>) => {
         const index = this.data.videos.findIndex((v) => v.id === id);
         if (index === -1) return null;
         this.data.videos[index] = {
@@ -1322,13 +1412,15 @@ class DatabaseStore {
           ...updates,
           updatedAt: new Date().toISOString(),
         };
+        await syncVideoToPostgres(this.data.videos[index]);
         this.persist();
         return this.data.videos[index];
       },
-      delete: (id: string) => {
+      delete: async (id: string) => {
         const index = this.data.videos.findIndex((v) => v.id === id);
         if (index === -1) return false;
         this.data.videos.splice(index, 1);
+        await deleteVideoFromPostgres(id);
         this.persist();
         return true;
       },
@@ -1341,7 +1433,7 @@ class DatabaseStore {
       findMany: () => [...this.data.services].sort((a, b) => (a.order || 0) - (b.order || 0)),
       findById: (id: string) => this.data.services.find((s) => s.id === id) || null,
       findBySlug: (slug: string) => this.data.services.find((s) => s.slug === slug || s.id === slug) || null,
-      create: (item: Omit<Service, 'id' | 'createdAt' | 'updatedAt'>) => {
+      create: async (item: Omit<Service, 'id' | 'createdAt' | 'updatedAt'>) => {
         const now = new Date().toISOString();
         const service: Service = {
           ...item,
@@ -1350,12 +1442,12 @@ class DatabaseStore {
           updatedAt: now,
         };
         this.data.services.push(service);
+        await syncServiceToPostgres(service);
         this.persist();
-        syncServiceToPostgres(service).catch(() => { });
         notifyServicesChanged();
         return service;
       },
-      update: (id: string, updates: Partial<Service>) => {
+      update: async (id: string, updates: Partial<Service>) => {
         const index = this.data.services.findIndex((s) => s.id === id);
         if (index === -1) return null;
         this.data.services[index] = {
@@ -1363,32 +1455,34 @@ class DatabaseStore {
           ...updates,
           updatedAt: new Date().toISOString(),
         };
+        await syncServiceToPostgres(this.data.services[index]);
         this.persist();
-        syncServiceToPostgres(this.data.services[index]).catch(() => { });
         notifyServicesChanged();
         return this.data.services[index];
       },
-      reorder: (serviceIds: string[]) => {
+      reorder: async (serviceIds: string[]) => {
         if (Array.isArray(serviceIds)) {
+          const promises: Promise<void>[] = [];
           serviceIds.forEach((id, idx) => {
             const s = this.data.services.find((item) => item.id === id);
             if (s) {
               s.order = idx + 1;
               s.updatedAt = new Date().toISOString();
-              syncServiceToPostgres(s).catch(() => { });
+              promises.push(syncServiceToPostgres(s));
             }
           });
+          await Promise.all(promises);
           this.persist();
           notifyServicesChanged();
         }
         return this.services.findMany();
       },
-      delete: (id: string) => {
+      delete: async (id: string) => {
         const index = this.data.services.findIndex((s) => s.id === id);
         if (index === -1) return false;
         this.data.services.splice(index, 1);
+        await deleteServiceFromPostgres(id);
         this.persist();
-        deleteServiceFromPostgres(id).catch(() => { });
         notifyServicesChanged();
         return true;
       },
@@ -1416,7 +1510,7 @@ class DatabaseStore {
         return list;
       },
       findById: (id: string) => this.data.media.find((m) => m.id === id) || null,
-      create: (item: Omit<Media, 'id' | 'createdAt' | 'updatedAt'>) => {
+      create: async (item: Omit<Media, 'id' | 'createdAt' | 'updatedAt'>) => {
         const now = new Date().toISOString();
         const media: Media = {
           ...item,
@@ -1425,10 +1519,11 @@ class DatabaseStore {
           updatedAt: now,
         };
         this.data.media.push(media);
+        await syncMediaToPostgres(media);
         this.persist();
         return media;
       },
-      update: (id: string, updates: Partial<Media>) => {
+      update: async (id: string, updates: Partial<Media>) => {
         const index = this.data.media.findIndex((m) => m.id === id);
         if (index === -1) return null;
         this.data.media[index] = {
@@ -1436,13 +1531,15 @@ class DatabaseStore {
           ...updates,
           updatedAt: new Date().toISOString(),
         };
+        await syncMediaToPostgres(this.data.media[index]);
         this.persist();
         return this.data.media[index];
       },
-      delete: (id: string) => {
+      delete: async (id: string) => {
         const index = this.data.media.findIndex((m) => m.id === id);
         if (index === -1) return false;
         this.data.media.splice(index, 1);
+        await deleteMediaFromPostgres(id);
         this.persist();
         return true;
       },
@@ -1455,7 +1552,7 @@ class DatabaseStore {
       findMany: () => this.data.contactRequests,
       findById: (id: string) => this.data.contactRequests.find((c) => c.id === id) || null,
       findByReferenceId: (refId: string) => this.data.contactRequests.find((c) => c.referenceId === refId) || null,
-      create: (item: Omit<ContactRequest, 'id' | 'referenceId' | 'status' | 'createdAt' | 'updatedAt'>) => {
+      create: async (item: Omit<ContactRequest, 'id' | 'referenceId' | 'status' | 'createdAt' | 'updatedAt'>) => {
         const now = new Date().toISOString();
         const randomRef = `VXO-${Date.now().toString(36).toUpperCase()}-${Math.floor(1000 + Math.random() * 9000)}`;
         const contact: ContactRequest = {
@@ -1468,11 +1565,11 @@ class DatabaseStore {
           updatedAt: now,
         };
         this.data.contactRequests.unshift(contact);
+        await syncContactRequestToPostgres(contact);
         this.persist();
-        syncContactRequestToPostgres(contact).catch(() => { });
         return contact;
       },
-      update: (id: string, updates: Partial<ContactRequest>) => {
+      update: async (id: string, updates: Partial<ContactRequest>) => {
         const index = this.data.contactRequests.findIndex((c) => c.id === id);
         if (index === -1) return null;
         this.data.contactRequests[index] = {
@@ -1480,16 +1577,16 @@ class DatabaseStore {
           ...updates,
           updatedAt: new Date().toISOString(),
         };
+        await syncContactRequestToPostgres(this.data.contactRequests[index]);
         this.persist();
-        syncContactRequestToPostgres(this.data.contactRequests[index]).catch(() => { });
         return this.data.contactRequests[index];
       },
-      delete: (id: string) => {
+      delete: async (id: string) => {
         const index = this.data.contactRequests.findIndex((c) => c.id === id);
         if (index === -1) return false;
         this.data.contactRequests.splice(index, 1);
+        await deleteContactRequestFromPostgres(id);
         this.persist();
-        deleteContactRequestFromPostgres(id).catch(() => { });
         return true;
       },
     };
@@ -1499,12 +1596,13 @@ class DatabaseStore {
   public get homepage() {
     return {
       get: () => this.data.homepage,
-      update: (updates: Partial<Homepage>) => {
+      update: async (updates: Partial<Homepage>) => {
         this.data.homepage = {
           ...this.data.homepage,
           ...updates,
           updatedAt: new Date().toISOString(),
         };
+        await syncHomepageToPostgres(this.data.homepage);
         this.persist();
         return this.data.homepage;
       },
@@ -1515,12 +1613,13 @@ class DatabaseStore {
   public get siteSettings() {
     return {
       get: () => this.data.siteSettings,
-      update: (updates: Partial<SiteSettings>) => {
+      update: async (updates: Partial<SiteSettings>) => {
         this.data.siteSettings = {
           ...this.data.siteSettings,
           ...updates,
           updatedAt: new Date().toISOString(),
         };
+        await syncSiteSettingsToPostgres(this.data.siteSettings);
         this.persist();
         return this.data.siteSettings;
       },
@@ -1541,6 +1640,7 @@ class DatabaseStore {
         if (this.data.activityLogs.length > 200) {
           this.data.activityLogs = this.data.activityLogs.slice(0, 200);
         }
+        syncActivityLogToPostgres(log).catch(() => {});
         this.persist();
         return log;
       },
@@ -1554,40 +1654,10 @@ class DatabaseStore {
         if (!this.data.preWedding) {
           this.data.preWedding = initialPreWeddingData;
           this.persist();
-        } else {
-          // Merge any newly introduced schema fields if missing from existing JSON DB
-          let hasMerged = false;
-          const initialObj = initialPreWeddingData as any;
-          const currentObj = this.data.preWedding as any;
-          for (const key of Object.keys(initialObj)) {
-            if (currentObj[key] === undefined) {
-              currentObj[key] = initialObj[key];
-              hasMerged = true;
-            }
-          }
-          if (currentObj.studioInfo && initialObj.studioInfo) {
-            for (const sKey of Object.keys(initialObj.studioInfo)) {
-              if (currentObj.studioInfo[sKey] === undefined) {
-                currentObj.studioInfo[sKey] = initialObj.studioInfo[sKey];
-                hasMerged = true;
-              }
-            }
-          }
-          if (currentObj.directorInfo && initialObj.directorInfo) {
-            for (const dKey of Object.keys(initialObj.directorInfo)) {
-              if (currentObj.directorInfo[dKey] === undefined) {
-                currentObj.directorInfo[dKey] = initialObj.directorInfo[dKey];
-                hasMerged = true;
-              }
-            }
-          }
-          if (hasMerged) {
-            this.persist();
-          }
         }
         return this.data.preWedding;
       },
-      update: (updates: Partial<PreWeddingPageData>) => {
+      update: async (updates: Partial<PreWeddingPageData>) => {
         const current = this.preWedding.get();
         this.data.preWedding = {
           ...current,
@@ -1614,6 +1684,7 @@ class DatabaseStore {
           whyUsPillars: updates.whyUsPillars || current.whyUsPillars || [],
           updatedAt: new Date().toISOString(),
         };
+        await syncPreWeddingToPostgres(this.data.preWedding);
         this.persist();
         return this.data.preWedding;
       },

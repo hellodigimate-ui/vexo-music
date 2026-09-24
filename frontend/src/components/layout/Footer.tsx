@@ -19,10 +19,12 @@ const DEFAULT_NAV_LINKS: FooterLinkItem[] = [
   { id: 'fn-2', label: 'Music', path: '/music' },
   { id: 'fn-3', label: 'Artists', path: '/artists' },
   { id: 'fn-4', label: 'Services', path: '/services' },
-  { id: 'fn-5', label: 'Events', path: '/events' },
-  { id: 'fn-6', label: 'Videos', path: '/videos' },
-  { id: 'fn-7', label: 'About', path: '/about' },
-  { id: 'fn-8', label: 'Contact', path: '/contact' },
+  { id: 'fn-5', label: 'Pre-Wedding', path: '/pre-wedding' },
+  { id: 'fn-6', label: 'Wedding', path: '/wedding' },
+  { id: 'fn-7', label: 'Events', path: '/events' },
+  { id: 'fn-8', label: 'Videos', path: '/videos' },
+  { id: 'fn-9', label: 'About', path: '/about' },
+  { id: 'fn-10', label: 'Contact', path: '/contact' },
 ];
 
 const DEFAULT_SERVICES_LIST: FooterLinkItem[] = [
@@ -33,6 +35,7 @@ const DEFAULT_SERVICES_LIST: FooterLinkItem[] = [
   { id: 'fs-5', label: 'Digital Marketing', path: '/services' },
   { id: 'fs-6', label: 'Brand Collaborations', path: '/services' },
   { id: 'fs-7', label: 'Pre-Wedding Shoot', path: '/pre-wedding' },
+  { id: 'fs-8', label: 'Wedding Cinematography', path: '/wedding' },
 ];
 
 export const Footer: React.FC = () => {
@@ -74,30 +77,28 @@ export const Footer: React.FC = () => {
         const cleanPhone = rawPhone.includes('98290') ? '+91 72399 99966' : rawPhone;
         setSettings((prev) => ({
           ...prev,
-          siteName: data.siteName || 'VEXO Music Entertainment',
-          siteDescription: data.siteDescription || 'A premier music entertainment powerhouse & record label specializing in original sound engineering, global music distribution, artist management, and cinematic audio-visual production based in Jaipur, India.',
-          footerBio: data.footerBio || data.siteDescription || 'A premier music entertainment powerhouse & record label specializing in original sound engineering, global music distribution, artist management, and cinematic audio-visual production based in Jaipur, India.',
-          contactEmail: data.contactEmail || 'Contact@vexomusic.in',
+          siteName: data.siteName || prev.siteName,
+          siteDescription: data.siteDescription ?? prev.siteDescription,
+          footerBio: data.footerBio ?? data.siteDescription ?? prev.footerBio,
+          contactEmail: data.contactEmail || prev.contactEmail,
           contactPhone: cleanPhone,
-          officeAddress: data.officeAddress || 'SKY CROWN, Office No. 205, Chordiya City, Kamla Nehru Nagar, Ajmer Road, Jaipur, Pin Code- 302021, Rajasthan, India',
+          officeAddress: data.officeAddress || prev.officeAddress,
           copyrightText: data.copyrightText || prev.copyrightText,
           socialInstagram: data.socialInstagram || prev.socialInstagram,
-          socialFacebook: data.socialFacebook || prev.socialFacebook || 'https://facebook.com',
+          socialFacebook: data.socialFacebook || prev.socialFacebook,
           socialYoutube: data.socialYoutube || prev.socialYoutube,
           socialSpotify: data.socialSpotify || prev.socialSpotify,
           socialTwitter: data.socialTwitter || prev.socialTwitter,
-          socialAppleMusic: data.socialAppleMusic || prev.socialAppleMusic || '',
+          socialAppleMusic: data.socialAppleMusic || prev.socialAppleMusic,
           socialSoundcloud: data.socialSoundcloud || '',
           footerQuickLinksHeading: data.footerQuickLinksHeading || prev.footerQuickLinksHeading,
-          footerQuickLinks:
-            Array.isArray(data.footerQuickLinks) && data.footerQuickLinks.length > 0
-              ? data.footerQuickLinks
-              : prev.footerQuickLinks,
+          footerQuickLinks: Array.isArray(data.footerQuickLinks)
+            ? data.footerQuickLinks
+            : prev.footerQuickLinks,
           footerServicesHeading: data.footerServicesHeading || prev.footerServicesHeading,
-          footerServicesLinks:
-            Array.isArray(data.footerServicesLinks) && data.footerServicesLinks.length > 0
-              ? data.footerServicesLinks
-              : prev.footerServicesLinks,
+          footerServicesLinks: Array.isArray(data.footerServicesLinks)
+            ? data.footerServicesLinks
+            : prev.footerServicesLinks,
           footerContactHeading: data.footerContactHeading || prev.footerContactHeading,
           footerStatusText: data.footerStatusText || prev.footerStatusText,
           footerStatusEnabled:
@@ -107,6 +108,7 @@ export const Footer: React.FC = () => {
           footerAdminLinkEnabled:
             data.footerAdminLinkEnabled !== undefined ? data.footerAdminLinkEnabled : prev.footerAdminLinkEnabled,
         }));
+        setIsLoaded(true);
       })
       .catch(() => {
         // Fallback on network error

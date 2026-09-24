@@ -27,22 +27,28 @@ interface BookDateSectionProps {
   studioInfo?: any;
   packages?: PreWeddingPackage[];
   addOns?: AddOnService[];
+  badgeText?: string;
+  serviceTypeLabel?: string;
 }
 
 export const BookDateSection: React.FC<BookDateSectionProps> = ({
-  selectedPackageId = 'gold',
+  selectedPackageId,
   selectedAddOnIds = [],
   initialNotes = '',
   studioInfo = WEDDING_STUDIO_INFO,
   packages = PRE_WEDDING_PACKAGES,
   addOns = ADD_ON_SERVICES,
+  badgeText = 'BOOK YOUR DATE',
+  serviceTypeLabel = 'Wedding Photography | Cinematography | Pre-Wedding | Wedding Films',
 }) => {
   const [coupleNames, setCoupleNames] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
   const [email, setEmail] = useState<string>('');
   const [eventDate, setEventDate] = useState<string>('');
   const [location, setLocation] = useState<string>('Jaipur');
-  const [currentPackage, setCurrentPackage] = useState<string>(selectedPackageId);
+  const [currentPackage, setCurrentPackage] = useState<string>(
+    selectedPackageId || (packages && packages.length > 0 ? packages[0].id : 'gold')
+  );
   const [currentAddOns, setCurrentAddOns] = useState<string[]>(selectedAddOnIds);
   const [notes, setNotes] = useState<string>(initialNotes);
   const [isSubmitted, setIsSubmitted] = useState<boolean>(false);
@@ -51,8 +57,10 @@ export const BookDateSection: React.FC<BookDateSectionProps> = ({
   React.useEffect(() => {
     if (selectedPackageId) {
       setCurrentPackage(selectedPackageId);
+    } else if (packages && packages.length > 0 && !packages.some((p) => p.id === currentPackage)) {
+      setCurrentPackage(packages[0].id);
     }
-  }, [selectedPackageId]);
+  }, [selectedPackageId, packages]);
 
   React.useEffect(() => {
     if (selectedAddOnIds) {
@@ -126,7 +134,7 @@ export const BookDateSection: React.FC<BookDateSectionProps> = ({
         <div className="max-w-3xl mx-auto text-center mb-16">
           <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-vexo-red/10 border border-vexo-red/30 text-xs font-mono font-bold tracking-widest text-vexo-red uppercase mb-4">
             <Calendar className="w-3.5 h-3.5 text-vexo-red" />
-            <span>BOOK YOUR DATE</span>
+            <span>{badgeText}</span>
           </div>
 
           <h2 className="text-3xl sm:text-5xl font-black uppercase tracking-tight text-white mb-3">
@@ -134,7 +142,7 @@ export const BookDateSection: React.FC<BookDateSectionProps> = ({
           </h2>
 
           <p className="text-sm sm:text-base text-zinc-300 font-medium tracking-wide mb-2">
-            Wedding Photography | Cinematography | Pre-Wedding | Wedding Films
+            {serviceTypeLabel}
           </p>
 
           <p className="text-xs font-mono uppercase tracking-[0.25em] text-vexo-red font-bold">
@@ -257,7 +265,7 @@ export const BookDateSection: React.FC<BookDateSectionProps> = ({
                   <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-300 mb-2 font-mono">
                     Select Package Tier
                   </label>
-                  <div className="grid grid-cols-3 gap-2.5">
+                  <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
                     {packages.map((pkg: PreWeddingPackage) => (
                       <button
                         key={pkg.id}

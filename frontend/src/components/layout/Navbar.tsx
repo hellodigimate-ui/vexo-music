@@ -46,7 +46,8 @@ export const Navbar: React.FC = () => {
 
   // Update bubble position using GPU transform offsets
   const updateBubblePosition = (targetPath: string) => {
-    const itemEl = itemRefs.current.get(targetPath);
+    const resolvedPath = targetPath === '/packages' ? '/pre-wedding' : targetPath;
+    const itemEl = itemRefs.current.get(resolvedPath);
     if (itemEl && navRef.current) {
       const navRect = navRef.current.getBoundingClientRect();
       const itemRect = itemEl.getBoundingClientRect();
@@ -135,7 +136,9 @@ export const Navbar: React.FC = () => {
               />
 
               {navItems.map((item) => {
-                const isActive = location.pathname === item.path;
+                const isActive =
+                  location.pathname === item.path ||
+                  (item.path === '/pre-wedding' && location.pathname === '/packages');
                 const isHovered = hoveredPath === item.path;
                 const isHighlighted = isHovered || (hoveredPath === null && isActive);
 
@@ -149,7 +152,7 @@ export const Navbar: React.FC = () => {
                     }}
                     onMouseEnter={() => setHoveredPath(item.path)}
                     className={cn(
-                      'relative z-10 px-2.5 xl:px-3.5 py-1 xl:py-1.5 rounded-full text-[11px] xl:text-xs font-semibold tracking-wide transition-colors duration-200 select-none whitespace-nowrap flex items-center justify-center',
+                      'relative z-10 px-2 lg:px-2.5 xl:px-3 py-1 xl:py-1.5 rounded-full text-[11px] xl:text-xs font-semibold tracking-wide transition-colors duration-200 select-none whitespace-nowrap flex items-center justify-center',
                       isHighlighted
                         ? 'nav-link-active text-white font-bold'
                         : 'nav-link-inactive text-slate-600 dark:text-zinc-400'
@@ -171,8 +174,8 @@ export const Navbar: React.FC = () => {
                 className={cn(
                   'group flex items-center gap-2 px-3 py-1.5 h-9 rounded-full transition-all duration-300 border cursor-text',
                   isSearchFocused
-                    ? 'w-48 lg:w-56 xl:w-64 border-vexo-red/60 bg-white dark:bg-zinc-900/95 shadow-md ring-2 ring-vexo-red/20'
-                    : 'w-36 lg:w-40 xl:w-48 bg-white/80 dark:bg-white/[0.06] border-slate-300 dark:border-white/[0.12] hover:border-slate-400 dark:hover:border-white/25 shadow-2xs'
+                    ? 'w-44 lg:w-48 xl:w-60 border-vexo-red/60 bg-white dark:bg-zinc-900/95 shadow-md ring-2 ring-vexo-red/20'
+                    : 'w-32 lg:w-36 xl:w-44 bg-white/80 dark:bg-white/[0.06] border-slate-300 dark:border-white/[0.12] hover:border-slate-400 dark:hover:border-white/25 shadow-2xs'
                 )}
                 onClick={() => searchInputRef.current?.focus()}
               >
@@ -412,23 +415,30 @@ export const Navbar: React.FC = () => {
             <div className="min-h-full flex flex-col justify-between gap-8 relative z-10">
               {/* Mobile Large Links */}
               <nav className="flex flex-col gap-3 my-auto pt-4">
-                {navItems.map((item, idx) => (
-                  <Link
-                    key={item.label}
-                    to={item.path}
-                    onClick={() => setIsMobileMenuOpen(false)}
-                    style={{ transitionDelay: `${idx * 30}ms` }}
-                    className={cn(
-                      'text-2xl sm:text-3xl font-black tracking-tight transition-all duration-200 w-fit flex items-center gap-3',
-                      location.pathname === item.path
-                        ? 'text-vexo-red translate-x-2'
-                        : 'text-slate-800 dark:text-white/80 hover:text-black dark:hover:text-white hover:translate-x-2'
-                    )}
-                  >
-                    <span className="text-xs font-mono text-zinc-400">0{idx + 1}.</span>
-                    {item.label}
-                  </Link>
-                ))}
+                {navItems.map((item, idx) => {
+                  const isActive =
+                    location.pathname === item.path ||
+                    (item.path === '/pre-wedding' && location.pathname === '/packages');
+                  const stepNumber = idx + 1 < 10 ? `0${idx + 1}` : `${idx + 1}`;
+
+                  return (
+                    <Link
+                      key={item.label}
+                      to={item.path}
+                      onClick={() => setIsMobileMenuOpen(false)}
+                      style={{ transitionDelay: `${idx * 30}ms` }}
+                      className={cn(
+                        'text-2xl sm:text-3xl font-black tracking-tight transition-all duration-200 w-fit flex items-center gap-3',
+                        isActive
+                          ? 'text-vexo-red translate-x-2'
+                          : 'text-slate-800 dark:text-white/80 hover:text-black dark:hover:text-white hover:translate-x-2'
+                      )}
+                    >
+                      <span className="text-xs font-mono text-zinc-400">{stepNumber}.</span>
+                      {item.label}
+                    </Link>
+                  );
+                })}
               </nav>
 
               {/* Mobile Footer CTA & Theme Switcher */}

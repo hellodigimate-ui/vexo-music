@@ -32,7 +32,7 @@ export const adminSiteSettingsRoutes: FastifyPluginAsync = async (fastify) => {
       }
       const updates = request.body;
 
-      const updated = db.siteSettings.update(updates);
+      const updated = await db.siteSettings.update(updates);
 
       db.activityLogs.log({
         adminUserId: user.id,

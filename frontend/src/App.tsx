@@ -14,7 +14,8 @@ import { EventsPage } from './pages/EventsPage';
 import { VideosPage } from './pages/VideosPage';
 import { AboutPage } from './pages/AboutPage';
 import { ContactPage } from './pages/ContactPage';
-import { PackagesPage } from './pages/PackagesPage';
+import { PreWeddingPage } from './pages/PreWeddingPage';
+import { WeddingPage } from './pages/WeddingPage';
 
 // Admin System Imports
 import { AdminAuthProvider } from './admin/context/AdminAuthContext';
@@ -36,6 +37,7 @@ import { AdminInquiriesPage } from './admin/pages/AdminInquiriesPage';
 import { AdminHomepagePage } from './admin/pages/AdminHomepagePage';
 import { AdminSiteSettingsPage } from './admin/pages/AdminSiteSettingsPage';
 import { AdminPreWeddingPage } from './admin/pages/AdminPreWeddingPage';
+import { AdminWeddingPage } from './admin/pages/AdminWeddingPage';
 import { AdminActivityLogsPage } from './admin/pages/AdminActivityLogsPage';
 import { AdminUsersPage } from './admin/pages/AdminUsersPage';
 import { AdminFooterPage } from './admin/pages/AdminFooterPage';
@@ -91,8 +93,9 @@ export function App() {
                 <Route path="/videos" element={<VideosPage />} />
                 <Route path="/about" element={<AboutPage />} />
                 <Route path="/contact" element={<ContactPage />} />
-                <Route path="/packages" element={<PackagesPage />} />
-                <Route path="/pre-wedding" element={<PackagesPage />} />
+                <Route path="/pre-wedding" element={<PreWeddingPage />} />
+                <Route path="/wedding" element={<WeddingPage />} />
+                <Route path="/packages" element={<PreWeddingPage />} />
               </Route>
 
               {/* Admin Authentication Route */}
@@ -125,6 +128,7 @@ export function App() {
                 <Route path="inquiries" element={<AdminInquiriesPage />} />
                 <Route path="homepage" element={<AdminHomepagePage />} />
                 <Route path="pre-wedding" element={<AdminPreWeddingPage />} />
+                <Route path="wedding" element={<AdminWeddingPage />} />
                 <Route path="site-settings" element={<AdminSiteSettingsPage />} />
                 <Route path="footer" element={<AdminFooterPage />} />
                 <Route path="activity-logs" element={<AdminActivityLogsPage />} />
