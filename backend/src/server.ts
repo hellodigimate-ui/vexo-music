@@ -7,6 +7,8 @@ import { authPlugin } from './plugins/auth.js';
 import { apiRoutes } from './routes/index.js';
 import { getStorageProvider, LocalStorageProvider } from './services/storage/index.js';
 
+import { db } from './db/index.js';
+
 dotenv.config();
 
 const PORT = process.env.PORT ? parseInt(process.env.PORT, 10) : 4000;
@@ -139,6 +141,10 @@ async function start() {
         message: error.message || 'Internal Server Error',
       });
     });
+
+    // Synchronize vexo_db.json cache with Supabase PostgreSQL
+    server.log.info('Synchronizing vexo_db.json cache with Supabase PostgreSQL...');
+    await db.waitForSync(6000);
 
     await server.listen({ port: PORT, host: HOST });
     server.log.info(`VEXO API Server running on http://${HOST}:${PORT}`);

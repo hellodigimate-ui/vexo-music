@@ -29,6 +29,7 @@ import { useAdminToast } from '../context/AdminToastContext';
 import { getMediaUrl } from '../../lib/utils';
 import { DEFAULT_WEDDING_PLANS, ADD_ON_SERVICES } from '../../data/weddingData';
 import { AdminCmsTabsSlider } from '../components/AdminCmsTabsSlider';
+import { AdminConfirmModal } from '../components/AdminConfirmModal';
 
 type TabKey =
   | 'info'
@@ -46,11 +47,40 @@ export const AdminPreWeddingPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<TabKey>('info');
   const [packageSubTab, setPackageSubTab] = useState<'pre-wedding' | 'wedding'>('pre-wedding');
 
-
   const [isLoading, setIsLoading] = useState(true);
   const [isSaving, setIsSaving] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
   const [data, setData] = useState<any>(null);
+
+  // Delete confirmation modal state
+  const [deleteModalState, setDeleteModalState] = useState<{
+    isOpen: boolean;
+    title: string;
+    itemName?: string;
+    message?: string;
+    confirmText?: string;
+    cancelText?: string;
+    badgeText?: string;
+    subText?: string;
+    onConfirm: () => void;
+  } | null>(null);
+
+  const requestDelete = (config: {
+    title: string;
+    itemName?: string;
+    message?: string;
+    confirmText?: string;
+    cancelText?: string;
+    badgeText?: string;
+    subText?: string;
+    onConfirm: () => void;
+  }) => {
+    setDeleteModalState({
+      isOpen: true,
+      cancelText: 'Cancel',
+      ...config,
+    });
+  };
   const [isGalleryUploading, setIsGalleryUploading] = useState(false);
   const [galleryDragOver, setGalleryDragOver] = useState(false);
   const [dragOverCardIndex, setDragOverCardIndex] = useState<number | null>(null);
@@ -207,13 +237,30 @@ export const AdminPreWeddingPage: React.FC = () => {
   };
 
   const removePackage = (index: number, targetKey: 'packages' | 'weddingPackages' = packageSubTab === 'wedding' ? 'weddingPackages' : 'packages') => {
-    if (!window.confirm('Are you sure you want to delete this package tier?')) return;
     setData((prev: any) => {
       const list = [...(prev[targetKey] || (targetKey === 'weddingPackages' ? DEFAULT_WEDDING_PLANS : []))];
       list.splice(index, 1);
       return { ...prev, [targetKey]: list };
     });
     setIsDirty(true);
+  };
+
+  const promptDeletePackage = (index: number, targetKey: 'packages' | 'weddingPackages' = packageSubTab === 'wedding' ? 'weddingPackages' : 'packages') => {
+    const list = data?.[targetKey] || (targetKey === 'weddingPackages' ? DEFAULT_WEDDING_PLANS : []);
+    const pkg = list[index];
+    const pkgName = pkg?.name || `Package #${index + 1}`;
+    requestDelete({
+      title: 'DELETE PACKAGE TIER',
+      itemName: pkgName,
+      message: `Are you sure you want to delete package "${pkgName}"? This will remove pricing, crew details, and deliverables for this tier.`,
+      confirmText: 'Delete Package',
+      badgeText: 'REMOVE PACKAGE',
+      subText: targetKey === 'weddingPackages' ? 'WEDDING PACKAGE TIER' : 'PRE-WEDDING PACKAGE TIER',
+      onConfirm: () => {
+        removePackage(index, targetKey);
+        toast.success('Package Deleted', `"${pkgName}" was successfully removed.`);
+      },
+    });
   };
 
   const updatePackage = (index: number, field: string, value: any, targetKey: 'packages' | 'weddingPackages' = packageSubTab === 'wedding' ? 'weddingPackages' : 'packages') => {
@@ -272,6 +319,31 @@ export const AdminPreWeddingPage: React.FC = () => {
     setIsDirty(true);
   };
 
+  const promptDeletePackageListItem = (
+    packageIndex: number,
+    listField: 'deliverables' | 'bonus',
+    itemIndex: number,
+    targetKey: 'packages' | 'weddingPackages' = packageSubTab === 'wedding' ? 'weddingPackages' : 'packages'
+  ) => {
+    const list = data?.[targetKey] || (targetKey === 'weddingPackages' ? DEFAULT_WEDDING_PLANS : []);
+    const pkg = list[packageIndex];
+    const fieldLabel = listField === 'deliverables' ? 'Deliverable' : 'Bonus Inclusion';
+    const currentItem = pkg?.[listField]?.[itemIndex] || `${fieldLabel} item`;
+
+    requestDelete({
+      title: `REMOVE ${fieldLabel.toUpperCase()}`,
+      itemName: currentItem,
+      message: `Are you sure you want to remove this ${fieldLabel.toLowerCase()} from "${pkg?.name || 'this package'}"?`,
+      confirmText: `Remove ${fieldLabel}`,
+      badgeText: `REMOVE ${listField.toUpperCase()}`,
+      subText: `PACKAGE: ${pkg?.name || 'PACKAGE'}`,
+      onConfirm: () => {
+        removePackageListItem(packageIndex, listField, itemIndex, targetKey);
+        toast.success(`${fieldLabel} Removed`, `Removed "${currentItem}".`);
+      },
+    });
+  };
+
   const updatePackageNestedList = (
     packageIndex: number,
     parent: string,
@@ -315,6 +387,31 @@ export const AdminPreWeddingPage: React.FC = () => {
     setIsDirty(true);
   };
 
+  const promptDeletePackageNestedListItem = (
+    packageIndex: number,
+    parent: string,
+    itemIndex: number,
+    targetKey: 'packages' | 'weddingPackages' = packageSubTab === 'wedding' ? 'weddingPackages' : 'packages'
+  ) => {
+    const list = data?.[targetKey] || (targetKey === 'weddingPackages' ? DEFAULT_WEDDING_PLANS : []);
+    const pkg = list[packageIndex];
+    const crewName = parent === 'photography' ? 'Photography' : 'Cinematography';
+    const currentInclusion = pkg?.[parent]?.details?.[itemIndex] || 'Inclusion item';
+
+    requestDelete({
+      title: `REMOVE ${crewName.toUpperCase()} INCLUSION`,
+      itemName: currentInclusion,
+      message: `Are you sure you want to remove this bullet inclusion from the ${crewName} crew in "${pkg?.name || 'this package'}"?`,
+      confirmText: 'Remove Inclusion',
+      badgeText: 'REMOVE INCLUSION',
+      subText: `CREW: ${crewName.toUpperCase()}`,
+      onConfirm: () => {
+        removePackageNestedListItem(packageIndex, parent, itemIndex, targetKey);
+        toast.success('Inclusion Removed', `Removed "${currentInclusion}" from ${crewName.toLowerCase()} crew.`);
+      },
+    });
+  };
+
   const updatePlatinumExp = (packageIndex: number, itemIndex: number, value: string, targetKey: 'packages' | 'weddingPackages' = packageSubTab === 'wedding' ? 'weddingPackages' : 'packages') => {
     setData((prev: any) => {
       const list = [...(prev[targetKey] || (targetKey === 'weddingPackages' ? DEFAULT_WEDDING_PLANS : []))];
@@ -345,6 +442,29 @@ export const AdminPreWeddingPage: React.FC = () => {
       return { ...prev, [targetKey]: list };
     });
     setIsDirty(true);
+  };
+
+  const promptDeletePlatinumExpItem = (
+    packageIndex: number,
+    itemIndex: number,
+    targetKey: 'packages' | 'weddingPackages' = packageSubTab === 'wedding' ? 'weddingPackages' : 'packages'
+  ) => {
+    const list = data?.[targetKey] || (targetKey === 'weddingPackages' ? DEFAULT_WEDDING_PLANS : []);
+    const pkg = list[packageIndex];
+    const currentItem = pkg?.platinumExperience?.[itemIndex] || 'VIP Experience Item';
+
+    requestDelete({
+      title: 'REMOVE VIP EXPERIENCE ITEM',
+      itemName: currentItem,
+      message: `Are you sure you want to remove this VIP experience item from "${pkg?.name || 'this package'}"?`,
+      confirmText: 'Remove Item',
+      badgeText: 'REMOVE VIP ITEM',
+      subText: 'PLATINUM VIP EXPERIENCE',
+      onConfirm: () => {
+        removePlatinumExpItem(packageIndex, itemIndex, targetKey);
+        toast.success('VIP Item Removed', `Removed "${currentItem}".`);
+      },
+    });
   };
 
   // Gallery CRUD
@@ -382,6 +502,25 @@ export const AdminPreWeddingPage: React.FC = () => {
       return { ...prev, portfolioGallery: list };
     });
     setIsDirty(true);
+  };
+
+  const promptDeleteGalleryItem = (index: number) => {
+    const list = data?.portfolioGallery || [];
+    const item = list[index];
+    const title = item?.title || `Photo #${index + 1}`;
+
+    requestDelete({
+      title: 'DELETE GALLERY PHOTO',
+      itemName: title,
+      message: `Are you sure you want to remove "${title}" from the portfolio gallery?`,
+      confirmText: 'Delete Photo',
+      badgeText: 'REMOVE PHOTO',
+      subText: `CATEGORY: ${item?.category || 'PORTFOLIO'}`,
+      onConfirm: () => {
+        removeGalleryItem(index);
+        toast.success('Photo Removed', `Removed "${title}" from gallery.`);
+      },
+    });
   };
 
   const handleBatchUpload = async (files: FileList | File[]) => {
@@ -486,6 +625,25 @@ export const AdminPreWeddingPage: React.FC = () => {
     setIsDirty(true);
   };
 
+  const promptDeleteVideo = (index: number) => {
+    const list = data?.videos || [];
+    const vid = list[index];
+    const title = vid?.title || `Video #${index + 1}`;
+
+    requestDelete({
+      title: 'DELETE VIDEO TEASER',
+      itemName: title,
+      message: `Are you sure you want to remove "${title}"? This will unlink the video from the showcase.`,
+      confirmText: 'Delete Video',
+      badgeText: 'REMOVE VIDEO',
+      subText: `CATEGORY: ${vid?.category || 'TEASER'}`,
+      onConfirm: () => {
+        removeVideo(index);
+        toast.success('Video Removed', `Removed "${title}".`);
+      },
+    });
+  };
+
   // Director & Process
   const updateDirectorInfo = (field: string, value: any) => {
     setData((prev: any) => ({
@@ -542,6 +700,25 @@ export const AdminPreWeddingPage: React.FC = () => {
       return { ...prev, coupleStories: list };
     });
     setIsDirty(true);
+  };
+
+  const promptDeleteCoupleStory = (index: number) => {
+    const list = data?.coupleStories || [];
+    const story = list[index];
+    const title = story?.title || `Story #${index + 1}`;
+
+    requestDelete({
+      title: 'DELETE COUPLE STORY',
+      itemName: title,
+      message: `Are you sure you want to delete "${title}"?`,
+      confirmText: 'Delete Story',
+      badgeText: 'REMOVE STORY',
+      subText: `COUPLE: ${story?.couple || 'STORY'}`,
+      onConfirm: () => {
+        removeCoupleStory(index);
+        toast.success('Story Removed', `Removed couple story "${title}".`);
+      },
+    });
   };
 
   // Add-Ons
@@ -615,6 +792,25 @@ export const AdminPreWeddingPage: React.FC = () => {
       return { ...prev, addOns: newAddOns };
     });
     setIsDirty(true);
+  };
+
+  const promptDeleteAddOn = (index: number) => {
+    const list = data?.addOns || [];
+    const addon = list[index];
+    const title = addon?.title || `Add-On #${index + 1}`;
+
+    requestDelete({
+      title: 'DELETE ADD-ON SERVICE',
+      itemName: title,
+      message: `Are you sure you want to delete add-on "${title}"?`,
+      confirmText: 'Delete Add-On',
+      badgeText: 'REMOVE ADD-ON',
+      subText: `PRICE: ${addon?.priceDisplay || 'ADD-ON'}`,
+      onConfirm: () => {
+        removeAddOn(index);
+        toast.success('Add-On Removed', `Removed "${title}".`);
+      },
+    });
   };
 
   // Custom Builder Services
@@ -1207,7 +1403,7 @@ export const AdminPreWeddingPage: React.FC = () => {
 
                         <button
                           type="button"
-                          onClick={() => removePackage(idx, currentTarget)}
+                          onClick={() => promptDeletePackage(idx, currentTarget)}
                           className="px-2.5 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 dark:bg-red-500/10 dark:hover:bg-red-500/20 text-xs font-semibold flex items-center gap-1 cursor-pointer transition-colors"
                           title="Delete Package"
                         >
@@ -1413,7 +1609,7 @@ export const AdminPreWeddingPage: React.FC = () => {
                             />
                             <button
                               type="button"
-                              onClick={() => removePackageNestedListItem(idx, 'photography', dIdx, currentTarget)}
+                              onClick={() => promptDeletePackageNestedListItem(idx, 'photography', dIdx, currentTarget)}
                               className="p-1.5 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-600 dark:hover:bg-red-500/10 dark:text-zinc-500 dark:hover:text-red-400 transition-colors cursor-pointer"
                               title="Remove"
                             >
@@ -1450,7 +1646,7 @@ export const AdminPreWeddingPage: React.FC = () => {
                             />
                             <button
                               type="button"
-                              onClick={() => removePackageNestedListItem(idx, 'cinematography', dIdx, currentTarget)}
+                              onClick={() => promptDeletePackageNestedListItem(idx, 'cinematography', dIdx, currentTarget)}
                               className="p-1.5 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-600 dark:hover:bg-red-500/10 dark:text-zinc-500 dark:hover:text-red-400 transition-colors cursor-pointer"
                               title="Remove"
                             >
@@ -1488,7 +1684,7 @@ export const AdminPreWeddingPage: React.FC = () => {
                             />
                             <button
                               type="button"
-                              onClick={() => removePackageListItem(idx, 'deliverables', delIdx, currentTarget)}
+                              onClick={() => promptDeletePackageListItem(idx, 'deliverables', delIdx, currentTarget)}
                               className="p-1.5 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-600 dark:hover:bg-red-500/10 dark:text-zinc-500 dark:hover:text-red-400 transition-colors cursor-pointer"
                               title="Delete Deliverable"
                             >
@@ -1526,7 +1722,7 @@ export const AdminPreWeddingPage: React.FC = () => {
                             />
                             <button
                               type="button"
-                              onClick={() => removePackageListItem(idx, 'bonus', bIdx, currentTarget)}
+                              onClick={() => promptDeletePackageListItem(idx, 'bonus', bIdx, currentTarget)}
                               className="p-1.5 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-600 dark:hover:bg-red-500/10 dark:text-zinc-500 dark:hover:text-red-400 transition-colors cursor-pointer"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -1565,7 +1761,7 @@ export const AdminPreWeddingPage: React.FC = () => {
                             />
                             <button
                               type="button"
-                              onClick={() => removePlatinumExpItem(idx, eIdx, currentTarget)}
+                              onClick={() => promptDeletePlatinumExpItem(idx, eIdx, currentTarget)}
                               className="p-1.5 rounded-lg hover:bg-red-50 text-slate-400 hover:text-red-600 dark:hover:bg-red-500/10 dark:text-zinc-500 dark:hover:text-red-400 transition-colors cursor-pointer"
                               title="Remove"
                             >
@@ -1750,7 +1946,7 @@ export const AdminPreWeddingPage: React.FC = () => {
                       </label>
                       <button
                         type="button"
-                        onClick={() => removeGalleryItem(gIdx)}
+                        onClick={() => promptDeleteGalleryItem(gIdx)}
                         className="p-1.5 rounded-lg bg-black/70 hover:bg-red-600 text-white transition-colors cursor-pointer"
                         title="Delete Photo"
                       >
@@ -1847,7 +2043,7 @@ export const AdminPreWeddingPage: React.FC = () => {
                   <img src={vid.thumbnailUrl} alt={vid.title} className="w-full h-full object-cover" />
                   <button
                     type="button"
-                    onClick={() => removeVideo(vIdx)}
+                    onClick={() => promptDeleteVideo(vIdx)}
                     className="absolute top-2 right-2 p-1.5 rounded-lg bg-black/70 hover:bg-red-600 text-white transition-colors cursor-pointer"
                     title="Delete Video"
                   >
@@ -2092,7 +2288,7 @@ export const AdminPreWeddingPage: React.FC = () => {
                   />
                   <button
                     type="button"
-                    onClick={() => removeCoupleStory(sIdx)}
+                    onClick={() => promptDeleteCoupleStory(sIdx)}
                     className="absolute top-2 right-2 p-1.5 rounded-lg bg-black/70 hover:bg-red-600 text-white transition-colors cursor-pointer"
                     title="Delete Story"
                   >
@@ -2171,7 +2367,7 @@ export const AdminPreWeddingPage: React.FC = () => {
               <div key={addon.id || idx} className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-5 space-y-3.5 relative shadow-xs transition-colors">
                 <button
                   type="button"
-                  onClick={() => removeAddOn(idx)}
+                  onClick={() => promptDeleteAddOn(idx)}
                   className="absolute top-4 right-4 p-1 rounded-lg text-slate-400 hover:text-red-600 hover:bg-red-50 dark:text-zinc-500 dark:hover:text-red-400 dark:hover:bg-red-500/10 transition-colors cursor-pointer"
                   title="Remove add-on"
                 >
@@ -2381,6 +2577,26 @@ export const AdminPreWeddingPage: React.FC = () => {
           </button>
         </div>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <AdminConfirmModal
+        isOpen={Boolean(deleteModalState?.isOpen)}
+        title={deleteModalState?.title || 'CONFIRM DELETION'}
+        itemName={deleteModalState?.itemName}
+        message={deleteModalState?.message}
+        confirmText={deleteModalState?.confirmText || 'Confirm & Delete'}
+        cancelText={deleteModalState?.cancelText || 'Cancel'}
+        badgeText={deleteModalState?.badgeText || 'CONFIRM DELETE'}
+        subText={deleteModalState?.subText}
+        icon={<Trash2 className="w-8 h-8 text-vexo-red-bright" />}
+        onConfirm={() => {
+          if (deleteModalState?.onConfirm) {
+            deleteModalState.onConfirm();
+          }
+          setDeleteModalState(null);
+        }}
+        onCancel={() => setDeleteModalState(null)}
+      />
     </div>
   );
 };

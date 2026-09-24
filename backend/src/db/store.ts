@@ -819,69 +819,161 @@ function getInitialDatabase(): DatabaseSchema {
   };
 }
 
+function safeMergeCollections<T extends { id: string; updatedAt?: string }>(
+  entityName: string,
+  localItems: T[] = [],
+  remoteItems: T[] = []
+): T[] {
+  if (!remoteItems || remoteItems.length === 0) {
+    return localItems;
+  }
+  if (!localItems || localItems.length === 0) {
+    return remoteItems;
+  }
+
+  const mergedMap = new Map<string, T>();
+  const remoteMap = new Map<string, T>(remoteItems.map((item) => [item.id, item]));
+
+  // 1. Process all local records
+  for (const local of localItems) {
+    const remote = remoteMap.get(local.id);
+    if (!remote) {
+      // Exists in JSON but not in Supabase: DO NOT DELETE, preserve in local cache!
+      console.log(`[Sync] Preserving local record in vexo_db.json: ${entityName} ID "${local.id}"`);
+      mergedMap.set(local.id, local);
+    } else {
+      // Exists in both: compare and synchronize safely
+      const localTime = local.updatedAt ? new Date(local.updatedAt).getTime() : 0;
+      const remoteTime = remote.updatedAt ? new Date(remote.updatedAt).getTime() : 0;
+      if (remoteTime >= localTime) {
+        mergedMap.set(local.id, { ...local, ...remote });
+      } else {
+        mergedMap.set(local.id, { ...remote, ...local });
+      }
+    }
+  }
+
+  // 2. Add remote records that did not exist in JSON
+  for (const remote of remoteItems) {
+    if (!mergedMap.has(remote.id)) {
+      console.log(`[Supabase -> vexo_db.json] New record found in Supabase: ${entityName} ID "${remote.id}", merging into local cache.`);
+      mergedMap.set(remote.id, remote);
+    }
+  }
+
+  return Array.from(mergedMap.values());
+}
+
 class DatabaseStore {
   private data: DatabaseSchema;
   private saveTimeout: NodeJS.Timeout | null = null;
+  private syncPromise: Promise<boolean> | null = null;
 
   constructor() {
     ensureDataDirectory();
     this.data = this.load();
-    initPostgresSync(this.data, (authoritativeData) => {
+    this.syncPromise = initPostgresSync(this.data, (authoritativeData) => {
       this.hydrateFromPostgres(authoritativeData);
     }).catch((err) => {
       console.warn('[DatabaseStore] PostgreSQL init background error:', err?.message || err);
+      return false;
     });
+  }
+
+  public async waitForSync(timeoutMs: number = 6000): Promise<boolean> {
+    if (!this.syncPromise) return false;
+    return Promise.race([
+      this.syncPromise,
+      new Promise<boolean>((resolve) => setTimeout(() => resolve(false), timeoutMs)),
+    ]);
   }
 
   public hydrateFromPostgres(pgData: Partial<DatabaseSchema>) {
     if (pgData.homepage) {
-      this.data.homepage = pgData.homepage;
+      const cur = this.data.homepage;
+      const remote = pgData.homepage;
+      this.data.homepage = {
+        ...cur,
+        ...remote,
+        reviews: (remote.reviews && remote.reviews.length > 0) ? remote.reviews : (cur.reviews || []),
+        selectedAlbumIds: (remote.selectedAlbumIds && remote.selectedAlbumIds.length > 0) ? remote.selectedAlbumIds : (cur.selectedAlbumIds || []),
+        featuredArtistIds: (remote.featuredArtistIds && remote.featuredArtistIds.length > 0) ? remote.featuredArtistIds : (cur.featuredArtistIds || []),
+        featuredEventIds: (remote.featuredEventIds && remote.featuredEventIds.length > 0) ? remote.featuredEventIds : (cur.featuredEventIds || []),
+        featuredVideoIds: (remote.featuredVideoIds && remote.featuredVideoIds.length > 0) ? remote.featuredVideoIds : (cur.featuredVideoIds || []),
+      };
     }
     if (pgData.siteSettings) {
-      this.data.siteSettings = pgData.siteSettings;
+      const cur = this.data.siteSettings;
+      const remote = pgData.siteSettings;
+      this.data.siteSettings = {
+        ...cur,
+        ...remote,
+        footerQuickLinks: (remote.footerQuickLinks && remote.footerQuickLinks.length > 0) ? remote.footerQuickLinks : (cur.footerQuickLinks || []),
+        footerServicesLinks: (remote.footerServicesLinks && remote.footerServicesLinks.length > 0) ? remote.footerServicesLinks : (cur.footerServicesLinks || []),
+      };
     }
     if (pgData.preWedding) {
-      this.data.preWedding = pgData.preWedding;
+      const cur = this.data.preWedding;
+      const remote = pgData.preWedding;
+      this.data.preWedding = {
+        ...cur,
+        ...remote,
+        studioInfo: { ...(cur?.studioInfo || {}), ...(remote.studioInfo || {}) },
+        directorInfo: { ...(cur?.directorInfo || {}), ...(remote.directorInfo || {}) },
+        heroStats: (remote.heroStats && remote.heroStats.length > 0) ? remote.heroStats : (cur?.heroStats || []),
+        processSteps: (remote.processSteps && remote.processSteps.length > 0) ? remote.processSteps : (cur?.processSteps || []),
+        videos: (remote.videos && remote.videos.length > 0) ? remote.videos : (cur?.videos || []),
+        portfolioGallery: (remote.portfolioGallery && remote.portfolioGallery.length > 0) ? remote.portfolioGallery : (cur?.portfolioGallery || []),
+        coverageTypes: (remote.coverageTypes && remote.coverageTypes.length > 0) ? remote.coverageTypes : (cur?.coverageTypes || []),
+        coupleStories: (remote.coupleStories && remote.coupleStories.length > 0) ? remote.coupleStories : (cur?.coupleStories || []),
+        packages: (remote.packages && remote.packages.length > 0) ? remote.packages : (cur?.packages || []),
+        weddingPackages: (remote.weddingPackages && remote.weddingPackages.length > 0) ? remote.weddingPackages : (cur?.weddingPackages || []),
+        customServices: (remote.customServices && remote.customServices.length > 0) ? remote.customServices : (cur?.customServices || []),
+        addOns: (remote.addOns && remote.addOns.length > 0) ? remote.addOns : (cur?.addOns || []),
+        whyUsPillars: (remote.whyUsPillars && remote.whyUsPillars.length > 0) ? remote.whyUsPillars : (cur?.whyUsPillars || []),
+        weddingDayStories: (remote.weddingDayStories && Object.keys(remote.weddingDayStories).length > 0) ? remote.weddingDayStories : (cur?.weddingDayStories || {} as any),
+      };
     }
-    if (pgData.services && pgData.services.length > 0) {
-      this.data.services = pgData.services;
+
+    if (pgData.services) {
+      this.data.services = safeMergeCollections('Service', this.data.services, pgData.services);
     }
-    if (pgData.contactRequests && pgData.contactRequests.length > 0) {
-      this.data.contactRequests = pgData.contactRequests;
+    if (pgData.contactRequests) {
+      this.data.contactRequests = safeMergeCollections('ContactRequest', this.data.contactRequests, pgData.contactRequests);
     }
-    if (pgData.artists && pgData.artists.length > 0) {
-      this.data.artists = pgData.artists;
+    if (pgData.artists) {
+      this.data.artists = safeMergeCollections('Artist', this.data.artists, pgData.artists);
     }
-    if (pgData.artistSocials && pgData.artistSocials.length > 0) {
-      this.data.artistSocials = pgData.artistSocials;
+    if (pgData.artistSocials) {
+      this.data.artistSocials = safeMergeCollections('ArtistSocial', this.data.artistSocials, pgData.artistSocials);
     }
-    if (pgData.albums && pgData.albums.length > 0) {
-      this.data.albums = pgData.albums;
+    if (pgData.albums) {
+      this.data.albums = safeMergeCollections('Album', this.data.albums, pgData.albums);
     }
-    if (pgData.tracks && pgData.tracks.length > 0) {
-      this.data.tracks = pgData.tracks;
+    if (pgData.tracks) {
+      this.data.tracks = safeMergeCollections('Track', this.data.tracks, pgData.tracks);
     }
-    if (pgData.events && pgData.events.length > 0) {
-      this.data.events = pgData.events;
+    if (pgData.events) {
+      this.data.events = safeMergeCollections('Event', this.data.events, pgData.events);
     }
-    if (pgData.eventArtists && pgData.eventArtists.length > 0) {
-      this.data.eventArtists = pgData.eventArtists;
+    if (pgData.eventArtists) {
+      this.data.eventArtists = safeMergeCollections('EventArtist', this.data.eventArtists, pgData.eventArtists);
     }
-    if (pgData.videos && pgData.videos.length > 0) {
-      this.data.videos = pgData.videos;
+    if (pgData.videos) {
+      this.data.videos = safeMergeCollections('Video', this.data.videos, pgData.videos);
     }
-    if (pgData.media && pgData.media.length > 0) {
-      this.data.media = pgData.media;
+    if (pgData.media) {
+      this.data.media = safeMergeCollections('Media', this.data.media, pgData.media);
     }
-    if (pgData.adminUsers && pgData.adminUsers.length > 0) {
-      this.data.adminUsers = pgData.adminUsers;
+    if (pgData.adminUsers) {
+      this.data.adminUsers = safeMergeCollections('AdminUser', this.data.adminUsers, pgData.adminUsers);
     }
-    if (pgData.activityLogs && pgData.activityLogs.length > 0) {
-      this.data.activityLogs = pgData.activityLogs;
+    if (pgData.activityLogs) {
+      this.data.activityLogs = safeMergeCollections('ActivityLog', this.data.activityLogs, pgData.activityLogs);
     }
 
     this.persistSync(this.data);
-    console.log('[DatabaseStore] ✅ In-memory store successfully hydrated from PostgreSQL authoritative source of truth.');
+    console.log('[DatabaseStore] ✅ vexo_db.json cache successfully synchronized with Supabase PostgreSQL.');
   }
 
   private load(): DatabaseSchema {
@@ -988,13 +1080,7 @@ class DatabaseStore {
   }
 
   public persist() {
-    if (this.saveTimeout) {
-      clearTimeout(this.saveTimeout);
-    }
-    this.saveTimeout = setTimeout(() => {
-      this.persistSync(this.data);
-      this.saveTimeout = null;
-    }, 50);
+    this.persistSync(this.data);
   }
 
   public get snapshot(): DatabaseSchema {

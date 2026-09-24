@@ -1415,11 +1415,14 @@ export async function initPostgresSync(
     const existingAdminIds = await getExistingIds('admin_users');
     const existingArtistIds = await getExistingIds('artists');
     const existingAlbumIds = await getExistingIds('albums');
+    const existingTrackIds = await getExistingIds('tracks');
     const existingEventIds = await getExistingIds('events');
     const existingVideoIds = await getExistingIds('videos');
     const existingServiceIds = await getExistingIds('services');
     const existingMediaIds = await getExistingIds('media');
     const existingContactIds = await getExistingIds('contact_requests');
+    const existingSocialIds = await getExistingIds('artist_socials');
+    const existingEventArtistIds = await getExistingIds('event_artists');
 
     // Check row counts for singleton tables
     const hpCountRes = await client.query('SELECT COUNT(*) FROM public.homepage;');
@@ -1431,7 +1434,7 @@ export async function initPostgresSync(
     const pwCountRes = await client.query('SELECT COUNT(*) FROM public.pre_wedding;');
     const pwCount = parseInt(pwCountRes.rows[0].count, 10);
 
-    console.log(`[PostgreSQL] Current row counts — Homepage: ${hpCount}, SiteSettings: ${ssCount}, PreWedding: ${pwCount}, Services: ${existingServiceIds.size}, Artists: ${existingArtistIds.size}, Albums: ${existingAlbumIds.size}, Contacts: ${existingContactIds.size}`);
+    console.log(`[PostgreSQL] Current row counts — Homepage: ${hpCount}, SiteSettings: ${ssCount}, PreWedding: ${pwCount}, Services: ${existingServiceIds.size}, Artists: ${existingArtistIds.size}, Albums: ${existingAlbumIds.size}, Tracks: ${existingTrackIds.size}, Contacts: ${existingContactIds.size}`);
 
     // -----------------------------------------------------------------
     // INITIAL BACKFILL: Insert missing records from vexo_db.json
@@ -1508,16 +1511,44 @@ export async function initPostgresSync(
       }
     }
 
-    // 3. Pre-Wedding backfill (only if table is empty)
+    // 3. Pre-Wedding backfill (only if table is empty or missing extended sections)
     if (pwCount === 0 && initialData.preWedding) {
       console.log('[PostgreSQL] 📥 Backfilling pre_wedding singleton from vexo_db.json...');
       await syncPreWeddingToPostgres(initialData.preWedding);
+    } else if (pwCount > 0 && initialData.preWedding) {
+      try {
+        const pwCheck = await client.query('SELECT "weddingPackages", "whyUsPillars", "weddingDayStories" FROM public.pre_wedding WHERE id = \'pre-wedding-singleton\' LIMIT 1;');
+        if (pwCheck.rows.length > 0 && initialData.preWedding) {
+          const row = pwCheck.rows[0];
+          const needsPackages = row.weddingPackages === null && initialData.preWedding.weddingPackages;
+          const needsWhyUs = row.whyUsPillars === null && initialData.preWedding.whyUsPillars;
+          const needsDayStories = row.weddingDayStories === null && initialData.preWedding.weddingDayStories;
+
+          if (needsPackages || needsWhyUs || needsDayStories) {
+            console.log('[PostgreSQL] 📥 Migrating pre-wedding sections into pre_wedding table from vexo_db.json...');
+            await client.query(`
+              UPDATE public.pre_wedding SET
+                "weddingPackages" = COALESCE("weddingPackages", $1::jsonb),
+                "whyUsPillars" = COALESCE("whyUsPillars", $2::jsonb),
+                "weddingDayStories" = COALESCE("weddingDayStories", $3::jsonb)
+              WHERE id = 'pre-wedding-singleton';
+            `, [
+              initialData.preWedding.weddingPackages ? JSON.stringify(initialData.preWedding.weddingPackages) : null,
+              initialData.preWedding.whyUsPillars ? JSON.stringify(initialData.preWedding.whyUsPillars) : null,
+              initialData.preWedding.weddingDayStories ? JSON.stringify(initialData.preWedding.weddingDayStories) : null,
+            ]);
+          }
+        }
+      } catch (err: any) {
+        console.warn('[PostgreSQL PreWedding Migration Warning]:', err.message);
+      }
     }
 
-    // 3. Admin Users backfill
+    // 4. Admin Users backfill
     if (initialData.adminUsers && initialData.adminUsers.length > 0) {
       for (const u of initialData.adminUsers) {
         if (!existingAdminIds.has(u.id)) {
+          console.log(`[JSON -> Supabase] Inserting missing record into Supabase: AdminUser ID "${u.id}" (${u.email})`);
           await insertIfNotExists('admin_users', {
             id: u.id,
             email: u.email,
@@ -1533,10 +1564,11 @@ export async function initPostgresSync(
       }
     }
 
-    // 4. Artists backfill
+    // 5. Artists backfill
     if (initialData.artists && initialData.artists.length > 0) {
       for (const a of initialData.artists) {
         if (!existingArtistIds.has(a.id)) {
+          console.log(`[JSON -> Supabase] Inserting missing record into Supabase: Artist ID "${a.id}" ("${a.name}")`);
           const defaultAvatar = 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80';
           await insertIfNotExists('artists', {
             id: a.id,
@@ -1559,10 +1591,10 @@ export async function initPostgresSync(
       }
     }
 
-    // 5. Artist Socials backfill (only for artists that exist in PostgreSQL)
+    // 6. Artist Socials backfill (only for artists that exist in PostgreSQL)
     if (initialData.artistSocials && initialData.artistSocials.length > 0) {
       for (const s of initialData.artistSocials) {
-        if (existingArtistIds.has(s.artistId)) {
+        if (existingArtistIds.has(s.artistId) && !existingSocialIds.has(s.id)) {
           await insertIfNotExists('artist_socials', {
             id: s.id,
             artistId: s.artistId,
@@ -1572,14 +1604,16 @@ export async function initPostgresSync(
             createdAt: s.createdAt ? new Date(s.createdAt) : new Date(),
             updatedAt: s.updatedAt ? new Date(s.updatedAt) : new Date(),
           });
+          existingSocialIds.add(s.id);
         }
       }
     }
 
-    // 6. Albums backfill
+    // 7. Albums backfill
     if (initialData.albums && initialData.albums.length > 0) {
       for (const alb of initialData.albums) {
         if (!existingAlbumIds.has(alb.id)) {
+          console.log(`[JSON -> Supabase] Inserting missing record into Supabase: Album ID "${alb.id}" ("${alb.title}")`);
           const validArtistId = alb.artistId && existingArtistIds.has(alb.artistId) ? alb.artistId : null;
           await insertIfNotExists('albums', {
             id: alb.id,
@@ -1605,36 +1639,41 @@ export async function initPostgresSync(
       }
     }
 
-    // 7. Tracks backfill
+    // 8. Tracks backfill
     if (initialData.tracks && initialData.tracks.length > 0) {
       for (const trk of initialData.tracks) {
-        const validArtistId = trk.artistId && existingArtistIds.has(trk.artistId) ? trk.artistId : null;
-        const validAlbumId = trk.albumId && existingAlbumIds.has(trk.albumId) ? trk.albumId : null;
-        await insertIfNotExists('tracks', {
-          id: trk.id,
-          title: trk.title,
-          artistName: trk.artistName,
-          artistId: validArtistId,
-          albumId: validAlbumId,
-          duration: typeof trk.duration === 'number' ? trk.duration : 180,
-          coverUrl: trk.coverUrl,
-          audioUrl: trk.audioUrl || null,
-          spotifyUrl: trk.spotifyUrl || null,
-          youtubeUrl: trk.youtubeUrl || null,
-          genre: trk.genre || 'Electronic',
-          plays: typeof trk.plays === 'number' ? trk.plays : 0,
-          isPopular: Boolean(trk.isPopular),
-          order: typeof trk.order === 'number' ? trk.order : 0,
-          createdAt: trk.createdAt ? new Date(trk.createdAt) : new Date(),
-          updatedAt: trk.updatedAt ? new Date(trk.updatedAt) : new Date(),
-        });
+        if (!existingTrackIds.has(trk.id)) {
+          console.log(`[JSON -> Supabase] Inserting missing record into Supabase: Track ID "${trk.id}" ("${trk.title}")`);
+          const validArtistId = trk.artistId && existingArtistIds.has(trk.artistId) ? trk.artistId : null;
+          const validAlbumId = trk.albumId && existingAlbumIds.has(trk.albumId) ? trk.albumId : null;
+          await insertIfNotExists('tracks', {
+            id: trk.id,
+            title: trk.title,
+            artistName: trk.artistName,
+            artistId: validArtistId,
+            albumId: validAlbumId,
+            duration: typeof trk.duration === 'number' ? trk.duration : 180,
+            coverUrl: trk.coverUrl,
+            audioUrl: trk.audioUrl || null,
+            spotifyUrl: trk.spotifyUrl || null,
+            youtubeUrl: trk.youtubeUrl || null,
+            genre: trk.genre || 'Electronic',
+            plays: typeof trk.plays === 'number' ? trk.plays : 0,
+            isPopular: Boolean(trk.isPopular),
+            order: typeof trk.order === 'number' ? trk.order : 0,
+            createdAt: trk.createdAt ? new Date(trk.createdAt) : new Date(),
+            updatedAt: trk.updatedAt ? new Date(trk.updatedAt) : new Date(),
+          });
+          existingTrackIds.add(trk.id);
+        }
       }
     }
 
-    // 8. Events backfill
+    // 9. Events backfill
     if (initialData.events && initialData.events.length > 0) {
       for (const ev of initialData.events) {
         if (!existingEventIds.has(ev.id)) {
+          console.log(`[JSON -> Supabase] Inserting missing record into Supabase: Event ID "${ev.id}" ("${ev.title}")`);
           await insertIfNotExists('events', {
             id: ev.id,
             title: ev.title,
@@ -1661,10 +1700,29 @@ export async function initPostgresSync(
       }
     }
 
-    // 9. Videos backfill
+    // 10. Event Artists backfill
+    if (initialData.eventArtists && initialData.eventArtists.length > 0) {
+      for (const ea of initialData.eventArtists) {
+        if (existingEventIds.has(ea.eventId) && existingArtistIds.has(ea.artistId) && !existingEventArtistIds.has(ea.id)) {
+          await insertIfNotExists('event_artists', {
+            id: ea.id,
+            eventId: ea.eventId,
+            artistId: ea.artistId,
+            role: ea.role || 'Headliner',
+            order: typeof ea.order === 'number' ? ea.order : 0,
+            createdAt: ea.createdAt ? new Date(ea.createdAt) : new Date(),
+            updatedAt: ea.updatedAt ? new Date(ea.updatedAt) : new Date(),
+          });
+          existingEventArtistIds.add(ea.id);
+        }
+      }
+    }
+
+    // 11. Videos backfill
     if (initialData.videos && initialData.videos.length > 0) {
       for (const vid of initialData.videos) {
         if (!existingVideoIds.has(vid.id)) {
+          console.log(`[JSON -> Supabase] Inserting missing record into Supabase: Video ID "${vid.id}" ("${vid.title}")`);
           await insertIfNotExists('videos', {
             id: vid.id,
             title: vid.title,
@@ -1687,10 +1745,11 @@ export async function initPostgresSync(
       }
     }
 
-    // 10. Services backfill
+    // 12. Services backfill
     if (initialData.services && initialData.services.length > 0) {
       for (const s of initialData.services) {
         if (!existingServiceIds.has(s.id)) {
+          console.log(`[JSON -> Supabase] Inserting missing record into Supabase: Service ID "${s.id}" ("${s.title}")`);
           await insertIfNotExists('services', {
             id: s.id,
             number: s.number || '01',
@@ -1721,10 +1780,11 @@ export async function initPostgresSync(
       }
     }
 
-    // 11. Media backfill
+    // 13. Media backfill
     if (initialData.media && initialData.media.length > 0) {
       for (const m of initialData.media) {
         if (!existingMediaIds.has(m.id)) {
+          console.log(`[JSON -> Supabase] Inserting missing record into Supabase: Media ID "${m.id}" ("${m.filename}")`);
           await insertIfNotExists('media', {
             id: m.id,
             filename: m.filename,
@@ -1744,10 +1804,11 @@ export async function initPostgresSync(
       }
     }
 
-    // 12. Contact Requests backfill (missing records only)
+    // 14. Contact Requests backfill (missing records only)
     if (initialData.contactRequests && initialData.contactRequests.length > 0) {
       for (const c of initialData.contactRequests) {
         if (!existingContactIds.has(c.id)) {
+          console.log(`[JSON -> Supabase] Inserting missing record into Supabase: ContactRequest ID "${c.id}" (${c.referenceId || c.email})`);
           await insertIfNotExists('contact_requests', {
             id: c.id,
             referenceId: c.referenceId || `VXO-${Date.now().toString(36).toUpperCase()}`,

@@ -11,6 +11,10 @@ interface AdminConfirmModalProps {
   cancelText?: string;
   isDanger?: boolean;
   isLoading?: boolean;
+  icon?: React.ReactNode;
+  headerTag?: string;
+  badgeText?: string;
+  subText?: string;
   onConfirm: () => void;
   onCancel: () => void;
 }
@@ -24,6 +28,10 @@ export const AdminConfirmModal: React.FC<AdminConfirmModalProps> = ({
   cancelText = 'Keep In Roster',
   isDanger = true,
   isLoading = false,
+  icon,
+  headerTag = 'STUDIO CONSOLE // DELETION WARNING',
+  badgeText = 'EXPEL FROM ROSTER',
+  subText = 'STATUS: ACTIVE CATALOG ENTRY',
   onConfirm,
   onCancel,
 }) => {
@@ -72,7 +80,7 @@ export const AdminConfirmModal: React.FC<AdminConfirmModalProps> = ({
             <div className="flex items-center gap-2.5">
               <span className="w-2 h-2 rounded-full bg-vexo-red-bright animate-ping" />
               <span className="text-[10px] font-mono uppercase tracking-[0.25em] text-red-400 font-bold">
-                STUDIO CONSOLE // DELETION WARNING
+                {headerTag}
               </span>
             </div>
 
@@ -96,10 +104,14 @@ export const AdminConfirmModal: React.FC<AdminConfirmModalProps> = ({
 
           {/* Main Visual: Spinning Vinyl / Audio Laser Node & Title */}
           <div className="relative z-10 flex items-start gap-4 sm:gap-5">
-            {/* Vinyl Record Ejector Badge */}
+            {/* Visual Icon Badge */}
             <div className="relative w-14 h-14 sm:w-16 sm:h-16 rounded-2xl bg-gradient-to-br from-neutral-900 via-neutral-950 to-black border border-red-500/50 flex items-center justify-center text-vexo-red-bright shadow-[0_0_25px_rgba(224,0,0,0.4)] shrink-0">
-              <Disc3 className="w-8 h-8 sm:w-9 sm:h-9 animate-[spin_8s_linear_infinite] text-vexo-red-bright" />
-              <span className="absolute w-3 h-3 rounded-full bg-red-600 shadow-[0_0_8px_#FF1111]" />
+              {icon || (
+                <>
+                  <Disc3 className="w-8 h-8 sm:w-9 sm:h-9 animate-[spin_8s_linear_infinite] text-vexo-red-bright" />
+                  <span className="absolute w-3 h-3 rounded-full bg-red-600 shadow-[0_0_8px_#FF1111]" />
+                </>
+              )}
             </div>
 
             <div className="space-y-1.5 pt-0.5">
@@ -131,7 +143,7 @@ export const AdminConfirmModal: React.FC<AdminConfirmModalProps> = ({
                   TARGET DOSSIER
                 </span>
                 <span className="px-2 py-0.5 rounded-full bg-red-950/60 text-red-400 border border-red-900/50 font-bold">
-                  EXPEL FROM ROSTER
+                  {badgeText}
                 </span>
               </div>
 
@@ -141,7 +153,7 @@ export const AdminConfirmModal: React.FC<AdminConfirmModalProps> = ({
                 </div>
                 <div className="min-w-0 flex-1">
                   <p style={{ color: '#ffffff' }} className="font-bold text-sm truncate">{itemName}</p>
-                  <p className="text-[10px] font-mono text-zinc-400">STATUS: ACTIVE CATALOG ENTRY</p>
+                  <p className="text-[10px] font-mono text-zinc-400">{subText}</p>
                 </div>
               </div>
             </div>

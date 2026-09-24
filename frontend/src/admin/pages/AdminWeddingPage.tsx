@@ -21,6 +21,7 @@ import { useAdminToast } from '../context/AdminToastContext';
 import { getMediaUrl } from '../../lib/utils';
 import { DEFAULT_WEDDING_PLANS, DEFAULT_WEDDING_DAY_STORIES, ADD_ON_SERVICES } from '../../data/weddingData';
 import { AdminCmsTabsSlider } from '../components/AdminCmsTabsSlider';
+import { AdminConfirmModal } from '../components/AdminConfirmModal';
 
 type TabKey =
   | 'plans'
@@ -41,6 +42,36 @@ export const AdminWeddingPage: React.FC = () => {
   const [isSaving, setIsSaving] = useState(false);
   const [isDirty, setIsDirty] = useState(false);
   const [data, setData] = useState<any>(null);
+
+  // Delete confirmation modal state
+  const [deleteModalState, setDeleteModalState] = useState<{
+    isOpen: boolean;
+    title: string;
+    itemName?: string;
+    message?: string;
+    confirmText?: string;
+    cancelText?: string;
+    badgeText?: string;
+    subText?: string;
+    onConfirm: () => void;
+  } | null>(null);
+
+  const requestDelete = (config: {
+    title: string;
+    itemName?: string;
+    message?: string;
+    confirmText?: string;
+    cancelText?: string;
+    badgeText?: string;
+    subText?: string;
+    onConfirm: () => void;
+  }) => {
+    setDeleteModalState({
+      isOpen: true,
+      cancelText: 'Cancel',
+      ...config,
+    });
+  };
 
   const fetchWeddingData = async () => {
     try {
@@ -157,13 +188,30 @@ export const AdminWeddingPage: React.FC = () => {
   };
 
   const removeWeddingPlan = (index: number) => {
-    if (!window.confirm('Are you sure you want to delete this wedding plan?')) return;
     setData((prev: any) => {
       const list = [...(prev.weddingPackages || DEFAULT_WEDDING_PLANS)];
       list.splice(index, 1);
       return { ...prev, weddingPackages: list };
     });
     setIsDirty(true);
+  };
+
+  const promptDeleteWeddingPlan = (index: number) => {
+    const list = data?.weddingPackages || DEFAULT_WEDDING_PLANS;
+    const plan = list[index];
+    const planName = plan?.name || `Plan #${index + 1}`;
+    requestDelete({
+      title: 'DELETE WEDDING PLAN',
+      itemName: planName,
+      message: `Are you sure you want to delete "${planName}"? This will remove the package tier, pricing, and all associated inclusions.`,
+      confirmText: 'Delete Plan',
+      badgeText: 'REMOVE PACKAGE',
+      subText: 'CATEGORY: WEDDING PLAN TIER',
+      onConfirm: () => {
+        removeWeddingPlan(index);
+        toast.success('Wedding Plan Deleted', `"${planName}" was successfully removed.`);
+      },
+    });
   };
 
   const updateWeddingPlan = (index: number, field: string, value: any) => {
@@ -222,6 +270,25 @@ export const AdminWeddingPage: React.FC = () => {
     setIsDirty(true);
   };
 
+  const promptDeleteDeliverable = (packageIndex: number, itemIndex: number) => {
+    const list = data?.weddingPackages || DEFAULT_WEDDING_PLANS;
+    const plan = list[packageIndex];
+    const currentDeliverable = plan?.deliverables?.[itemIndex] || 'Deliverable item';
+
+    requestDelete({
+      title: 'REMOVE FINAL DELIVERABLE',
+      itemName: currentDeliverable,
+      message: `Are you sure you want to remove this deliverable from "${plan?.name || 'this plan'}"?`,
+      confirmText: 'Remove Deliverable',
+      badgeText: 'REMOVE DELIVERABLE',
+      subText: 'FINAL DELIVERABLE SPECIFICATION',
+      onConfirm: () => {
+        removeWeddingPlanListItem(packageIndex, 'deliverables', itemIndex);
+        toast.success('Deliverable Removed', `Removed "${currentDeliverable}" from final deliverables.`);
+      },
+    });
+  };
+
   const updateWeddingPlanNestedList = (packageIndex: number, parent: string, itemIndex: number, value: string) => {
     setData((prev: any) => {
       const list = [...(prev.weddingPackages || DEFAULT_WEDDING_PLANS)];
@@ -257,6 +324,26 @@ export const AdminWeddingPage: React.FC = () => {
       return { ...prev, weddingPackages: list };
     });
     setIsDirty(true);
+  };
+
+  const promptDeleteCrewInclusion = (packageIndex: number, parent: 'photography' | 'cinematography', itemIndex: number) => {
+    const list = data?.weddingPackages || DEFAULT_WEDDING_PLANS;
+    const plan = list[packageIndex];
+    const crewName = parent === 'photography' ? 'Photography' : 'Cinematography';
+    const currentInclusion = plan?.[parent]?.details?.[itemIndex] || 'Inclusion item';
+
+    requestDelete({
+      title: `REMOVE ${crewName.toUpperCase()} INCLUSION`,
+      itemName: currentInclusion,
+      message: `Are you sure you want to remove this bullet inclusion from the ${crewName} crew in "${plan?.name || 'this plan'}"?`,
+      confirmText: 'Remove Inclusion',
+      badgeText: 'REMOVE INCLUSION',
+      subText: `CREW: ${crewName.toUpperCase()}`,
+      onConfirm: () => {
+        removeWeddingPlanNestedListItem(packageIndex, parent, itemIndex);
+        toast.success('Inclusion Removed', `Removed "${currentInclusion}" from ${crewName.toLowerCase()} crew.`);
+      },
+    });
   };
 
   // Wedding Day Stories helpers
@@ -312,7 +399,6 @@ export const AdminWeddingPage: React.FC = () => {
   };
 
   const removeStoryItem = (index: number) => {
-    if (!window.confirm('Delete this wedding story?')) return;
     setData((prev: any) => {
       const currentConfig = prev.weddingDayStories || DEFAULT_WEDDING_DAY_STORIES;
       const list = [...(currentConfig.stories || [])];
@@ -326,6 +412,25 @@ export const AdminWeddingPage: React.FC = () => {
       };
     });
     setIsDirty(true);
+  };
+
+  const promptDeleteStory = (index: number) => {
+    const currentConfig = data?.weddingDayStories || DEFAULT_WEDDING_DAY_STORIES;
+    const story = currentConfig.stories?.[index];
+    const storyTitle = story?.title || `Story #${index + 1}`;
+
+    requestDelete({
+      title: 'DELETE WEDDING STORY',
+      itemName: storyTitle,
+      message: `Are you sure you want to delete "${storyTitle}"? It will be removed from the Wedding Day Stories editorial gallery.`,
+      confirmText: 'Delete Story',
+      badgeText: 'REMOVE STORY',
+      subText: `COUPLE: ${story?.couple || 'WEDDING STORY'}`,
+      onConfirm: () => {
+        removeStoryItem(index);
+        toast.success('Wedding Story Deleted', `"${storyTitle}" was removed.`);
+      },
+    });
   };
 
   // Video Teasers & Films
@@ -369,6 +474,24 @@ export const AdminWeddingPage: React.FC = () => {
     setIsDirty(true);
   };
 
+  const promptDeleteVideo = (index: number) => {
+    const vid = data?.videos?.[index];
+    const videoTitle = vid?.title || `Film #${index + 1}`;
+
+    requestDelete({
+      title: 'DELETE WEDDING FILM',
+      itemName: videoTitle,
+      message: `Are you sure you want to delete "${videoTitle}"? This will unlink the video showcase from the wedding page.`,
+      confirmText: 'Delete Film',
+      badgeText: 'REMOVE FILM',
+      subText: `CATEGORY: ${vid?.category || 'WEDDING FILM'}`,
+      onConfirm: () => {
+        removeVideo(index);
+        toast.success('Wedding Film Deleted', `"${videoTitle}" was removed.`);
+      },
+    });
+  };
+
   // Add-Ons
   const updateAddOn = (index: number, field: string, value: any) => {
     setData((prev: any) => {
@@ -408,6 +531,24 @@ export const AdminWeddingPage: React.FC = () => {
       return { ...prev, addOns: list };
     });
     setIsDirty(true);
+  };
+
+  const promptDeleteAddOn = (index: number) => {
+    const addon = data?.addOns?.[index];
+    const addonTitle = addon?.title || `Add-On #${index + 1}`;
+
+    requestDelete({
+      title: 'DELETE SERVICE ADD-ON',
+      itemName: addonTitle,
+      message: `Are you sure you want to delete add-on "${addonTitle}"?`,
+      confirmText: 'Delete Add-On',
+      badgeText: 'REMOVE ADD-ON',
+      subText: `PRICE: ${addon?.priceDisplay || 'ADD-ON'}`,
+      onConfirm: () => {
+        removeAddOn(index);
+        toast.success('Add-On Deleted', `"${addonTitle}" was removed.`);
+      },
+    });
   };
 
   if (isLoading) {
@@ -603,7 +744,7 @@ export const AdminWeddingPage: React.FC = () => {
 
                       <button
                         type="button"
-                        onClick={() => removeWeddingPlan(idx)}
+                        onClick={() => promptDeleteWeddingPlan(idx)}
                         className="px-2.5 py-1.5 rounded-lg bg-red-50 hover:bg-red-100 text-red-600 dark:bg-red-500/10 dark:hover:bg-red-500/20 text-xs font-semibold flex items-center gap-1 cursor-pointer transition-colors"
                         title="Delete Plan"
                       >
@@ -738,7 +879,7 @@ export const AdminWeddingPage: React.FC = () => {
                             />
                             <button
                               type="button"
-                              onClick={() => removeWeddingPlanNestedListItem(idx, 'photography', dIdx)}
+                              onClick={() => promptDeleteCrewInclusion(idx, 'photography', dIdx)}
                               className="text-slate-400 hover:text-red-500 p-1"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -789,7 +930,7 @@ export const AdminWeddingPage: React.FC = () => {
                             />
                             <button
                               type="button"
-                              onClick={() => removeWeddingPlanNestedListItem(idx, 'cinematography', dIdx)}
+                              onClick={() => promptDeleteCrewInclusion(idx, 'cinematography', dIdx)}
                               className="text-slate-400 hover:text-red-500 p-1"
                             >
                               <Trash2 className="w-3.5 h-3.5" />
@@ -825,7 +966,7 @@ export const AdminWeddingPage: React.FC = () => {
                           />
                           <button
                             type="button"
-                            onClick={() => removeWeddingPlanListItem(idx, 'deliverables', delIdx)}
+                            onClick={() => promptDeleteDeliverable(idx, delIdx)}
                             className="text-slate-400 hover:text-red-500 p-1"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -934,7 +1075,7 @@ export const AdminWeddingPage: React.FC = () => {
 
                     <button
                       type="button"
-                      onClick={() => removeStoryItem(sIdx)}
+                      onClick={() => promptDeleteStory(sIdx)}
                       className="text-slate-400 hover:text-red-500 p-1"
                       title="Delete Story"
                     >
@@ -1056,7 +1197,7 @@ export const AdminWeddingPage: React.FC = () => {
 
                   <button
                     type="button"
-                    onClick={() => removeVideo(vIdx)}
+                    onClick={() => promptDeleteVideo(vIdx)}
                     className="text-slate-400 hover:text-red-500 p-1"
                     title="Delete Film"
                   >
@@ -1312,7 +1453,7 @@ export const AdminWeddingPage: React.FC = () => {
                   />
                   <button
                     type="button"
-                    onClick={() => removeAddOn(aIdx)}
+                    onClick={() => promptDeleteAddOn(aIdx)}
                     className="text-slate-400 hover:text-red-500 p-1"
                   >
                     <Trash2 className="w-4 h-4" />
@@ -1426,6 +1567,26 @@ export const AdminWeddingPage: React.FC = () => {
           </div>
         </div>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <AdminConfirmModal
+        isOpen={Boolean(deleteModalState?.isOpen)}
+        title={deleteModalState?.title || 'CONFIRM DELETION'}
+        itemName={deleteModalState?.itemName}
+        message={deleteModalState?.message}
+        confirmText={deleteModalState?.confirmText || 'Confirm & Delete'}
+        cancelText={deleteModalState?.cancelText || 'Cancel'}
+        badgeText={deleteModalState?.badgeText || 'CONFIRM DELETE'}
+        subText={deleteModalState?.subText}
+        icon={<Trash2 className="w-8 h-8 text-vexo-red-bright" />}
+        onConfirm={() => {
+          if (deleteModalState?.onConfirm) {
+            deleteModalState.onConfirm();
+          }
+          setDeleteModalState(null);
+        }}
+        onCancel={() => setDeleteModalState(null)}
+      />
     </div>
   );
 };
