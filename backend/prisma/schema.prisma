@@ -1,0 +1,381 @@
+// VEXO Music Platform — Prisma Schema
+// Database schema supporting 14 core models for public platform and CMS Admin Panel
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+// 1. Admin User Model
+model AdminUser {
+  id           String        @id @default(cuid())
+  email        String        @unique
+  passwordHash String
+  name         String
+  role         String        @default("ADMIN") // SUPER_ADMIN, ADMIN, EDITOR
+  isActive     Boolean       @default(true)
+  lastLoginAt  DateTime?
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  activityLogs ActivityLog[]
+
+  @@map("admin_users")
+}
+
+// 2. Artist Model
+model Artist {
+  id               String         @id @default(cuid())
+  name             String
+  slug             String         @unique
+  role             String
+  avatarUrl        String
+  coverUrl         String?
+  bio              String?
+  monthlyListeners Int            @default(0)
+  genres           String // JSON string array of genres
+  featured         Boolean        @default(false)
+  isComingSoon     Boolean        @default(false)
+  order            Int            @default(0)
+  createdAt        DateTime       @default(now())
+  updatedAt        DateTime       @updatedAt
+  socials          ArtistSocial[]
+  albums           Album[]
+  tracks           Track[]
+  eventArtists     EventArtist[]
+
+  @@map("artists")
+}
+
+// 3. Artist Social Links
+model ArtistSocial {
+  id        String   @id @default(cuid())
+  artistId  String
+  artist    Artist   @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  platform  String // spotify, youtube, instagram, twitter, apple, soundcloud
+  url       String
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("artist_socials")
+}
+
+// 4. Album Model
+model Album {
+  id            String   @id @default(cuid())
+  title         String
+  slug          String?  @unique
+  artistName    String
+  artistId      String?
+  artist        Artist?  @relation(fields: [artistId], references: [id], onDelete: SetNull)
+  coverUrl      String
+  releaseDate   String
+  year          Int
+  genre         String
+  trackCount    Int      @default(0)
+  spotifyUrl    String?
+  youtubeUrl    String?
+  appleMusicUrl String?
+  featured      Boolean  @default(false)
+  order         Int      @default(0)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+  tracks        Track[]
+
+  @@map("albums")
+}
+
+// 5. Track Model
+model Track {
+  id         String   @id @default(cuid())
+  title      String
+  artistName String
+  artistId   String?
+  artist     Artist?  @relation(fields: [artistId], references: [id], onDelete: SetNull)
+  albumId    String?
+  album      Album?   @relation(fields: [albumId], references: [id], onDelete: SetNull)
+  duration   Int // In seconds
+  coverUrl   String
+  audioUrl   String?
+  spotifyUrl String?
+  youtubeUrl String?
+  genre      String
+  plays      Int      @default(0)
+  isPopular  Boolean  @default(false)
+  order      Int      @default(0)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+
+  @@map("tracks")
+}
+
+// 6. Event Model
+model Event {
+  id           String        @id @default(cuid())
+  title        String
+  slug         String?       @unique
+  mainArtist   String
+  date         String
+  time         String
+  venue        String
+  location     String
+  city         String?
+  country      String?
+  ticketUrl    String?
+  price        String
+  status       String        @default("upcoming") // upcoming, live, sold-out, past
+  imageUrl     String
+  description  String?
+  featured     Boolean       @default(false)
+  order        Int           @default(0)
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
+  eventArtists EventArtist[]
+
+  @@map("events")
+}
+
+// 7. Event Artist Junction
+model EventArtist {
+  id        String   @id @default(cuid())
+  eventId   String
+  event     Event    @relation(fields: [eventId], references: [id], onDelete: Cascade)
+  artistId  String
+  artist    Artist   @relation(fields: [artistId], references: [id], onDelete: Cascade)
+  role      String?  @default("Performer") // Headliner, Supporting, Special Guest
+  order     Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@unique([eventId, artistId])
+  @@map("event_artists")
+}
+
+// 8. Video Model
+model Video {
+  id           String   @id @default(cuid())
+  title        String
+  artist       String
+  youtubeId    String
+  thumbnailUrl String
+  duration     String
+  views        Int      @default(0)
+  publishedAt  String
+  category     String // Official Music Videos, Live Performances, Behind The Scenes, Visualizers
+  featured     Boolean  @default(false)
+  description  String?
+  tags         String? // JSON string array
+  order        Int      @default(0)
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("videos")
+}
+
+// 9. Service Model
+model Service {
+  id             String   @id @default(cuid())
+  number         String?  @default("01") // 01, 02, etc.
+  title          String
+  slug           String?  @unique
+  category       String?  @default("Production")
+  shortDesc      String
+  fullDesc       String
+  imageUrl       String
+  icon           String?  @default("Music")
+  features       String? // JSON string array
+  ctaText        String?  @default("INITIATE PROJECT")
+  pricingRange   String?
+  specifications String? // JSON string array
+  equipmentList  String? // JSON string array
+  order          Int      @default(0)
+  isActive       Boolean  @default(true)
+  createdAt      DateTime @default(now())
+  updatedAt      DateTime @updatedAt
+
+  @@map("services")
+}
+
+// 10. Media Asset Model
+model Media {
+  id           String   @id @default(cuid())
+  filename     String
+  originalName String
+  mimeType     String
+  size         Int
+  url          String
+  path         String?
+  altText      String?
+  category     String   @default("image") // image, audio, video, document
+  uploadedBy   String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+
+  @@map("media")
+}
+
+// 11. Contact Request / Inquiries Model
+model ContactRequest {
+  id          String   @id @default(cuid())
+  referenceId String   @unique
+  name        String
+  email       String
+  phone       String?
+  company     String?
+  service     String
+  message     String
+  status      String   @default("NEW") // NEW, IN_PROGRESS, CONTACTED, RESOLVED, ARCHIVED
+  notes       String?
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("contact_requests")
+}
+
+// 12. Homepage Singleton Model
+model Homepage {
+  id                   String  @id @default("homepage-singleton")
+  // Hero Section
+  heroTagline          String?
+  heroHeadline         String?
+  heroSubtitle         String?
+  heroBgImage          String?
+  heroBgMedia          String?
+  featuredVideoId      String?
+  heroCtaText          String?
+  heroCtaUrl           String?
+  heroSecondaryCtaText String?
+  heroSecondaryCtaUrl  String?
+
+  // Latest Releases Section
+  releasesHeading  String?
+  releasesSubtitle String?
+  selectedAlbumIds String? // JSON string array of album IDs
+  releasesLimit    Int?    @default(4)
+
+  // Featured Artists Section
+  artistsHeading    String?
+  artistsSubtitle   String?
+  featuredArtistIds String? // JSON string array of artist IDs
+
+  // Featured Events Section
+  eventsHeading    String?
+  eventsSubtitle   String?
+  featuredEventIds String? // JSON string array of event IDs
+
+  // Featured Videos Section
+  videosHeading    String?
+  videosSubtitle   String?
+  featuredVideoIds String? // JSON string array of video IDs
+
+  // Statistics Section
+  statsArtistsCount  String? @default("10+")
+  statsReleasesCount String? @default("50+")
+  statsProjectsCount String? @default("100+")
+  statsTotalStreams  String?
+  statsGlobalReach   String?
+
+  // About Section
+  aboutBadge       String? @default("ABOUT VEXO")
+  aboutHeading     String? @default("VEXO MUSIC ENTERTAINMENT PVT. LTD.")
+  aboutDescription String?
+  aboutImage       String?
+
+  // Final CTA Section
+  finalCtaBadge          String? @default("READY TO COLLABORATE?")
+  finalCtaHeading        String? @default("LET'S CREATE SOMETHING ICONIC.")
+  finalCtaDescription    String?
+  finalCtaButtonLabel    String? @default("START A PROJECT")
+  finalCtaButtonUrl      String? @default("/contact")
+  finalCtaSecondaryLabel String? @default("CONTACT VEXO")
+  finalCtaSecondaryUrl   String? @default("/contact")
+
+  // Reviews / Testimonials Section
+  reviewsBadge    String?  @default("TESTIMONIALS & TRUST")
+  reviewsHeading  String?  @default("VOICES OF EXCELLENCE")
+  reviewsSubtitle String?  @default("What artists, visionary couples, and industry partners say about producing with VEXO.")
+  reviews         Json?
+
+  marqueeText String?
+  updatedAt   DateTime @updatedAt
+
+  @@map("homepage")
+}
+
+// 13. Site Settings Singleton Model
+model SiteSettings {
+  id              String   @id @default("site-settings-singleton")
+  siteName        String   @default("VEXO Music Entertainment")
+  siteDescription String?
+  logoUrl         String?
+  faviconUrl      String?
+  contactEmail    String?
+  contactPhone    String?
+  officeAddress   String?
+  copyrightText   String?
+  socialSpotify   String?
+  socialYoutube   String?
+  socialInstagram String?
+  socialTwitter   String?
+  socialAppleMusic String?
+  socialFacebook  String?
+  socialSoundcloud String?
+  maintenanceMode Boolean  @default(false)
+
+  // Footer Customization
+  footerBio               String?
+  footerQuickLinksHeading String?  @default("QUICK LINKS")
+  footerQuickLinks        Json?
+  footerServicesHeading   String?  @default("SERVICES")
+  footerServicesLinks     Json?
+  footerContactHeading    String?  @default("CONTACT US")
+  footerStatusText        String?  @default("STUDIO ACTIVE • JAIPUR")
+  footerStatusEnabled     Boolean? @default(true)
+  footerBackToTopEnabled  Boolean? @default(true)
+  footerAdminLinkEnabled  Boolean? @default(true)
+
+  updatedAt       DateTime @updatedAt
+
+  @@map("site_settings")
+}
+
+// 14. Activity Log Model
+model ActivityLog {
+  id          String     @id @default(cuid())
+  adminUserId String?
+  adminUser   AdminUser? @relation(fields: [adminUserId], references: [id], onDelete: SetNull)
+  action      String // CREATE_ARTIST, UPDATE_ALBUM, DELETE_TRACK, LOGIN, etc.
+  entityType  String // Artist, Album, Event, ContactRequest, AdminUser, etc.
+  entityId    String?
+  details     String? // JSON details
+  ipAddress   String?
+  userAgent   String?
+  createdAt   DateTime   @default(now())
+
+  @@map("activity_logs")
+}
+
+// 15. Pre-Wedding Studio Singleton Model
+model PreWedding {
+  id                String   @id @default("pre-wedding-singleton")
+  studioInfo        Json?
+  heroStats         Json?
+  directorInfo      Json?
+  processSteps      Json?
+  videos            Json?
+  portfolioGallery  Json?
+  coverageTypes     Json?
+  coupleStories     Json?
+  packages          Json?
+  weddingPackages   Json?
+  customServices    Json?
+  addOns            Json?
+  whyUsPillars      Json?
+  weddingDayStories Json?
+  updatedAt         DateTime @updatedAt
+
+  @@map("pre_wedding")
+}
