@@ -272,6 +272,15 @@ export const AdminPreWeddingPage: React.FC = () => {
     setIsDirty(true);
   };
 
+  const updatePackageFields = (index: number, fields: Record<string, any>, targetKey: 'packages' | 'weddingPackages' = packageSubTab === 'wedding' ? 'weddingPackages' : 'packages') => {
+    setData((prev: any) => {
+      const list = [...(prev[targetKey] || (targetKey === 'weddingPackages' ? DEFAULT_WEDDING_PLANS : []))];
+      list[index] = { ...list[index], ...fields };
+      return { ...prev, [targetKey]: list };
+    });
+    setIsDirty(true);
+  };
+
   const updatePackageNested = (index: number, parent: string, field: string, value: any, targetKey: 'packages' | 'weddingPackages' = packageSubTab === 'wedding' ? 'weddingPackages' : 'packages') => {
     setData((prev: any) => {
       const list = [...(prev[targetKey] || (targetKey === 'weddingPackages' ? DEFAULT_WEDDING_PLANS : []))];
@@ -1431,10 +1440,14 @@ export const AdminPreWeddingPage: React.FC = () => {
                           value={pkg.priceINR || 0}
                           onChange={(e) => {
                             const num = Number(e.target.value);
-                            updatePackage(idx, 'priceINR', num, currentTarget);
-                            if (num > 0) {
-                              updatePackage(idx, 'priceDisplay', `₹${num.toLocaleString('en-IN')}`, currentTarget);
-                            }
+                            updatePackageFields(
+                              idx,
+                              {
+                                priceINR: num,
+                                priceDisplay: num > 0 ? `₹${num.toLocaleString('en-IN')}` : pkg.priceDisplay,
+                              },
+                              currentTarget
+                            );
                           }}
                           className="w-full px-3.5 py-2 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white focus:border-vexo-red focus:outline-none font-mono transition-colors shadow-2xs"
                         />

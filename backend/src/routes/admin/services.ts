@@ -292,30 +292,60 @@ export const adminServiceRoutes: FastifyPluginAsync = async (fastify) => {
           : [];
       }
 
+      if ((body as any).description !== undefined) {
+        (updates as any).description = ((body as any).description || '').trim();
+      }
+
       if ((body as any).plans !== undefined) updates.plans = (body as any).plans;
       if ((body as any).specs !== undefined) updates.specs = (body as any).specs;
+      if ((body as any).specifications !== undefined) {
+        const specs = Array.isArray((body as any).specifications)
+          ? (body as any).specifications
+          : typeof (body as any).specifications === 'string'
+          ? ((body as any).specifications as string).split('\n').map((f: string) => f.trim()).filter(Boolean)
+          : [];
+        (updates as any).specifications = specs;
+        if (updates.specs === undefined) updates.specs = specs;
+      }
       if ((body as any).processSteps !== undefined) updates.processSteps = (body as any).processSteps;
       if ((body as any).deliverables !== undefined) updates.deliverables = (body as any).deliverables;
+      if ((body as any).equipmentList !== undefined) {
+        const equip = Array.isArray((body as any).equipmentList)
+          ? (body as any).equipmentList
+          : typeof (body as any).equipmentList === 'string'
+          ? ((body as any).equipmentList as string).split('\n').map((f: string) => f.trim()).filter(Boolean)
+          : [];
+        (updates as any).equipmentList = equip;
+        if (updates.deliverables === undefined) updates.deliverables = equip;
+      }
       if ((body as any).faqs !== undefined) updates.faqs = (body as any).faqs;
 
-      const updated = await db.services.update(id, updates);
+      try {
+        const updated = await db.services.update(id, updates);
 
-      db.activityLogs.log({
-        adminUserId: user.id,
-        adminUserName: user.name,
-        action: 'UPDATE_SERVICE',
-        entityType: 'Service',
-        entityId: id,
-        details: { updates },
-        ipAddress: request.ip,
-        userAgent: request.headers['user-agent'] || '',
-      });
+        db.activityLogs.log({
+          adminUserId: user.id,
+          adminUserName: user.name,
+          action: 'UPDATE_SERVICE',
+          entityType: 'Service',
+          entityId: id,
+          details: { updates },
+          ipAddress: request.ip,
+          userAgent: request.headers['user-agent'] || '',
+        });
 
-      return reply.send({
-        success: true,
-        data: updated,
-        message: `Service "${updated?.title}" updated successfully.`,
-      });
+        return reply.send({
+          success: true,
+          data: updated,
+          message: `Service "${updated?.title}" updated successfully.`,
+        });
+      } catch (err: any) {
+        fastify.log.error(err);
+        return reply.code(500).send({
+          success: false,
+          message: err.message || `Failed to update service "${id}" in Supabase database.`,
+        });
+      }
     }
   );
 

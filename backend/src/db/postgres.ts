@@ -36,6 +36,16 @@ const tableColumnsMap: Map<string, Set<string>> = new Map();
 async function ensureSchemaExtensions(client: pg.PoolClient | pg.Pool): Promise<void> {
   try {
     await client.query(`
+      ALTER TABLE public."services"
+        ADD COLUMN IF NOT EXISTS "description" TEXT,
+        ADD COLUMN IF NOT EXISTS "plans" JSONB,
+        ADD COLUMN IF NOT EXISTS "specs" JSONB,
+        ADD COLUMN IF NOT EXISTS "deliverables" JSONB,
+        ADD COLUMN IF NOT EXISTS "faqs" JSONB,
+        ADD COLUMN IF NOT EXISTS "processSteps" JSONB;
+    `);
+
+    await client.query(`
       ALTER TABLE public."homepage"
         ADD COLUMN IF NOT EXISTS "reviewsBadge" TEXT,
         ADD COLUMN IF NOT EXISTS "reviewsHeading" TEXT,
@@ -197,7 +207,9 @@ function formatDateToIso(val: any): string {
 }
 
 /**
+/**
  * Generic upsert helper that dynamically discovers and matches columns in the live PostgreSQL table.
+ * Throws an error on connection failure, missing columns, or database execution failure.
  */
 async function upsertRow(
   tableName: string,
@@ -205,10 +217,22 @@ async function upsertRow(
   conflictCol: string = 'id'
 ): Promise<boolean> {
   const client = getPostgresPool();
-  if (!client || !isConnected) return false;
+  if (!client) {
+    throw new Error(`[PostgreSQL] Cannot upsert into "${tableName}": Database connection pool is unavailable.`);
+  }
 
-  const tableCols = tableColumnsMap.get(tableName);
-  if (!tableCols || tableCols.size === 0) return false;
+  let tableCols = tableColumnsMap.get(tableName);
+  if (!tableCols || tableCols.size === 0) {
+    const colRes = await client.query(
+      `SELECT column_name FROM information_schema.columns WHERE table_schema = 'public' AND table_name = $1;`,
+      [tableName]
+    );
+    if (colRes.rows.length === 0) {
+      throw new Error(`[PostgreSQL] Table "public.${tableName}" does not exist in database.`);
+    }
+    tableCols = new Set(colRes.rows.map((r: any) => r.column_name));
+    tableColumnsMap.set(tableName, tableCols);
+  }
 
   const fields: string[] = [];
   const values: any[] = [];
@@ -225,7 +249,9 @@ async function upsertRow(
     }
   }
 
-  if (fields.length === 0) return false;
+  if (fields.length === 0) {
+    throw new Error(`[PostgreSQL] No matching columns found for table "${tableName}".`);
+  }
 
   const updateClause = fields
     .filter((f) => f !== `"${conflictCol}"`)
@@ -235,15 +261,19 @@ async function upsertRow(
   const query = `
     INSERT INTO public."${tableName}" (${fields.join(', ')})
     VALUES (${placeholders.join(', ')})
-    ON CONFLICT ("${conflictCol}") DO UPDATE SET ${updateClause};
+    ON CONFLICT ("${conflictCol}") DO UPDATE SET ${updateClause}
+    RETURNING "${conflictCol}";
   `;
 
-  await client.query(query, values);
+  const res = await client.query(query, values);
+  if (!res || !res.rowCount || res.rowCount === 0) {
+    throw new Error(`[PostgreSQL] Upsert into "${tableName}" failed to affect any rows.`);
+  }
   return true;
 }
 
 /**
- * Generic insert-if-not-exists helper for initial backfill from vexo_db.json
+ * Generic insert-if-not-exists helper for initial backfill
  */
 async function insertIfNotExists(
   tableName: string,
@@ -251,7 +281,7 @@ async function insertIfNotExists(
   conflictCol: string = 'id'
 ): Promise<boolean> {
   const client = getPostgresPool();
-  if (!client || !isConnected) return false;
+  if (!client) return false;
 
   const tableCols = tableColumnsMap.get(tableName);
   if (!tableCols || tableCols.size === 0) return false;
@@ -284,83 +314,86 @@ async function insertIfNotExists(
 }
 
 /**
- * Delete a row by id
+ * Delete a row by id. Throws an error on failure.
  */
-async function deleteRow(tableName: string, id: string, idCol: string = 'id'): Promise<void> {
+async function deleteRow(tableName: string, id: string, idCol: string = 'id'): Promise<boolean> {
   const client = getPostgresPool();
-  if (!client || !isConnected) return;
+  if (!client) {
+    throw new Error(`[PostgreSQL] Cannot delete from "${tableName}": Database connection pool is unavailable.`);
+  }
   await client.query(`DELETE FROM public."${tableName}" WHERE "${idCol}" = $1`, [id]);
+  return true;
 }
 
 // ==========================================
 // 1. HOMEPAGE SYNC & LOAD
 // ==========================================
-export async function syncHomepageToPostgres(homepage: Homepage): Promise<void> {
+export async function syncHomepageToPostgres(homepage: Homepage): Promise<boolean> {
   const client = getPostgresPool();
-  if (!client || !isConnected) return;
-
-  try {
-    const dataObj: Record<string, any> = {
-      id: homepage.id || 'homepage-singleton',
-      heroTagline: homepage.heroTagline ?? null,
-      heroHeadline: homepage.heroHeadline ?? null,
-      heroSubtitle: homepage.heroSubtitle ?? null,
-      heroBgImage: homepage.heroBgImage ?? null,
-      heroBgMedia: homepage.heroBgMedia ?? null,
-      featuredVideoId: homepage.featuredVideoId ?? null,
-      heroCtaText: homepage.heroCtaText ?? null,
-      heroCtaUrl: homepage.heroCtaUrl ?? null,
-      heroSecondaryCtaText: homepage.heroSecondaryCtaText ?? null,
-      heroSecondaryCtaUrl: homepage.heroSecondaryCtaUrl ?? null,
-      releasesHeading: homepage.releasesHeading ?? null,
-      releasesSubtitle: homepage.releasesSubtitle ?? null,
-      selectedAlbumIds: Array.isArray(homepage.selectedAlbumIds)
-        ? JSON.stringify(homepage.selectedAlbumIds)
-        : homepage.selectedAlbumIds ?? null,
-      releasesLimit: typeof homepage.releasesLimit === 'number' ? homepage.releasesLimit : 4,
-      artistsHeading: homepage.artistsHeading ?? null,
-      artistsSubtitle: homepage.artistsSubtitle ?? null,
-      featuredArtistIds: Array.isArray(homepage.featuredArtistIds)
-        ? JSON.stringify(homepage.featuredArtistIds)
-        : homepage.featuredArtistIds ?? null,
-      eventsHeading: homepage.eventsHeading ?? null,
-      eventsSubtitle: homepage.eventsSubtitle ?? null,
-      featuredEventIds: Array.isArray(homepage.featuredEventIds)
-        ? JSON.stringify(homepage.featuredEventIds)
-        : homepage.featuredEventIds ?? null,
-      videosHeading: homepage.videosHeading ?? null,
-      videosSubtitle: homepage.videosSubtitle ?? null,
-      featuredVideoIds: Array.isArray(homepage.featuredVideoIds)
-        ? JSON.stringify(homepage.featuredVideoIds)
-        : homepage.featuredVideoIds ?? null,
-      statsArtistsCount: homepage.statsArtistsCount ? String(homepage.statsArtistsCount) : '10+',
-      statsReleasesCount: homepage.statsReleasesCount ? String(homepage.statsReleasesCount) : '50+',
-      statsProjectsCount: homepage.statsProjectsCount ? String(homepage.statsProjectsCount) : '100+',
-      statsTotalStreams: homepage.statsTotalStreams ?? null,
-      statsGlobalReach: homepage.statsGlobalReach ?? null,
-      aboutBadge: homepage.aboutBadge ?? 'ABOUT VEXO',
-      aboutHeading: homepage.aboutHeading ?? 'VEXO MUSIC ENTERTAINMENT PVT. LTD.',
-      aboutDescription: homepage.aboutDescription ?? null,
-      aboutImage: homepage.aboutImage ?? null,
-      finalCtaBadge: homepage.finalCtaBadge ?? 'READY TO COLLABORATE?',
-      finalCtaHeading: homepage.finalCtaHeading ?? "LET'S CREATE SOMETHING ICONIC.",
-      finalCtaDescription: homepage.finalCtaDescription ?? null,
-      finalCtaButtonLabel: homepage.finalCtaButtonLabel ?? 'START A PROJECT',
-      finalCtaButtonUrl: homepage.finalCtaButtonUrl ?? '/contact',
-      finalCtaSecondaryLabel: homepage.finalCtaSecondaryLabel ?? 'CONTACT VEXO',
-      finalCtaSecondaryUrl: homepage.finalCtaSecondaryUrl ?? '/contact',
-      marqueeText: homepage.marqueeText ?? null,
-      reviewsBadge: homepage.reviewsBadge ?? 'TESTIMONIALS & TRUST',
-      reviewsHeading: homepage.reviewsHeading ?? 'VOICES OF EXCELLENCE',
-      reviewsSubtitle: homepage.reviewsSubtitle ?? 'What artists, visionary couples, and industry partners say about producing with VEXO.',
-      reviews: homepage.reviews ? JSON.stringify(homepage.reviews) : null,
-      updatedAt: new Date(),
-    };
-
-    await upsertRow('homepage', dataObj, 'id');
-  } catch (err: any) {
-    console.warn('[PostgreSQL Homepage Sync Error]:', err.message);
+  if (!client) {
+    throw new Error('[PostgreSQL] Database pool is unavailable. Cannot sync homepage.');
   }
+
+  const dataObj: Record<string, any> = {
+    id: homepage.id || 'homepage-singleton',
+    heroTagline: homepage.heroTagline ?? null,
+    heroHeadline: homepage.heroHeadline ?? null,
+    heroSubtitle: homepage.heroSubtitle ?? null,
+    heroBgImage: homepage.heroBgImage ?? null,
+    heroBgMedia: homepage.heroBgMedia ?? null,
+    featuredVideoId: homepage.featuredVideoId ?? null,
+    heroCtaText: homepage.heroCtaText ?? null,
+    heroCtaUrl: homepage.heroCtaUrl ?? null,
+    heroSecondaryCtaText: homepage.heroSecondaryCtaText ?? null,
+    heroSecondaryCtaUrl: homepage.heroSecondaryCtaUrl ?? null,
+    releasesHeading: homepage.releasesHeading ?? null,
+    releasesSubtitle: homepage.releasesSubtitle ?? null,
+    selectedAlbumIds: Array.isArray(homepage.selectedAlbumIds)
+      ? JSON.stringify(homepage.selectedAlbumIds)
+      : homepage.selectedAlbumIds ?? null,
+    releasesLimit: typeof homepage.releasesLimit === 'number' ? homepage.releasesLimit : 4,
+    artistsHeading: homepage.artistsHeading ?? null,
+    artistsSubtitle: homepage.artistsSubtitle ?? null,
+    featuredArtistIds: Array.isArray(homepage.featuredArtistIds)
+      ? JSON.stringify(homepage.featuredArtistIds)
+      : homepage.featuredArtistIds ?? null,
+    eventsHeading: homepage.eventsHeading ?? null,
+    eventsSubtitle: homepage.eventsSubtitle ?? null,
+    featuredEventIds: Array.isArray(homepage.featuredEventIds)
+      ? JSON.stringify(homepage.featuredEventIds)
+      : homepage.featuredEventIds ?? null,
+    videosHeading: homepage.videosHeading ?? null,
+    videosSubtitle: homepage.videosSubtitle ?? null,
+    featuredVideoIds: Array.isArray(homepage.featuredVideoIds)
+      ? JSON.stringify(homepage.featuredVideoIds)
+      : homepage.featuredVideoIds ?? null,
+    statsArtistsCount: homepage.statsArtistsCount ? String(homepage.statsArtistsCount) : '10+',
+    statsReleasesCount: homepage.statsReleasesCount ? String(homepage.statsReleasesCount) : '50+',
+    statsProjectsCount: homepage.statsProjectsCount ? String(homepage.statsProjectsCount) : '100+',
+    statsTotalStreams: homepage.statsTotalStreams ?? null,
+    statsGlobalReach: homepage.statsGlobalReach ?? null,
+    aboutBadge: homepage.aboutBadge ?? 'ABOUT VEXO',
+    aboutHeading: homepage.aboutHeading ?? 'VEXO MUSIC ENTERTAINMENT PVT. LTD.',
+    aboutDescription: homepage.aboutDescription ?? null,
+    aboutImage: homepage.aboutImage ?? null,
+    finalCtaBadge: homepage.finalCtaBadge ?? 'READY TO COLLABORATE?',
+    finalCtaHeading: homepage.finalCtaHeading ?? "LET'S CREATE SOMETHING ICONIC.",
+    finalCtaDescription: homepage.finalCtaDescription ?? null,
+    finalCtaButtonLabel: homepage.finalCtaButtonLabel ?? 'START A PROJECT',
+    finalCtaButtonUrl: homepage.finalCtaButtonUrl ?? '/contact',
+    finalCtaSecondaryLabel: homepage.finalCtaSecondaryLabel ?? 'CONTACT VEXO',
+    finalCtaSecondaryUrl: homepage.finalCtaSecondaryUrl ?? '/contact',
+    marqueeText: homepage.marqueeText ?? null,
+    reviewsBadge: homepage.reviewsBadge ?? 'TESTIMONIALS & TRUST',
+    reviewsHeading: homepage.reviewsHeading ?? 'VOICES OF EXCELLENCE',
+    reviewsSubtitle: homepage.reviewsSubtitle ?? 'What artists, visionary couples, and industry partners say about producing with VEXO.',
+    reviews: homepage.reviews ? JSON.stringify(homepage.reviews) : null,
+    updatedAt: new Date(),
+  };
+
+  await upsertRow('homepage', dataObj, 'id');
+  console.log('[PostgreSQL] ✅ Homepage synced to Supabase.');
+  return true;
 }
 
 export async function loadHomepageFromPostgres(): Promise<Homepage | null> {
@@ -429,46 +462,46 @@ export async function loadHomepageFromPostgres(): Promise<Homepage | null> {
 // ==========================================
 // 2. SITE SETTINGS SYNC & LOAD
 // ==========================================
-export async function syncSiteSettingsToPostgres(settings: SiteSettings): Promise<void> {
+export async function syncSiteSettingsToPostgres(settings: SiteSettings): Promise<boolean> {
   const client = getPostgresPool();
-  if (!client || !isConnected) return;
-
-  try {
-    const dataObj: Record<string, any> = {
-      id: settings.id || 'site-settings-singleton',
-      siteName: settings.siteName || 'VEXO Music Entertainment Pvt. Ltd.',
-      siteDescription: settings.siteDescription ?? null,
-      logoUrl: settings.logoUrl ?? null,
-      faviconUrl: settings.faviconUrl ?? null,
-      contactEmail: settings.contactEmail ?? null,
-      contactPhone: settings.contactPhone ?? null,
-      officeAddress: settings.officeAddress ?? null,
-      copyrightText: settings.copyrightText ?? null,
-      socialSpotify: settings.socialSpotify ?? null,
-      socialYoutube: settings.socialYoutube ?? null,
-      socialInstagram: settings.socialInstagram ?? null,
-      socialTwitter: settings.socialTwitter ?? null,
-      socialAppleMusic: settings.socialAppleMusic ?? null,
-      socialFacebook: settings.socialFacebook ?? null,
-      socialSoundcloud: settings.socialSoundcloud ?? null,
-      footerBio: settings.footerBio ?? null,
-      footerQuickLinksHeading: settings.footerQuickLinksHeading ?? 'QUICK LINKS',
-      footerQuickLinks: settings.footerQuickLinks ? JSON.stringify(settings.footerQuickLinks) : null,
-      footerServicesHeading: settings.footerServicesHeading ?? 'SERVICES',
-      footerServicesLinks: settings.footerServicesLinks ? JSON.stringify(settings.footerServicesLinks) : null,
-      footerContactHeading: settings.footerContactHeading ?? 'CONTACT US',
-      footerStatusText: settings.footerStatusText ?? 'STUDIO ACTIVE • JAIPUR',
-      footerStatusEnabled: settings.footerStatusEnabled !== undefined ? Boolean(settings.footerStatusEnabled) : true,
-      footerBackToTopEnabled: settings.footerBackToTopEnabled !== undefined ? Boolean(settings.footerBackToTopEnabled) : true,
-      footerAdminLinkEnabled: settings.footerAdminLinkEnabled !== undefined ? Boolean(settings.footerAdminLinkEnabled) : true,
-      maintenanceMode: Boolean(settings.maintenanceMode),
-      updatedAt: new Date(),
-    };
-
-    await upsertRow('site_settings', dataObj, 'id');
-  } catch (err: any) {
-    console.warn('[PostgreSQL SiteSettings Sync Error]:', err.message);
+  if (!client) {
+    throw new Error('[PostgreSQL] Database pool is unavailable. Cannot sync site settings.');
   }
+
+  const dataObj: Record<string, any> = {
+    id: settings.id || 'site-settings-singleton',
+    siteName: settings.siteName || 'VEXO Music Entertainment Pvt. Ltd.',
+    siteDescription: settings.siteDescription ?? null,
+    logoUrl: settings.logoUrl ?? null,
+    faviconUrl: settings.faviconUrl ?? null,
+    contactEmail: settings.contactEmail ?? null,
+    contactPhone: settings.contactPhone ?? null,
+    officeAddress: settings.officeAddress ?? null,
+    copyrightText: settings.copyrightText ?? null,
+    socialSpotify: settings.socialSpotify ?? null,
+    socialYoutube: settings.socialYoutube ?? null,
+    socialInstagram: settings.socialInstagram ?? null,
+    socialTwitter: settings.socialTwitter ?? null,
+    socialAppleMusic: settings.socialAppleMusic ?? null,
+    socialFacebook: settings.socialFacebook ?? null,
+    socialSoundcloud: settings.socialSoundcloud ?? null,
+    footerBio: settings.footerBio ?? null,
+    footerQuickLinksHeading: settings.footerQuickLinksHeading ?? 'QUICK LINKS',
+    footerQuickLinks: settings.footerQuickLinks ? JSON.stringify(settings.footerQuickLinks) : null,
+    footerServicesHeading: settings.footerServicesHeading ?? 'SERVICES',
+    footerServicesLinks: settings.footerServicesLinks ? JSON.stringify(settings.footerServicesLinks) : null,
+    footerContactHeading: settings.footerContactHeading ?? 'CONTACT US',
+    footerStatusText: settings.footerStatusText ?? 'STUDIO ACTIVE • JAIPUR',
+    footerStatusEnabled: settings.footerStatusEnabled !== undefined ? Boolean(settings.footerStatusEnabled) : true,
+    footerBackToTopEnabled: settings.footerBackToTopEnabled !== undefined ? Boolean(settings.footerBackToTopEnabled) : true,
+    footerAdminLinkEnabled: settings.footerAdminLinkEnabled !== undefined ? Boolean(settings.footerAdminLinkEnabled) : true,
+    maintenanceMode: Boolean(settings.maintenanceMode),
+    updatedAt: new Date(),
+  };
+
+  await upsertRow('site_settings', dataObj, 'id');
+  console.log('[PostgreSQL] ✅ SiteSettings synced to Supabase.');
+  return true;
 }
 
 export async function loadSiteSettingsFromPostgres(): Promise<SiteSettings | null> {
@@ -519,53 +552,56 @@ export async function loadSiteSettingsFromPostgres(): Promise<SiteSettings | nul
 // ==========================================
 // 3. SERVICES SYNC & LOAD
 // ==========================================
-export async function syncServiceToPostgres(service: Service): Promise<void> {
+export async function syncServiceToPostgres(service: Service): Promise<boolean> {
   const client = getPostgresPool();
-  if (!client || !isConnected) return;
-
-  try {
-    const now = new Date();
-    const createdAt = service.createdAt ? new Date(service.createdAt) : now;
-    const updatedAt = service.updatedAt ? new Date(service.updatedAt) : now;
-
-    const dataObj: Record<string, any> = {
-      id: service.id,
-      number: service.number || '01',
-      title: service.title,
-      slug: service.slug || service.id,
-      category: service.category || 'Production',
-      shortDesc: service.shortDesc || service.fullDesc || '',
-      fullDesc: service.fullDesc || service.shortDesc || '',
-      description: service.shortDesc || service.fullDesc || '',
-      imageUrl: service.imageUrl || '',
-      icon: service.icon || 'Music',
-      features: Array.isArray(service.features) ? JSON.stringify(service.features) : (service.features || '[]'),
-      plans: (service as any).plans ? JSON.stringify((service as any).plans) : '[]',
-      specs: (service as any).specs ? JSON.stringify((service as any).specs) : '[]',
-      specifications: (service as any).specs ? JSON.stringify((service as any).specs) : (service.specifications ? JSON.stringify(service.specifications) : '[]'),
-      deliverables: (service as any).deliverables ? JSON.stringify((service as any).deliverables) : '[]',
-      equipmentList: (service as any).equipmentList ? JSON.stringify((service as any).equipmentList) : (service.equipmentList ? JSON.stringify(service.equipmentList) : '[]'),
-      faqs: (service as any).faqs ? JSON.stringify((service as any).faqs) : '[]',
-      ctaText: service.ctaText || 'INITIATE PROJECT',
-      pricingRange: service.pricingRange || null,
-      order: typeof service.order === 'number' ? service.order : 0,
-      isActive: service.isActive !== false,
-      createdAt,
-      updatedAt,
-    };
-
-    await upsertRow('services', dataObj, 'id');
-  } catch (err: any) {
-    console.warn(`[PostgreSQL Service Sync Error for "${service.title}"]:`, err.message);
+  if (!client) {
+    throw new Error(`[PostgreSQL] Database pool is unavailable. Cannot sync service "${service.title}".`);
   }
+
+  const now = new Date();
+  const createdAt = service.createdAt ? new Date(service.createdAt) : now;
+  const updatedAt = service.updatedAt ? new Date(service.updatedAt) : now;
+
+  const dataObj: Record<string, any> = {
+    id: service.id,
+    number: service.number || '01',
+    title: service.title,
+    slug: service.slug || service.id,
+    category: service.category || 'Production',
+    shortDesc: service.shortDesc || (service as any).description || service.fullDesc || '',
+    fullDesc: service.fullDesc || service.shortDesc || (service as any).description || '',
+    description: (service as any).description || service.shortDesc || service.fullDesc || '',
+    imageUrl: service.imageUrl || '',
+    icon: service.icon || 'Music',
+    features: Array.isArray(service.features) ? JSON.stringify(service.features) : (service.features || '[]'),
+    plans: (service as any).plans ? JSON.stringify((service as any).plans) : '[]',
+    specs: (service as any).specs ? JSON.stringify((service as any).specs) : (Array.isArray(service.specifications) ? JSON.stringify(service.specifications) : '[]'),
+    specifications: (service as any).specs ? JSON.stringify((service as any).specs) : (Array.isArray(service.specifications) ? JSON.stringify(service.specifications) : '[]'),
+    deliverables: (service as any).deliverables ? JSON.stringify((service as any).deliverables) : '[]',
+    equipmentList: (service as any).equipmentList ? JSON.stringify((service as any).equipmentList) : '[]',
+    faqs: (service as any).faqs ? JSON.stringify((service as any).faqs) : '[]',
+    processSteps: (service as any).processSteps ? JSON.stringify((service as any).processSteps) : '[]',
+    ctaText: service.ctaText || 'INITIATE PROJECT',
+    pricingRange: service.pricingRange || null,
+    order: typeof service.order === 'number' ? service.order : 0,
+    isActive: service.isActive !== false,
+    createdAt,
+    updatedAt,
+  };
+
+  await upsertRow('services', dataObj, 'id');
+  console.log(`[PostgreSQL] ✅ Service "${service.title}" (${service.id}) persisted to Supabase.`);
+  return true;
 }
 
-export async function deleteServiceFromPostgres(serviceId: string): Promise<void> {
-  try {
-    await deleteRow('services', serviceId, 'id');
-  } catch (err: any) {
-    console.warn(`[PostgreSQL Service Delete Error for "${serviceId}"]:`, err.message);
+export async function deleteServiceFromPostgres(serviceId: string): Promise<boolean> {
+  const client = getPostgresPool();
+  if (!client) {
+    throw new Error(`[PostgreSQL] Database pool is unavailable. Cannot delete service "${serviceId}".`);
   }
+  await deleteRow('services', serviceId, 'id');
+  console.log(`[PostgreSQL] ✅ Service ID "${serviceId}" deleted from Supabase.`);
+  return true;
 }
 
 export async function loadServicesFromPostgres(): Promise<Service[]> {
@@ -582,6 +618,7 @@ export async function loadServicesFromPostgres(): Promise<Service[]> {
       category: r.category || 'Production',
       shortDesc: r.shortDesc || r.description || '',
       fullDesc: r.fullDesc || r.shortDesc || r.description || '',
+      description: r.description || r.shortDesc || r.fullDesc || '',
       imageUrl: r.imageUrl || '',
       icon: r.icon || 'Music',
       features: parseJsonSafely(r.features, []),
@@ -678,12 +715,14 @@ export async function syncContactRequestToPostgres(contact: ContactRequest): Pro
   }
 }
 
-export async function deleteContactRequestFromPostgres(contactId: string): Promise<void> {
-  try {
-    await deleteRow('contact_requests', contactId, 'id');
-  } catch (err: any) {
-    console.warn(`[PostgreSQL Contact Delete Error for "${contactId}"]:`, err.message);
+export async function deleteContactRequestFromPostgres(contactId: string): Promise<boolean> {
+  const client = getPostgresPool();
+  if (!client) {
+    throw new Error(`[PostgreSQL] Database pool is unavailable. Cannot delete contact request "${contactId}".`);
   }
+  await deleteRow('contact_requests', contactId, 'id');
+  console.log(`[PostgreSQL] ✅ ContactRequest ID "${contactId}" deleted from Supabase.`);
+  return true;
 }
 
 export async function loadContactRequestsFromPostgres(): Promise<ContactRequest[]> {
@@ -715,72 +754,71 @@ export async function loadContactRequestsFromPostgres(): Promise<ContactRequest[
 // ==========================================
 // 5. ARTISTS & SOCIALS SYNC & LOAD
 // ==========================================
-export async function syncArtistToPostgres(artist: Artist, socials?: ArtistSocial[]): Promise<void> {
+export async function syncArtistToPostgres(artist: Artist, socials?: ArtistSocial[]): Promise<boolean> {
   const client = getPostgresPool();
-  if (!client || !isConnected) return;
-
-  try {
-    const now = new Date();
-    const createdAt = artist.createdAt ? new Date(artist.createdAt) : now;
-    const updatedAt = artist.updatedAt ? new Date(artist.updatedAt) : now;
-    const defaultAvatar = 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80';
-    const avatarUrl = (artist.avatarUrl && artist.avatarUrl.trim()) ? artist.avatarUrl.trim() : defaultAvatar;
-    const slug = (artist.slug && artist.slug.trim())
-      ? artist.slug.trim()
-      : artist.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || artist.id;
-    const genres = Array.isArray(artist.genres)
-      ? JSON.stringify(artist.genres)
-      : (typeof artist.genres === 'string' && artist.genres ? artist.genres : '["Pop"]');
-
-    const dataObj: Record<string, any> = {
-      id: artist.id,
-      name: artist.name,
-      slug,
-      role: artist.role || 'Recording Artist',
-      avatarUrl,
-      coverUrl: artist.coverUrl || null,
-      bio: artist.bio || null,
-      monthlyListeners: typeof artist.monthlyListeners === 'number' ? artist.monthlyListeners : 0,
-      genres,
-      featured: Boolean(artist.featured),
-      isComingSoon: Boolean(artist.isComingSoon),
-      order: typeof artist.order === 'number' ? artist.order : 0,
-      createdAt,
-      updatedAt,
-    };
-
-    await upsertRow('artists', dataObj, 'id');
-
-    if (socials && socials.length > 0) {
-      await client.query('DELETE FROM public.artist_socials WHERE "artistId" = $1', [artist.id]);
-      for (const s of socials) {
-        const socObj: Record<string, any> = {
-          id: s.id || `soc-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 6)}`,
-          artistId: artist.id,
-          platform: s.platform,
-          url: s.url,
-          order: typeof s.order === 'number' ? s.order : 0,
-          createdAt,
-          updatedAt,
-        };
-        await upsertRow('artist_socials', socObj, 'id');
-      }
-    }
-  } catch (err: any) {
-    console.warn(`[PostgreSQL Artist Sync Error for "${artist.name}"]:`, err.message);
+  if (!client) {
+    throw new Error(`[PostgreSQL] Database pool is unavailable. Cannot sync artist "${artist.name}".`);
   }
+
+  const now = new Date();
+  const createdAt = artist.createdAt ? new Date(artist.createdAt) : now;
+  const updatedAt = artist.updatedAt ? new Date(artist.updatedAt) : now;
+  const defaultAvatar = 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80';
+  const avatarUrl = (artist.avatarUrl && artist.avatarUrl.trim()) ? artist.avatarUrl.trim() : defaultAvatar;
+  const slug = (artist.slug && artist.slug.trim())
+    ? artist.slug.trim()
+    : artist.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') || artist.id;
+  const genres = Array.isArray(artist.genres)
+    ? JSON.stringify(artist.genres)
+    : (typeof artist.genres === 'string' && artist.genres ? artist.genres : '["Pop"]');
+
+  const dataObj: Record<string, any> = {
+    id: artist.id,
+    name: artist.name,
+    slug,
+    role: artist.role || 'Recording Artist',
+    avatarUrl,
+    coverUrl: artist.coverUrl || null,
+    bio: artist.bio || null,
+    monthlyListeners: typeof artist.monthlyListeners === 'number' ? artist.monthlyListeners : 0,
+    genres,
+    featured: Boolean(artist.featured),
+    isComingSoon: Boolean(artist.isComingSoon),
+    order: typeof artist.order === 'number' ? artist.order : 0,
+    createdAt,
+    updatedAt,
+  };
+
+  await upsertRow('artists', dataObj, 'id');
+
+  if (socials && socials.length > 0) {
+    await client.query('DELETE FROM public.artist_socials WHERE "artistId" = $1', [artist.id]);
+    for (const s of socials) {
+      const socObj: Record<string, any> = {
+        id: s.id || `soc-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 6)}`,
+        artistId: artist.id,
+        platform: s.platform,
+        url: s.url,
+        order: typeof s.order === 'number' ? s.order : 0,
+        createdAt,
+        updatedAt,
+      };
+      await upsertRow('artist_socials', socObj, 'id');
+    }
+  }
+  console.log(`[PostgreSQL] ✅ Artist "${artist.name}" (${artist.id}) persisted to Supabase.`);
+  return true;
 }
 
-export async function deleteArtistFromPostgres(artistId: string): Promise<void> {
+export async function deleteArtistFromPostgres(artistId: string): Promise<boolean> {
   const client = getPostgresPool();
-  if (!client || !isConnected) return;
-
-  try {
-    await client.query('DELETE FROM public.artist_socials WHERE "artistId" = $1', [artistId]);
-    await deleteRow('artists', artistId, 'id');
-  } catch (err: any) {
-    console.warn(`[PostgreSQL Artist Delete Error for "${artistId}"]:`, err.message);
+  if (!client) {
+    throw new Error(`[PostgreSQL] Database pool is unavailable. Cannot delete artist "${artistId}".`);
   }
+  await client.query('DELETE FROM public.artist_socials WHERE "artistId" = $1', [artistId]);
+  await deleteRow('artists', artistId, 'id');
+  console.log(`[PostgreSQL] ✅ Artist ID "${artistId}" deleted from Supabase.`);
+  return true;
 }
 
 export async function loadArtistsFromPostgres(): Promise<{ artists: Artist[]; socials: ArtistSocial[] }> {
@@ -829,55 +867,53 @@ export async function loadArtistsFromPostgres(): Promise<{ artists: Artist[]; so
 // ==========================================
 // 6. ALBUMS SYNC & LOAD
 // ==========================================
-export async function syncAlbumToPostgres(album: Album): Promise<void> {
+export async function syncAlbumToPostgres(album: Album): Promise<boolean> {
   const client = getPostgresPool();
-  if (!client || !isConnected) return;
-
-  try {
-    const now = new Date();
-    const createdAt = album.createdAt ? new Date(album.createdAt) : now;
-    const updatedAt = album.updatedAt ? new Date(album.updatedAt) : now;
-
-    let validArtistId = album.artistId || null;
-    if (validArtistId) {
-      const artCheck = await client.query('SELECT id FROM public.artists WHERE id = $1', [validArtistId]);
-      if (artCheck.rows.length === 0) {
-        validArtistId = null;
-      }
-    }
-
-    const dataObj: Record<string, any> = {
-      id: album.id,
-      title: album.title,
-      slug: album.slug || album.id,
-      artistName: album.artistName,
-      artistId: validArtistId,
-      coverUrl: album.coverUrl,
-      releaseDate: album.releaseDate || now.toISOString().split('T')[0],
-      year: typeof album.year === 'number' ? album.year : now.getFullYear(),
-      genre: album.genre || 'Electronic',
-      trackCount: typeof album.trackCount === 'number' ? album.trackCount : 0,
-      spotifyUrl: album.spotifyUrl || null,
-      youtubeUrl: album.youtubeUrl || null,
-      appleMusicUrl: album.appleMusicUrl || null,
-      featured: Boolean(album.featured),
-      order: typeof album.order === 'number' ? album.order : 0,
-      createdAt,
-      updatedAt,
-    };
-
-    await upsertRow('albums', dataObj, 'id');
-  } catch (err: any) {
-    console.warn(`[PostgreSQL Album Sync Error for "${album.title}"]:`, err.message);
+  if (!client) {
+    throw new Error(`[PostgreSQL] Database pool is unavailable. Cannot sync album "${album.title}".`);
   }
+
+  const now = new Date();
+  const createdAt = album.createdAt ? new Date(album.createdAt) : now;
+  const updatedAt = album.updatedAt ? new Date(album.updatedAt) : now;
+
+  let validArtistId = album.artistId || null;
+  if (validArtistId) {
+    const artCheck = await client.query('SELECT id FROM public.artists WHERE id = $1', [validArtistId]);
+    if (artCheck.rows.length === 0) {
+      validArtistId = null;
+    }
+  }
+
+  const dataObj: Record<string, any> = {
+    id: album.id,
+    title: album.title,
+    slug: album.slug || album.id,
+    artistName: album.artistName,
+    artistId: validArtistId,
+    coverUrl: album.coverUrl,
+    releaseDate: album.releaseDate || now.toISOString().split('T')[0],
+    year: typeof album.year === 'number' ? album.year : now.getFullYear(),
+    genre: album.genre || 'Electronic',
+    trackCount: typeof album.trackCount === 'number' ? album.trackCount : 0,
+    spotifyUrl: album.spotifyUrl || null,
+    youtubeUrl: album.youtubeUrl || null,
+    appleMusicUrl: album.appleMusicUrl || null,
+    featured: Boolean(album.featured),
+    order: typeof album.order === 'number' ? album.order : 0,
+    createdAt,
+    updatedAt,
+  };
+
+  await upsertRow('albums', dataObj, 'id');
+  console.log(`[PostgreSQL] ✅ Album "${album.title}" (${album.id}) persisted to Supabase.`);
+  return true;
 }
 
-export async function deleteAlbumFromPostgres(albumId: string): Promise<void> {
-  try {
-    await deleteRow('albums', albumId, 'id');
-  } catch (err: any) {
-    console.warn(`[PostgreSQL Album Delete Error for "${albumId}"]:`, err.message);
-  }
+export async function deleteAlbumFromPostgres(albumId: string): Promise<boolean> {
+  const res = await deleteRow('albums', albumId, 'id');
+  console.log(`[PostgreSQL] ✅ Album ID "${albumId}" deleted from Supabase.`);
+  return res;
 }
 
 export async function loadAlbumsFromPostgres(): Promise<Album[]> {
@@ -914,58 +950,56 @@ export async function loadAlbumsFromPostgres(): Promise<Album[]> {
 // ==========================================
 // 7. TRACKS SYNC & LOAD
 // ==========================================
-export async function syncTrackToPostgres(track: Track): Promise<void> {
+export async function syncTrackToPostgres(track: Track): Promise<boolean> {
   const client = getPostgresPool();
-  if (!client || !isConnected) return;
-
-  try {
-    const now = new Date();
-    const createdAt = track.createdAt ? new Date(track.createdAt) : now;
-    const updatedAt = track.updatedAt ? new Date(track.updatedAt) : now;
-
-    let validArtistId = track.artistId || null;
-    if (validArtistId) {
-      const artCheck = await client.query('SELECT id FROM public.artists WHERE id = $1', [validArtistId]);
-      if (artCheck.rows.length === 0) validArtistId = null;
-    }
-
-    let validAlbumId = track.albumId || null;
-    if (validAlbumId) {
-      const albCheck = await client.query('SELECT id FROM public.albums WHERE id = $1', [validAlbumId]);
-      if (albCheck.rows.length === 0) validAlbumId = null;
-    }
-
-    const dataObj: Record<string, any> = {
-      id: track.id,
-      title: track.title,
-      artistName: track.artistName,
-      artistId: validArtistId,
-      albumId: validAlbumId,
-      duration: typeof track.duration === 'number' ? track.duration : 180,
-      coverUrl: track.coverUrl,
-      audioUrl: track.audioUrl || null,
-      spotifyUrl: track.spotifyUrl || null,
-      youtubeUrl: track.youtubeUrl || null,
-      genre: track.genre || 'Electronic',
-      plays: typeof track.plays === 'number' ? track.plays : 0,
-      isPopular: Boolean(track.isPopular),
-      order: typeof track.order === 'number' ? track.order : 0,
-      createdAt,
-      updatedAt,
-    };
-
-    await upsertRow('tracks', dataObj, 'id');
-  } catch (err: any) {
-    console.warn(`[PostgreSQL Track Sync Error for "${track.title}"]:`, err.message);
+  if (!client) {
+    throw new Error(`[PostgreSQL] Database pool is unavailable. Cannot sync track "${track.title}".`);
   }
+
+  const now = new Date();
+  const createdAt = track.createdAt ? new Date(track.createdAt) : now;
+  const updatedAt = track.updatedAt ? new Date(track.updatedAt) : now;
+
+  let validArtistId = track.artistId || null;
+  if (validArtistId) {
+    const artCheck = await client.query('SELECT id FROM public.artists WHERE id = $1', [validArtistId]);
+    if (artCheck.rows.length === 0) validArtistId = null;
+  }
+
+  let validAlbumId = track.albumId || null;
+  if (validAlbumId) {
+    const albCheck = await client.query('SELECT id FROM public.albums WHERE id = $1', [validAlbumId]);
+    if (albCheck.rows.length === 0) validAlbumId = null;
+  }
+
+  const dataObj: Record<string, any> = {
+    id: track.id,
+    title: track.title,
+    artistName: track.artistName,
+    artistId: validArtistId,
+    albumId: validAlbumId,
+    duration: typeof track.duration === 'number' ? track.duration : 180,
+    coverUrl: track.coverUrl,
+    audioUrl: track.audioUrl || null,
+    spotifyUrl: track.spotifyUrl || null,
+    youtubeUrl: track.youtubeUrl || null,
+    genre: track.genre || 'Electronic',
+    plays: typeof track.plays === 'number' ? track.plays : 0,
+    isPopular: Boolean(track.isPopular),
+    order: typeof track.order === 'number' ? track.order : 0,
+    createdAt,
+    updatedAt,
+  };
+
+  await upsertRow('tracks', dataObj, 'id');
+  console.log(`[PostgreSQL] ✅ Track "${track.title}" (${track.id}) persisted to Supabase.`);
+  return true;
 }
 
-export async function deleteTrackFromPostgres(trackId: string): Promise<void> {
-  try {
-    await deleteRow('tracks', trackId, 'id');
-  } catch (err: any) {
-    console.warn(`[PostgreSQL Track Delete Error for "${trackId}"]:`, err.message);
-  }
+export async function deleteTrackFromPostgres(trackId: string): Promise<boolean> {
+  const res = await deleteRow('tracks', trackId, 'id');
+  console.log(`[PostgreSQL] ✅ Track ID "${trackId}" deleted from Supabase.`);
+  return res;
 }
 
 export async function loadTracksFromPostgres(): Promise<Track[]> {
@@ -1001,45 +1035,43 @@ export async function loadTracksFromPostgres(): Promise<Track[]> {
 // ==========================================
 // 8. VIDEOS SYNC & LOAD
 // ==========================================
-export async function syncVideoToPostgres(video: Video): Promise<void> {
+export async function syncVideoToPostgres(video: Video): Promise<boolean> {
   const client = getPostgresPool();
-  if (!client || !isConnected) return;
-
-  try {
-    const now = new Date();
-    const createdAt = video.createdAt ? new Date(video.createdAt) : now;
-    const updatedAt = video.updatedAt ? new Date(video.updatedAt) : now;
-
-    const dataObj: Record<string, any> = {
-      id: video.id,
-      title: video.title,
-      artist: video.artist,
-      youtubeId: video.youtubeId,
-      thumbnailUrl: video.thumbnailUrl,
-      duration: video.duration || '3:30',
-      views: typeof video.views === 'number' ? video.views : 0,
-      publishedAt: video.publishedAt || now.toISOString().split('T')[0],
-      category: video.category || 'Official Music Videos',
-      featured: Boolean(video.featured),
-      description: video.description || null,
-      tags: Array.isArray(video.tags) ? JSON.stringify(video.tags) : (video.tags || '[]'),
-      order: typeof video.order === 'number' ? video.order : 0,
-      createdAt,
-      updatedAt,
-    };
-
-    await upsertRow('videos', dataObj, 'id');
-  } catch (err: any) {
-    console.warn(`[PostgreSQL Video Sync Error for "${video.title}"]:`, err.message);
+  if (!client) {
+    throw new Error(`[PostgreSQL] Database pool is unavailable. Cannot sync video "${video.title}".`);
   }
+
+  const now = new Date();
+  const createdAt = video.createdAt ? new Date(video.createdAt) : now;
+  const updatedAt = video.updatedAt ? new Date(video.updatedAt) : now;
+
+  const dataObj: Record<string, any> = {
+    id: video.id,
+    title: video.title,
+    artist: video.artist,
+    youtubeId: video.youtubeId,
+    thumbnailUrl: video.thumbnailUrl,
+    duration: video.duration || '3:30',
+    views: typeof video.views === 'number' ? video.views : 0,
+    publishedAt: video.publishedAt || now.toISOString().split('T')[0],
+    category: video.category || 'Official Music Videos',
+    featured: Boolean(video.featured),
+    description: video.description || null,
+    tags: Array.isArray(video.tags) ? JSON.stringify(video.tags) : (video.tags || '[]'),
+    order: typeof video.order === 'number' ? video.order : 0,
+    createdAt,
+    updatedAt,
+  };
+
+  await upsertRow('videos', dataObj, 'id');
+  console.log(`[PostgreSQL] ✅ Video "${video.title}" (${video.id}) persisted to Supabase.`);
+  return true;
 }
 
-export async function deleteVideoFromPostgres(videoId: string): Promise<void> {
-  try {
-    await deleteRow('videos', videoId, 'id');
-  } catch (err: any) {
-    console.warn(`[PostgreSQL Video Delete Error for "${videoId}"]:`, err.message);
-  }
+export async function deleteVideoFromPostgres(videoId: string): Promise<boolean> {
+  const res = await deleteRow('videos', videoId, 'id');
+  console.log(`[PostgreSQL] ✅ Video ID "${videoId}" deleted from Supabase.`);
+  return res;
 }
 
 export async function loadVideosFromPostgres(): Promise<Video[]> {
@@ -1074,72 +1106,71 @@ export async function loadVideosFromPostgres(): Promise<Video[]> {
 // ==========================================
 // 9. EVENTS & EVENT ARTISTS SYNC & LOAD
 // ==========================================
-export async function syncEventToPostgres(event: Event, eventArtists?: EventArtist[]): Promise<void> {
+export async function syncEventToPostgres(event: Event, eventArtists?: EventArtist[]): Promise<boolean> {
   const client = getPostgresPool();
-  if (!client || !isConnected) return;
+  if (!client) {
+    throw new Error(`[PostgreSQL] Database pool is unavailable. Cannot sync event "${event.title}".`);
+  }
 
-  try {
-    const now = new Date();
-    const createdAt = event.createdAt ? new Date(event.createdAt) : now;
-    const updatedAt = event.updatedAt ? new Date(event.updatedAt) : now;
+  const now = new Date();
+  const createdAt = event.createdAt ? new Date(event.createdAt) : now;
+  const updatedAt = event.updatedAt ? new Date(event.updatedAt) : now;
 
-    const dataObj: Record<string, any> = {
-      id: event.id,
-      title: event.title,
-      slug: event.slug || event.id,
-      mainArtist: event.mainArtist,
-      date: event.date,
-      time: event.time,
-      venue: event.venue,
-      location: event.location,
-      city: event.city || null,
-      country: event.country || null,
-      ticketUrl: event.ticketUrl || null,
-      price: event.price,
-      status: event.status || 'upcoming',
-      imageUrl: event.imageUrl,
-      description: event.description || null,
-      featured: Boolean(event.featured),
-      order: typeof event.order === 'number' ? event.order : 0,
-      createdAt,
-      updatedAt,
-    };
+  const dataObj: Record<string, any> = {
+    id: event.id,
+    title: event.title,
+    slug: event.slug || event.id,
+    mainArtist: event.mainArtist,
+    date: event.date,
+    time: event.time,
+    venue: event.venue,
+    location: event.location,
+    city: event.city || null,
+    country: event.country || null,
+    ticketUrl: event.ticketUrl || null,
+    price: event.price,
+    status: event.status || 'upcoming',
+    imageUrl: event.imageUrl,
+    description: event.description || null,
+    featured: Boolean(event.featured),
+    order: typeof event.order === 'number' ? event.order : 0,
+    createdAt,
+    updatedAt,
+  };
 
-    await upsertRow('events', dataObj, 'id');
+  await upsertRow('events', dataObj, 'id');
 
-    if (eventArtists && eventArtists.length > 0) {
-      await client.query('DELETE FROM public.event_artists WHERE "eventId" = $1', [event.id]);
-      for (const ea of eventArtists) {
-        const artCheck = await client.query('SELECT id FROM public.artists WHERE id = $1', [ea.artistId]);
-        if (artCheck.rows.length > 0) {
-          const eaObj: Record<string, any> = {
-            id: ea.id || `ea-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 6)}`,
-            eventId: event.id,
-            artistId: ea.artistId,
-            role: ea.role || 'Headliner',
-            order: typeof ea.order === 'number' ? ea.order : 0,
-            createdAt,
-            updatedAt,
-          };
-          await upsertRow('event_artists', eaObj, 'id');
-        }
+  if (eventArtists && eventArtists.length > 0) {
+    await client.query('DELETE FROM public.event_artists WHERE "eventId" = $1', [event.id]);
+    for (const ea of eventArtists) {
+      const artCheck = await client.query('SELECT id FROM public.artists WHERE id = $1', [ea.artistId]);
+      if (artCheck.rows.length > 0) {
+        const eaObj: Record<string, any> = {
+          id: ea.id || `ea-${Date.now().toString(36)}-${Math.random().toString(36).substring(2, 6)}`,
+          eventId: event.id,
+          artistId: ea.artistId,
+          role: ea.role || 'Headliner',
+          order: typeof ea.order === 'number' ? ea.order : 0,
+          createdAt,
+          updatedAt,
+        };
+        await upsertRow('event_artists', eaObj, 'id');
       }
     }
-  } catch (err: any) {
-    console.warn(`[PostgreSQL Event Sync Error for "${event.title}"]:`, err.message);
   }
+  console.log(`[PostgreSQL] ✅ Event "${event.title}" (${event.id}) persisted to Supabase.`);
+  return true;
 }
 
-export async function deleteEventFromPostgres(eventId: string): Promise<void> {
+export async function deleteEventFromPostgres(eventId: string): Promise<boolean> {
   const client = getPostgresPool();
-  if (!client || !isConnected) return;
-
-  try {
-    await client.query('DELETE FROM public.event_artists WHERE "eventId" = $1', [eventId]);
-    await deleteRow('events', eventId, 'id');
-  } catch (err: any) {
-    console.warn(`[PostgreSQL Event Delete Error for "${eventId}"]:`, err.message);
+  if (!client) {
+    throw new Error(`[PostgreSQL] Database pool is unavailable. Cannot delete event "${eventId}".`);
   }
+  await client.query('DELETE FROM public.event_artists WHERE "eventId" = $1', [eventId]);
+  await deleteRow('events', eventId, 'id');
+  console.log(`[PostgreSQL] ✅ Event ID "${eventId}" deleted from Supabase.`);
+  return true;
 }
 
 export async function loadEventsFromPostgres(): Promise<{ events: Event[]; eventArtists: EventArtist[] }> {
@@ -1193,42 +1224,40 @@ export async function loadEventsFromPostgres(): Promise<{ events: Event[]; event
 // ==========================================
 // 10. MEDIA SYNC & LOAD
 // ==========================================
-export async function syncMediaToPostgres(media: Media): Promise<void> {
+export async function syncMediaToPostgres(media: Media): Promise<boolean> {
   const client = getPostgresPool();
-  if (!client || !isConnected) return;
-
-  try {
-    const now = new Date();
-    const createdAt = media.createdAt ? new Date(media.createdAt) : now;
-    const updatedAt = media.updatedAt ? new Date(media.updatedAt) : now;
-
-    const dataObj: Record<string, any> = {
-      id: media.id,
-      filename: media.filename,
-      originalName: media.originalName,
-      mimeType: media.mimeType,
-      size: typeof media.size === 'number' ? media.size : 0,
-      url: media.url,
-      path: media.path || null,
-      altText: media.altText || null,
-      category: media.category || 'image',
-      uploadedBy: media.uploadedBy || null,
-      createdAt,
-      updatedAt,
-    };
-
-    await upsertRow('media', dataObj, 'id');
-  } catch (err: any) {
-    console.warn(`[PostgreSQL Media Sync Error for "${media.filename}"]:`, err.message);
+  if (!client) {
+    throw new Error(`[PostgreSQL] Database pool is unavailable. Cannot sync media "${media.filename}".`);
   }
+
+  const now = new Date();
+  const createdAt = media.createdAt ? new Date(media.createdAt) : now;
+  const updatedAt = media.updatedAt ? new Date(media.updatedAt) : now;
+
+  const dataObj: Record<string, any> = {
+    id: media.id,
+    filename: media.filename,
+    originalName: media.originalName,
+    mimeType: media.mimeType,
+    size: typeof media.size === 'number' ? media.size : 0,
+    url: media.url,
+    path: media.path || null,
+    altText: media.altText || null,
+    category: media.category || 'image',
+    uploadedBy: media.uploadedBy || null,
+    createdAt,
+    updatedAt,
+  };
+
+  await upsertRow('media', dataObj, 'id');
+  console.log(`[PostgreSQL] ✅ Media "${media.filename}" (${media.id}) persisted to Supabase.`);
+  return true;
 }
 
-export async function deleteMediaFromPostgres(mediaId: string): Promise<void> {
-  try {
-    await deleteRow('media', mediaId, 'id');
-  } catch (err: any) {
-    console.warn(`[PostgreSQL Media Delete Error for "${mediaId}"]:`, err.message);
-  }
+export async function deleteMediaFromPostgres(mediaId: string): Promise<boolean> {
+  const res = await deleteRow('media', mediaId, 'id');
+  console.log(`[PostgreSQL] ✅ Media ID "${mediaId}" deleted from Supabase.`);
+  return res;
 }
 
 export async function loadMediaFromPostgres(): Promise<Media[]> {
@@ -1260,40 +1289,38 @@ export async function loadMediaFromPostgres(): Promise<Media[]> {
 // ==========================================
 // 11. ADMIN USERS SYNC & LOAD
 // ==========================================
-export async function syncAdminUserToPostgres(user: AdminUser): Promise<void> {
+export async function syncAdminUserToPostgres(user: AdminUser): Promise<boolean> {
   const client = getPostgresPool();
-  if (!client || !isConnected) return;
-
-  try {
-    const now = new Date();
-    const createdAt = user.createdAt ? new Date(user.createdAt) : now;
-    const updatedAt = user.updatedAt ? new Date(user.updatedAt) : now;
-    const lastLoginAt = user.lastLoginAt ? new Date(user.lastLoginAt) : null;
-
-    const dataObj: Record<string, any> = {
-      id: user.id,
-      email: user.email,
-      passwordHash: user.passwordHash,
-      name: user.name,
-      role: user.role || 'ADMIN',
-      isActive: user.isActive !== false,
-      lastLoginAt,
-      createdAt,
-      updatedAt,
-    };
-
-    await upsertRow('admin_users', dataObj, 'id');
-  } catch (err: any) {
-    console.warn(`[PostgreSQL AdminUser Sync Error for "${user.email}"]:`, err.message);
+  if (!client) {
+    throw new Error(`[PostgreSQL] Database pool is unavailable. Cannot sync admin user "${user.email}".`);
   }
+
+  const now = new Date();
+  const createdAt = user.createdAt ? new Date(user.createdAt) : now;
+  const updatedAt = user.updatedAt ? new Date(user.updatedAt) : now;
+  const lastLoginAt = user.lastLoginAt ? new Date(user.lastLoginAt) : null;
+
+  const dataObj: Record<string, any> = {
+    id: user.id,
+    email: user.email,
+    passwordHash: user.passwordHash,
+    name: user.name,
+    role: user.role || 'ADMIN',
+    isActive: user.isActive !== false,
+    lastLoginAt,
+    createdAt,
+    updatedAt,
+  };
+
+  await upsertRow('admin_users', dataObj, 'id');
+  console.log(`[PostgreSQL] ✅ AdminUser "${user.email}" (${user.id}) persisted to Supabase.`);
+  return true;
 }
 
-export async function deleteAdminUserFromPostgres(userId: string): Promise<void> {
-  try {
-    await deleteRow('admin_users', userId, 'id');
-  } catch (err: any) {
-    console.warn(`[PostgreSQL AdminUser Delete Error for "${userId}"]:`, err.message);
-  }
+export async function deleteAdminUserFromPostgres(userId: string): Promise<boolean> {
+  const res = await deleteRow('admin_users', userId, 'id');
+  console.log(`[PostgreSQL] ✅ AdminUser ID "${userId}" deleted from Supabase.`);
+  return res;
 }
 
 export async function loadAdminUsersFromPostgres(): Promise<AdminUser[]> {
@@ -1322,33 +1349,32 @@ export async function loadAdminUsersFromPostgres(): Promise<AdminUser[]> {
 // ==========================================
 // 12. ACTIVITY LOGS SYNC & LOAD
 // ==========================================
-export async function syncActivityLogToPostgres(log: ActivityLog): Promise<void> {
+export async function syncActivityLogToPostgres(log: ActivityLog): Promise<boolean> {
   const client = getPostgresPool();
-  if (!client || !isConnected) return;
-
-  try {
-    let validUserId = log.adminUserId || null;
-    if (validUserId) {
-      const uCheck = await client.query('SELECT id FROM public.admin_users WHERE id = $1', [validUserId]);
-      if (uCheck.rows.length === 0) validUserId = null;
-    }
-
-    const dataObj: Record<string, any> = {
-      id: log.id,
-      adminUserId: validUserId,
-      action: log.action,
-      entityType: log.entityType,
-      entityId: log.entityId || null,
-      details: typeof log.details === 'object' ? JSON.stringify(log.details) : (log.details || null),
-      ipAddress: log.ipAddress || null,
-      userAgent: log.userAgent || null,
-      createdAt: log.createdAt ? new Date(log.createdAt) : new Date(),
-    };
-
-    await upsertRow('activity_logs', dataObj, 'id');
-  } catch (err: any) {
-    console.warn('[PostgreSQL ActivityLog Sync Error]:', err.message);
+  if (!client) {
+    throw new Error('[PostgreSQL] Database pool is unavailable. Cannot sync activity log.');
   }
+
+  let validUserId = log.adminUserId || null;
+  if (validUserId) {
+    const uCheck = await client.query('SELECT id FROM public.admin_users WHERE id = $1', [validUserId]);
+    if (uCheck.rows.length === 0) validUserId = null;
+  }
+
+  const dataObj: Record<string, any> = {
+    id: log.id,
+    adminUserId: validUserId,
+    action: log.action,
+    entityType: log.entityType,
+    entityId: log.entityId || null,
+    details: typeof log.details === 'object' ? JSON.stringify(log.details) : (log.details || null),
+    ipAddress: log.ipAddress || null,
+    userAgent: log.userAgent || null,
+    createdAt: log.createdAt ? new Date(log.createdAt) : new Date(),
+  };
+
+  await upsertRow('activity_logs', dataObj, 'id');
+  return true;
 }
 
 export async function loadActivityLogsFromPostgres(limit = 100): Promise<ActivityLog[]> {
@@ -1377,9 +1403,11 @@ export async function loadActivityLogsFromPostgres(limit = 100): Promise<Activit
 // ==========================================
 // 13. PRE-WEDDING STUDIO SYNC & LOAD
 // ==========================================
-export async function syncPreWeddingToPostgres(data: PreWeddingPageData): Promise<void> {
+export async function syncPreWeddingToPostgres(data: PreWeddingPageData): Promise<boolean> {
   const client = getPostgresPool();
-  if (!client || !isConnected) return;
+  if (!client) {
+    throw new Error('[PostgreSQL] Database pool is unavailable. Cannot persist Pre-Wedding data.');
+  }
 
   try {
     const dataObj: Record<string, any> = {
@@ -1401,9 +1429,12 @@ export async function syncPreWeddingToPostgres(data: PreWeddingPageData): Promis
       updatedAt: new Date(),
     };
 
-    await upsertRow('pre_wedding', dataObj, 'id');
+    const res = await upsertRow('pre_wedding', dataObj, 'id');
+    console.log('[PostgreSQL] ✅ Pre-Wedding studio content synced to Supabase PostgreSQL.');
+    return res;
   } catch (err: any) {
-    console.warn('[PostgreSQL PreWedding Sync Error]:', err.message);
+    console.error('[PostgreSQL PreWedding Sync Error]:', err.message);
+    throw err;
   }
 }
 
@@ -1492,437 +1523,9 @@ export async function initPostgresSync(
 
     console.log(`[PostgreSQL] 🔍 Discovered schema for ${tableColumnsMap.size} tables.`);
 
-    // Helper to query existing IDs
-    const getExistingIds = async (tableName: string): Promise<Set<string>> => {
-      try {
-        const r = await client.query(`SELECT "id" FROM public."${tableName}";`);
-        return new Set(r.rows.map((row: any) => String(row.id)));
-      } catch {
-        return new Set();
-      }
-    };
-
-    const existingAdminIds = await getExistingIds('admin_users');
-    const existingArtistIds = await getExistingIds('artists');
-    const existingAlbumIds = await getExistingIds('albums');
-    const existingTrackIds = await getExistingIds('tracks');
-    const existingEventIds = await getExistingIds('events');
-    const existingVideoIds = await getExistingIds('videos');
-    const existingServiceIds = await getExistingIds('services');
-    const existingMediaIds = await getExistingIds('media');
-    const existingContactIds = await getExistingIds('contact_requests');
-    const existingSocialIds = await getExistingIds('artist_socials');
-    const existingEventArtistIds = await getExistingIds('event_artists');
-
-    // Check row counts for singleton tables
-    const hpCountRes = await client.query('SELECT COUNT(*) FROM public.homepage;');
-    const hpCount = parseInt(hpCountRes.rows[0].count, 10);
-
-    const ssCountRes = await client.query('SELECT COUNT(*) FROM public.site_settings;');
-    const ssCount = parseInt(ssCountRes.rows[0].count, 10);
-
-    const pwCountRes = await client.query('SELECT COUNT(*) FROM public.pre_wedding;');
-    const pwCount = parseInt(pwCountRes.rows[0].count, 10);
-
-    console.log(`[PostgreSQL] Current row counts — Homepage: ${hpCount}, SiteSettings: ${ssCount}, PreWedding: ${pwCount}, Services: ${existingServiceIds.size}, Artists: ${existingArtistIds.size}, Albums: ${existingAlbumIds.size}, Tracks: ${existingTrackIds.size}, Contacts: ${existingContactIds.size}`);
-
-    // -----------------------------------------------------------------
-    // INITIAL BACKFILL: Insert missing records from vexo_db.json
-    // Never overwrite rows that already exist in PostgreSQL!
-    // -----------------------------------------------------------------
-
-    // 1. Homepage backfill (only if table is empty or missing reviews)
-    if (hpCount === 0 && initialData.homepage) {
-      console.log('[PostgreSQL] 📥 Backfilling homepage singleton from vexo_db.json...');
-      await syncHomepageToPostgres(initialData.homepage);
-    } else if (hpCount > 0 && initialData.homepage) {
-      // Non-destructive migration of reviews if missing in PostgreSQL
-      try {
-        const hpCheck = await client.query('SELECT "reviews" FROM public.homepage WHERE id = \'homepage-singleton\' LIMIT 1;');
-        if (hpCheck.rows.length > 0 && hpCheck.rows[0].reviews === null && initialData.homepage.reviews && initialData.homepage.reviews.length > 0) {
-          console.log('[PostgreSQL] 📥 Migrating reviews into homepage from vexo_db.json...');
-          await client.query(`
-            UPDATE public.homepage SET
-              "reviews" = $1::jsonb,
-              "reviewsBadge" = COALESCE("reviewsBadge", $2),
-              "reviewsHeading" = COALESCE("reviewsHeading", $3),
-              "reviewsSubtitle" = COALESCE("reviewsSubtitle", $4)
-            WHERE id = 'homepage-singleton';
-          `, [
-            JSON.stringify(initialData.homepage.reviews),
-            initialData.homepage.reviewsBadge || 'TESTIMONIALS & TRUST',
-            initialData.homepage.reviewsHeading || 'VOICES OF EXCELLENCE',
-            initialData.homepage.reviewsSubtitle || 'What artists, visionary couples, and industry partners say about producing with VEXO.',
-          ]);
-        }
-      } catch (err: any) {
-        console.warn('[PostgreSQL Reviews Migration Warning]:', err.message);
-      }
-    }
-
-    // 2. Site settings backfill (only if table is empty or missing footer settings)
-    if (ssCount === 0 && initialData.siteSettings) {
-      console.log('[PostgreSQL] 📥 Backfilling site_settings singleton from vexo_db.json...');
-      await syncSiteSettingsToPostgres(initialData.siteSettings);
-    } else if (ssCount > 0 && initialData.siteSettings) {
-      // Non-destructive migration of footer settings if missing in PostgreSQL
-      try {
-        const ssCheck = await client.query('SELECT "footerBio", "footerQuickLinks" FROM public.site_settings WHERE id = \'site-settings-singleton\' LIMIT 1;');
-        if (ssCheck.rows.length > 0 && (ssCheck.rows[0].footerBio === null || ssCheck.rows[0].footerQuickLinks === null) && initialData.siteSettings) {
-          console.log('[PostgreSQL] 📥 Migrating footer configuration into site_settings from vexo_db.json...');
-          await client.query(`
-            UPDATE public.site_settings SET
-              "footerBio" = COALESCE("footerBio", $1),
-              "footerQuickLinksHeading" = COALESCE("footerQuickLinksHeading", $2),
-              "footerQuickLinks" = COALESCE("footerQuickLinks", $3::jsonb),
-              "footerServicesHeading" = COALESCE("footerServicesHeading", $4),
-              "footerServicesLinks" = COALESCE("footerServicesLinks", $5::jsonb),
-              "footerContactHeading" = COALESCE("footerContactHeading", $6),
-              "footerStatusText" = COALESCE("footerStatusText", $7),
-              "socialAppleMusic" = COALESCE("socialAppleMusic", $8),
-              "socialFacebook" = COALESCE("socialFacebook", $9),
-              "socialSoundcloud" = COALESCE("socialSoundcloud", $10)
-            WHERE id = 'site-settings-singleton';
-          `, [
-            initialData.siteSettings.footerBio || null,
-            initialData.siteSettings.footerQuickLinksHeading || 'QUICK LINKS',
-            initialData.siteSettings.footerQuickLinks ? JSON.stringify(initialData.siteSettings.footerQuickLinks) : null,
-            initialData.siteSettings.footerServicesHeading || 'SERVICES',
-            initialData.siteSettings.footerServicesLinks ? JSON.stringify(initialData.siteSettings.footerServicesLinks) : null,
-            initialData.siteSettings.footerContactHeading || 'CONTACT US',
-            initialData.siteSettings.footerStatusText || 'STUDIO ACTIVE • JAIPUR',
-            initialData.siteSettings.socialAppleMusic || null,
-            initialData.siteSettings.socialFacebook || null,
-            initialData.siteSettings.socialSoundcloud || null,
-          ]);
-        }
-      } catch (err: any) {
-        console.warn('[PostgreSQL Footer Settings Migration Warning]:', err.message);
-      }
-    }
-
-    // 3. Pre-Wedding backfill (only if table is empty or missing extended sections)
-    if (pwCount === 0 && initialData.preWedding) {
-      console.log('[PostgreSQL] 📥 Backfilling pre_wedding singleton from vexo_db.json...');
-      await syncPreWeddingToPostgres(initialData.preWedding);
-    } else if (pwCount > 0 && initialData.preWedding) {
-      try {
-        const pwCheck = await client.query('SELECT "weddingPackages", "whyUsPillars", "weddingDayStories" FROM public.pre_wedding WHERE id = \'pre-wedding-singleton\' LIMIT 1;');
-        if (pwCheck.rows.length > 0 && initialData.preWedding) {
-          const row = pwCheck.rows[0];
-          const needsPackages = row.weddingPackages === null && initialData.preWedding.weddingPackages;
-          const needsWhyUs = row.whyUsPillars === null && initialData.preWedding.whyUsPillars;
-          const needsDayStories = row.weddingDayStories === null && initialData.preWedding.weddingDayStories;
-
-          if (needsPackages || needsWhyUs || needsDayStories) {
-            console.log('[PostgreSQL] 📥 Migrating pre-wedding sections into pre_wedding table from vexo_db.json...');
-            await client.query(`
-              UPDATE public.pre_wedding SET
-                "weddingPackages" = COALESCE("weddingPackages", $1::jsonb),
-                "whyUsPillars" = COALESCE("whyUsPillars", $2::jsonb),
-                "weddingDayStories" = COALESCE("weddingDayStories", $3::jsonb)
-              WHERE id = 'pre-wedding-singleton';
-            `, [
-              initialData.preWedding.weddingPackages ? JSON.stringify(initialData.preWedding.weddingPackages) : null,
-              initialData.preWedding.whyUsPillars ? JSON.stringify(initialData.preWedding.whyUsPillars) : null,
-              initialData.preWedding.weddingDayStories ? JSON.stringify(initialData.preWedding.weddingDayStories) : null,
-            ]);
-          }
-        }
-      } catch (err: any) {
-        console.warn('[PostgreSQL PreWedding Migration Warning]:', err.message);
-      }
-    }
-
-    // 4. Admin Users backfill
-    if (initialData.adminUsers && initialData.adminUsers.length > 0) {
-      for (const u of initialData.adminUsers) {
-        if (!existingAdminIds.has(u.id)) {
-          console.log(`[JSON -> Supabase] Inserting missing record into Supabase: AdminUser ID "${u.id}" (${u.email})`);
-          await insertIfNotExists('admin_users', {
-            id: u.id,
-            email: u.email,
-            passwordHash: u.passwordHash,
-            name: u.name,
-            role: u.role || 'ADMIN',
-            isActive: u.isActive !== false,
-            createdAt: u.createdAt ? new Date(u.createdAt) : new Date(),
-            updatedAt: u.updatedAt ? new Date(u.updatedAt) : new Date(),
-          });
-          existingAdminIds.add(u.id);
-        }
-      }
-    }
-
-    // 5. Artists backfill
-    if (initialData.artists && initialData.artists.length > 0) {
-      for (const a of initialData.artists) {
-        if (!existingArtistIds.has(a.id)) {
-          console.log(`[JSON -> Supabase] Inserting missing record into Supabase: Artist ID "${a.id}" ("${a.name}")`);
-          const defaultAvatar = 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80';
-          await insertIfNotExists('artists', {
-            id: a.id,
-            name: a.name,
-            slug: a.slug || a.id,
-            role: a.role || 'Recording Artist',
-            avatarUrl: (a.avatarUrl && a.avatarUrl.trim()) ? a.avatarUrl.trim() : defaultAvatar,
-            coverUrl: a.coverUrl || null,
-            bio: a.bio || null,
-            monthlyListeners: typeof a.monthlyListeners === 'number' ? a.monthlyListeners : 0,
-            genres: Array.isArray(a.genres) ? JSON.stringify(a.genres) : '["Pop"]',
-            featured: Boolean(a.featured),
-            isComingSoon: Boolean(a.isComingSoon),
-            order: typeof a.order === 'number' ? a.order : 0,
-            createdAt: a.createdAt ? new Date(a.createdAt) : new Date(),
-            updatedAt: a.updatedAt ? new Date(a.updatedAt) : new Date(),
-          });
-          existingArtistIds.add(a.id);
-        }
-      }
-    }
-
-    // 6. Artist Socials backfill (only for artists that exist in PostgreSQL)
-    if (initialData.artistSocials && initialData.artistSocials.length > 0) {
-      for (const s of initialData.artistSocials) {
-        if (existingArtistIds.has(s.artistId) && !existingSocialIds.has(s.id)) {
-          await insertIfNotExists('artist_socials', {
-            id: s.id,
-            artistId: s.artistId,
-            platform: s.platform,
-            url: s.url,
-            order: typeof s.order === 'number' ? s.order : 0,
-            createdAt: s.createdAt ? new Date(s.createdAt) : new Date(),
-            updatedAt: s.updatedAt ? new Date(s.updatedAt) : new Date(),
-          });
-          existingSocialIds.add(s.id);
-        }
-      }
-    }
-
-    // 7. Albums backfill
-    if (initialData.albums && initialData.albums.length > 0) {
-      for (const alb of initialData.albums) {
-        if (!existingAlbumIds.has(alb.id)) {
-          console.log(`[JSON -> Supabase] Inserting missing record into Supabase: Album ID "${alb.id}" ("${alb.title}")`);
-          const validArtistId = alb.artistId && existingArtistIds.has(alb.artistId) ? alb.artistId : null;
-          await insertIfNotExists('albums', {
-            id: alb.id,
-            title: alb.title,
-            slug: alb.slug || alb.id,
-            artistName: alb.artistName,
-            artistId: validArtistId,
-            coverUrl: alb.coverUrl,
-            releaseDate: alb.releaseDate || new Date().toISOString().split('T')[0],
-            year: typeof alb.year === 'number' ? alb.year : new Date().getFullYear(),
-            genre: alb.genre || 'Electronic',
-            trackCount: typeof alb.trackCount === 'number' ? alb.trackCount : 0,
-            spotifyUrl: alb.spotifyUrl || null,
-            youtubeUrl: alb.youtubeUrl || null,
-            appleMusicUrl: alb.appleMusicUrl || null,
-            featured: Boolean(alb.featured),
-            order: typeof alb.order === 'number' ? alb.order : 0,
-            createdAt: alb.createdAt ? new Date(alb.createdAt) : new Date(),
-            updatedAt: alb.updatedAt ? new Date(alb.updatedAt) : new Date(),
-          });
-          existingAlbumIds.add(alb.id);
-        }
-      }
-    }
-
-    // 8. Tracks backfill
-    if (initialData.tracks && initialData.tracks.length > 0) {
-      for (const trk of initialData.tracks) {
-        if (!existingTrackIds.has(trk.id)) {
-          console.log(`[JSON -> Supabase] Inserting missing record into Supabase: Track ID "${trk.id}" ("${trk.title}")`);
-          const validArtistId = trk.artistId && existingArtistIds.has(trk.artistId) ? trk.artistId : null;
-          const validAlbumId = trk.albumId && existingAlbumIds.has(trk.albumId) ? trk.albumId : null;
-          await insertIfNotExists('tracks', {
-            id: trk.id,
-            title: trk.title,
-            artistName: trk.artistName,
-            artistId: validArtistId,
-            albumId: validAlbumId,
-            duration: typeof trk.duration === 'number' ? trk.duration : 180,
-            coverUrl: trk.coverUrl,
-            audioUrl: trk.audioUrl || null,
-            spotifyUrl: trk.spotifyUrl || null,
-            youtubeUrl: trk.youtubeUrl || null,
-            genre: trk.genre || 'Electronic',
-            plays: typeof trk.plays === 'number' ? trk.plays : 0,
-            isPopular: Boolean(trk.isPopular),
-            order: typeof trk.order === 'number' ? trk.order : 0,
-            createdAt: trk.createdAt ? new Date(trk.createdAt) : new Date(),
-            updatedAt: trk.updatedAt ? new Date(trk.updatedAt) : new Date(),
-          });
-          existingTrackIds.add(trk.id);
-        }
-      }
-    }
-
-    // 9. Events backfill
-    if (initialData.events && initialData.events.length > 0) {
-      for (const ev of initialData.events) {
-        if (!existingEventIds.has(ev.id)) {
-          console.log(`[JSON -> Supabase] Inserting missing record into Supabase: Event ID "${ev.id}" ("${ev.title}")`);
-          await insertIfNotExists('events', {
-            id: ev.id,
-            title: ev.title,
-            slug: ev.slug || ev.id,
-            mainArtist: ev.mainArtist,
-            date: ev.date,
-            time: ev.time,
-            venue: ev.venue,
-            location: ev.location,
-            city: ev.city || null,
-            country: ev.country || null,
-            ticketUrl: ev.ticketUrl || null,
-            price: ev.price,
-            status: ev.status || 'upcoming',
-            imageUrl: ev.imageUrl,
-            description: ev.description || null,
-            featured: Boolean(ev.featured),
-            order: typeof ev.order === 'number' ? ev.order : 0,
-            createdAt: ev.createdAt ? new Date(ev.createdAt) : new Date(),
-            updatedAt: ev.updatedAt ? new Date(ev.updatedAt) : new Date(),
-          });
-          existingEventIds.add(ev.id);
-        }
-      }
-    }
-
-    // 10. Event Artists backfill
-    if (initialData.eventArtists && initialData.eventArtists.length > 0) {
-      for (const ea of initialData.eventArtists) {
-        if (existingEventIds.has(ea.eventId) && existingArtistIds.has(ea.artistId) && !existingEventArtistIds.has(ea.id)) {
-          await insertIfNotExists('event_artists', {
-            id: ea.id,
-            eventId: ea.eventId,
-            artistId: ea.artistId,
-            role: ea.role || 'Headliner',
-            order: typeof ea.order === 'number' ? ea.order : 0,
-            createdAt: ea.createdAt ? new Date(ea.createdAt) : new Date(),
-            updatedAt: ea.updatedAt ? new Date(ea.updatedAt) : new Date(),
-          });
-          existingEventArtistIds.add(ea.id);
-        }
-      }
-    }
-
-    // 11. Videos backfill
-    if (initialData.videos && initialData.videos.length > 0) {
-      for (const vid of initialData.videos) {
-        if (!existingVideoIds.has(vid.id)) {
-          console.log(`[JSON -> Supabase] Inserting missing record into Supabase: Video ID "${vid.id}" ("${vid.title}")`);
-          await insertIfNotExists('videos', {
-            id: vid.id,
-            title: vid.title,
-            artist: vid.artist,
-            youtubeId: vid.youtubeId,
-            thumbnailUrl: vid.thumbnailUrl,
-            duration: vid.duration || '3:30',
-            views: typeof vid.views === 'number' ? vid.views : 0,
-            publishedAt: vid.publishedAt || new Date().toISOString().split('T')[0],
-            category: vid.category || 'Official Music Videos',
-            featured: Boolean(vid.featured),
-            description: vid.description || null,
-            tags: Array.isArray(vid.tags) ? JSON.stringify(vid.tags) : '[]',
-            order: typeof vid.order === 'number' ? vid.order : 0,
-            createdAt: vid.createdAt ? new Date(vid.createdAt) : new Date(),
-            updatedAt: vid.updatedAt ? new Date(vid.updatedAt) : new Date(),
-          });
-          existingVideoIds.add(vid.id);
-        }
-      }
-    }
-
-    // 12. Services backfill
-    if (initialData.services && initialData.services.length > 0) {
-      for (const s of initialData.services) {
-        if (!existingServiceIds.has(s.id)) {
-          console.log(`[JSON -> Supabase] Inserting missing record into Supabase: Service ID "${s.id}" ("${s.title}")`);
-          await insertIfNotExists('services', {
-            id: s.id,
-            number: s.number || '01',
-            title: s.title,
-            slug: s.slug || s.id,
-            category: s.category || 'Production',
-            shortDesc: s.shortDesc || s.fullDesc || '',
-            fullDesc: s.fullDesc || s.shortDesc || '',
-            description: s.shortDesc || s.fullDesc || '',
-            imageUrl: s.imageUrl || '',
-            icon: s.icon || 'Music',
-            features: Array.isArray(s.features) ? JSON.stringify(s.features) : '[]',
-            plans: (s as any).plans ? JSON.stringify((s as any).plans) : '[]',
-            specs: (s as any).specs ? JSON.stringify((s as any).specs) : '[]',
-            specifications: (s as any).specs ? JSON.stringify((s as any).specs) : '[]',
-            deliverables: (s as any).deliverables ? JSON.stringify((s as any).deliverables) : '[]',
-            equipmentList: (s as any).equipmentList ? JSON.stringify((s as any).equipmentList) : '[]',
-            faqs: (s as any).faqs ? JSON.stringify((s as any).faqs) : '[]',
-            ctaText: s.ctaText || 'INITIATE PROJECT',
-            pricingRange: s.pricingRange || null,
-            order: typeof s.order === 'number' ? s.order : 0,
-            isActive: s.isActive !== false,
-            createdAt: s.createdAt ? new Date(s.createdAt) : new Date(),
-            updatedAt: s.updatedAt ? new Date(s.updatedAt) : new Date(),
-          });
-          existingServiceIds.add(s.id);
-        }
-      }
-    }
-
-    // 13. Media backfill
-    if (initialData.media && initialData.media.length > 0) {
-      for (const m of initialData.media) {
-        if (!existingMediaIds.has(m.id)) {
-          console.log(`[JSON -> Supabase] Inserting missing record into Supabase: Media ID "${m.id}" ("${m.filename}")`);
-          await insertIfNotExists('media', {
-            id: m.id,
-            filename: m.filename,
-            originalName: m.originalName,
-            mimeType: m.mimeType,
-            size: typeof m.size === 'number' ? m.size : 0,
-            url: m.url,
-            path: m.path || null,
-            altText: m.altText || null,
-            category: m.category || 'image',
-            uploadedBy: m.uploadedBy || null,
-            createdAt: m.createdAt ? new Date(m.createdAt) : new Date(),
-            updatedAt: m.updatedAt ? new Date(m.updatedAt) : new Date(),
-          });
-          existingMediaIds.add(m.id);
-        }
-      }
-    }
-
-    // 14. Contact Requests backfill (missing records only)
-    if (initialData.contactRequests && initialData.contactRequests.length > 0) {
-      for (const c of initialData.contactRequests) {
-        if (!existingContactIds.has(c.id)) {
-          console.log(`[JSON -> Supabase] Inserting missing record into Supabase: ContactRequest ID "${c.id}" (${c.referenceId || c.email})`);
-          await insertIfNotExists('contact_requests', {
-            id: c.id,
-            referenceId: c.referenceId || `VXO-${Date.now().toString(36).toUpperCase()}`,
-            name: c.name,
-            email: c.email,
-            phone: c.phone || null,
-            company: c.company || null,
-            service: c.service,
-            message: c.message,
-            status: c.status || 'NEW',
-            notes: c.notes || null,
-            createdAt: c.createdAt ? new Date(c.createdAt) : new Date(),
-            updatedAt: c.updatedAt ? new Date(c.updatedAt) : new Date(),
-          });
-          existingContactIds.add(c.id);
-        }
-      }
-    }
-
-    console.log('[PostgreSQL] ✅ Initial migration and missing-record backfill complete.');
-
     // -----------------------------------------------------------------
     // HYDRATION: Load authoritative records from PostgreSQL
-    // PostgreSQL is now the authoritative production source of truth.
+    // Supabase PostgreSQL is the SINGLE LIVE SOURCE OF TRUTH.
     // -----------------------------------------------------------------
     if (onHydrate) {
       const [
@@ -1959,18 +1562,18 @@ export async function initPostgresSync(
         homepage: loadedHomepage || undefined,
         siteSettings: loadedSiteSettings || undefined,
         preWedding: loadedPreWedding || undefined,
-        services: loadedServices.length > 0 ? loadedServices : undefined,
-        contactRequests: loadedContacts.length > 0 ? loadedContacts : undefined,
-        artists: loadedArtistsResult.artists.length > 0 ? loadedArtistsResult.artists : undefined,
-        artistSocials: loadedArtistsResult.socials.length > 0 ? loadedArtistsResult.socials : undefined,
-        albums: loadedAlbums.length > 0 ? loadedAlbums : undefined,
-        tracks: loadedTracks.length > 0 ? loadedTracks : undefined,
-        events: loadedEventsResult.events.length > 0 ? loadedEventsResult.events : undefined,
-        eventArtists: loadedEventsResult.eventArtists.length > 0 ? loadedEventsResult.eventArtists : undefined,
-        videos: loadedVideos.length > 0 ? loadedVideos : undefined,
-        media: loadedMedia.length > 0 ? loadedMedia : undefined,
-        adminUsers: loadedAdmins.length > 0 ? loadedAdmins : undefined,
-        activityLogs: loadedLogs.length > 0 ? loadedLogs : undefined,
+        services: loadedServices,
+        contactRequests: loadedContacts,
+        artists: loadedArtistsResult.artists,
+        artistSocials: loadedArtistsResult.socials,
+        albums: loadedAlbums,
+        tracks: loadedTracks,
+        events: loadedEventsResult.events,
+        eventArtists: loadedEventsResult.eventArtists,
+        videos: loadedVideos,
+        media: loadedMedia,
+        adminUsers: loadedAdmins,
+        activityLogs: loadedLogs,
       };
 
       onHydrate(authoritativeData);

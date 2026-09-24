@@ -1,6 +1,3 @@
-import fs from 'node:fs';
-import path from 'node:path';
-import { fileURLToPath } from 'node:url';
 import { hashPassword, generateId } from '../lib/crypto.js';
 import type {
   AdminUser,
@@ -48,17 +45,6 @@ import {
   syncActivityLogToPostgres,
   syncPreWeddingToPostgres,
 } from './postgres.js';
-
-const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
-const DATA_DIR = path.resolve(__dirname, '../../data');
-const DB_FILE = path.join(DATA_DIR, 'vexo_db.json');
-
-function ensureDataDirectory() {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
-  }
-}
 
 function getInitialDatabase(): DatabaseSchema {
   const now = new Date().toISOString();
@@ -819,58 +805,11 @@ function getInitialDatabase(): DatabaseSchema {
   };
 }
 
-function safeMergeCollections<T extends { id: string; updatedAt?: string }>(
-  entityName: string,
-  localItems: T[] = [],
-  remoteItems: T[] = []
-): T[] {
-  if (!remoteItems || remoteItems.length === 0) {
-    return localItems;
-  }
-  if (!localItems || localItems.length === 0) {
-    return remoteItems;
-  }
-
-  const mergedMap = new Map<string, T>();
-  const remoteMap = new Map<string, T>(remoteItems.map((item) => [item.id, item]));
-
-  // 1. Process all local records
-  for (const local of localItems) {
-    const remote = remoteMap.get(local.id);
-    if (!remote) {
-      // Exists in JSON but not in Supabase: DO NOT DELETE, preserve in local cache!
-      console.log(`[Sync] Preserving local record in vexo_db.json: ${entityName} ID "${local.id}"`);
-      mergedMap.set(local.id, local);
-    } else {
-      // Exists in both: compare and synchronize safely
-      const localTime = local.updatedAt ? new Date(local.updatedAt).getTime() : 0;
-      const remoteTime = remote.updatedAt ? new Date(remote.updatedAt).getTime() : 0;
-      if (remoteTime >= localTime) {
-        mergedMap.set(local.id, { ...local, ...remote });
-      } else {
-        mergedMap.set(local.id, { ...remote, ...local });
-      }
-    }
-  }
-
-  // 2. Add remote records that did not exist in JSON
-  for (const remote of remoteItems) {
-    if (!mergedMap.has(remote.id)) {
-      console.log(`[Supabase -> vexo_db.json] New record found in Supabase: ${entityName} ID "${remote.id}", merging into local cache.`);
-      mergedMap.set(remote.id, remote);
-    }
-  }
-
-  return Array.from(mergedMap.values());
-}
-
 class DatabaseStore {
   private data: DatabaseSchema;
-  private saveTimeout: NodeJS.Timeout | null = null;
   private syncPromise: Promise<boolean> | null = null;
 
   constructor() {
-    ensureDataDirectory();
     this.data = this.load();
     this.syncPromise = initPostgresSync(this.data, (authoritativeData) => {
       this.hydrateFromPostgres(authoritativeData);
@@ -880,7 +819,7 @@ class DatabaseStore {
     });
   }
 
-  public async waitForSync(timeoutMs: number = 6000): Promise<boolean> {
+  public async waitForSync(timeoutMs: number = 8000): Promise<boolean> {
     if (!this.syncPromise) return false;
     return Promise.race([
       this.syncPromise,
@@ -890,197 +829,70 @@ class DatabaseStore {
 
   public hydrateFromPostgres(pgData: Partial<DatabaseSchema>) {
     if (pgData.homepage) {
-      const cur = this.data.homepage;
-      const remote = pgData.homepage;
-      this.data.homepage = {
-        ...cur,
-        ...remote,
-        reviews: (remote.reviews && remote.reviews.length > 0) ? remote.reviews : (cur.reviews || []),
-        selectedAlbumIds: (remote.selectedAlbumIds && remote.selectedAlbumIds.length > 0) ? remote.selectedAlbumIds : (cur.selectedAlbumIds || []),
-        featuredArtistIds: (remote.featuredArtistIds && remote.featuredArtistIds.length > 0) ? remote.featuredArtistIds : (cur.featuredArtistIds || []),
-        featuredEventIds: (remote.featuredEventIds && remote.featuredEventIds.length > 0) ? remote.featuredEventIds : (cur.featuredEventIds || []),
-        featuredVideoIds: (remote.featuredVideoIds && remote.featuredVideoIds.length > 0) ? remote.featuredVideoIds : (cur.featuredVideoIds || []),
-      };
+      this.data.homepage = pgData.homepage;
     }
     if (pgData.siteSettings) {
-      const cur = this.data.siteSettings;
-      const remote = pgData.siteSettings;
-      this.data.siteSettings = {
-        ...cur,
-        ...remote,
-        footerQuickLinks: (remote.footerQuickLinks && remote.footerQuickLinks.length > 0) ? remote.footerQuickLinks : (cur.footerQuickLinks || []),
-        footerServicesLinks: (remote.footerServicesLinks && remote.footerServicesLinks.length > 0) ? remote.footerServicesLinks : (cur.footerServicesLinks || []),
-      };
+      this.data.siteSettings = pgData.siteSettings;
     }
     if (pgData.preWedding) {
-      const cur = this.data.preWedding;
-      const remote = pgData.preWedding;
-      this.data.preWedding = {
-        ...cur,
-        ...remote,
-        studioInfo: { ...(cur?.studioInfo || {}), ...(remote.studioInfo || {}) },
-        directorInfo: { ...(cur?.directorInfo || {}), ...(remote.directorInfo || {}) },
-        heroStats: (remote.heroStats && remote.heroStats.length > 0) ? remote.heroStats : (cur?.heroStats || []),
-        processSteps: (remote.processSteps && remote.processSteps.length > 0) ? remote.processSteps : (cur?.processSteps || []),
-        videos: (remote.videos && remote.videos.length > 0) ? remote.videos : (cur?.videos || []),
-        portfolioGallery: (remote.portfolioGallery && remote.portfolioGallery.length > 0) ? remote.portfolioGallery : (cur?.portfolioGallery || []),
-        coverageTypes: (remote.coverageTypes && remote.coverageTypes.length > 0) ? remote.coverageTypes : (cur?.coverageTypes || []),
-        coupleStories: (remote.coupleStories && remote.coupleStories.length > 0) ? remote.coupleStories : (cur?.coupleStories || []),
-        packages: (remote.packages && remote.packages.length > 0) ? remote.packages : (cur?.packages || []),
-        weddingPackages: (remote.weddingPackages && remote.weddingPackages.length > 0) ? remote.weddingPackages : (cur?.weddingPackages || []),
-        customServices: (remote.customServices && remote.customServices.length > 0) ? remote.customServices : (cur?.customServices || []),
-        addOns: (remote.addOns && remote.addOns.length > 0) ? remote.addOns : (cur?.addOns || []),
-        whyUsPillars: (remote.whyUsPillars && remote.whyUsPillars.length > 0) ? remote.whyUsPillars : (cur?.whyUsPillars || []),
-        weddingDayStories: (remote.weddingDayStories && Object.keys(remote.weddingDayStories).length > 0) ? remote.weddingDayStories : (cur?.weddingDayStories || {} as any),
-      };
+      this.data.preWedding = pgData.preWedding;
     }
 
-    if (pgData.services) {
-      this.data.services = safeMergeCollections('Service', this.data.services, pgData.services);
+    if (pgData.services && Array.isArray(pgData.services)) {
+      this.data.services = pgData.services;
     }
-    if (pgData.contactRequests) {
-      this.data.contactRequests = safeMergeCollections('ContactRequest', this.data.contactRequests, pgData.contactRequests);
+    if (pgData.contactRequests && Array.isArray(pgData.contactRequests)) {
+      this.data.contactRequests = pgData.contactRequests;
     }
-    if (pgData.artists) {
-      this.data.artists = safeMergeCollections('Artist', this.data.artists, pgData.artists);
+    if (pgData.artists && Array.isArray(pgData.artists)) {
+      this.data.artists = pgData.artists;
     }
-    if (pgData.artistSocials) {
-      this.data.artistSocials = safeMergeCollections('ArtistSocial', this.data.artistSocials, pgData.artistSocials);
+    if (pgData.artistSocials && Array.isArray(pgData.artistSocials)) {
+      this.data.artistSocials = pgData.artistSocials;
     }
-    if (pgData.albums) {
-      this.data.albums = safeMergeCollections('Album', this.data.albums, pgData.albums);
+    if (pgData.albums && Array.isArray(pgData.albums)) {
+      this.data.albums = pgData.albums;
     }
-    if (pgData.tracks) {
-      this.data.tracks = safeMergeCollections('Track', this.data.tracks, pgData.tracks);
+    if (pgData.tracks && Array.isArray(pgData.tracks)) {
+      this.data.tracks = pgData.tracks;
     }
-    if (pgData.events) {
-      this.data.events = safeMergeCollections('Event', this.data.events, pgData.events);
+    if (pgData.events && Array.isArray(pgData.events)) {
+      this.data.events = pgData.events;
     }
-    if (pgData.eventArtists) {
-      this.data.eventArtists = safeMergeCollections('EventArtist', this.data.eventArtists, pgData.eventArtists);
+    if (pgData.eventArtists && Array.isArray(pgData.eventArtists)) {
+      this.data.eventArtists = pgData.eventArtists;
     }
-    if (pgData.videos) {
-      this.data.videos = safeMergeCollections('Video', this.data.videos, pgData.videos);
+    if (pgData.videos && Array.isArray(pgData.videos)) {
+      this.data.videos = pgData.videos;
     }
-    if (pgData.media) {
-      this.data.media = safeMergeCollections('Media', this.data.media, pgData.media);
+    if (pgData.media && Array.isArray(pgData.media)) {
+      this.data.media = pgData.media;
     }
-    if (pgData.adminUsers) {
-      this.data.adminUsers = safeMergeCollections('AdminUser', this.data.adminUsers, pgData.adminUsers);
+    if (pgData.adminUsers && Array.isArray(pgData.adminUsers) && pgData.adminUsers.length > 0) {
+      this.data.adminUsers = pgData.adminUsers;
     }
-    if (pgData.activityLogs) {
-      this.data.activityLogs = safeMergeCollections('ActivityLog', this.data.activityLogs, pgData.activityLogs);
+    if (pgData.activityLogs && Array.isArray(pgData.activityLogs)) {
+      this.data.activityLogs = pgData.activityLogs;
     }
 
-    this.persistSync(this.data);
-    console.log('[DatabaseStore] ✅ vexo_db.json cache successfully synchronized with Supabase PostgreSQL.');
+    console.log('[DatabaseStore] ✅ In-memory store successfully hydrated directly from Supabase PostgreSQL.');
   }
 
   private load(): DatabaseSchema {
-    const initial = getInitialDatabase();
-    try {
-      if (fs.existsSync(DB_FILE)) {
-        const fileContent = fs.readFileSync(DB_FILE, 'utf-8');
-        const parsed = JSON.parse(fileContent);
-        // Ensure all 14 models exist in parsed data
-        const loadedServices = (parsed.services && parsed.services.length > 0)
-          ? parsed.services.map((s: any, idx: number) => {
-            const fallback = initial.services.find(
-              (is) => is.id === s.id || is.slug === s.slug || is.title?.toLowerCase() === s.title?.toLowerCase()
-            );
-            return {
-              ...s,
-              icon: s.icon || fallback?.icon || 'Music',
-              order: typeof s.order === 'number' ? s.order : idx + 1,
-              slug: s.slug || fallback?.slug || (s.title ? s.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '') : `service-${idx + 1}`),
-              isActive: s.isActive !== undefined ? Boolean(s.isActive) : true,
-              plans: (Array.isArray(s.plans) && s.plans.length > 0) ? s.plans : (fallback?.plans || []),
-              specs: (Array.isArray(s.specs) && s.specs.length > 0) ? s.specs : (s.specifications || fallback?.specs || []),
-              processSteps: (Array.isArray(s.processSteps) && s.processSteps.length > 0) ? s.processSteps : (fallback?.processSteps || []),
-              deliverables: (Array.isArray(s.deliverables) && s.deliverables.length > 0) ? s.deliverables : (fallback?.deliverables || []),
-              faqs: (Array.isArray(s.faqs) && s.faqs.length > 0) ? s.faqs : (fallback?.faqs || []),
-            };
-          })
-          : initial.services;
-
-        const loadedArtists = Array.isArray(parsed.artists)
-          ? parsed.artists.filter((a: any) => a.id !== 'art-4' && a.name !== 'Artist Coming Soon')
-          : initial.artists;
-        loadedArtists.sort((a: any, b: any) => (a.order || 99) - (b.order || 99));
-
-        const loadedAlbums = Array.isArray(parsed.albums) ? parsed.albums : initial.albums;
-        loadedAlbums.sort((a: any, b: any) => (a.order || 99) - (b.order || 99));
-
-        const loadedTracks = Array.isArray(parsed.tracks) ? parsed.tracks : initial.tracks;
-        loadedTracks.sort((a: any, b: any) => (a.order || 99) - (b.order || 99));
-
-        const loadedVideos = [...(parsed.videos || [])];
-        initial.videos.forEach((vid) => {
-          if (!loadedVideos.some((v: any) => v.id === vid.id || v.youtubeId === vid.youtubeId)) {
-            loadedVideos.push(vid);
-          }
-        });
-        loadedVideos.sort((a: any, b: any) => (a.order || 99) - (b.order || 99));
-
-        const loadedSocials = (parsed.artistSocials || []).filter((s: any) => s.artistId !== 'art-4');
-        initial.artistSocials.forEach((soc) => {
-          if (!loadedSocials.some((s: any) => s.id === soc.id)) {
-            loadedSocials.push(soc);
-          }
-        });
-
-        const loadedHomepage = parsed.homepage
-          ? {
-            ...initial.homepage,
-            ...parsed.homepage,
-            featuredVideoId: parsed.homepage.featuredVideoId === 'HcEcM5AtEZ8' ? 'PsmXAUKjR5Y' : (parsed.homepage.featuredVideoId || 'PsmXAUKjR5Y'),
-            selectedAlbumIds: ['alb-2', 'alb-bhartar', 'alb-1', 'alb-3'],
-            featuredVideoIds: ['vid-1', 'vid-bhartar', 'vid-2', 'vid-3'],
-            marqueeText: initial.homepage.marqueeText,
-            reviews: parsed.homepage.reviews && parsed.homepage.reviews.length > 0 ? parsed.homepage.reviews : initial.homepage.reviews,
-          }
-          : initial.homepage;
-
-        const merged: DatabaseSchema = {
-          adminUsers: parsed.adminUsers || initial.adminUsers,
-          artists: loadedArtists,
-          artistSocials: loadedSocials,
-          albums: loadedAlbums,
-          tracks: loadedTracks,
-          events: parsed.events || initial.events,
-          eventArtists: parsed.eventArtists || initial.eventArtists,
-          videos: loadedVideos,
-          services: loadedServices,
-          media: parsed.media || initial.media,
-          contactRequests: parsed.contactRequests || initial.contactRequests,
-          homepage: loadedHomepage,
-          siteSettings: parsed.siteSettings ? { ...initial.siteSettings, ...parsed.siteSettings } : initial.siteSettings,
-          activityLogs: parsed.activityLogs || initial.activityLogs,
-          preWedding: parsed.preWedding || initial.preWedding,
-        };
-
-        this.persistSync(merged);
-        return merged;
-      }
-    } catch (err) {
-      console.error('[DatabaseStore] Failed to load DB file, initializing fresh state:', err);
-    }
-
-    this.persistSync(initial);
-    return initial;
+    // Supabase PostgreSQL is the single source of truth.
+    // In-memory data is initialized with the clean schema structure,
+    // and immediately hydrated with authoritative live rows from Supabase.
+    return getInitialDatabase();
   }
 
-  private persistSync(data: DatabaseSchema) {
-    try {
-      ensureDataDirectory();
-      fs.writeFileSync(DB_FILE, JSON.stringify(data, null, 2), 'utf-8');
-    } catch (err) {
-      console.error('[DatabaseStore] Failed to write DB file:', err);
-    }
+  private persistSync(_data?: DatabaseSchema) {
+    // Normal runtime file writes are disabled.
+    // backend/data/vexo_db.backup.json is reserved solely as a static emergency recovery backup.
   }
 
   public persist() {
-    this.persistSync(this.data);
+    // Normal runtime file writes are disabled.
+    // Live writes are committed directly and synchronously to Supabase PostgreSQL.
   }
 
   public get snapshot(): DatabaseSchema {
@@ -1107,29 +919,27 @@ class DatabaseStore {
           createdAt: now,
           updatedAt: now,
         };
-        this.data.adminUsers.push(user);
         await syncAdminUserToPostgres(user);
-        this.persist();
+        this.data.adminUsers.push(user);
         return user;
       },
       update: async (id: string, updates: Partial<AdminUser>) => {
         const index = this.data.adminUsers.findIndex((u) => u.id === id);
         if (index === -1) return null;
-        this.data.adminUsers[index] = {
+        const updated: AdminUser = {
           ...this.data.adminUsers[index],
           ...updates,
           updatedAt: new Date().toISOString(),
         };
-        await syncAdminUserToPostgres(this.data.adminUsers[index]);
-        this.persist();
-        return this.data.adminUsers[index];
+        await syncAdminUserToPostgres(updated);
+        this.data.adminUsers[index] = updated;
+        return updated;
       },
       delete: async (id: string) => {
         const index = this.data.adminUsers.findIndex((u) => u.id === id);
         if (index === -1) return false;
-        this.data.adminUsers.splice(index, 1);
         await deleteAdminUserFromPostgres(id);
-        this.persist();
+        this.data.adminUsers.splice(index, 1);
         return true;
       },
     };
@@ -1169,11 +979,11 @@ class DatabaseStore {
           createdAt: now,
           updatedAt: now,
         };
-        this.data.artists.push(artist);
 
+        const socialsList: ArtistSocial[] = [];
         if (socials && socials.length > 0) {
           socials.forEach((s, idx) => {
-            this.data.artistSocials.push({
+            socialsList.push({
               id: generateId('soc'),
               artistId: id,
               platform: s.platform,
@@ -1185,56 +995,52 @@ class DatabaseStore {
           });
         }
 
-        const createdArtist = this.artists.findById(id);
-        if (createdArtist) {
-          await syncArtistToPostgres(createdArtist, createdArtist.socials);
-        }
-        this.persist();
-        return createdArtist;
+        await syncArtistToPostgres(artist, socialsList);
+        this.data.artists.push(artist);
+        this.data.artistSocials.push(...socialsList);
+        return this.artists.findById(id);
       },
       update: async (id: string, updates: Partial<Artist>, socials?: Array<{ platform: string; url: string }>) => {
         const index = this.data.artists.findIndex((a) => a.id === id);
         if (index === -1) return null;
         const now = new Date().toISOString();
 
-        this.data.artists[index] = {
+        const updatedArtist: Artist = {
           ...this.data.artists[index],
           ...updates,
           updatedAt: now,
         };
 
+        let updatedSocials: ArtistSocial[] | undefined = undefined;
         if (socials !== undefined) {
-          // Remove old socials
-          this.data.artistSocials = this.data.artistSocials.filter((s) => s.artistId !== id);
-          // Insert new
-          socials.forEach((s, idx) => {
-            this.data.artistSocials.push({
-              id: generateId('soc'),
-              artistId: id,
-              platform: s.platform,
-              url: s.url,
-              order: idx + 1,
-              createdAt: now,
-              updatedAt: now,
-            });
-          });
+          updatedSocials = socials.map((s, idx) => ({
+            id: generateId('soc'),
+            artistId: id,
+            platform: s.platform,
+            url: s.url,
+            order: idx + 1,
+            createdAt: now,
+            updatedAt: now,
+          }));
         }
 
-        const updatedArtist = this.artists.findById(id);
-        if (updatedArtist) {
-          await syncArtistToPostgres(updatedArtist, updatedArtist.socials);
+        await syncArtistToPostgres(updatedArtist, updatedSocials);
+        this.data.artists[index] = updatedArtist;
+
+        if (updatedSocials !== undefined) {
+          this.data.artistSocials = this.data.artistSocials.filter((s) => s.artistId !== id);
+          this.data.artistSocials.push(...updatedSocials);
         }
-        this.persist();
-        return updatedArtist;
+
+        return this.artists.findById(id);
       },
       delete: async (id: string) => {
         const index = this.data.artists.findIndex((a) => a.id === id);
         if (index === -1) return false;
+        await deleteArtistFromPostgres(id);
         this.data.artists.splice(index, 1);
         this.data.artistSocials = this.data.artistSocials.filter((s) => s.artistId !== id);
         this.data.eventArtists = this.data.eventArtists.filter((ea) => ea.artistId !== id);
-        await deleteArtistFromPostgres(id);
-        this.persist();
         return true;
       },
     };
@@ -1275,35 +1081,30 @@ class DatabaseStore {
           createdAt: now,
           updatedAt: now,
         };
-        this.data.albums.push(album);
         await syncAlbumToPostgres(album);
-        this.persist();
+        this.data.albums.push(album);
         return album;
       },
       update: async (id: string, updates: Partial<Album>) => {
         const index = this.data.albums.findIndex((a) => a.id === id);
         if (index === -1) return null;
-        this.data.albums[index] = {
+        const updated: Album = {
           ...this.data.albums[index],
           ...updates,
           updatedAt: new Date().toISOString(),
         };
-        const updated = this.albums.findById(id);
-        if (updated) {
-          await syncAlbumToPostgres(updated);
-        }
-        this.persist();
-        return updated;
+        await syncAlbumToPostgres(updated);
+        this.data.albums[index] = updated;
+        return this.albums.findById(id);
       },
       delete: async (id: string) => {
         const index = this.data.albums.findIndex((a) => a.id === id);
         if (index === -1) return false;
+        await deleteAlbumFromPostgres(id);
         this.data.albums.splice(index, 1);
         this.data.tracks.forEach((t) => {
           if (t.albumId === id) t.albumId = null;
         });
-        await deleteAlbumFromPostgres(id);
-        this.persist();
         return true;
       },
     };
@@ -1324,45 +1125,43 @@ class DatabaseStore {
           createdAt: now,
           updatedAt: now,
         };
-        this.data.tracks.push(track);
         await syncTrackToPostgres(track);
+        this.data.tracks.push(track);
         // Update album trackCount
         if (track.albumId) {
           const album = this.data.albums.find((a) => a.id === track.albumId);
           if (album) {
             album.trackCount = this.data.tracks.filter((t) => t.albumId === album.id).length;
-            await syncAlbumToPostgres(album);
+            await syncAlbumToPostgres(album).catch(() => {});
           }
         }
-        this.persist();
         return track;
       },
       update: async (id: string, updates: Partial<Track>) => {
         const index = this.data.tracks.findIndex((t) => t.id === id);
         if (index === -1) return null;
-        this.data.tracks[index] = {
+        const updated: Track = {
           ...this.data.tracks[index],
           ...updates,
           updatedAt: new Date().toISOString(),
         };
-        await syncTrackToPostgres(this.data.tracks[index]);
-        this.persist();
-        return this.data.tracks[index];
+        await syncTrackToPostgres(updated);
+        this.data.tracks[index] = updated;
+        return updated;
       },
       delete: async (id: string) => {
         const index = this.data.tracks.findIndex((t) => t.id === id);
         if (index === -1) return false;
         const albumId = this.data.tracks[index].albumId;
-        this.data.tracks.splice(index, 1);
         await deleteTrackFromPostgres(id);
+        this.data.tracks.splice(index, 1);
         if (albumId) {
           const album = this.data.albums.find((a) => a.id === albumId);
           if (album) {
             album.trackCount = this.data.tracks.filter((t) => t.albumId === album.id).length;
-            await syncAlbumToPostgres(album);
+            await syncAlbumToPostgres(album).catch(() => {});
           }
         }
-        this.persist();
         return true;
       },
     };
@@ -1404,11 +1203,11 @@ class DatabaseStore {
           createdAt: now,
           updatedAt: now,
         };
-        this.data.events.push(event);
 
+        const eventArtistsList: EventArtist[] = [];
         if (artistIds && artistIds.length > 0) {
           artistIds.forEach((artId, idx) => {
-            this.data.eventArtists.push({
+            eventArtistsList.push({
               id: generateId('ea'),
               eventId: id,
               artistId: artId,
@@ -1420,53 +1219,51 @@ class DatabaseStore {
           });
         }
 
-        const createdEvent = this.events.findById(id);
-        if (createdEvent) {
-          await syncEventToPostgres(createdEvent, createdEvent.eventArtists);
-        }
-        this.persist();
-        return createdEvent;
+        await syncEventToPostgres(event, eventArtistsList);
+        this.data.events.push(event);
+        this.data.eventArtists.push(...eventArtistsList);
+        return this.events.findById(id);
       },
       update: async (id: string, updates: Partial<Event>, artistIds?: string[]) => {
         const index = this.data.events.findIndex((e) => e.id === id);
         if (index === -1) return null;
         const now = new Date().toISOString();
 
-        this.data.events[index] = {
+        const updatedEvent: Event = {
           ...this.data.events[index],
           ...updates,
           updatedAt: now,
         };
 
+        let updatedEventArtists: EventArtist[] | undefined = undefined;
         if (artistIds !== undefined) {
-          this.data.eventArtists = this.data.eventArtists.filter((ea) => ea.eventId !== id);
-          artistIds.forEach((artId, idx) => {
-            this.data.eventArtists.push({
-              id: generateId('ea'),
-              eventId: id,
-              artistId: artId,
-              role: idx === 0 ? 'Headliner' : 'Supporting',
-              order: idx + 1,
-              createdAt: now,
-              updatedAt: now,
-            });
-          });
+          updatedEventArtists = artistIds.map((artId, idx) => ({
+            id: generateId('ea'),
+            eventId: id,
+            artistId: artId,
+            role: idx === 0 ? 'Headliner' : 'Supporting',
+            order: idx + 1,
+            createdAt: now,
+            updatedAt: now,
+          }));
         }
 
-        const updatedEvent = this.events.findById(id);
-        if (updatedEvent) {
-          await syncEventToPostgres(updatedEvent, updatedEvent.eventArtists);
+        await syncEventToPostgres(updatedEvent, updatedEventArtists);
+        this.data.events[index] = updatedEvent;
+
+        if (updatedEventArtists !== undefined) {
+          this.data.eventArtists = this.data.eventArtists.filter((ea) => ea.eventId !== id);
+          this.data.eventArtists.push(...updatedEventArtists);
         }
-        this.persist();
-        return updatedEvent;
+
+        return this.events.findById(id);
       },
       delete: async (id: string) => {
         const index = this.data.events.findIndex((e) => e.id === id);
         if (index === -1) return false;
+        await deleteEventFromPostgres(id);
         this.data.events.splice(index, 1);
         this.data.eventArtists = this.data.eventArtists.filter((ea) => ea.eventId !== id);
-        await deleteEventFromPostgres(id);
-        this.persist();
         return true;
       },
     };
@@ -1485,29 +1282,27 @@ class DatabaseStore {
           createdAt: now,
           updatedAt: now,
         };
-        this.data.videos.push(video);
         await syncVideoToPostgres(video);
-        this.persist();
+        this.data.videos.push(video);
         return video;
       },
       update: async (id: string, updates: Partial<Video>) => {
         const index = this.data.videos.findIndex((v) => v.id === id);
         if (index === -1) return null;
-        this.data.videos[index] = {
+        const updated: Video = {
           ...this.data.videos[index],
           ...updates,
           updatedAt: new Date().toISOString(),
         };
-        await syncVideoToPostgres(this.data.videos[index]);
-        this.persist();
-        return this.data.videos[index];
+        await syncVideoToPostgres(updated);
+        this.data.videos[index] = updated;
+        return updated;
       },
       delete: async (id: string) => {
         const index = this.data.videos.findIndex((v) => v.id === id);
         if (index === -1) return false;
-        this.data.videos.splice(index, 1);
         await deleteVideoFromPostgres(id);
-        this.persist();
+        this.data.videos.splice(index, 1);
         return true;
       },
     };
@@ -1527,38 +1322,45 @@ class DatabaseStore {
           createdAt: now,
           updatedAt: now,
         };
-        this.data.services.push(service);
         await syncServiceToPostgres(service);
-        this.persist();
+        this.data.services.push(service);
         notifyServicesChanged();
         return service;
       },
       update: async (id: string, updates: Partial<Service>) => {
         const index = this.data.services.findIndex((s) => s.id === id);
         if (index === -1) return null;
-        this.data.services[index] = {
+        const updatedService: Service = {
           ...this.data.services[index],
           ...updates,
           updatedAt: new Date().toISOString(),
         };
-        await syncServiceToPostgres(this.data.services[index]);
-        this.persist();
+        await syncServiceToPostgres(updatedService);
+        this.data.services[index] = updatedService;
         notifyServicesChanged();
-        return this.data.services[index];
+        return updatedService;
       },
       reorder: async (serviceIds: string[]) => {
         if (Array.isArray(serviceIds)) {
-          const promises: Promise<void>[] = [];
-          serviceIds.forEach((id, idx) => {
-            const s = this.data.services.find((item) => item.id === id);
+          const updatedServices: Service[] = [];
+          for (let idx = 0; idx < serviceIds.length; idx++) {
+            const s = this.data.services.find((item) => item.id === serviceIds[idx]);
             if (s) {
-              s.order = idx + 1;
-              s.updatedAt = new Date().toISOString();
-              promises.push(syncServiceToPostgres(s));
+              const updated: Service = {
+                ...s,
+                order: idx + 1,
+                updatedAt: new Date().toISOString(),
+              };
+              await syncServiceToPostgres(updated);
+              updatedServices.push(updated);
             }
-          });
-          await Promise.all(promises);
-          this.persist();
+          }
+          for (const u of updatedServices) {
+            const idx = this.data.services.findIndex((s) => s.id === u.id);
+            if (idx !== -1) {
+              this.data.services[idx] = u;
+            }
+          }
           notifyServicesChanged();
         }
         return this.services.findMany();
@@ -1566,9 +1368,8 @@ class DatabaseStore {
       delete: async (id: string) => {
         const index = this.data.services.findIndex((s) => s.id === id);
         if (index === -1) return false;
-        this.data.services.splice(index, 1);
         await deleteServiceFromPostgres(id);
-        this.persist();
+        this.data.services.splice(index, 1);
         notifyServicesChanged();
         return true;
       },
@@ -1604,29 +1405,27 @@ class DatabaseStore {
           createdAt: now,
           updatedAt: now,
         };
-        this.data.media.push(media);
         await syncMediaToPostgres(media);
-        this.persist();
+        this.data.media.push(media);
         return media;
       },
       update: async (id: string, updates: Partial<Media>) => {
         const index = this.data.media.findIndex((m) => m.id === id);
         if (index === -1) return null;
-        this.data.media[index] = {
+        const updated: Media = {
           ...this.data.media[index],
           ...updates,
           updatedAt: new Date().toISOString(),
         };
-        await syncMediaToPostgres(this.data.media[index]);
-        this.persist();
-        return this.data.media[index];
+        await syncMediaToPostgres(updated);
+        this.data.media[index] = updated;
+        return updated;
       },
       delete: async (id: string) => {
         const index = this.data.media.findIndex((m) => m.id === id);
         if (index === -1) return false;
-        this.data.media.splice(index, 1);
         await deleteMediaFromPostgres(id);
-        this.persist();
+        this.data.media.splice(index, 1);
         return true;
       },
     };
@@ -1650,55 +1449,29 @@ class DatabaseStore {
           createdAt: now,
           updatedAt: now,
         };
-        // 1. Temporarily place in in-memory store
+        // Persist directly to Supabase first; throws if fails
+        await syncContactRequestToPostgres(contact);
         this.data.contactRequests.unshift(contact);
-
-        try {
-          // 2. Persist to Supabase PostgreSQL (throws if fails)
-          await syncContactRequestToPostgres(contact);
-
-          // 3. Persist local file backup/cache only after Supabase succeeded
-          this.persist();
-          return contact;
-        } catch (err: any) {
-          // Rollback in-memory state if Supabase persistence failed
-          this.data.contactRequests = this.data.contactRequests.filter((c) => c.id !== contact.id);
-          console.error(`[DatabaseStore] Contact request persistence failed, rolled back in-memory cache: ${err.message}`);
-          throw err;
-        }
+        return contact;
       },
       update: async (id: string, updates: Partial<ContactRequest>) => {
         const index = this.data.contactRequests.findIndex((c) => c.id === id);
         if (index === -1) return null;
-        const previousState = { ...this.data.contactRequests[index] };
-        this.data.contactRequests[index] = {
+        const updated: ContactRequest = {
           ...this.data.contactRequests[index],
           ...updates,
           updatedAt: new Date().toISOString(),
         };
-        try {
-          await syncContactRequestToPostgres(this.data.contactRequests[index]);
-          this.persist();
-          return this.data.contactRequests[index];
-        } catch (err: any) {
-          this.data.contactRequests[index] = previousState;
-          console.error(`[DatabaseStore] Contact request update failed, rolled back in-memory cache: ${err.message}`);
-          throw err;
-        }
+        await syncContactRequestToPostgres(updated);
+        this.data.contactRequests[index] = updated;
+        return updated;
       },
       delete: async (id: string) => {
         const index = this.data.contactRequests.findIndex((c) => c.id === id);
         if (index === -1) return false;
-        const removed = this.data.contactRequests.splice(index, 1)[0];
-        try {
-          await deleteContactRequestFromPostgres(id);
-          this.persist();
-          return true;
-        } catch (err: any) {
-          this.data.contactRequests.splice(index, 0, removed);
-          console.error(`[DatabaseStore] Contact request deletion failed, rolled back in-memory cache: ${err.message}`);
-          throw err;
-        }
+        await deleteContactRequestFromPostgres(id);
+        this.data.contactRequests.splice(index, 1);
+        return true;
       },
     };
   }
@@ -1708,14 +1481,14 @@ class DatabaseStore {
     return {
       get: () => this.data.homepage,
       update: async (updates: Partial<Homepage>) => {
-        this.data.homepage = {
+        const updated: Homepage = {
           ...this.data.homepage,
           ...updates,
           updatedAt: new Date().toISOString(),
         };
-        await syncHomepageToPostgres(this.data.homepage);
-        this.persist();
-        return this.data.homepage;
+        await syncHomepageToPostgres(updated);
+        this.data.homepage = updated;
+        return updated;
       },
     };
   }
@@ -1725,14 +1498,14 @@ class DatabaseStore {
     return {
       get: () => this.data.siteSettings,
       update: async (updates: Partial<SiteSettings>) => {
-        this.data.siteSettings = {
+        const updated: SiteSettings = {
           ...this.data.siteSettings,
           ...updates,
           updatedAt: new Date().toISOString(),
         };
-        await syncSiteSettingsToPostgres(this.data.siteSettings);
-        this.persist();
-        return this.data.siteSettings;
+        await syncSiteSettingsToPostgres(updated);
+        this.data.siteSettings = updated;
+        return updated;
       },
     };
   }
@@ -1751,8 +1524,9 @@ class DatabaseStore {
         if (this.data.activityLogs.length > 200) {
           this.data.activityLogs = this.data.activityLogs.slice(0, 200);
         }
-        syncActivityLogToPostgres(log).catch(() => {});
-        this.persist();
+        syncActivityLogToPostgres(log).catch((err) => {
+          console.warn('[DatabaseStore] ActivityLog sync warning:', err.message);
+        });
         return log;
       },
     };
@@ -1764,13 +1538,12 @@ class DatabaseStore {
       get: () => {
         if (!this.data.preWedding) {
           this.data.preWedding = initialPreWeddingData;
-          this.persist();
         }
         return this.data.preWedding;
       },
       update: async (updates: Partial<PreWeddingPageData>) => {
         const current = this.preWedding.get();
-        this.data.preWedding = {
+        const updated: PreWeddingPageData = {
           ...current,
           ...updates,
           studioInfo: {
@@ -1778,7 +1551,7 @@ class DatabaseStore {
             ...(updates.studioInfo || {}),
           },
           directorInfo: {
-            ...(current.directorInfo || {}),
+            ...current.directorInfo,
             ...(updates.directorInfo || {}),
           },
           heroStats: updates.heroStats || current.heroStats || [],
@@ -1795,9 +1568,9 @@ class DatabaseStore {
           whyUsPillars: updates.whyUsPillars || current.whyUsPillars || [],
           updatedAt: new Date().toISOString(),
         };
-        await syncPreWeddingToPostgres(this.data.preWedding);
-        this.persist();
-        return this.data.preWedding;
+        await syncPreWeddingToPostgres(updated);
+        this.data.preWedding = updated;
+        return updated;
       },
     };
   }

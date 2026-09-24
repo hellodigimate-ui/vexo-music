@@ -142,9 +142,9 @@ async function start() {
       });
     });
 
-    // Synchronize vexo_db.json cache with Supabase PostgreSQL
-    server.log.info('Synchronizing vexo_db.json cache with Supabase PostgreSQL...');
-    await db.waitForSync(6000);
+    // Hydrate in-memory store from Supabase PostgreSQL
+    server.log.info('Hydrating live data store from Supabase PostgreSQL...');
+    await db.waitForSync(8000);
 
     await server.listen({ port: PORT, host: HOST });
     server.log.info(`VEXO API Server running on http://${HOST}:${PORT}`);
@@ -154,4 +154,5 @@ async function start() {
   }
 }
 
+// Start Fastify server
 start();

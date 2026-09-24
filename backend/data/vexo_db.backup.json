@@ -17,7 +17,7 @@
       "id": "art-rbeer",
       "name": "R Beer",
       "slug": "r-beer",
-      "role": "Singer, Lyricist & Music Director",
+      "role": "Singer, Lyricist & video  Director",
       "avatarUrl": "https://img.youtube.com/vi/PsmXAUKjR5Y/maxresdefault.jpg",
       "coverUrl": "https://img.youtube.com/vi/PsmXAUKjR5Y/maxresdefault.jpg",
       "bio": "Multi-talented artist, singer, and lyricist behind the chartbuster release \"Bhartar\", collaborating with Rashmi Nishad and VEXO Music Entertainment.",
@@ -31,8 +31,17 @@
       "isComingSoon": false,
       "order": 4,
       "createdAt": "2026-08-24T13:55:46.230Z",
-      "updatedAt": "2026-08-24T13:55:46.230Z",
+      "updatedAt": "2026-09-24T02:42:37.521Z",
       "socials": [
+        {
+          "id": "soc-a4a089474b19d94d",
+          "artistId": "art-rbeer",
+          "platform": "youtube",
+          "url": "https://youtu.be/PsmXAUKjR5Y?si=WpdguDVkiQZkI0j6",
+          "order": 1,
+          "createdAt": "2026-08-24T13:55:46.230Z",
+          "updatedAt": "2026-09-24T02:42:37.521Z"
+        },
         {
           "id": "soc-rbeer-yt",
           "artistId": "art-rbeer",
@@ -170,6 +179,15 @@
       "order": 2,
       "createdAt": "2026-09-24T07:09:55.476Z",
       "updatedAt": "2026-09-24T07:09:55.476Z"
+    },
+    {
+      "id": "soc-a4a089474b19d94d",
+      "artistId": "art-rbeer",
+      "platform": "youtube",
+      "url": "https://youtu.be/PsmXAUKjR5Y?si=WpdguDVkiQZkI0j6",
+      "order": 1,
+      "createdAt": "2026-08-24T13:55:46.230Z",
+      "updatedAt": "2026-09-24T02:42:37.521Z"
     }
   ],
   "albums": [
@@ -831,7 +849,7 @@
       "category": "camera and the rental services ",
       "shortDesc": "Professional camera and lens rentals for photography, filmmaking, events, and commercial productions.",
       "fullDesc": "Access professional cameras, cinema bodies, lenses, lighting equipment, and essential production gear for your next shoot. Choose from flexible rental packages designed for photographers, filmmakers, creators, events, and commercial productions. All equipment is quality-checked and production-ready, with reliable support to help you get the right setup for every project.",
-      "imageUrl": "/uploads/image/vexo-1789191015895-oip-1--a9e6b34e.webp",
+      "imageUrl": "/uploads/image/vexo-1790237356873-sony-51c336a5.avif",
       "icon": "Users",
       "features": [
         "High-Fidelity Stereo Mastering",
@@ -840,7 +858,7 @@
         "Commercial Radio Master Delivery"
       ],
       "ctaText": "INITIATE PROJECT",
-      "pricingRange": "Starting from $450 / ₹35,000",
+      "pricingRange": "Starting from 7000",
       "plans": [],
       "specs": [
         "Solid State Logic 4000E Analog Console",
@@ -867,7 +885,7 @@
       "order": 8,
       "isActive": true,
       "createdAt": "2026-09-12T05:32:28.699Z",
-      "updatedAt": "2026-09-12T05:43:15.398Z"
+      "updatedAt": "2026-09-24T02:39:21.472Z"
     }
   ],
   "media": [
@@ -912,6 +930,20 @@
       "uploadedBy": "admin-super-1",
       "createdAt": "2026-08-18T05:58:38.923Z",
       "updatedAt": "2026-08-18T05:58:38.923Z"
+    },
+    {
+      "id": "med-040ffc5759d40de9",
+      "filename": "vexo-1790237356873-sony-51c336a5.avif",
+      "originalName": "sony.avif",
+      "mimeType": "image/avif",
+      "size": 70713,
+      "url": "/uploads/image/vexo-1790237356873-sony-51c336a5.avif",
+      "path": "image/vexo-1790237356873-sony-51c336a5.avif",
+      "altText": "sony.avif",
+      "category": "image",
+      "uploadedBy": "admin-super-1",
+      "createdAt": "2026-09-24T02:39:16.877Z",
+      "updatedAt": "2026-09-24T02:39:16.877Z"
     }
   ],
   "contactRequests": [
@@ -1054,6 +1086,48 @@
       "notes": null,
       "createdAt": "2026-09-24T07:39:12.848Z",
       "updatedAt": "2026-09-24T07:39:12.848Z"
+    },
+    {
+      "id": "cnt-e539b80fb62a2014",
+      "referenceId": "VXO-MUF9FW1F-8480",
+      "name": "hello my name is cghinf",
+      "email": "ffffffffff@gmail.com",
+      "phone": "4444444444",
+      "company": "fwgqf",
+      "service": "Music Production",
+      "message": "weqg444444444444444fgfffff",
+      "status": "NEW",
+      "notes": null,
+      "createdAt": "2026-09-24T02:48:50.739Z",
+      "updatedAt": "2026-09-24T02:48:50.739Z"
+    },
+    {
+      "id": "cnt-07d40a95d16fe096",
+      "referenceId": "VXO-MUF90ZHS-5827",
+      "name": "hhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhhh",
+      "email": "kkkkkkkkkkkk@gmail.com",
+      "phone": "5555555555",
+      "company": "fwefewfwfwef",
+      "service": "Music Production",
+      "message": "wfwub8owyegfuwegyfy8ghfuygfuyf",
+      "status": "NEW",
+      "notes": null,
+      "createdAt": "2026-09-24T02:37:15.376Z",
+      "updatedAt": "2026-09-24T02:37:15.376Z"
+    },
+    {
+      "id": "cnt-d75c4c9db8347d7b",
+      "referenceId": "VXO-MUF8ZQQV-2797",
+      "name": "hekefnbfub",
+      "email": "uwfygwubfu@gmail.com",
+      "phone": "2222222222",
+      "company": "asgvasvr",
+      "service": "Music Production",
+      "message": "hhhhhhhhhhhhhhhhhhhhhhkadhu9edhu",
+      "status": "NEW",
+      "notes": null,
+      "createdAt": "2026-09-24T02:36:17.383Z",
+      "updatedAt": "2026-09-24T02:36:17.383Z"
     }
   ],
   "homepage": {
@@ -1202,14 +1276,14 @@
     "officeAddress": "SKY CROWN, Office No. 205  Chordiya City, Kamla Nehru Nagar, Ajmer Road  Jaipur, Pin Code- 302021, Rajasthan, India",
     "copyrightText": "© 2026 VEXO Music Entertainment Pvt. Ltd. All rights reserved.",
     "socialSpotify": "https://spotify.com",
-    "socialYoutube": "https://youtube.com",
-    "socialInstagram": "https://instagram.com",
+    "socialYoutube": "https://youtu.be/HcEcM5AtEZ8?si=GRQJZe8f4r4ANy2B",
+    "socialInstagram": "https://www.instagram.com/vexoentertainment?stkn=MXNwZXczZDZ3NnFxcQ==",
     "socialTwitter": "https://twitter.com",
     "socialAppleMusic": null,
-    "socialFacebook": null,
+    "socialFacebook": "https://www.facebook.com/VexoRajasthaniMusic/",
     "socialSoundcloud": null,
     "maintenanceMode": false,
-    "footerBio": null,
+    "footerBio": "Premier record label, studio production house, and artist management company.",
     "footerQuickLinksHeading": "QUICK LINKS",
     "footerQuickLinks": [
       {
@@ -1317,7 +1391,7 @@
     "footerStatusEnabled": true,
     "footerBackToTopEnabled": true,
     "footerAdminLinkEnabled": true,
-    "updatedAt": "2026-09-24T06:27:33.126Z"
+    "updatedAt": "2026-09-24T02:41:55.099Z"
   },
   "activityLogs": [
     {
@@ -5039,6 +5113,502 @@
       "ipAddress": "127.0.0.1",
       "userAgent": "System Seed",
       "createdAt": "2026-08-18T05:58:38.923Z"
+    },
+    {
+      "id": "log-d6f91082c1c4d9fc",
+      "adminUserId": "admin-super-1",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+      "createdAt": "2026-09-24T02:45:51.338Z"
+    },
+    {
+      "id": "log-19668ea7bfb14fa2",
+      "adminUserId": "admin-super-1",
+      "action": "UPDATE_PRE_WEDDING_STUDIO",
+      "entityType": "PreWeddingStudio",
+      "entityId": "pre-wedding-singleton",
+      "details": {
+        "message": "Updated pre-wedding packages and studio settings"
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+      "createdAt": "2026-09-24T02:45:27.637Z"
+    },
+    {
+      "id": "log-1127af8094dd6da6",
+      "adminUserId": "admin-super-1",
+      "action": "UPDATE_ARTIST",
+      "entityType": "Artist",
+      "entityId": "art-rbeer",
+      "details": {
+        "updates": {
+          "name": "R Beer",
+          "slug": "r-beer",
+          "role": "Singer, Lyricist & video  Director",
+          "avatarUrl": "https://img.youtube.com/vi/PsmXAUKjR5Y/maxresdefault.jpg",
+          "coverUrl": "https://img.youtube.com/vi/PsmXAUKjR5Y/maxresdefault.jpg",
+          "bio": "Multi-talented artist, singer, and lyricist behind the chartbuster release \"Bhartar\", collaborating with Rashmi Nishad and VEXO Music Entertainment.",
+          "genres": [
+            "Rajasthani Folk",
+            "Contemporary Beat",
+            "Folk Pop"
+          ],
+          "monthlyListeners": 165000,
+          "featured": true,
+          "isComingSoon": false,
+          "order": 4
+        }
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+      "createdAt": "2026-09-24T02:42:38.782Z"
+    },
+    {
+      "id": "log-f7d4e466e3ea5d94",
+      "adminUserId": "admin-super-1",
+      "action": "UPDATE_SITE_SETTINGS",
+      "entityType": "SiteSettings",
+      "entityId": "site-settings-singleton",
+      "details": {
+        "updates": {
+          "id": "site-settings-singleton",
+          "siteName": "VEXO Music Entertainment Pvt. Ltd.",
+          "siteDescription": "Premier record label, studio production house, and artist management company.",
+          "logoUrl": "/logo.svg",
+          "faviconUrl": "/favicon.ico",
+          "contactEmail": "contact@vexomusic.com",
+          "contactPhone": "+91 72399 99966",
+          "officeAddress": "SKY CROWN, Office No. 205  Chordiya City, Kamla Nehru Nagar, Ajmer Road  Jaipur, Pin Code- 302021, Rajasthan, India",
+          "copyrightText": "© 2026 VEXO Music Entertainment Pvt. Ltd. All rights reserved.",
+          "socialSpotify": "https://spotify.com",
+          "socialYoutube": "https://youtu.be/HcEcM5AtEZ8?si=GRQJZe8f4r4ANy2B",
+          "socialInstagram": "https://www.instagram.com/vexoentertainment?stkn=MXNwZXczZDZ3NnFxcQ==",
+          "socialTwitter": "https://twitter.com",
+          "socialAppleMusic": null,
+          "socialFacebook": "https://www.facebook.com/VexoRajasthaniMusic/",
+          "socialSoundcloud": null,
+          "maintenanceMode": false,
+          "footerBio": "Premier record label, studio production house, and artist management company.",
+          "footerQuickLinksHeading": "QUICK LINKS",
+          "footerQuickLinks": [
+            {
+              "id": "fn-1",
+              "path": "/",
+              "label": "Home"
+            },
+            {
+              "id": "fn-2",
+              "path": "/music",
+              "label": "Music"
+            },
+            {
+              "id": "fn-3",
+              "path": "/artists",
+              "label": "Artists"
+            },
+            {
+              "id": "fn-4",
+              "path": "/services",
+              "label": "Services"
+            },
+            {
+              "id": "fn-5",
+              "path": "/pre-wedding",
+              "label": "Pre-Wedding"
+            },
+            {
+              "id": "fn-6",
+              "path": "/wedding",
+              "label": "Wedding"
+            },
+            {
+              "id": "fn-7",
+              "path": "/events",
+              "label": "Events"
+            },
+            {
+              "id": "fn-8",
+              "path": "/videos",
+              "label": "Videos"
+            },
+            {
+              "id": "fn-9",
+              "path": "/about",
+              "label": "About"
+            },
+            {
+              "id": "fn-10",
+              "path": "/contact",
+              "label": "Contact"
+            }
+          ],
+          "footerServicesHeading": "SERVICES",
+          "footerServicesLinks": [
+            {
+              "id": "fs-1",
+              "path": "/services",
+              "label": "Music Production"
+            },
+            {
+              "id": "fs-2",
+              "path": "/services",
+              "label": "Audio & Video Production"
+            },
+            {
+              "id": "fs-3",
+              "path": "/services",
+              "label": "Artist Management"
+            },
+            {
+              "id": "fs-4",
+              "path": "/services",
+              "label": "Music Distribution"
+            },
+            {
+              "id": "fs-5",
+              "path": "/services",
+              "label": "Digital Marketing"
+            },
+            {
+              "id": "fs-6",
+              "path": "/services",
+              "label": "Brand Collaborations"
+            },
+            {
+              "id": "fs-7",
+              "path": "/pre-wedding",
+              "label": "Pre-Wedding Shoot"
+            },
+            {
+              "id": "fs-wedding",
+              "path": "/wedding",
+              "label": "Wedding Cinematography"
+            },
+            {
+              "id": "fs-1790076908691",
+              "path": "/services",
+              "label": "camera rental ",
+              "isExternal": false
+            }
+          ],
+          "footerContactHeading": "CONTACT US",
+          "footerStatusText": "STUDIO ACTIVE • JAIPUR",
+          "footerStatusEnabled": true,
+          "footerBackToTopEnabled": true,
+          "footerAdminLinkEnabled": true,
+          "updatedAt": "2026-09-24T11:57:33.126Z"
+        }
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+      "createdAt": "2026-09-24T02:41:55.992Z"
+    },
+    {
+      "id": "log-46f95f0fddb5d1d5",
+      "adminUserId": "admin-super-1",
+      "action": "UPDATE_SITE_SETTINGS",
+      "entityType": "SiteSettings",
+      "entityId": "site-settings-singleton",
+      "details": {
+        "updates": {
+          "id": "site-settings-singleton",
+          "siteName": "VEXO Music Entertainment Pvt. Ltd.",
+          "siteDescription": "Premier record label, studio production house, and artist management company.",
+          "logoUrl": "/logo.svg",
+          "faviconUrl": "/favicon.ico",
+          "contactEmail": "contact@vexomusic.com",
+          "contactPhone": "+91 72399 99966",
+          "officeAddress": "SKY CROWN, Office No. 205  Chordiya City, Kamla Nehru Nagar, Ajmer Road  Jaipur, Pin Code- 302021, Rajasthan, India",
+          "copyrightText": "© 2026 VEXO Music Entertainment Pvt. Ltd. All rights reserved.",
+          "socialSpotify": "https://spotify.com",
+          "socialYoutube": "https://youtu.be/HcEcM5AtEZ8?si=GRQJZe8f4r4ANy2B",
+          "socialInstagram": "https://www.instagram.com/vexoentertainment?stkn=MXNwZXczZDZ3NnFxcQ==",
+          "socialTwitter": "https://twitter.com",
+          "socialAppleMusic": null,
+          "socialFacebook": "https://www.facebook.com/VexoRajasthaniMusic/",
+          "socialSoundcloud": null,
+          "maintenanceMode": false,
+          "footerBio": "Premier record label, studio production house, and artist management company.",
+          "footerQuickLinksHeading": "QUICK LINKS",
+          "footerQuickLinks": [
+            {
+              "id": "fn-1",
+              "path": "/",
+              "label": "Home"
+            },
+            {
+              "id": "fn-2",
+              "path": "/music",
+              "label": "Music"
+            },
+            {
+              "id": "fn-3",
+              "path": "/artists",
+              "label": "Artists"
+            },
+            {
+              "id": "fn-4",
+              "path": "/services",
+              "label": "Services"
+            },
+            {
+              "id": "fn-5",
+              "path": "/pre-wedding",
+              "label": "Pre-Wedding"
+            },
+            {
+              "id": "fn-6",
+              "path": "/wedding",
+              "label": "Wedding"
+            },
+            {
+              "id": "fn-7",
+              "path": "/events",
+              "label": "Events"
+            },
+            {
+              "id": "fn-8",
+              "path": "/videos",
+              "label": "Videos"
+            },
+            {
+              "id": "fn-9",
+              "path": "/about",
+              "label": "About"
+            },
+            {
+              "id": "fn-10",
+              "path": "/contact",
+              "label": "Contact"
+            }
+          ],
+          "footerServicesHeading": "SERVICES",
+          "footerServicesLinks": [
+            {
+              "id": "fs-1",
+              "path": "/services",
+              "label": "Music Production"
+            },
+            {
+              "id": "fs-2",
+              "path": "/services",
+              "label": "Audio & Video Production"
+            },
+            {
+              "id": "fs-3",
+              "path": "/services",
+              "label": "Artist Management"
+            },
+            {
+              "id": "fs-4",
+              "path": "/services",
+              "label": "Music Distribution"
+            },
+            {
+              "id": "fs-5",
+              "path": "/services",
+              "label": "Digital Marketing"
+            },
+            {
+              "id": "fs-6",
+              "path": "/services",
+              "label": "Brand Collaborations"
+            },
+            {
+              "id": "fs-7",
+              "path": "/pre-wedding",
+              "label": "Pre-Wedding Shoot"
+            },
+            {
+              "id": "fs-wedding",
+              "path": "/wedding",
+              "label": "Wedding Cinematography"
+            },
+            {
+              "id": "fs-1790076908691",
+              "path": "/services",
+              "label": "camera rental ",
+              "isExternal": false
+            }
+          ],
+          "footerContactHeading": "CONTACT US",
+          "footerStatusText": "STUDIO ACTIVE • JAIPUR",
+          "footerStatusEnabled": true,
+          "footerBackToTopEnabled": true,
+          "footerAdminLinkEnabled": true,
+          "updatedAt": "2026-09-24T11:57:33.126Z"
+        }
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+      "createdAt": "2026-09-24T02:40:19.410Z"
+    },
+    {
+      "id": "log-d8067251c47c2d68",
+      "adminUserId": "admin-super-1",
+      "action": "UPDATE_SERVICE",
+      "entityType": "Service",
+      "entityId": "srv-a39e1355c4698ff9",
+      "details": {
+        "updates": {
+          "title": "camera rental",
+          "slug": "camera-rental",
+          "icon": "Users",
+          "category": "camera and the rental services ",
+          "shortDesc": "Professional camera and lens rentals for photography, filmmaking, events, and commercial productions.",
+          "fullDesc": "Access professional cameras, cinema bodies, lenses, lighting equipment, and essential production gear for your next shoot. Choose from flexible rental packages designed for photographers, filmmakers, creators, events, and commercial productions. All equipment is quality-checked and production-ready, with reliable support to help you get the right setup for every project.",
+          "imageUrl": "/uploads/image/vexo-1790237356873-sony-51c336a5.avif",
+          "number": "08",
+          "ctaText": "INITIATE PROJECT",
+          "pricingRange": "Starting from $450 / ₹35,000",
+          "order": 8,
+          "isActive": true,
+          "features": [
+            "High-Fidelity Stereo Mastering",
+            "Analog Console Processing",
+            "Dolby Atmos Spatial Mix",
+            "Commercial Radio Master Delivery"
+          ],
+          "plans": [
+            {
+              "id": "plan-1",
+              "name": "Starter / Essential",
+              "badge": "ESSENTIAL",
+              "tagline": "Ideal for independent artists seeking foundational production.",
+              "priceUSD": "$450",
+              "priceINR": "₹35,000",
+              "duration": "3–5 Days Turnaround",
+              "revisions": "3 Free Revisions Included",
+              "isPopular": false,
+              "features": [
+                "Vocal Tuning & Stem Alignment",
+                "Stereo Stem Mixdown",
+                "24-bit 96kHz Radio Master",
+                "Standard Streaming Target"
+              ],
+              "deliverables": [
+                "Master WAV",
+                "Master MP3",
+                "Instrumental Track"
+              ],
+              "ctaText": "BOOK STARTER"
+            },
+            {
+              "id": "plan-2",
+              "name": "Commercial Standard Single",
+              "badge": "MOST POPULAR",
+              "tagline": "Full analog SSL tracking, custom arrangement, and Dolby Atmos.",
+              "priceUSD": "$1,200",
+              "priceINR": "₹95,000",
+              "duration": "5–7 Days Turnaround",
+              "revisions": "Unlimited Mix Revisions",
+              "isPopular": true,
+              "features": [
+                "Custom Beat Composition",
+                "Analog SSL 4000E Console Mixdown",
+                "Dolby Atmos Spatial Master",
+                "Full Multi-track Stems Archive",
+                "Dedicated Producer Support"
+              ],
+              "deliverables": [
+                "Master Stereo WAV",
+                "Dolby Atmos ADM BWF",
+                "Full Stems Archive",
+                "Instrumental & Acapella"
+              ],
+              "ctaText": "BOOK COMMERCIAL"
+            },
+            {
+              "id": "plan-3",
+              "name": "Studio Master / Full EP",
+              "badge": "FLAGSHIP",
+              "tagline": "Comprehensive multi-track executive production with VIP priority.",
+              "priceUSD": "$3,500",
+              "priceINR": "₹2,80,000",
+              "duration": "3–4 Weeks Turnaround",
+              "revisions": "VIP Priority Unlimited",
+              "isPopular": false,
+              "features": [
+                "Up to 5 Tracks Written & Produced",
+                "Live Session Musicians",
+                "Neve & Telefunken Outboard Chain",
+                "Dolby Atmos Spatial for All Tracks",
+                "Vinyl DDP & Broadcast Sync Licensing"
+              ],
+              "deliverables": [
+                "Complete Album Multi-Tracks",
+                "Dolby Atmos Master Suite",
+                "Vinyl Master Files",
+                "100% Commercial Rights Certificate"
+              ],
+              "ctaText": "BOOK STUDIO EP"
+            }
+          ],
+          "specs": [
+            "Solid State Logic 4000E Analog Console",
+            "Neve 1073 Preamps",
+            "Dolby Atmos 7.1.4 Monitoring"
+          ],
+          "processSteps": [
+            {
+              "step": "01",
+              "title": "Creative Brief & Concept",
+              "desc": "Discovery session to map out sonic vibe, references, and milestones."
+            },
+            {
+              "step": "02",
+              "title": "Tracking & Composition",
+              "desc": "Arranging hooks, beats, instrumentation, and tracking vocal stems."
+            },
+            {
+              "step": "03",
+              "title": "Stem Mixing & Processing",
+              "desc": "Routing audio through analog gear, hardware EQs, and spatial summing."
+            },
+            {
+              "step": "04",
+              "title": "Dolby Atmos & Master Release",
+              "desc": "Final loudness mastering and delivering pristine broadcast assets."
+            }
+          ],
+          "deliverables": [
+            "Master WAV (24-bit)",
+            "Multi-Track Stems",
+            "Commercial Rights Certificate"
+          ],
+          "faqs": [
+            {
+              "q": "Do I retain 100% of my master rights?",
+              "a": "Yes, full commercial ownership."
+            }
+          ]
+        }
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+      "createdAt": "2026-09-24T02:39:21.652Z"
+    },
+    {
+      "id": "log-ffb4c0299913fe75",
+      "adminUserId": "admin-super-1",
+      "action": "UPLOAD_MEDIA",
+      "entityType": "Media",
+      "entityId": "med-040ffc5759d40de9",
+      "details": {
+        "filename": "vexo-1790237356873-sony-51c336a5.avif",
+        "originalName": "sony.avif",
+        "category": "image",
+        "size": 70713
+      },
+      "ipAddress": "127.0.0.1",
+      "userAgent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/153.0.0.0 Safari/537.36",
+      "createdAt": "2026-09-24T02:39:17.759Z"
     }
   ],
   "preWedding": {
@@ -5315,7 +5885,7 @@
           "locations": "Up to 2 Locations"
         },
         "tagline": "Our Most Popular Package",
-        "priceINR": 59989,
+        "priceINR": 59999,
         "isPopular": true,
         "photography": {
           "details": [
@@ -5335,7 +5905,7 @@
           "Cinematic Sound Design",
           "Food, Travel — Paid By Client / Company"
         ],
-        "priceDisplay": "₹59,989",
+        "priceDisplay": "₹59,999",
         "highlightText": "The crowd favorite. Enhanced cinematic camera movements, sound design & bonus portraits.",
         "cinematography": {
           "details": [
@@ -5766,6 +6336,6 @@
       ],
       "supportingText": "Beyond the pre-wedding, we capture every emotion, ritual and celebration of your wedding day."
     },
-    "updatedAt": "2026-09-24T06:27:33.705Z"
+    "updatedAt": "2026-09-24T09:12:22.376Z"
   }
 }
