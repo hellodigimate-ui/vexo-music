@@ -142,9 +142,14 @@ async function start() {
       });
     });
 
-    // Hydrate in-memory store from Supabase PostgreSQL
-    server.log.info('Hydrating live data store from Supabase PostgreSQL...');
-    await db.waitForSync(8000);
+    // Hydrate store from PostgreSQL database (sole data source)
+    server.log.info('Connecting to PostgreSQL database and hydrating data store...');
+    const synced = await db.waitForSync(10000);
+    if (!synced) {
+      server.log.error('PostgreSQL database synchronization failed or timed out. Database is the sole data source.');
+    } else {
+      server.log.info('✅ Live data store successfully hydrated from PostgreSQL database.');
+    }
 
     await server.listen({ port: PORT, host: HOST });
     server.log.info(`VEXO API Server running on http://${HOST}:${PORT}`);
