@@ -110,37 +110,39 @@ export const adminServiceRoutes: FastifyPluginAsync = async (fastify) => {
       const features = Array.isArray(body.features)
         ? body.features
         : typeof body.features === 'string'
-        ? (body.features as string).split('\n').map((f) => f.trim()).filter(Boolean)
-        : [];
+          ? (body.features as string).split('\n').map((f) => f.trim()).filter(Boolean)
+          : [];
 
       const specifications = Array.isArray(body.specifications)
         ? body.specifications
         : typeof body.specifications === 'string'
-        ? (body.specifications as string).split('\n').map((f) => f.trim()).filter(Boolean)
-        : [];
+          ? (body.specifications as string).split('\n').map((f) => f.trim()).filter(Boolean)
+          : [];
 
       const equipmentList = Array.isArray(body.equipmentList)
         ? body.equipmentList
         : typeof body.equipmentList === 'string'
-        ? (body.equipmentList as string).split('\n').map((f) => f.trim()).filter(Boolean)
-        : [];
+          ? (body.equipmentList as string).split('\n').map((f) => f.trim()).filter(Boolean)
+          : [];
 
       const allServices = db.services.findMany();
       const order =
         body.order !== undefined
           ? Number(body.order)
           : body.displayOrder !== undefined
-          ? Number(body.displayOrder)
-          : allServices.length + 1;
+            ? Number(body.displayOrder)
+            : allServices.length + 1;
 
       const isActive =
         body.isActive !== undefined
           ? Boolean(body.isActive)
           : body.published !== undefined
-          ? Boolean(body.published)
-          : true;
+            ? Boolean(body.published)
+            : true;
 
       const number = body.number || (order < 10 ? `0${order}` : `${order}`);
+
+      console.log("service created :", body)
 
       const created = await db.services.create({
         number,
@@ -207,8 +209,8 @@ export const adminServiceRoutes: FastifyPluginAsync = async (fastify) => {
         request.body?.isActive !== undefined
           ? Boolean(request.body.isActive)
           : request.body?.published !== undefined
-          ? Boolean(request.body.published)
-          : !existing.isActive;
+            ? Boolean(request.body.published)
+            : !existing.isActive;
 
       const updated = await db.services.update(id, { isActive: newStatus });
 
@@ -288,8 +290,8 @@ export const adminServiceRoutes: FastifyPluginAsync = async (fastify) => {
         updates.features = Array.isArray(body.features)
           ? body.features
           : typeof body.features === 'string'
-          ? (body.features as string).split('\n').map((f) => f.trim()).filter(Boolean)
-          : [];
+            ? (body.features as string).split('\n').map((f) => f.trim()).filter(Boolean)
+            : [];
       }
 
       if ((body as any).description !== undefined) {
@@ -302,8 +304,8 @@ export const adminServiceRoutes: FastifyPluginAsync = async (fastify) => {
         const specs = Array.isArray((body as any).specifications)
           ? (body as any).specifications
           : typeof (body as any).specifications === 'string'
-          ? ((body as any).specifications as string).split('\n').map((f: string) => f.trim()).filter(Boolean)
-          : [];
+            ? ((body as any).specifications as string).split('\n').map((f: string) => f.trim()).filter(Boolean)
+            : [];
         (updates as any).specifications = specs;
         if (updates.specs === undefined) updates.specs = specs;
       }
@@ -313,8 +315,8 @@ export const adminServiceRoutes: FastifyPluginAsync = async (fastify) => {
         const equip = Array.isArray((body as any).equipmentList)
           ? (body as any).equipmentList
           : typeof (body as any).equipmentList === 'string'
-          ? ((body as any).equipmentList as string).split('\n').map((f: string) => f.trim()).filter(Boolean)
-          : [];
+            ? ((body as any).equipmentList as string).split('\n').map((f: string) => f.trim()).filter(Boolean)
+            : [];
         (updates as any).equipmentList = equip;
         if (updates.deliverables === undefined) updates.deliverables = equip;
       }
