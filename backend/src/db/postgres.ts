@@ -272,46 +272,6 @@ async function upsertRow(
   return true;
 }
 
-/**
- * Generic insert-if-not-exists helper for initial backfill
- */
-async function insertIfNotExists(
-  tableName: string,
-  dataObj: Record<string, any>,
-  conflictCol: string = 'id'
-): Promise<boolean> {
-  const client = getPostgresPool();
-  if (!client) return false;
-
-  const tableCols = tableColumnsMap.get(tableName);
-  if (!tableCols || tableCols.size === 0) return false;
-
-  const fields: string[] = [];
-  const values: any[] = [];
-  const placeholders: string[] = [];
-
-  for (const [key, val] of Object.entries(dataObj)) {
-    const matchingCol = Array.from(tableCols).find(
-      (c) => c === key || c.toLowerCase() === key.toLowerCase()
-    );
-    if (matchingCol) {
-      fields.push(`"${matchingCol}"`);
-      values.push(val);
-      placeholders.push(`$${values.length}`);
-    }
-  }
-
-  if (fields.length === 0) return false;
-
-  const query = `
-    INSERT INTO public."${tableName}" (${fields.join(', ')})
-    VALUES (${placeholders.join(', ')})
-    ON CONFLICT ("${conflictCol}") DO NOTHING;
-  `;
-
-  const res = await client.query(query, values);
-  return (res.rowCount || 0) > 0;
-}
 
 /**
  * Delete a row by id. Throws an error on failure.
@@ -1475,7 +1435,6 @@ export async function loadPreWeddingFromPostgres(): Promise<PreWeddingPageData |
 // 14. MASTER INITIALIZATION & BACKFILL
 // ==========================================
 export async function initPostgresSync(
-  initialData: DatabaseSchema,
   onHydrate?: (data: Partial<DatabaseSchema>) => void
 ): Promise<boolean> {
   const client = getPostgresPool();
@@ -1483,7 +1442,7 @@ export async function initPostgresSync(
     if (!retryTimer) {
       retryTimer = setTimeout(async () => {
         retryTimer = null;
-        await initPostgresSync(initialData, onHydrate);
+        await initPostgresSync(onHydrate);
       }, 10000);
       retryTimer.unref?.();
     }
@@ -1588,7 +1547,7 @@ export async function initPostgresSync(
     if (!retryTimer) {
       retryTimer = setTimeout(async () => {
         retryTimer = null;
-        await initPostgresSync(initialData, onHydrate);
+        await initPostgresSync(onHydrate);
       }, 10000);
       retryTimer.unref?.();
     }
