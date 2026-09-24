@@ -916,6 +916,48 @@
   ],
   "contactRequests": [
     {
+      "name": "RECOVERY VERIFICATION USER",
+      "email": "recovery@example.com",
+      "phone": "9876543210",
+      "company": "Post-Failure Recovery Test",
+      "service": "Mastering & Stem Mixing",
+      "message": "Testing that normal contact submission immediately recovers after database is reconnected.",
+      "id": "cnt-8e696c5b98c2f3eb",
+      "referenceId": "VXO-MUF9KYJD-6214",
+      "status": "NEW",
+      "notes": null,
+      "createdAt": "2026-09-24T08:22:47.257Z",
+      "updatedAt": "2026-09-24T08:22:47.257Z"
+    },
+    {
+      "name": "NEBULA SOUNDWORKS SYNC VERIFY",
+      "email": "nebula2026@soundworks.io",
+      "phone": "9123456780",
+      "company": "Nebula Soundworks Studios",
+      "service": "Artist & Repertoire",
+      "message": "Secondary verification inquiry confirming dual persistence into Supabase and Admin panel automatically.",
+      "id": "cnt-61c8c7a50d8ab57e",
+      "referenceId": "VXO-MUF9JZ1H-1757",
+      "status": "NEW",
+      "notes": null,
+      "createdAt": "2026-09-24T08:22:01.253Z",
+      "updatedAt": "2026-09-24T08:22:01.253Z"
+    },
+    {
+      "name": "AUTO SYNC TEST 2026",
+      "email": "autosync2026@example.com",
+      "phone": "9876501234",
+      "company": "Auto Sync Test",
+      "service": "Music Production",
+      "message": "Testing automatic Admin + Supabase persistence.",
+      "id": "cnt-ef033027dc788c9c",
+      "referenceId": "VXO-MUF9JL5Y-4020",
+      "status": "NEW",
+      "notes": null,
+      "createdAt": "2026-09-24T08:21:43.270Z",
+      "updatedAt": "2026-09-24T08:21:43.270Z"
+    },
+    {
       "name": "ttttttttttetetg",
       "email": "sfjufuygefguuy@gmail.com",
       "phone": "2222222222",

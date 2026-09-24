@@ -80,6 +80,23 @@ async function ensureSchemaExtensions(client: pg.PoolClient | pg.Pool): Promise<
         "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW()
       );
     `);
+
+    await client.query(`
+      CREATE TABLE IF NOT EXISTS public."contact_requests" (
+        "id" TEXT PRIMARY KEY,
+        "referenceId" TEXT UNIQUE,
+        "name" TEXT NOT NULL,
+        "email" TEXT NOT NULL,
+        "phone" TEXT,
+        "company" TEXT,
+        "service" TEXT NOT NULL,
+        "message" TEXT NOT NULL,
+        "status" TEXT DEFAULT 'NEW',
+        "notes" TEXT,
+        "createdAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+        "updatedAt" TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+      );
+    `);
   } catch (err: any) {
     console.warn('[PostgreSQL Schema Extension Warning]:', err.message);
   }
@@ -102,12 +119,24 @@ const DEFAULT_SUPABASE_DATABASE_URL =
 export function getPostgresPool(): pg.Pool | null {
   reloadEnv();
   let dbUrl = process.env.DATABASE_URL;
-  if (!dbUrl || !dbUrl.startsWith('postgres') || dbUrl.includes('dev.db')) {
+
+  if (dbUrl === 'disconnected' || dbUrl === 'disabled' || dbUrl?.includes('YOUR_PASSWORD')) {
+    if (pool) {
+      try { pool.end(); } catch {}
+      pool = null;
+    }
+    isConnected = false;
+    return null;
+  }
+
+  if (!dbUrl || dbUrl.includes('dev.db')) {
     dbUrl = DEFAULT_SUPABASE_DATABASE_URL;
   }
 
-  if (dbUrl.includes('YOUR_PASSWORD')) {
-    return null;
+  // If pool already exists but DATABASE_URL was changed, recreate pool
+  if (pool && (pool as any)._customDbUrl !== dbUrl) {
+    try { pool.end(); } catch {}
+    pool = null;
   }
 
   if (!pool) {
@@ -115,6 +144,7 @@ export function getPostgresPool(): pg.Pool | null {
       connectionString: dbUrl,
       connectionTimeoutMillis: 8000,
     });
+    (pool as any)._customDbUrl = dbUrl;
 
     pool.on('error', (err) => {
       console.warn('[PostgreSQL Pool Error]:', err.message);
@@ -124,6 +154,23 @@ export function getPostgresPool(): pg.Pool | null {
   }
 
   return pool;
+}
+
+export async function verifyPostgresConnection(): Promise<boolean> {
+  const client = getPostgresPool();
+  if (!client) {
+    isConnected = false;
+    throw new Error('PostgreSQL database pool is unavailable or disconnected.');
+  }
+  try {
+    await client.query('SELECT 1 FROM public."contact_requests" LIMIT 1;');
+    isConnected = true;
+    return true;
+  } catch (err: any) {
+    isConnected = false;
+    console.error('[PostgreSQL Connection Verification Error]:', err.message);
+    throw new Error(`PostgreSQL is unavailable: ${err.message}`);
+  }
 }
 
 function parseJsonSafely<T>(raw: any, fallback: T): T {
@@ -561,33 +608,73 @@ export async function loadServicesFromPostgres(): Promise<Service[]> {
 // ==========================================
 // 4. CONTACT REQUESTS SYNC & LOAD
 // ==========================================
-export async function syncContactRequestToPostgres(contact: ContactRequest): Promise<void> {
+export async function syncContactRequestToPostgres(contact: ContactRequest): Promise<boolean> {
   const client = getPostgresPool();
-  if (!client || !isConnected) return;
+  if (!client) {
+    const errMsg = '[PostgreSQL] Database pool is unavailable. Cannot persist contact request.';
+    console.error(errMsg);
+    throw new Error(errMsg);
+  }
+
+  const now = new Date();
+  const createdAt = contact.createdAt ? new Date(contact.createdAt) : now;
+  const updatedAt = contact.updatedAt ? new Date(contact.updatedAt) : now;
+
+  const query = `
+    INSERT INTO public."contact_requests" (
+      "id",
+      "referenceId",
+      "name",
+      "email",
+      "phone",
+      "company",
+      "service",
+      "message",
+      "status",
+      "notes",
+      "createdAt",
+      "updatedAt"
+    )
+    VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+    ON CONFLICT ("id") DO UPDATE SET
+      "referenceId" = EXCLUDED."referenceId",
+      "name" = EXCLUDED."name",
+      "email" = EXCLUDED."email",
+      "phone" = EXCLUDED."phone",
+      "company" = EXCLUDED."company",
+      "service" = EXCLUDED."service",
+      "message" = EXCLUDED."message",
+      "status" = EXCLUDED."status",
+      "notes" = EXCLUDED."notes",
+      "updatedAt" = EXCLUDED."updatedAt"
+    RETURNING "id", "referenceId";
+  `;
+
+  const values = [
+    contact.id,
+    contact.referenceId || `VXO-${Date.now().toString(36).toUpperCase()}`,
+    contact.name,
+    contact.email,
+    contact.phone || null,
+    contact.company || null,
+    contact.service,
+    contact.message,
+    contact.status || 'NEW',
+    contact.notes || null,
+    createdAt,
+    updatedAt,
+  ];
 
   try {
-    const now = new Date();
-    const createdAt = contact.createdAt ? new Date(contact.createdAt) : now;
-    const updatedAt = contact.updatedAt ? new Date(contact.updatedAt) : now;
-
-    const dataObj: Record<string, any> = {
-      id: contact.id,
-      referenceId: contact.referenceId || `VXO-${Date.now().toString(36).toUpperCase()}`,
-      name: contact.name,
-      email: contact.email,
-      phone: contact.phone || null,
-      company: contact.company || null,
-      service: contact.service,
-      message: contact.message,
-      status: contact.status || 'NEW',
-      notes: contact.notes || null,
-      createdAt,
-      updatedAt,
-    };
-
-    await upsertRow('contact_requests', dataObj, 'id');
+    const res = await client.query(query, values);
+    if (!res || !res.rowCount || res.rowCount === 0) {
+      throw new Error(`[PostgreSQL] Zero rows affected during upsert for contact ID "${contact.id}".`);
+    }
+    console.log(`[PostgreSQL] ✅ Contact request persisted to Supabase: ID="${contact.id}", Ref="${contact.referenceId || res.rows[0]?.referenceId}"`);
+    return true;
   } catch (err: any) {
-    console.warn(`[PostgreSQL Contact Sync Error for "${contact.name}"]:`, err.message);
+    console.error(`[PostgreSQL Contact Sync Error for "${contact.name}"]:`, err.message);
+    throw err;
   }
 }
 

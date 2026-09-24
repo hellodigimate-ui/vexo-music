@@ -1,5 +1,6 @@
 import type { FastifyPluginAsync } from 'fastify';
 import { db } from '../db/index.js';
+import { verifyPostgresConnection } from '../db/postgres.js';
 import type { ApiResponse, ContactFormData, ContactResponse } from '../types/index.js';
 
 export const contactRoutes: FastifyPluginAsync = async (fastify) => {
@@ -48,33 +49,48 @@ export const contactRoutes: FastifyPluginAsync = async (fastify) => {
       }
     }
 
-    // Persist to database
-    const saved = await db.contactRequests.create({
-      name: name.trim(),
-      email: email.trim(),
-      phone: phone?.trim() ? phone.trim().replace(/\D/g, '').slice(0, 10) : null,
-      company: company?.trim() || null,
-      service: service.trim(),
-      message: message.trim(),
-    });
+    try {
+      // 1. Verify PostgreSQL connection is available before accepting inquiry
+      await verifyPostgresConnection();
 
-    fastify.log.info(
-      { name, email, phone, company, service, referenceId: saved.referenceId },
-      'Received and saved new contact request'
-    );
+      // 2. Persist to database (Admin store + Supabase PostgreSQL)
+      const saved = await db.contactRequests.create({
+        name: name.trim(),
+        email: email.trim(),
+        phone: phone?.trim() ? phone.trim().replace(/\D/g, '').slice(0, 10) : null,
+        company: company?.trim() || null,
+        service: service.trim(),
+        message: message.trim(),
+      });
 
-    const contactResult: ContactResponse = {
-      success: true,
-      message: `Thank you, ${name}! Your project inquiry for "${service}" has been received. Our production team will contact you at ${email} within 24 hours.`,
-      referenceId: saved.referenceId,
-      timestamp: saved.createdAt,
-    };
+      fastify.log.info(
+        { id: saved.id, name, email, phone, company, service, referenceId: saved.referenceId },
+        'Received and successfully persisted contact request to Supabase & Admin Store'
+      );
 
-    const response: ApiResponse<ContactResponse> = {
-      success: true,
-      data: contactResult,
-    };
+      const contactResult: ContactResponse = {
+        success: true,
+        message: `Thank you, ${name}! Your project inquiry for "${service}" has been received. Our production team will contact you at ${email} within 24 hours.`,
+        referenceId: saved.referenceId,
+        timestamp: saved.createdAt,
+      };
 
-    return reply.code(201).send(response);
+      const response: ApiResponse<ContactResponse> = {
+        success: true,
+        data: contactResult,
+      };
+
+      return reply.code(201).send(response);
+    } catch (err: any) {
+      fastify.log.error(
+        { err: err.message, stack: err.stack, name, email },
+        'Failed to persist contact request to Supabase PostgreSQL'
+      );
+
+      return reply.code(500).send({
+        success: false,
+        message: `Unable to submit your project inquiry at this time. Database persistence failed: ${err.message || 'PostgreSQL error'}`,
+      });
+    }
   });
 };

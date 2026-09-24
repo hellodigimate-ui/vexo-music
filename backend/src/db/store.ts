@@ -1650,30 +1650,55 @@ class DatabaseStore {
           createdAt: now,
           updatedAt: now,
         };
+        // 1. Temporarily place in in-memory store
         this.data.contactRequests.unshift(contact);
-        await syncContactRequestToPostgres(contact);
-        this.persist();
-        return contact;
+
+        try {
+          // 2. Persist to Supabase PostgreSQL (throws if fails)
+          await syncContactRequestToPostgres(contact);
+
+          // 3. Persist local file backup/cache only after Supabase succeeded
+          this.persist();
+          return contact;
+        } catch (err: any) {
+          // Rollback in-memory state if Supabase persistence failed
+          this.data.contactRequests = this.data.contactRequests.filter((c) => c.id !== contact.id);
+          console.error(`[DatabaseStore] Contact request persistence failed, rolled back in-memory cache: ${err.message}`);
+          throw err;
+        }
       },
       update: async (id: string, updates: Partial<ContactRequest>) => {
         const index = this.data.contactRequests.findIndex((c) => c.id === id);
         if (index === -1) return null;
+        const previousState = { ...this.data.contactRequests[index] };
         this.data.contactRequests[index] = {
           ...this.data.contactRequests[index],
           ...updates,
           updatedAt: new Date().toISOString(),
         };
-        await syncContactRequestToPostgres(this.data.contactRequests[index]);
-        this.persist();
-        return this.data.contactRequests[index];
+        try {
+          await syncContactRequestToPostgres(this.data.contactRequests[index]);
+          this.persist();
+          return this.data.contactRequests[index];
+        } catch (err: any) {
+          this.data.contactRequests[index] = previousState;
+          console.error(`[DatabaseStore] Contact request update failed, rolled back in-memory cache: ${err.message}`);
+          throw err;
+        }
       },
       delete: async (id: string) => {
         const index = this.data.contactRequests.findIndex((c) => c.id === id);
         if (index === -1) return false;
-        this.data.contactRequests.splice(index, 1);
-        await deleteContactRequestFromPostgres(id);
-        this.persist();
-        return true;
+        const removed = this.data.contactRequests.splice(index, 1)[0];
+        try {
+          await deleteContactRequestFromPostgres(id);
+          this.persist();
+          return true;
+        } catch (err: any) {
+          this.data.contactRequests.splice(index, 0, removed);
+          console.error(`[DatabaseStore] Contact request deletion failed, rolled back in-memory cache: ${err.message}`);
+          throw err;
+        }
       },
     };
   }
