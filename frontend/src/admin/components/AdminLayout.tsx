@@ -8,9 +8,11 @@ export const AdminLayout: React.FC = () => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [isSidebarPinned, setIsSidebarPinned] = useState(() => {
     try {
-      return localStorage.getItem('vexo_admin_sidebar_pinned') === 'true';
+      const saved = localStorage.getItem('vexo_admin_sidebar_pinned');
+      // Default to true (docked) on desktop to guarantee non-overlapping layout
+      return saved === null ? true : saved === 'true';
     } catch {
-      return false;
+      return true;
     }
   });
 
@@ -22,6 +24,14 @@ export const AdminLayout: React.FC = () => {
       } catch {}
       return next;
     });
+  };
+
+  const handleToggleSidebar = () => {
+    if (window.innerWidth < 1024) {
+      setSidebarOpen((prev) => !prev);
+    } else {
+      handleTogglePin();
+    }
   };
 
   const location = useLocation();
@@ -45,6 +55,7 @@ export const AdminLayout: React.FC = () => {
       case '/admin/media':
         return { title: 'Media Asset Library', subtitle: 'Upload and manage promotional imagery, posters, and audio assets' };
       case '/admin/inquiries':
+      case '/admin/enquiries':
         return { title: 'Client Inquiries & CRM', subtitle: 'Review and triage project booking requests and contact submissions' };
       case '/admin/site-settings':
         return { title: 'Global Platform Settings', subtitle: 'Manage branding, SEO metadata, corporate contacts, and social handles' };
@@ -69,20 +80,19 @@ export const AdminLayout: React.FC = () => {
         onTogglePin={handleTogglePin}
       />
 
-      {/* Main Content Area */}
-      <div className={`flex-1 flex flex-col min-w-0 pb-16 lg:pb-0 transition-all duration-300 ${
-        isSidebarPinned ? 'lg:pl-64' : 'lg:pl-[72px]'
-      }`}>
+      {/* Main Content Area - Fluid flex child that naturally occupies 100% of remaining space */}
+      <div className="flex-1 flex flex-col min-w-0 pb-16 lg:pb-0 transition-all duration-300">
         {/* Topbar Header */}
         <AdminTopbar
-          onToggleSidebar={() => setSidebarOpen((prev) => !prev)}
+          onToggleSidebar={handleToggleSidebar}
+          isSidebarPinned={isSidebarPinned}
           title={meta.title}
           subtitle={meta.subtitle}
         />
 
-        {/* Dashboard Shell Canvas */}
-        <main className="flex-1 p-4 lg:p-6 overflow-y-auto bg-slate-100 dark:bg-[#08080a] transition-colors duration-300">
-          <div className="max-w-7xl mx-auto space-y-6">
+        {/* Dashboard Shell Canvas - Outer section expands fluidly across the canvas */}
+        <main className="flex-1 w-full p-4 sm:p-6 lg:p-8 overflow-y-auto bg-slate-100 dark:bg-[#08080a] transition-colors duration-300">
+          <div className="w-full max-w-[1600px] mx-auto space-y-6 sm:space-y-8">
             <Outlet />
           </div>
         </main>

@@ -145,6 +145,7 @@ export const AdminFooterPage: React.FC = () => {
           'Footer Configuration Saved',
           'Global footer updated immediately across public website.'
         );
+        window.dispatchEvent(new CustomEvent('site-settings-updated', { detail: formData }));
       }
     } catch (err: any) {
       toast.error('Save failed', err.message);

@@ -18,6 +18,9 @@ export const AdminSiteSettingsPage: React.FC = () => {
     socialYoutube: '',
     socialInstagram: '',
     socialTwitter: '',
+    socialFacebook: '',
+    socialAppleMusic: '',
+    socialSoundcloud: '',
     maintenanceMode: false,
   });
 
@@ -49,6 +52,7 @@ export const AdminSiteSettingsPage: React.FC = () => {
       const res = await adminSiteSettingsApi.update(formData);
       if (res.success) {
         toast.success('Site settings updated', 'Global branding and metadata saved successfully.');
+        window.dispatchEvent(new CustomEvent('site-settings-updated', { detail: formData }));
       }
     } catch (err: any) {
       toast.error('Save failed', err.message);
@@ -147,50 +151,86 @@ export const AdminSiteSettingsPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Global Social Handles */}
+        {/* Navbar & Brand Social Profiles */}
         <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-6 space-y-5 shadow-sm dark:shadow-none">
           <div className="border-b border-slate-200 dark:border-zinc-800/80 pb-4">
-            <h3 className="text-sm font-bold text-slate-900 dark:text-white tracking-wide">Label Social Profiles</h3>
-            <p className="text-xs text-slate-500 dark:text-zinc-500">Footer links and global brand channels</p>
+            <h3 className="text-sm font-bold text-slate-900 dark:text-white tracking-wide">Navbar & Brand Social Profiles</h3>
+            <p className="text-xs text-slate-500 dark:text-zinc-500">
+              Configure the social media links displayed in the top Navigation Bar and Footer
+            </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="space-y-1.5">
+              <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">
+                INSTAGRAM PROFILE / HANDLE URL <span className="text-vexo-red font-bold">(NAVBAR)</span>
+              </label>
+              <input
+                type="url"
+                value={formData.socialInstagram || ''}
+                onChange={(e) => setFormData({ ...formData, socialInstagram: e.target.value })}
+                placeholder="https://www.instagram.com/..."
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:border-vexo-red focus:ring-1 focus:ring-vexo-red/20 focus:outline-none transition-all"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">
+                FACEBOOK PAGE URL <span className="text-vexo-red font-bold">(NAVBAR)</span>
+              </label>
+              <input
+                type="url"
+                value={formData.socialFacebook || ''}
+                onChange={(e) => setFormData({ ...formData, socialFacebook: e.target.value })}
+                placeholder="https://www.facebook.com/..."
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:border-vexo-red focus:ring-1 focus:ring-vexo-red/20 focus:outline-none transition-all"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">
+                YOUTUBE CHANNEL URL <span className="text-vexo-red font-bold">(NAVBAR)</span>
+              </label>
+              <input
+                type="url"
+                value={formData.socialYoutube || ''}
+                onChange={(e) => setFormData({ ...formData, socialYoutube: e.target.value })}
+                placeholder="https://youtube.com/@..."
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:border-vexo-red focus:ring-1 focus:ring-vexo-red/20 focus:outline-none transition-all"
+              />
+            </div>
+
+            <div className="space-y-1.5">
+              <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">
+                TWITTER / X PROFILE URL <span className="text-vexo-red font-bold">(NAVBAR)</span>
+              </label>
+              <input
+                type="url"
+                value={formData.socialTwitter || ''}
+                onChange={(e) => setFormData({ ...formData, socialTwitter: e.target.value })}
+                placeholder="https://x.com/..."
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:border-vexo-red focus:ring-1 focus:ring-vexo-red/20 focus:outline-none transition-all"
+              />
+            </div>
+
             <div className="space-y-1.5">
               <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">SPOTIFY PROFILE URL</label>
               <input
                 type="url"
                 value={formData.socialSpotify || ''}
                 onChange={(e) => setFormData({ ...formData, socialSpotify: e.target.value })}
+                placeholder="https://spotify.com/..."
                 className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:border-vexo-red focus:ring-1 focus:ring-vexo-red/20 focus:outline-none transition-all"
               />
             </div>
 
             <div className="space-y-1.5">
-              <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">YOUTUBE CHANNEL URL</label>
+              <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">APPLE MUSIC URL</label>
               <input
                 type="url"
-                value={formData.socialYoutube || ''}
-                onChange={(e) => setFormData({ ...formData, socialYoutube: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:border-vexo-red focus:ring-1 focus:ring-vexo-red/20 focus:outline-none transition-all"
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">INSTAGRAM HANDLE / URL</label>
-              <input
-                type="url"
-                value={formData.socialInstagram || ''}
-                onChange={(e) => setFormData({ ...formData, socialInstagram: e.target.value })}
-                className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:border-vexo-red focus:ring-1 focus:ring-vexo-red/20 focus:outline-none transition-all"
-              />
-            </div>
-
-            <div className="space-y-1.5">
-              <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">TWITTER / X PROFILE URL</label>
-              <input
-                type="url"
-                value={formData.socialTwitter || ''}
-                onChange={(e) => setFormData({ ...formData, socialTwitter: e.target.value })}
+                value={formData.socialAppleMusic || ''}
+                onChange={(e) => setFormData({ ...formData, socialAppleMusic: e.target.value })}
+                placeholder="https://music.apple.com/..."
                 className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:border-vexo-red focus:ring-1 focus:ring-vexo-red/20 focus:outline-none transition-all"
               />
             </div>

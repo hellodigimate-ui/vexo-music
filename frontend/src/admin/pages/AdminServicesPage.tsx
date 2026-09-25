@@ -29,6 +29,8 @@ import {
   ArrowRight,
   HelpCircle,
   FileCheck,
+  LayoutGrid,
+  LayoutList,
 } from 'lucide-react';
 import { adminServicesApi } from '../services/adminApiClient';
 import { useAdminToast } from '../context/AdminToastContext';
@@ -139,6 +141,7 @@ export const AdminServicesPage: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [statusFilter, setStatusFilter] = useState<'all' | 'published' | 'draft'>('all');
   const [isLoading, setIsLoading] = useState(true);
+  const [viewPreference, setViewPreference] = useState<'auto' | 'cards' | 'table'>('auto');
 
   // Styled Confirmation Modal State
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; title: string } | null>(null);
@@ -553,7 +556,7 @@ export const AdminServicesPage: React.FC = () => {
       </div>
 
       {/* Filter & Search Controls */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white dark:bg-zinc-900/70 p-3 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-xs">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white dark:bg-zinc-900/70 p-3 rounded-2xl border border-slate-200 dark:border-zinc-800 shadow-xs">
         <div className="relative w-full sm:w-80">
           <Search className="w-4 h-4 text-slate-400 dark:text-zinc-400 absolute left-3.5 top-1/2 -translate-y-1/2" />
           <input
@@ -565,37 +568,66 @@ export const AdminServicesPage: React.FC = () => {
           />
         </div>
 
-        <div className="flex items-center gap-2 w-full sm:w-auto">
-          <button
-            onClick={() => setStatusFilter('all')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
-              statusFilter === 'all'
-                ? 'bg-slate-200 text-slate-900 border border-slate-300 shadow-2xs font-bold dark:bg-zinc-800 dark:text-white dark:border-zinc-600'
-                : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-zinc-800/50'
-            }`}
-          >
-            All ({services.length})
-          </button>
-          <button
-            onClick={() => setStatusFilter('published')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
-              statusFilter === 'published'
-                ? 'bg-slate-200 text-slate-900 border border-slate-300 shadow-2xs font-bold dark:bg-zinc-800 dark:text-white dark:border-zinc-600'
-                : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-zinc-800/50'
-            }`}
-          >
-            Live ({services.filter((s) => s.isActive).length})
-          </button>
-          <button
-            onClick={() => setStatusFilter('draft')}
-            className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer ${
-              statusFilter === 'draft'
-                ? 'bg-slate-200 text-slate-900 border border-slate-300 shadow-2xs font-bold dark:bg-zinc-800 dark:text-white dark:border-zinc-600'
-                : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-zinc-800/50'
-            }`}
-          >
-            Drafts ({services.filter((s) => !s.isActive).length})
-          </button>
+        <div className="flex items-center justify-between sm:justify-end gap-2 w-full sm:w-auto overflow-x-auto pb-1 sm:pb-0">
+          <div className="flex items-center gap-1.5 shrink-0">
+            <button
+              onClick={() => setStatusFilter('all')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer whitespace-nowrap ${
+                statusFilter === 'all'
+                  ? 'bg-slate-200 text-slate-900 border border-slate-300 shadow-2xs font-bold dark:bg-zinc-800 dark:text-white dark:border-zinc-600'
+                  : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-zinc-800/50'
+              }`}
+            >
+              All ({services.length})
+            </button>
+            <button
+              onClick={() => setStatusFilter('published')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer whitespace-nowrap ${
+                statusFilter === 'published'
+                  ? 'bg-slate-200 text-slate-900 border border-slate-300 shadow-2xs font-bold dark:bg-zinc-800 dark:text-white dark:border-zinc-600'
+                  : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-zinc-800/50'
+              }`}
+            >
+              Live ({services.filter((s) => s.isActive).length})
+            </button>
+            <button
+              onClick={() => setStatusFilter('draft')}
+              className={`px-3 py-1.5 rounded-lg text-xs font-semibold transition-colors cursor-pointer whitespace-nowrap ${
+                statusFilter === 'draft'
+                  ? 'bg-slate-200 text-slate-900 border border-slate-300 shadow-2xs font-bold dark:bg-zinc-800 dark:text-white dark:border-zinc-600'
+                  : 'text-slate-600 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-zinc-800/50'
+              }`}
+            >
+              Drafts ({services.filter((s) => !s.isActive).length})
+            </button>
+          </div>
+
+          <div className="flex items-center gap-1 bg-slate-100 dark:bg-zinc-800/80 p-1 rounded-lg border border-slate-200 dark:border-zinc-700/60 shrink-0 ml-auto sm:ml-2">
+            <button
+              type="button"
+              onClick={() => setViewPreference(viewPreference === 'cards' ? 'auto' : 'cards')}
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer ${
+                viewPreference === 'cards'
+                  ? 'bg-white dark:bg-zinc-700 text-vexo-red shadow-xs font-bold'
+                  : 'text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+              title="Card View"
+            >
+              <LayoutGrid className="w-3.5 h-3.5" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewPreference(viewPreference === 'table' ? 'auto' : 'table')}
+              className={`p-1.5 rounded-md text-xs transition-colors cursor-pointer ${
+                viewPreference === 'table'
+                  ? 'bg-white dark:bg-zinc-700 text-vexo-red shadow-xs font-bold'
+                  : 'text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+              title="Table View"
+            >
+              <LayoutList className="w-3.5 h-3.5" />
+            </button>
+          </div>
         </div>
       </div>
 
@@ -610,108 +642,54 @@ export const AdminServicesPage: React.FC = () => {
             No services found matching current filters.
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs sm:text-sm text-slate-800 dark:text-zinc-200">
-              <thead className="bg-slate-50 dark:bg-zinc-900/90 border-b border-slate-200 dark:border-zinc-800 text-slate-600 dark:text-zinc-400 font-mono text-[11px] uppercase tracking-wider font-semibold">
-                <tr>
-                  <th className="py-3 px-3.5 w-14 text-center">Seq</th>
-                  <th className="py-3 px-5">Capability & Cover</th>
-                  <th className="py-3 px-3.5">Category</th>
-                  <th className="py-3 px-5">3 Plans Pricing</th>
-                  <th className="py-3 px-3.5 text-center">Status</th>
-                  <th className="py-3 px-5 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100 dark:divide-zinc-800/70 font-sans">
+          <>
+            {/* 1. Mobile Cards View (shown on mobile when auto, or forced when viewPreference is 'cards') */}
+            {(viewPreference === 'cards' || viewPreference === 'auto') && (
+              <div className={`divide-y divide-slate-100 dark:divide-zinc-800/70 ${viewPreference === 'auto' ? 'block md:hidden' : 'block'}`}>
                 {filteredServices.map((service, index) => {
                   const IconComp = getIconComponent(service.icon);
                   const isFirst = index === 0;
                   const isLast = index === filteredServices.length - 1;
 
                   return (
-                    <tr key={service.id} className="hover:bg-slate-50/80 dark:hover:bg-zinc-900/40 transition-colors">
-                      {/* Reorder Buttons */}
-                      <td className="py-3.5 px-3.5 text-center">
-                        <div className="flex flex-col items-center gap-0.5">
+                    <div key={service.id} className="p-4 space-y-3.5 hover:bg-slate-50/60 dark:hover:bg-zinc-900/30 transition-colors">
+                      {/* Top Row: Sequence reorder + Category pill + Live/Draft status */}
+                      <div className="flex items-center justify-between gap-2">
+                        <div className="flex items-center gap-1.5 bg-slate-100 dark:bg-zinc-900 px-2 py-1 rounded-lg border border-slate-200 dark:border-zinc-800 shrink-0">
                           <button
                             type="button"
                             onClick={() => handleMove(index, 'up')}
                             disabled={isFirst || isReordering}
-                            className="p-1 rounded hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-400 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed"
+                            className="p-0.5 rounded hover:bg-slate-200 dark:hover:bg-zinc-800 text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed"
                             title="Move Up"
                           >
                             <ArrowUp className="w-3.5 h-3.5" />
                           </button>
-                          <span className="font-mono text-xs font-bold text-slate-700 dark:text-zinc-400">
-                            {service.number || (index + 1 < 10 ? `0${index + 1}` : index + 1)}
+                          <span className="font-mono text-xs font-bold text-slate-700 dark:text-zinc-300">
+                            #{service.number || (index + 1 < 10 ? `0${index + 1}` : index + 1)}
                           </span>
                           <button
                             type="button"
                             onClick={() => handleMove(index, 'down')}
                             disabled={isLast || isReordering}
-                            className="p-1 rounded hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-400 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed"
+                            className="p-0.5 rounded hover:bg-slate-200 dark:hover:bg-zinc-800 text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed"
                             title="Move Down"
                           >
                             <ArrowDown className="w-3.5 h-3.5" />
                           </button>
                         </div>
-                      </td>
 
-                      {/* Service Info */}
-                      <td className="py-3.5 px-5">
-                        <div className="flex items-center gap-3.5">
-                          <div className="relative w-16 h-11 rounded-lg overflow-hidden border border-slate-200 dark:border-zinc-700/80 bg-slate-100 dark:bg-zinc-900 shrink-0 shadow-xs">
-                            {service.imageUrl ? (
-                              <img src={getMediaUrl(service.imageUrl)} alt={service.title} className="w-full h-full object-cover" />
-                            ) : (
-                              <div className="w-full h-full flex items-center justify-center text-slate-400 dark:text-zinc-500 font-mono text-[10px]">
-                                NO IMG
-                              </div>
-                            )}
-                          </div>
-                          <div className="min-w-0 flex-1">
-                            <div className="flex items-center gap-2 flex-wrap">
-                              <IconComp className="w-4 h-4 text-vexo-red shrink-0" />
-                              <span className="font-bold text-slate-900 dark:text-white text-sm">{service.title}</span>
-                              <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-red-50 dark:bg-red-500/15 text-vexo-red border border-red-200 dark:border-red-500/30 shrink-0">
-                                3 PLANS
-                              </span>
-                            </div>
-                            <p className="text-xs text-slate-500 dark:text-zinc-400 line-clamp-1 mt-0.5 leading-normal">
-                              {service.shortDesc}
-                            </p>
-                          </div>
-                        </div>
-                      </td>
-
-                      {/* Category */}
-                      <td className="py-3.5 px-3.5 font-mono text-xs">
-                        <span className="inline-block px-2.5 py-1 rounded-md bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700/70 text-[11px] uppercase font-semibold text-slate-700 dark:text-zinc-200 whitespace-nowrap shadow-xs">
+                        <span className="inline-block px-2.5 py-1 rounded-md bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-[10px] uppercase font-mono font-semibold text-slate-700 dark:text-zinc-300 truncate max-w-[150px]">
                           {service.category || 'Production'}
                         </span>
-                      </td>
 
-                      {/* Pricing Range */}
-                      <td className="py-3.5 px-5">
-                        <div className="flex flex-col whitespace-nowrap">
-                          <span className="text-slate-900 dark:text-white text-sm font-bold tracking-tight">
-                            {service.pricingRange || 'Tiered Milestone Pricing'}
-                          </span>
-                          <span className="text-[11px] text-slate-400 dark:text-zinc-400 font-mono mt-1">
-                            Tiered Pricing Active
-                          </span>
-                        </div>
-                      </td>
-
-                      {/* Status Toggle */}
-                      <td className="py-3.5 px-3.5 text-center">
                         <button
                           type="button"
                           onClick={() => handleTogglePublish(service)}
-                          className={`inline-flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-bold uppercase transition-all cursor-pointer whitespace-nowrap shrink-0 min-w-[76px] shadow-xs ${
+                          className={`inline-flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-bold uppercase transition-all cursor-pointer whitespace-nowrap shrink-0 ${
                             service.isActive
-                              ? 'bg-emerald-50 dark:bg-emerald-950/90 border border-emerald-200 dark:border-emerald-600/70 text-emerald-700 dark:text-emerald-300 hover:border-emerald-300'
-                              : 'bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 text-slate-600 dark:text-zinc-400 hover:border-slate-300'
+                              ? 'bg-emerald-50 dark:bg-emerald-950/90 border border-emerald-200 dark:border-emerald-600/70 text-emerald-700 dark:text-emerald-300'
+                              : 'bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 text-slate-600 dark:text-zinc-400'
                           }`}
                         >
                           {service.isActive ? (
@@ -726,34 +704,213 @@ export const AdminServicesPage: React.FC = () => {
                             </>
                           )}
                         </button>
-                      </td>
+                      </div>
 
-                      {/* Actions */}
-                      <td className="py-3.5 px-5 text-right">
-                        <div className="flex items-center justify-end gap-2 whitespace-nowrap">
-                          <button
-                            onClick={() => openEditModal(service)}
-                            className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-950 border border-slate-200 dark:bg-zinc-800 dark:hover:bg-vexo-red dark:text-zinc-200 dark:hover:text-white transition-all cursor-pointer dark:border-zinc-700 hover:border-slate-300 dark:hover:border-red-600 text-xs font-semibold flex items-center gap-1.5 shadow-2xs"
-                            title="Edit Service & 3 Plans"
-                          >
-                            <Edit2 className="w-3.5 h-3.5 shrink-0" />
-                            <span>Edit Plans</span>
-                          </button>
-                          <button
-                            onClick={() => setDeleteTarget({ id: service.id, title: service.title })}
-                            className="p-1.5 rounded-lg bg-slate-100 hover:bg-red-50 text-slate-500 hover:text-red-600 border border-slate-200 hover:border-red-200 dark:bg-zinc-800 dark:hover:bg-red-950 dark:text-zinc-400 dark:hover:text-red-400 transition-colors cursor-pointer dark:border-zinc-700/60 shadow-2xs"
-                            title="Delete Service"
-                          >
-                            <Trash2 className="w-3.5 h-3.5" />
-                          </button>
+                      {/* Middle: Thumbnail + Title + Badge + Overview */}
+                      <div className="flex items-start gap-3.5">
+                        <div className="relative w-20 h-16 rounded-xl overflow-hidden border border-slate-200 dark:border-zinc-800 bg-slate-100 dark:bg-zinc-900 shrink-0 shadow-xs">
+                          {service.imageUrl ? (
+                            <img src={getMediaUrl(service.imageUrl)} alt={service.title} className="w-full h-full object-cover" />
+                          ) : (
+                            <div className="w-full h-full flex items-center justify-center text-slate-400 dark:text-zinc-500 font-mono text-[10px]">
+                              NO IMG
+                            </div>
+                          )}
                         </div>
-                      </td>
-                    </tr>
+
+                        <div className="min-w-0 flex-1">
+                          <div className="flex items-center gap-2 flex-wrap">
+                            <IconComp className="w-4 h-4 text-vexo-red shrink-0" />
+                            <h3 className="font-bold text-slate-900 dark:text-white text-sm leading-snug">
+                              {service.title}
+                            </h3>
+                            <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-red-50 dark:bg-red-500/15 text-vexo-red border border-red-200 dark:border-red-500/30 shrink-0">
+                              3 PLANS
+                            </span>
+                          </div>
+                          {service.shortDesc && (
+                            <p className="text-xs text-slate-500 dark:text-zinc-400 line-clamp-2 mt-1 leading-relaxed">
+                              {service.shortDesc}
+                            </p>
+                          )}
+                          <div className="mt-2 text-xs font-semibold text-slate-700 dark:text-zinc-300 flex items-center gap-1.5">
+                            <span className="text-[11px] font-mono text-slate-400 dark:text-zinc-400">Pricing:</span>
+                            <span className="text-slate-900 dark:text-white font-bold">{service.pricingRange || 'Tiered Milestone Pricing'}</span>
+                          </div>
+                        </div>
+                      </div>
+
+                      {/* Bottom: Action buttons */}
+                      <div className="flex items-center gap-2 pt-1 border-t border-slate-100 dark:border-zinc-800/60">
+                        <button
+                          onClick={() => openEditModal(service)}
+                          className="flex-1 py-2 px-3 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-800 dark:bg-zinc-800 dark:hover:bg-vexo-red dark:text-zinc-200 dark:hover:text-white transition-all text-xs font-semibold flex items-center justify-center gap-1.5 border border-slate-200 dark:border-zinc-700 shadow-2xs cursor-pointer"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                          <span>Edit Service & 3 Plans</span>
+                        </button>
+                        <button
+                          onClick={() => setDeleteTarget({ id: service.id, title: service.title })}
+                          className="p-2 rounded-xl bg-slate-100 hover:bg-red-50 text-slate-500 hover:text-red-600 border border-slate-200 hover:border-red-200 dark:bg-zinc-800 dark:hover:bg-red-950 dark:text-zinc-400 dark:hover:text-red-400 transition-colors shadow-2xs cursor-pointer"
+                          title="Delete Service"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
                   );
                 })}
-              </tbody>
-            </table>
-          </div>
+              </div>
+            )}
+
+            {/* 2. Desktop/Tablet Table View (shown on md+ when auto, or forced when viewPreference is 'table') */}
+            {(viewPreference === 'table' || viewPreference === 'auto') && (
+              <div className={`overflow-x-auto scrollbar-thin ${viewPreference === 'auto' ? 'hidden md:block' : 'block'}`}>
+                <table className="w-full min-w-[880px] text-left text-xs sm:text-sm text-slate-800 dark:text-zinc-200">
+                  <thead className="bg-slate-50 dark:bg-zinc-900/90 border-b border-slate-200 dark:border-zinc-800 text-slate-600 dark:text-zinc-400 font-mono text-[11px] uppercase tracking-wider font-semibold">
+                    <tr>
+                      <th className="py-3 px-3.5 w-16 text-center">Seq</th>
+                      <th className="py-3 px-5 min-w-[280px]">Capability & Cover</th>
+                      <th className="py-3 px-3.5 min-w-[130px]">Category</th>
+                      <th className="py-3 px-5 min-w-[170px]">3 Plans Pricing</th>
+                      <th className="py-3 px-3.5 text-center min-w-[100px]">Status</th>
+                      <th className="py-3 px-5 text-right min-w-[140px]">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-zinc-800/70 font-sans">
+                    {filteredServices.map((service, index) => {
+                      const IconComp = getIconComponent(service.icon);
+                      const isFirst = index === 0;
+                      const isLast = index === filteredServices.length - 1;
+
+                      return (
+                        <tr key={service.id} className="hover:bg-slate-50/80 dark:hover:bg-zinc-900/40 transition-colors">
+                          {/* Reorder Buttons */}
+                          <td className="py-3.5 px-3.5 text-center">
+                            <div className="flex flex-col items-center gap-0.5">
+                              <button
+                                type="button"
+                                onClick={() => handleMove(index, 'up')}
+                                disabled={isFirst || isReordering}
+                                className="p-1 rounded hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-400 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed"
+                                title="Move Up"
+                              >
+                                <ArrowUp className="w-3.5 h-3.5" />
+                              </button>
+                              <span className="font-mono text-xs font-bold text-slate-700 dark:text-zinc-400">
+                                {service.number || (index + 1 < 10 ? `0${index + 1}` : index + 1)}
+                              </span>
+                              <button
+                                type="button"
+                                onClick={() => handleMove(index, 'down')}
+                                disabled={isLast || isReordering}
+                                className="p-1 rounded hover:bg-slate-100 dark:hover:bg-zinc-800 text-slate-400 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white disabled:opacity-20 cursor-pointer disabled:cursor-not-allowed"
+                                title="Move Down"
+                              >
+                                <ArrowDown className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </td>
+
+                          {/* Service Info */}
+                          <td className="py-3.5 px-5 min-w-[280px]">
+                            <div className="flex items-center gap-3.5">
+                              <div className="relative w-16 h-11 rounded-lg overflow-hidden border border-slate-200 dark:border-zinc-700/80 bg-slate-100 dark:bg-zinc-900 shrink-0 shadow-xs">
+                                {service.imageUrl ? (
+                                  <img src={getMediaUrl(service.imageUrl)} alt={service.title} className="w-full h-full object-cover" />
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center text-slate-400 dark:text-zinc-500 font-mono text-[10px]">
+                                    NO IMG
+                                  </div>
+                                )}
+                              </div>
+                              <div className="min-w-0 flex-1">
+                                <div className="flex items-center gap-2 flex-wrap">
+                                  <IconComp className="w-4 h-4 text-vexo-red shrink-0" />
+                                  <span className="font-bold text-slate-900 dark:text-white text-sm whitespace-nowrap">{service.title}</span>
+                                  <span className="px-1.5 py-0.5 rounded text-[10px] font-mono font-bold bg-red-50 dark:bg-red-500/15 text-vexo-red border border-red-200 dark:border-red-500/30 shrink-0">
+                                    3 PLANS
+                                  </span>
+                                </div>
+                                <p className="text-xs text-slate-500 dark:text-zinc-400 line-clamp-1 mt-0.5 leading-normal">
+                                  {service.shortDesc}
+                                </p>
+                              </div>
+                            </div>
+                          </td>
+
+                          {/* Category */}
+                          <td className="py-3.5 px-3.5 font-mono text-xs min-w-[130px]">
+                            <span className="inline-block px-2.5 py-1 rounded-md bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700/70 text-[11px] uppercase font-semibold text-slate-700 dark:text-zinc-200 whitespace-nowrap shadow-xs">
+                              {service.category || 'Production'}
+                            </span>
+                          </td>
+
+                          {/* Pricing Range */}
+                          <td className="py-3.5 px-5 min-w-[170px]">
+                            <div className="flex flex-col whitespace-nowrap">
+                              <span className="text-slate-900 dark:text-white text-sm font-bold tracking-tight">
+                                {service.pricingRange || 'Tiered Milestone Pricing'}
+                              </span>
+                              <span className="text-[11px] text-slate-400 dark:text-zinc-400 font-mono mt-1">
+                                Tiered Pricing Active
+                              </span>
+                            </div>
+                          </td>
+
+                          {/* Status Toggle */}
+                          <td className="py-3.5 px-3.5 text-center min-w-[100px]">
+                            <button
+                              type="button"
+                              onClick={() => handleTogglePublish(service)}
+                              className={`inline-flex items-center justify-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-mono font-bold uppercase transition-all cursor-pointer whitespace-nowrap shrink-0 min-w-[76px] shadow-xs ${
+                                service.isActive
+                                  ? 'bg-emerald-50 dark:bg-emerald-950/90 border border-emerald-200 dark:border-emerald-600/70 text-emerald-700 dark:text-emerald-300 hover:border-emerald-300'
+                                  : 'bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700 text-slate-600 dark:text-zinc-400 hover:border-slate-300'
+                              }`}
+                            >
+                              {service.isActive ? (
+                                <>
+                                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 dark:bg-emerald-400 animate-pulse shrink-0" />
+                                  <span>Live</span>
+                                </>
+                              ) : (
+                                <>
+                                  <span className="w-1.5 h-1.5 rounded-full bg-slate-400 dark:bg-zinc-500 shrink-0" />
+                                  <span>Draft</span>
+                                </>
+                              )}
+                            </button>
+                          </td>
+
+                          {/* Actions */}
+                          <td className="py-3.5 px-5 text-right min-w-[140px]">
+                            <div className="flex items-center justify-end gap-2 whitespace-nowrap">
+                              <button
+                                onClick={() => openEditModal(service)}
+                                className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 text-slate-700 hover:text-slate-950 border border-slate-200 dark:bg-zinc-800 dark:hover:bg-vexo-red dark:text-zinc-200 dark:hover:text-white transition-all cursor-pointer dark:border-zinc-700 hover:border-slate-300 dark:hover:border-red-600 text-xs font-semibold flex items-center gap-1.5 shadow-2xs"
+                                title="Edit Service & 3 Plans"
+                              >
+                                <Edit2 className="w-3.5 h-3.5 shrink-0" />
+                                <span>Edit Plans</span>
+                              </button>
+                              <button
+                                onClick={() => setDeleteTarget({ id: service.id, title: service.title })}
+                                className="p-1.5 rounded-lg bg-slate-100 hover:bg-red-50 text-slate-500 hover:text-red-600 border border-slate-200 hover:border-red-200 dark:bg-zinc-800 dark:hover:bg-red-950 dark:text-zinc-400 dark:hover:text-red-400 transition-colors cursor-pointer dark:border-zinc-700/60 shadow-2xs"
+                                title="Delete Service"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </>
         )}
       </div>
 

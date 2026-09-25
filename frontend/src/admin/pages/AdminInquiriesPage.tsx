@@ -295,8 +295,8 @@ export const AdminInquiriesPage: React.FC = () => {
             </p>
           </div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
+          <div className="overflow-x-auto scrollbar-thin">
+            <table className="w-full min-w-[800px] text-left text-xs">
               <thead className="bg-slate-50 dark:bg-[#121218] border-b border-slate-200 dark:border-zinc-800/80 text-[10px] font-mono uppercase tracking-widest text-slate-600 dark:text-zinc-400">
                 <tr>
                   <th className="py-3.5 px-6">Name & Company</th>

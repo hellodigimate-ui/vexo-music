@@ -163,62 +163,62 @@ export const AdminDashboardPage: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-8">
+    <div className="space-y-6 sm:space-y-8">
       {/* Top Banner / Platform Summary */}
-      <div className="relative overflow-hidden rounded-3xl bg-white dark:bg-gradient-to-r dark:from-[#14141c] dark:via-[#101017] dark:to-[#0a0a0f] border border-slate-200 dark:border-zinc-800/80 p-8 shadow-xs">
+      <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-white dark:bg-gradient-to-r dark:from-[#14141c] dark:via-[#101017] dark:to-[#0a0a0f] border border-slate-200 dark:border-zinc-800/80 p-5 sm:p-6 lg:p-8 shadow-xs">
         <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-radial from-vexo-red/10 to-transparent pointer-events-none" />
-        <div className="relative z-10 space-y-4">
-          <div className="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-red-50 dark:bg-red-950/60 border border-red-200 dark:border-red-800/50 text-[11px] font-mono text-vexo-red dark:text-red-400">
-            <Radio className="w-3.5 h-3.5 text-vexo-red animate-pulse" />
+        <div className="relative z-10 space-y-3 sm:space-y-4">
+          <div className="inline-flex items-center gap-2 px-3 py-1 sm:px-3.5 sm:py-1.5 rounded-full bg-red-50 dark:bg-red-950/60 border border-red-200 dark:border-red-800/50 text-[10px] sm:text-[11px] font-mono text-vexo-red dark:text-red-400">
+            <Radio className="w-3 h-3 sm:w-3.5 sm:h-3.5 text-vexo-red animate-pulse" />
             <span className="font-semibold tracking-wider uppercase">VEXO MUSIC ENTERTAINMENT &bull; RECORD LABEL CONSOLE</span>
           </div>
           <div>
-            <h2 className="text-2xl lg:text-3xl font-black text-slate-900 dark:text-white tracking-wide flex items-center gap-3">
+            <h2 className="text-xl sm:text-2xl lg:text-3xl font-black text-slate-900 dark:text-white tracking-wide flex items-center gap-2 sm:gap-3 flex-wrap">
               <span>VEXO LABEL CONTROL CENTER</span>
-              <Headphones className="w-7 h-7 text-vexo-red" />
+              <Headphones className="w-6 h-6 sm:w-7 sm:h-7 text-vexo-red shrink-0" />
             </h2>
-            <p className="text-sm text-slate-600 dark:text-zinc-400 max-w-2xl mt-1">
+            <p className="text-xs sm:text-sm text-slate-600 dark:text-zinc-400 max-w-2xl mt-1 leading-relaxed">
               Synchronize label releases, roster artists, YouTube music videos, stadium tour itineraries, and studio booking inquiries in real time.
             </p>
           </div>
 
-          <div className="pt-2 flex flex-wrap gap-4">
+          <div className="pt-2 flex flex-wrap gap-2.5 sm:gap-3.5">
             <NavLink
               to="/admin/artists"
-              className="px-4 py-2.5 rounded-xl bg-vexo-red hover:bg-[#c50000] active:scale-[0.98] text-xs font-semibold text-white shadow-xs hover:shadow-md hover:shadow-red-500/20 flex items-center gap-2 transition-all cursor-pointer"
+              className="px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-vexo-red hover:bg-[#c50000] active:scale-[0.98] text-xs font-semibold text-white shadow-xs hover:shadow-md hover:shadow-red-500/20 flex items-center gap-2 transition-all cursor-pointer whitespace-nowrap"
             >
-              <PlusCircle className="w-4 h-4" />
+              <PlusCircle className="w-4 h-4 shrink-0" />
               <span>Add Signed Artist</span>
             </NavLink>
 
             <NavLink
               to="/admin/music"
-              className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 border border-slate-200 dark:border-zinc-700/80 text-xs font-semibold text-slate-800 dark:text-zinc-200 flex items-center gap-2 transition-all cursor-pointer shadow-xs"
+              className="px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 border border-slate-200 dark:border-zinc-700/80 text-xs font-semibold text-slate-800 dark:text-zinc-200 flex items-center gap-2 transition-all cursor-pointer shadow-xs whitespace-nowrap"
             >
-              <Disc3 className="w-4 h-4 text-vexo-red" />
+              <Disc3 className="w-4 h-4 text-vexo-red shrink-0" />
               <span>Release Album / Track</span>
             </NavLink>
 
             <NavLink
               to="/admin/videos"
-              className="px-4 py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 border border-slate-200 dark:border-zinc-700/80 text-xs font-semibold text-slate-800 dark:text-zinc-200 flex items-center gap-2 transition-all cursor-pointer shadow-xs"
+              className="px-3.5 sm:px-4 py-2 sm:py-2.5 rounded-xl bg-slate-100 hover:bg-slate-200 dark:bg-zinc-900 dark:hover:bg-zinc-800 border border-slate-200 dark:border-zinc-700/80 text-xs font-semibold text-slate-800 dark:text-zinc-200 flex items-center gap-2 transition-all cursor-pointer shadow-xs whitespace-nowrap"
             >
-              <Video className="w-4 h-4 text-sky-500 dark:text-sky-400" />
+              <Video className="w-4 h-4 text-sky-500 dark:text-sky-400 shrink-0" />
               <span>Publish Music Video</span>
             </NavLink>
           </div>
         </div>
       </div>
 
-      {/* KPI Metric Grid */}
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+      {/* KPI Metric Grid - Fully responsive across mobile, tablet, laptop, and ultra-wide screens */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 xl:grid-cols-4 gap-3.5 sm:gap-4 lg:gap-5">
         {kpiCards.map((card) => {
           const Icon = card.icon;
           return (
             <NavLink
               key={card.title}
               to={card.link}
-              className={`group relative overflow-hidden p-6 rounded-2xl bg-white dark:bg-[#0c0c12] border border-slate-200 ${card.darkBorder} ${card.glow} hover:border-slate-300 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between`}
+              className={`group relative overflow-hidden p-4 sm:p-5 lg:p-6 rounded-2xl bg-white dark:bg-[#0c0c12] border border-slate-200 ${card.darkBorder} ${card.glow} hover:border-slate-300 shadow-xs hover:shadow-md transition-all duration-300 flex flex-col justify-between`}
             >
               {/* Dark mode gradient background overlay */}
               <div
@@ -227,9 +227,9 @@ export const AdminDashboardPage: React.FC = () => {
 
               <div className="relative z-10 flex items-center justify-between">
                 <div
-                  className={`p-2.5 rounded-xl border transition-all duration-200 ${card.iconBox}`}
+                  className={`p-2 sm:p-2.5 rounded-xl border transition-all duration-200 ${card.iconBox}`}
                 >
-                  <Icon className="w-5 h-5" />
+                  <Icon className="w-4 h-4 sm:w-5 sm:h-5" />
                 </div>
                 {card.badge ? (
                   <span className="px-2 py-0.5 rounded-md bg-vexo-red text-[10px] font-mono font-bold text-white shadow-[0_0_10px_rgba(220,38,38,0.5)] animate-pulse">
@@ -240,11 +240,11 @@ export const AdminDashboardPage: React.FC = () => {
                 )}
               </div>
 
-              <div className="relative z-10 mt-6 space-y-1">
-                <p className="text-3xl font-black text-slate-900 dark:text-white tracking-tight group-hover:scale-105 transition-transform origin-left">
+              <div className="relative z-10 mt-4 sm:mt-6 space-y-1">
+                <p className="text-2xl sm:text-3xl font-black text-slate-900 dark:text-white tracking-tight group-hover:scale-105 transition-transform origin-left">
                   {card.count}
                 </p>
-                <p className="text-[11px] font-mono tracking-wider uppercase text-slate-500 dark:text-zinc-400 font-semibold">
+                <p className="text-[10px] sm:text-[11px] font-mono tracking-wider uppercase text-slate-500 dark:text-zinc-400 font-semibold truncate">
                   {card.title}
                 </p>
               </div>
@@ -254,9 +254,9 @@ export const AdminDashboardPage: React.FC = () => {
       </div>
 
       {/* Bottom Grid: Recent Inquiries & Activity Feed */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
+      <div className="grid grid-cols-1 xl:grid-cols-3 gap-6 lg:gap-8">
         {/* Recent Inquiries Section (2 Cols) */}
-        <div className="lg:col-span-2 space-y-4">
+        <div className="xl:col-span-2 space-y-4">
           <div className="flex items-center justify-between">
             <div>
               <h3 className="text-sm font-bold text-slate-900 dark:text-white tracking-wider flex items-center gap-2">

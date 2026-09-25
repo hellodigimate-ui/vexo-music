@@ -98,8 +98,8 @@ export const AdminUsersPage: React.FC = () => {
         {isLoading ? (
           <div className="py-20 text-center text-xs font-mono text-slate-400 dark:text-zinc-500">LOADING USERS...</div>
         ) : (
-          <div className="overflow-x-auto">
-            <table className="w-full text-left text-xs">
+          <div className="overflow-x-auto scrollbar-thin">
+            <table className="w-full min-w-[700px] text-left text-xs">
               <thead className="bg-slate-50 dark:bg-[#121218] border-b border-slate-200 dark:border-zinc-800/80 text-[10px] font-mono uppercase tracking-widest text-slate-500 dark:text-zinc-400">
                 <tr>
                   <th className="py-3.5 px-6">Admin Name & Email</th>

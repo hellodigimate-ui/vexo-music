@@ -700,6 +700,7 @@ class DatabaseStore {
       update: async (updates: Partial<Homepage>) => {
         const current = this.homepage.get() || ({ id: 'homepage-singleton' } as Homepage);
         const updated: Homepage = {
+<<<<<<< HEAD
           ...current,
           ...updates,
           updatedAt: new Date().toISOString(),
@@ -716,6 +717,48 @@ class DatabaseStore {
     return {
       get: () => this.data.siteSettings,
       update: async (updates: Partial<SiteSettings>) => {
+=======
+          ...current,
+          ...updates,
+          updatedAt: new Date().toISOString(),
+        };
+        await syncHomepageToPostgres(updated);
+        this.data.homepage = updated;
+        return updated;
+      },
+    };
+  }
+
+  // --- Site Settings ---
+  public get siteSettings() {
+    return {
+      get: () => {
+        if (!this.data.siteSettings) {
+          this.data.siteSettings = {
+            id: 'site-settings-singleton',
+            siteName: 'VEXO Music Entertainment Pvt. Ltd.',
+            siteDescription: 'Premier record label, studio production house, and artist management company.',
+            logoUrl: '/logo.svg',
+            faviconUrl: '/favicon.ico',
+            contactEmail: 'contact@vexomusic.com',
+            contactPhone: '+91 72399 99966',
+            officeAddress: 'SKY CROWN, Office No. 205 Chordiya City, Kamla Nehru Nagar, Ajmer Road Jaipur, Pin Code- 302021, Rajasthan, India',
+            copyrightText: '© 2026 VEXO Music Entertainment Pvt. Ltd. All rights reserved.',
+            socialSpotify: 'https://spotify.com',
+            socialYoutube: 'https://youtube.com/@vexomusicentertainment',
+            socialInstagram: 'https://www.instagram.com/vexomusicentertainment',
+            socialTwitter: 'https://x.com/vexomusicentertainment',
+            socialFacebook: 'https://facebook.com',
+            socialAppleMusic: null,
+            socialSoundcloud: null,
+            maintenanceMode: false,
+            updatedAt: new Date().toISOString(),
+          } as SiteSettings;
+        }
+        return this.data.siteSettings;
+      },
+      update: async (updates: Partial<SiteSettings>) => {
+>>>>>>> 6c6f775 (Initial commit)
         const current = this.siteSettings.get() || ({ id: 'site-settings-singleton' } as SiteSettings);
         const updated: SiteSettings = {
           ...current,

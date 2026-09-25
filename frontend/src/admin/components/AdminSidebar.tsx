@@ -211,11 +211,11 @@ export const AdminSidebar: React.FC<SidebarProps> = ({
       <aside
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className={`admin-sidebar fixed top-0 bottom-0 left-0 z-50 bg-white dark:bg-[#08080a] border-r border-slate-200 dark:border-zinc-800/80 flex flex-col transition-all duration-300 ease-in-out select-none overflow-x-hidden ${
+        className={`admin-sidebar fixed lg:static lg:sticky lg:top-0 lg:h-screen inset-y-0 left-0 z-50 lg:z-30 bg-white dark:bg-[#08080a] border-r border-slate-200 dark:border-zinc-800/80 flex flex-col transition-all duration-300 ease-in-out select-none overflow-x-hidden shrink-0 ${
           isOpen ? 'translate-x-0 w-64' : '-translate-x-full lg:translate-x-0'
         } ${
           isExpanded
-            ? 'lg:w-64 shadow-2xl shadow-slate-900/15 dark:shadow-[0_0_40px_rgba(0,0,0,0.85)]'
+            ? 'w-64 shadow-2xl lg:shadow-none'
             : 'lg:w-[72px]'
         }`}
       >
@@ -245,8 +245,8 @@ export const AdminSidebar: React.FC<SidebarProps> = ({
             <button
               type="button"
               onClick={onTogglePin}
-              title={isPinned ? 'Unpin sidebar (hover to open/close)' : 'Pin sidebar open'}
-              className="hidden lg:flex min-h-0 h-7 w-7 items-center justify-center rounded-lg text-slate-400 hover:text-slate-900 dark:text-zinc-500 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer shrink-0"
+              title={isPinned ? 'Collapse / Unpin sidebar' : 'Pin sidebar open (dock to layout)'}
+              className="hidden lg:flex min-h-0 h-7 w-7 items-center justify-center rounded-lg text-slate-400 hover:text-slate-950 dark:text-zinc-500 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer shrink-0"
             >
               {isPinned ? (
                 <Pin className="w-3.5 h-3.5 text-vexo-red fill-vexo-red" />

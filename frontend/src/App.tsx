@@ -48,9 +48,16 @@ import { ThemeProvider, ThemeTransition } from './components/theme';
 function PublicLayout() {
   const location = useLocation();
   const [hasInitialBooted, setHasInitialBooted] = useState(false);
+  const isCinematicPage =
+    location.pathname.startsWith('/pre-wedding') ||
+    location.pathname.startsWith('/weddings');
 
   return (
-    <div className="min-h-screen bg-[#f8fafc] dark:bg-[#050505] text-slate-900 dark:text-white font-sans selection:bg-vexo-red selection:text-white flex flex-col transition-colors duration-300">
+    <div
+      className={`min-h-screen ${
+        isCinematicPage ? 'bg-[#050505]' : 'bg-[#f8fafc] dark:bg-[#050505]'
+      } text-slate-900 dark:text-white font-sans selection:bg-vexo-red selection:text-white flex flex-col transition-colors duration-300`}
+    >
       {!hasInitialBooted && (
         <VexoLogoLoader
           currentPath={location.pathname}

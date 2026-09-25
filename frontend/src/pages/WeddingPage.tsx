@@ -19,7 +19,6 @@ import {
   DEFAULT_WEDDING_PROCESS_STEPS,
 } from '../data/weddingData';
 import { API_BASE_URL, adminPreWeddingApi } from '../admin/services/adminApiClient';
-import { Skeleton } from '../components/ui/Skeleton';
 import { Crown, Film, Award, Play } from 'lucide-react';
 
 export const WeddingPage: React.FC = () => {
@@ -28,6 +27,8 @@ export const WeddingPage: React.FC = () => {
   const [initialNotes, setInitialNotes] = useState<string>('');
   const [weddingData, setWeddingData] = useState<any>(null);
   const [isLoading, setIsLoading] = useState(true);
+
+
 
   useEffect(() => {
     let isMounted = true;
@@ -125,33 +126,32 @@ export const WeddingPage: React.FC = () => {
 
   if (isLoading || !weddingData) {
     return (
-      <div className="cinematic-dark bg-[#050505] text-white min-h-screen pt-24 pb-20 select-none">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          {/* Hero Skeleton */}
-          <div className="flex flex-col items-center text-center py-16 gap-6">
-            <Skeleton className="h-8 w-60 rounded-full" />
-            <Skeleton className="h-14 sm:h-20 w-3/4 max-w-2xl rounded-2xl" />
-            <Skeleton className="h-5 w-4/5 max-w-lg rounded-md" />
-            <div className="flex gap-4 mt-4">
-              <Skeleton className="h-12 w-44 rounded-xl" />
-              <Skeleton className="h-12 w-44 rounded-xl" />
-            </div>
+      <div className="cinematic-dark bg-[#050505] text-white min-h-screen flex flex-col items-center justify-center pt-24 pb-20 select-none">
+        <motion.div
+          initial={{ opacity: 0, scale: 0.95 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ duration: 0.5 }}
+          className="flex flex-col items-center gap-5 text-center px-4"
+        >
+          <div className="relative w-16 h-16 rounded-2xl bg-gradient-to-tr from-[#D4AF37]/20 via-vexo-red/20 to-transparent border border-[#D4AF37]/30 flex items-center justify-center shadow-[0_0_30px_rgba(212,175,55,0.2)]">
+            <Crown className="w-8 h-8 text-[#D4AF37] animate-pulse" />
           </div>
-
-          {/* 3 Highlights Strip Skeleton */}
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 my-12">
-            <Skeleton className="h-28 rounded-2xl" />
-            <Skeleton className="h-28 rounded-2xl" />
-            <Skeleton className="h-28 rounded-2xl" />
+          <div className="space-y-1.5">
+            <h2 className="text-sm font-mono uppercase tracking-[0.25em] text-[#D4AF37] font-bold">
+              VEXO ROYAL WEDDINGS
+            </h2>
+            <p className="text-xs text-zinc-400 font-sans tracking-wide">
+              Preparing your royal wedding cinema experience...
+            </p>
           </div>
-
-          {/* Package Cards Skeleton */}
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 my-16">
-            <Skeleton className="h-[520px] rounded-3xl" />
-            <Skeleton className="h-[560px] rounded-3xl" />
-            <Skeleton className="h-[520px] rounded-3xl" />
+          <div className="w-48 h-1 bg-white/10 rounded-full overflow-hidden mt-2">
+            <motion.div
+              animate={{ x: ['-100%', '100%'] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
+              className="w-1/2 h-full bg-gradient-to-r from-transparent via-[#D4AF37] to-transparent"
+            />
           </div>
-        </div>
+        </motion.div>
       </div>
     );
   }
@@ -163,27 +163,11 @@ export const WeddingPage: React.FC = () => {
       transition={{ duration: 0.6 }}
       className="cinematic-dark bg-[#050505] text-white min-h-screen relative overflow-hidden"
     >
-      {/* Ambient Royal & Crimson Lighting Atmosphere */}
-      <motion.div
-        animate={{ opacity: [0.08, 0.16, 0.08], scale: [1, 1.1, 1] }}
-        transition={{ duration: 10, repeat: Infinity, ease: 'easeInOut' }}
-        className="absolute top-[15%] -left-40 w-[600px] h-[600px] bg-red-600/15 rounded-full blur-[180px] pointer-events-none"
-      />
-      <motion.div
-        animate={{ opacity: [0.06, 0.14, 0.06], scale: [1, 1.12, 1] }}
-        transition={{ duration: 12, repeat: Infinity, ease: 'easeInOut', delay: 2 }}
-        className="absolute top-[38%] -right-40 w-[650px] h-[650px] bg-amber-500/15 rounded-full blur-[200px] pointer-events-none"
-      />
-      <motion.div
-        animate={{ opacity: [0.08, 0.15, 0.08], scale: [1, 1.08, 1] }}
-        transition={{ duration: 11, repeat: Infinity, ease: 'easeInOut', delay: 4 }}
-        className="absolute top-[65%] -left-40 w-[600px] h-[600px] bg-red-600/15 rounded-full blur-[180px] pointer-events-none"
-      />
-      <motion.div
-        animate={{ opacity: [0.07, 0.15, 0.07], scale: [1, 1.1, 1] }}
-        transition={{ duration: 13, repeat: Infinity, ease: 'easeInOut', delay: 1 }}
-        className="absolute top-[88%] -right-40 w-[600px] h-[600px] bg-amber-500/15 rounded-full blur-[190px] pointer-events-none"
-      />
+      {/* Ambient Royal & Crimson Lighting Atmosphere (Static hardware-accelerated radial gradients - zero scroll jank) */}
+      <div className="absolute top-[15%] -left-40 w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(220,38,38,0.08)_0%,transparent_70%)] pointer-events-none" />
+      <div className="absolute top-[38%] -right-40 w-[650px] h-[650px] bg-[radial-gradient(circle,rgba(212,175,55,0.06)_0%,transparent_70%)] pointer-events-none" />
+      <div className="absolute top-[65%] -left-40 w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(220,38,38,0.07)_0%,transparent_70%)] pointer-events-none" />
+      <div className="absolute top-[88%] -right-40 w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(212,175,55,0.06)_0%,transparent_70%)] pointer-events-none" />
 
       {/* 1. Hero Section Tailored for Wedding Day */}
       <WeddingHero

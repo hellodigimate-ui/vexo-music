@@ -206,6 +206,7 @@ export const PRE_WEDDING_PACKAGES: PreWeddingPackage[] = [
     badge: 'CLASSIC ELEGANCE',
     isPopular: false,
     highlightText: 'Ideal for intimate, heartfelt pre-wedding moments with cinematic finesse.',
+    foodTravel: 'Food, Travel — Paid By Client / Company',
     photography: {
       photographersCount: '1 Professional Photographer',
       cameraSetup: '1 Photography Camera Setup',
@@ -245,6 +246,7 @@ export const PRE_WEDDING_PACKAGES: PreWeddingPackage[] = [
     badge: 'MOST POPULAR',
     isPopular: true,
     highlightText: 'The crowd favorite. Enhanced cinematic camera movements, sound design & bonus portraits.',
+    foodTravel: 'Food, Travel — Paid By Client / Company',
     photography: {
       photographersCount: '1 Professional Photographer',
       cameraSetup: 'Premium Camera Setup',
@@ -290,6 +292,7 @@ export const PRE_WEDDING_PACKAGES: PreWeddingPackage[] = [
     badge: 'ROYAL EXPERIENCE',
     isPopular: false,
     highlightText: 'For couples who want a premium cinematic experience with 2 shoot days & full creative direction.',
+    foodTravel: 'Food, Travel — Paid By Client / Company',
     photography: {
       photographersCount: '1 Professional Photographer',
       cameraSetup: 'Premium Photography Setup',

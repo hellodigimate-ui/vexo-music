@@ -1,17 +1,19 @@
 import React from 'react';
-import { Menu, Radio, Disc3, Music2, ExternalLink, ArrowLeft } from 'lucide-react';
+import { Menu, Radio, Disc3, Music2, ExternalLink, ArrowLeft, PanelLeftClose, PanelLeft } from 'lucide-react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useAdminAuth } from '../context/AdminAuthContext';
 import { MusicThemeToggle } from '../../components/theme';
 
 interface AdminTopbarProps {
   onToggleSidebar: () => void;
+  isSidebarPinned?: boolean;
   title?: string;
   subtitle?: string;
 }
 
 export const AdminTopbar: React.FC<AdminTopbarProps> = ({
   onToggleSidebar,
+  isSidebarPinned = true,
   title,
   subtitle,
 }) => {
@@ -20,15 +22,21 @@ export const AdminTopbar: React.FC<AdminTopbarProps> = ({
   const isDashboard = location.pathname === '/admin';
 
   return (
-    <header className="admin-topbar h-14 px-4 lg:px-6 border-b border-slate-200 dark:border-zinc-800/80 bg-white/90 dark:bg-[#08080a]/90 backdrop-blur-md sticky top-0 z-30 flex items-center justify-between transition-colors duration-300">
-      {/* Left: Mobile Toggle, Back to Dashboard & Page Title */}
-      <div className="flex items-center gap-3 min-w-0">
+    <header className="admin-topbar h-14 px-3 sm:px-4 lg:px-6 border-b border-slate-200 dark:border-zinc-800/80 bg-white/90 dark:bg-[#08080a]/90 backdrop-blur-md sticky top-0 z-30 flex items-center justify-between transition-colors duration-300">
+      {/* Left: Sidebar Toggle, Back to Dashboard & Page Title */}
+      <div className="flex items-center gap-2 sm:gap-3 min-w-0">
         <button
           onClick={onToggleSidebar}
-          className="lg:hidden p-1.5 rounded-lg text-slate-500 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer shrink-0"
+          className="p-1.5 sm:p-2 rounded-xl text-slate-500 dark:text-zinc-400 hover:text-slate-950 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer shrink-0"
           aria-label="Toggle navigation menu"
+          title={isSidebarPinned ? 'Collapse Sidebar' : 'Expand Sidebar'}
         >
-          <Menu className="w-5 h-5" />
+          {isSidebarPinned ? (
+            <PanelLeftClose className="w-5 h-5 hidden lg:block" />
+          ) : (
+            <PanelLeft className="w-5 h-5 hidden lg:block" />
+          )}
+          <Menu className="w-5 h-5 lg:hidden" />
         </button>
 
         {!isDashboard && (

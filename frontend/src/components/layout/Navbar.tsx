@@ -8,6 +8,7 @@ import { Search, Menu, X, ArrowUpRight, Music, Sparkles } from 'lucide-react';
 import { MusicThemeToggle } from '../theme';
 
 import { navItems, type NavItem } from './navData';
+import { API_BASE_URL } from '../../lib/api/client';
 export type { NavItem };
 
 export const Navbar: React.FC = () => {
@@ -19,6 +20,59 @@ export const Navbar: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [hoveredPath, setHoveredPath] = useState<string | null>(null);
+
+  // Dynamic social media profile links from backend site-settings
+  const [socials, setSocials] = useState({
+    instagram: 'https://www.instagram.com/vexoentertainment?stkn=MXNwZXczZDZ3NnFxcQ==',
+    facebook: 'https://www.facebook.com/VexoRajasthaniMusic/',
+    youtube: 'https://youtu.be/HcEcM5AtEZ8?si=GRQJZe8f4r4ANy2B',
+    twitter: 'https://x.com/Vexo_Music',
+    spotify: 'https://spotify.com',
+  });
+
+  // Fetch live site settings from API and listen for real-time admin updates
+  useEffect(() => {
+    let isMounted = true;
+    const loadSiteSettings = () => {
+      fetch(`${API_BASE_URL}/site-settings`)
+        .then((res) => res.json())
+        .then((json) => {
+          if (!isMounted || !json?.data) return;
+          const d = json.data;
+          setSocials({
+            instagram: d.socialInstagram ?? 'https://www.instagram.com/vexoentertainment?stkn=MXNwZXczZDZ3NnFxcQ==',
+            facebook: d.socialFacebook ?? 'https://www.facebook.com/VexoRajasthaniMusic/',
+            youtube: d.socialYoutube ?? 'https://youtu.be/HcEcM5AtEZ8?si=GRQJZe8f4r4ANy2B',
+            twitter: d.socialTwitter ?? 'https://x.com/Vexo_Music',
+            spotify: d.socialSpotify ?? 'https://spotify.com',
+          });
+        })
+        .catch(() => {});
+    };
+
+    loadSiteSettings();
+
+    const handleUpdate = (e: any) => {
+      if (e?.detail) {
+        setSocials((prev) => ({
+          ...prev,
+          instagram: e.detail.socialInstagram ?? prev.instagram,
+          facebook: e.detail.socialFacebook ?? prev.facebook,
+          youtube: e.detail.socialYoutube ?? prev.youtube,
+          twitter: e.detail.socialTwitter ?? prev.twitter,
+          spotify: e.detail.socialSpotify ?? prev.spotify,
+        }));
+      } else {
+        loadSiteSettings();
+      }
+    };
+
+    window.addEventListener('site-settings-updated', handleUpdate);
+    return () => {
+      isMounted = false;
+      window.removeEventListener('site-settings-updated', handleUpdate);
+    };
+  }, []);
 
   // GPU-Accelerated Bubble sliding animation state
   const [bubbleStyle, setBubbleStyle] = useState<{ left: number; width: number; opacity: number }>({
@@ -284,58 +338,66 @@ export const Navbar: React.FC = () => {
             {/* Music-Themed Theme Visualizer Toggle */}
             <MusicThemeToggle variant="compact" className="shrink-0" />
 
-            {/* Social Icons (Shown only on ultra-wide screens 2xl: 1536px+ to preserve navbar width on standard screens) */}
-            <div className="hidden 2xl:flex items-center gap-2 pl-1 shrink-0">
-              <a
-                href="https://www.instagram.com/vexomusicentertainment"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="apple-control-btn apple-social-insta"
-                title="Instagram"
-                aria-label="Instagram"
-              >
-                <svg className="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
-                  <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
-                  <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
-                  <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
-                </svg>
-              </a>
-              <a
-                href="https://facebook.com"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="apple-control-btn apple-social-fb"
-                title="Facebook"
-                aria-label="Facebook"
-              >
-                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                  <path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.043-1.5-.14-2.75-.14-2.8 0-4.75 1.7-4.75 4.9v2.6H7v4h3.25V22h3.75v-8.5z" />
-                </svg>
-              </a>
-              <a
-                href="https://www.youtube.com/@vexomusicentertainment"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="apple-control-btn apple-social-yt"
-                title="YouTube"
-                aria-label="YouTube"
-              >
-                <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
-                  <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
-                </svg>
-              </a>
-              <a
-                href="https://x.com/vexomusicentertainment"
-                target="_blank"
-                rel="noopener noreferrer"
-                className="apple-control-btn apple-social-x"
-                title="X / Twitter"
-                aria-label="X (Twitter)"
-              >
-                <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
-                  <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
-                </svg>
-              </a>
+            {/* Social Icons (Dynamic from Site Settings / Admin Panel) */}
+            <div className="hidden md:flex items-center gap-1.5 xl:gap-2 pl-0.5 shrink-0">
+              {socials.instagram && (
+                <a
+                  href={socials.instagram}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="apple-control-btn apple-social-insta"
+                  title="Instagram"
+                  aria-label="Instagram"
+                >
+                  <svg className="w-4 h-4 fill-none stroke-current stroke-2" viewBox="0 0 24 24">
+                    <rect width="20" height="20" x="2" y="2" rx="5" ry="5" />
+                    <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z" />
+                    <line x1="17.5" x2="17.51" y1="6.5" y2="6.5" />
+                  </svg>
+                </a>
+              )}
+              {socials.facebook && (
+                <a
+                  href={socials.facebook}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="apple-control-btn apple-social-fb hidden xl:flex"
+                  title="Facebook"
+                  aria-label="Facebook"
+                >
+                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                    <path d="M14 13.5h2.5l1-4H14v-2c0-1.03 0-2 2-2h1.5V2.14c-.326-.043-1.5-.14-2.75-.14-2.8 0-4.75 1.7-4.75 4.9v2.6H7v4h3.25V22h3.75v-8.5z" />
+                  </svg>
+                </a>
+              )}
+              {socials.youtube && (
+                <a
+                  href={socials.youtube}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="apple-control-btn apple-social-yt"
+                  title="YouTube"
+                  aria-label="YouTube"
+                >
+                  <svg className="w-4 h-4 fill-current" viewBox="0 0 24 24">
+                    <path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z" />
+                  </svg>
+                </a>
+              )}
+              {socials.twitter && (
+                <a
+                  href={socials.twitter}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="apple-control-btn apple-social-x hidden xl:flex"
+                  title="X / Twitter"
+                  aria-label="X (Twitter)"
+                >
+                  <svg className="w-3.5 h-3.5 fill-current" viewBox="0 0 24 24">
+                    <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                  </svg>
+                </a>
+              )}
             </div>
 
             {/* Book A Project CTA */}
@@ -463,33 +525,49 @@ export const Navbar: React.FC = () => {
                   BOOK A PROJECT
                 </Button>
 
-                <div className="flex items-center justify-between text-xs text-zinc-500 dark:text-zinc-400">
-                  <span>Follow VEXO</span>
-                  <div className="flex items-center gap-4">
-                    <a
-                      href="https://www.instagram.com/vexomusicentertainment"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-pink-500"
-                    >
-                      Instagram
-                    </a>
-                    <a
-                      href="https://www.youtube.com/@vexomusicentertainment"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-red-500"
-                    >
-                      YouTube
-                    </a>
-                    <a
-                      href="https://x.com/vexomusicentertainment"
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      className="hover:text-sky-400"
-                    >
-                      X
-                    </a>
+                <div className="flex flex-col gap-2 pt-2 border-t border-slate-200 dark:border-white/10 text-xs">
+                  <span className="font-semibold text-slate-500 dark:text-zinc-400">Follow VEXO</span>
+                  <div className="flex flex-wrap items-center gap-4">
+                    {socials.instagram && (
+                      <a
+                        href={socials.instagram}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-pink-500 transition-colors"
+                      >
+                        Instagram
+                      </a>
+                    )}
+                    {socials.facebook && (
+                      <a
+                        href={socials.facebook}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-blue-500 transition-colors"
+                      >
+                        Facebook
+                      </a>
+                    )}
+                    {socials.youtube && (
+                      <a
+                        href={socials.youtube}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-red-500 transition-colors"
+                      >
+                        YouTube
+                      </a>
+                    )}
+                    {socials.twitter && (
+                      <a
+                        href={socials.twitter}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="hover:text-sky-400 transition-colors"
+                      >
+                        X (Twitter)
+                      </a>
+                    )}
                   </div>
                 </div>
               </div>

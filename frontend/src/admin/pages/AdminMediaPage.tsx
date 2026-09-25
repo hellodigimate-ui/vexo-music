@@ -492,8 +492,8 @@ export const AdminMediaPage: React.FC = () => {
       ) : (
         /* LIST / TABLE VIEW */
         <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl overflow-hidden shadow-xs">
-          <div className="overflow-x-auto">
-            <table className="w-full text-left border-collapse">
+          <div className="overflow-x-auto scrollbar-thin">
+            <table className="w-full min-w-[680px] text-left border-collapse">
               <thead>
                 <tr className="border-b border-slate-200 dark:border-zinc-800/80 bg-slate-50 dark:bg-zinc-900/50 text-[10px] font-mono uppercase tracking-wider text-slate-600 dark:text-zinc-400">
                   <th className="py-3 px-4">Asset</th>
