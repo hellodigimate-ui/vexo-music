@@ -155,7 +155,7 @@ export const Footer: React.FC = () => {
   };
 
   return (
-    <footer className="bg-slate-50 dark:bg-[#060608] border-t border-slate-200 dark:border-white/10 text-slate-600 dark:text-zinc-300 relative overflow-hidden transition-colors duration-300">
+    <footer className="w-full max-w-full overflow-x-hidden bg-slate-50 dark:bg-[#060608] border-t border-slate-200 dark:border-white/10 text-slate-600 dark:text-zinc-300 relative transition-colors duration-300">
       {/* Minimalist Ambient Red Lighting Haze */}
       <div className="absolute bottom-0 right-0 w-[500px] h-[350px] bg-vexo-red/5 dark:bg-vexo-red/8 rounded-full blur-[140px] pointer-events-none" />
       <div className="absolute top-0 left-1/4 w-[400px] h-[300px] bg-vexo-red/3 dark:bg-vexo-red/5 rounded-full blur-[120px] pointer-events-none" />

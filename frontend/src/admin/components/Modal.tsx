@@ -47,7 +47,7 @@ export const Modal: React.FC<ModalProps> = ({
   }[maxWidth];
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
       {/* Backdrop */}
       <div
         className="fixed inset-0 bg-black/85 backdrop-blur-sm animate-fade-in"
@@ -56,24 +56,24 @@ export const Modal: React.FC<ModalProps> = ({
 
       {/* Modal Card */}
       <div
-        className={`relative w-full ${maxWidthClasses} bg-white dark:bg-[#0e0e12] border border-slate-200 dark:border-zinc-800 rounded-2xl shadow-xl overflow-hidden z-10 animate-scale-up flex flex-col max-h-[90vh]`}
+        className={`relative w-full max-w-full ${maxWidthClasses} bg-white dark:bg-[#0e0e12] border border-slate-200 dark:border-zinc-800 rounded-2xl shadow-xl overflow-hidden z-10 animate-scale-up flex flex-col max-h-[94vh] sm:max-h-[90vh]`}
       >
         {/* Modal Header */}
-        <div className="px-6 py-5 border-b border-slate-200 dark:border-zinc-800 flex items-center justify-between bg-slate-50 dark:bg-[#111116]">
-          <div>
-            <h3 className="text-base font-bold text-slate-900 dark:text-white tracking-wide">{title}</h3>
-            {subtitle && <p className="text-xs text-slate-500 dark:text-zinc-400 mt-0.5">{subtitle}</p>}
+        <div className="px-4 sm:px-6 py-4 sm:py-5 border-b border-slate-200 dark:border-zinc-800 flex items-center justify-between bg-slate-50 dark:bg-[#111116] shrink-0">
+          <div className="min-w-0 pr-2">
+            <h3 className="text-sm sm:text-base font-bold text-slate-900 dark:text-white tracking-wide truncate">{title}</h3>
+            {subtitle && <p className="text-xs text-slate-500 dark:text-zinc-400 mt-0.5 truncate">{subtitle}</p>}
           </div>
           <button
             onClick={onClose}
-            className="p-1.5 rounded-lg text-slate-400 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer"
+            className="p-1.5 rounded-lg text-slate-400 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100 dark:hover:bg-zinc-800 transition-colors cursor-pointer shrink-0"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
 
         {/* Modal Body */}
-        <div className="px-6 py-6 overflow-y-auto flex-1 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-zinc-700 bg-white dark:bg-[#0e0e12] text-slate-900 dark:text-zinc-100">
+        <div className="px-4 sm:px-6 py-4 sm:py-6 overflow-y-auto flex-1 scrollbar-thin scrollbar-thumb-slate-200 dark:scrollbar-thumb-zinc-700 bg-white dark:bg-[#0e0e12] text-slate-900 dark:text-zinc-100">
           {children}
         </div>
       </div>

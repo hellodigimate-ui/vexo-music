@@ -56,7 +56,7 @@ function PublicLayout() {
     <div
       className={`min-h-screen ${
         isCinematicPage ? 'bg-[#050505]' : 'bg-[#f8fafc] dark:bg-[#050505]'
-      } text-slate-900 dark:text-white font-sans selection:bg-vexo-red selection:text-white flex flex-col transition-colors duration-300`}
+      } text-slate-900 dark:text-white font-sans selection:bg-vexo-red selection:text-white flex flex-col transition-colors duration-300 w-full max-w-full overflow-x-hidden`}
     >
       {!hasInitialBooted && (
         <VexoLogoLoader
@@ -65,12 +65,13 @@ function PublicLayout() {
         />
       )}
       <Navbar />
-      <main className="flex-1">
+      <main className="flex-1 w-full max-w-full min-w-0">
         <motion.div
           key={location.pathname}
           initial={{ opacity: 0, y: 12 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.35, ease: [0.22, 1, 0.36, 1] }}
+          className="w-full max-w-full min-w-0"
         >
           <Outlet />
         </motion.div>

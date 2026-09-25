@@ -400,9 +400,9 @@ export const AdminHomepagePage: React.FC = () => {
   }
 
   return (
-    <div className="max-w-5xl mx-auto space-y-6 pb-20">
+    <div className="w-full max-w-5xl mx-auto min-w-0 space-y-6 pb-20">
       {/* Top Header & Navigation Banner */}
-      <div className="p-6 rounded-2xl bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-colors">
+      <div className="p-4 sm:p-6 rounded-2xl bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-4 transition-colors">
         <div>
           <div className="flex items-center gap-2">
             <span className="w-2 h-2 rounded-full bg-vexo-red animate-pulse" />
@@ -413,12 +413,12 @@ export const AdminHomepagePage: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 w-full sm:w-auto">
           <Link
             to="/"
             target="_blank"
             rel="noreferrer"
-            className="px-4 py-2 rounded-xl bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 hover:bg-slate-200 dark:hover:border-zinc-700 text-xs font-semibold text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white flex items-center gap-1.5 transition-colors shadow-xs"
+            className="flex-1 sm:flex-initial px-4 py-2 rounded-xl bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 hover:bg-slate-200 dark:hover:border-zinc-700 text-xs font-semibold text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white flex items-center justify-center gap-1.5 transition-colors shadow-xs"
           >
             <Eye className="w-3.5 h-3.5 text-vexo-red" />
             <span>View Live Site</span>
@@ -429,7 +429,7 @@ export const AdminHomepagePage: React.FC = () => {
             type="button"
             onClick={handleSubmit}
             disabled={isSaving}
-            className="px-5 py-2 rounded-xl bg-vexo-red hover:bg-red-600 text-xs font-semibold text-white shadow-md shadow-red-500/25 flex items-center gap-2 transition-all cursor-pointer disabled:opacity-50"
+            className="flex-1 sm:flex-initial px-5 py-2 rounded-xl bg-vexo-red hover:bg-red-600 text-xs font-semibold text-white shadow-md shadow-red-500/25 flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50"
           >
             <Save className="w-3.5 h-3.5 text-white" />
             <span className="text-white">{isSaving ? 'Saving...' : 'Save All Changes'}</span>

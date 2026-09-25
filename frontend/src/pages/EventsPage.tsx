@@ -41,7 +41,7 @@ export const EventsPage: React.FC = () => {
   };
 
   return (
-    <div className="pt-20 min-h-screen bg-[#f8fafc] dark:bg-[#050505] text-slate-900 dark:text-white pb-24 transition-colors duration-300">
+    <div className="pt-20 min-h-screen bg-[#f8fafc] dark:bg-[#050505] text-slate-900 dark:text-white pb-24 transition-colors duration-300 w-full max-w-full overflow-x-hidden">
       {/* 1. HERO HEADER SECTION */}
       <div className="relative pt-16 pb-20 border-b border-slate-200 dark:border-white/10 overflow-hidden bg-white dark:bg-[#07070a] transition-colors duration-300">
         {/* Ambient Red Glow */}
@@ -54,7 +54,7 @@ export const EventsPage: React.FC = () => {
           </div>
 
           {/* BOLD DISPLAY TITLE */}
-          <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black uppercase tracking-tight text-slate-950 dark:text-white mb-5 leading-none select-none">
+          <h1 className="text-3xl sm:text-5xl md:text-7xl lg:text-8xl font-black uppercase tracking-tight text-slate-950 dark:text-white mb-5 leading-none select-none">
             LIVE <span className="text-vexo-red">EXPERIENCE</span>
           </h1>
 

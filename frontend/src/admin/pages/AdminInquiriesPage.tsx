@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo } from 'react';
+import React, { useState, useEffect, useMemo, useRef } from 'react';
 import {
   Mail,
   Search,
@@ -13,11 +13,14 @@ import {
   Inbox,
   PhoneCall,
   RefreshCw,
+  LayoutGrid,
+  List,
 } from 'lucide-react';
 import { adminInquiriesApi } from '../services/adminApiClient';
 import { useAdminToast } from '../context/AdminToastContext';
 import { Modal } from '../components/Modal';
 import { AdminConfirmModal } from '../components/AdminConfirmModal';
+import { TableScrollSlider } from '../components/TableScrollSlider';
 
 export type EnquiryStatus = 'NEW' | 'CONTACTED' | 'CLOSED';
 
@@ -42,6 +45,14 @@ export const AdminInquiriesPage: React.FC = () => {
   const [statusFilter, setStatusFilter] = useState<string>('ALL');
   const [searchQuery, setSearchQuery] = useState('');
   const [isLoading, setIsLoading] = useState(true);
+  const [viewMode, setViewMode] = useState<'grid' | 'table'>(() => {
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      return 'grid';
+    }
+    return 'table';
+  });
+
+  const inquiriesScrollRef = useRef<HTMLDivElement>(null);
 
   // Styled Confirmation Modal State
   const [deleteTarget, setDeleteTarget] = useState<{ id: string; refId: string } | null>(null);
@@ -172,7 +183,7 @@ export const AdminInquiriesPage: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="w-full max-w-full min-w-0 space-y-6">
       {/* 1. Header & Summary Metric Cards */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
@@ -266,21 +277,51 @@ export const AdminInquiriesPage: React.FC = () => {
           })}
         </div>
 
-        {/* Search Input */}
-        <div className="relative flex-1 max-w-md">
-          <Search className="w-4 h-4 text-slate-400 dark:text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
-          <input
-            type="text"
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            placeholder="Search by name, email, service, company, or keywords..."
-            className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:border-vexo-red focus:outline-none focus:ring-1 focus:ring-vexo-red transition-colors shadow-xs"
-          />
+        {/* Search Input & View Toggle */}
+        <div className="flex items-center gap-2.5 w-full lg:w-auto flex-1 max-w-lg">
+          <div className="relative flex-1">
+            <Search className="w-4 h-4 text-slate-400 dark:text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
+            <input
+              type="text"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+              placeholder="Search by name, email, service, company, or keywords..."
+              className="w-full pl-10 pr-4 py-2.5 rounded-xl bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:border-vexo-red focus:outline-none focus:ring-1 focus:ring-vexo-red transition-colors shadow-xs"
+            />
+          </div>
+
+          {/* View Mode Toggle */}
+          <div className="flex items-center p-1 rounded-xl bg-slate-100 dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800 shrink-0">
+            <button
+              type="button"
+              onClick={() => setViewMode('table')}
+              className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                viewMode === 'table'
+                  ? 'bg-white dark:bg-zinc-800 text-slate-950 dark:text-white shadow-xs'
+                  : 'text-slate-400 hover:text-slate-700 dark:text-zinc-500 dark:hover:text-zinc-300'
+              }`}
+              title="Table View"
+            >
+              <List className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode('grid')}
+              className={`p-1.5 rounded-lg transition-colors cursor-pointer ${
+                viewMode === 'grid'
+                  ? 'bg-white dark:bg-zinc-800 text-slate-950 dark:text-white shadow-xs'
+                  : 'text-slate-400 hover:text-slate-700 dark:text-zinc-500 dark:hover:text-zinc-300'
+              }`}
+              title="Card Grid View"
+            >
+              <LayoutGrid className="w-4 h-4" />
+            </button>
+          </div>
         </div>
       </div>
 
-      {/* 3. Enquiries Table */}
-      <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl overflow-hidden shadow-xs">
+      {/* 3. Enquiries Directory */}
+      <div className="w-full max-w-full min-w-0 bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl overflow-hidden shadow-xs">
         {isLoading ? (
           <div className="py-20 text-center text-xs font-mono text-slate-400 dark:text-zinc-500 flex flex-col items-center justify-center gap-3">
             <div className="w-6 h-6 border-2 border-vexo-red border-t-transparent rounded-full animate-spin" />
@@ -294,17 +335,179 @@ export const AdminInquiriesPage: React.FC = () => {
               {searchQuery ? 'Try clearing your search query.' : 'Incoming submissions from the contact form will appear here.'}
             </p>
           </div>
+        ) : viewMode === 'grid' ? (
+          /* Mobile / Responsive Cards Grid */
+          <div className="p-4 sm:p-6 grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
+            {filteredInquiries.map((inq) => {
+              const isNew = inq.status === 'NEW';
+              const isContacted = inq.status === 'CONTACTED';
+              return (
+                <div
+                  key={inq.id}
+                  onClick={() => handleOpenDetail(inq)}
+                  className={`p-4 sm:p-5 rounded-2xl bg-white dark:bg-[#0c0c10] border transition-all cursor-pointer flex flex-col justify-between gap-3 shadow-xs hover:shadow-md ${
+                    isNew
+                      ? 'border-red-300 dark:border-red-900/60 ring-1 ring-red-500/20'
+                      : 'border-slate-200 dark:border-zinc-800/80 hover:border-slate-300 dark:hover:border-zinc-700'
+                  }`}
+                >
+                  {/* Header: Reference ID & Status */}
+                  <div className="flex items-center justify-between gap-2 border-b border-slate-100 dark:border-zinc-800/60 pb-3">
+                    <div className="flex items-center gap-2">
+                      <span className="font-mono font-bold text-vexo-red text-xs">
+                        {inq.referenceId}
+                      </span>
+                      {isNew && (
+                        <span className="inline-flex items-center px-1.5 py-0.5 rounded text-[9px] font-mono font-bold bg-red-100 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300">
+                          NEW
+                        </span>
+                      )}
+                    </div>
+
+                    <span
+                      className={`text-[10px] font-mono font-bold uppercase px-2.5 py-0.5 rounded-full inline-flex items-center gap-1.5 ${
+                        isNew
+                          ? 'bg-red-50 text-red-700 border border-red-200 dark:bg-red-950 dark:border-red-800 dark:text-red-300'
+                          : isContacted
+                          ? 'bg-sky-50 text-sky-700 border border-sky-200 dark:bg-sky-950 dark:border-sky-800 dark:text-sky-300'
+                          : 'bg-emerald-50 text-emerald-700 border border-emerald-200 dark:bg-emerald-950 dark:border-emerald-800 dark:text-emerald-300'
+                      }`}
+                    >
+                      <span
+                        className={`w-1.5 h-1.5 rounded-full ${
+                          isNew
+                            ? 'bg-vexo-red animate-pulse'
+                            : isContacted
+                            ? 'bg-sky-500'
+                            : 'bg-emerald-500'
+                        }`}
+                      />
+                      <span>{inq.status}</span>
+                    </span>
+                  </div>
+
+                  {/* Body: Client Name & Contact */}
+                  <div className="space-y-2">
+                    <div>
+                      <h4 className="font-bold text-slate-900 dark:text-white text-sm">
+                        {inq.name}
+                      </h4>
+                      {inq.company && (
+                        <p className="text-xs text-slate-500 dark:text-zinc-400 flex items-center gap-1 mt-0.5">
+                          <Building2 className="w-3.5 h-3.5 shrink-0" />
+                          <span className="truncate">{inq.company}</span>
+                        </p>
+                      )}
+                    </div>
+
+                    <div className="flex flex-wrap items-center gap-2 pt-1 text-xs">
+                      <a
+                        href={`mailto:${inq.email}`}
+                        onClick={(e) => e.stopPropagation()}
+                        className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-slate-700 dark:text-zinc-300 hover:text-vexo-red font-mono text-[11px] truncate max-w-full"
+                      >
+                        <Mail className="w-3 h-3 text-slate-400 shrink-0" />
+                        <span className="truncate">{inq.email}</span>
+                      </a>
+
+                      {inq.phone && (
+                        <a
+                          href={`tel:${inq.phone}`}
+                          onClick={(e) => e.stopPropagation()}
+                          className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-lg bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-slate-700 dark:text-zinc-300 hover:text-vexo-red font-mono text-[11px]"
+                        >
+                          <Phone className="w-3 h-3 text-slate-400 shrink-0" />
+                          <span>{inq.phone}</span>
+                        </a>
+                      )}
+                    </div>
+
+                    <div className="flex items-center justify-between gap-2 pt-1 text-[11px] text-slate-500 dark:text-zinc-400">
+                      <span className="px-2 py-0.5 rounded-lg bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 font-mono font-medium text-slate-800 dark:text-zinc-200 text-[10px]">
+                        {inq.service}
+                      </span>
+                      <span className="font-mono text-[10px]">
+                        {new Date(inq.createdAt).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
+                      </span>
+                    </div>
+
+                    {inq.message && (
+                      <p className="text-xs text-slate-600 dark:text-zinc-400 line-clamp-2 italic bg-slate-50/50 dark:bg-zinc-900/40 p-2 rounded-lg border border-slate-100 dark:border-zinc-800/40">
+                        "{inq.message}"
+                      </p>
+                    )}
+                  </div>
+
+                  {/* Footer Actions */}
+                  <div
+                    className="flex items-center justify-between gap-2 pt-3 border-t border-slate-100 dark:border-zinc-800/60"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <div className="flex items-center gap-1.5">
+                      {inq.status === 'NEW' && (
+                        <button
+                          type="button"
+                          onClick={() => handleUpdateStatus(inq.id, 'CONTACTED')}
+                          className="px-2.5 py-1.5 rounded-lg bg-sky-50 hover:bg-sky-100 border border-sky-200 text-sky-700 dark:bg-sky-950/60 dark:hover:bg-sky-900/80 dark:border-sky-800/60 dark:text-sky-300 text-[11px] font-mono font-semibold transition-colors cursor-pointer flex items-center gap-1 whitespace-nowrap"
+                        >
+                          <PhoneCall className="w-3 h-3" />
+                          <span>Contacted</span>
+                        </button>
+                      )}
+
+                      {inq.status !== 'CLOSED' && (
+                        <button
+                          type="button"
+                          onClick={() => handleUpdateStatus(inq.id, 'CLOSED')}
+                          className="px-2.5 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 dark:bg-emerald-950/60 dark:hover:bg-emerald-900/80 dark:border-emerald-800/60 dark:text-emerald-300 text-[11px] font-mono font-semibold transition-colors cursor-pointer flex items-center gap-1 whitespace-nowrap"
+                        >
+                          <Check className="w-3 h-3" />
+                          <span>Close</span>
+                        </button>
+                      )}
+                    </div>
+
+                    <div className="flex items-center gap-1.5">
+                      <button
+                        type="button"
+                        onClick={() => handleOpenDetail(inq)}
+                        className="px-3 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 hover:text-slate-950 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-800 dark:text-zinc-300 dark:hover:text-white text-[11px] font-semibold transition-colors cursor-pointer flex items-center gap-1 whitespace-nowrap"
+                      >
+                        <Eye className="w-3.5 h-3.5" />
+                        <span>Details</span>
+                      </button>
+
+                      <button
+                        type="button"
+                        onClick={() => setDeleteTarget({ id: inq.id, refId: inq.referenceId })}
+                        className="p-1.5 rounded-lg bg-slate-100 hover:bg-red-50 border border-slate-200 hover:border-red-200 text-slate-500 hover:text-red-600 dark:bg-red-950/30 dark:hover:bg-red-900/60 dark:border-red-900/40 dark:text-red-400 dark:hover:text-red-200 transition-colors cursor-pointer shrink-0"
+                        title="Delete Enquiry"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         ) : (
-          <div className="overflow-x-auto scrollbar-thin">
-            <table className="w-full min-w-[800px] text-left text-xs">
+          /* Desktop Table View */
+          <div className="w-full max-w-full min-w-0 bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl overflow-hidden shadow-xs">
+            <div
+              ref={inquiriesScrollRef}
+              className="w-full max-w-full overflow-x-auto scrollbar-thin touch-pan-x overscroll-x-contain"
+              style={{ WebkitOverflowScrolling: 'touch' }}
+            >
+              <table className="w-full min-w-[960px] text-left text-xs">
               <thead className="bg-slate-50 dark:bg-[#121218] border-b border-slate-200 dark:border-zinc-800/80 text-[10px] font-mono uppercase tracking-widest text-slate-600 dark:text-zinc-400">
                 <tr>
-                  <th className="py-3.5 px-6">Name & Company</th>
-                  <th className="py-3.5 px-6">Email & Phone</th>
-                  <th className="py-3.5 px-6">Service</th>
-                  <th className="py-3.5 px-6">Date</th>
-                  <th className="py-3.5 px-6">Status</th>
-                  <th className="py-3.5 px-6 text-right">Actions</th>
+                  <th className="py-3.5 px-4 sm:px-6 whitespace-nowrap min-w-[200px]">Name & Company</th>
+                  <th className="py-3.5 px-4 sm:px-6 whitespace-nowrap min-w-[200px]">Email & Phone</th>
+                  <th className="py-3.5 px-4 sm:px-6 whitespace-nowrap min-w-[150px]">Service</th>
+                  <th className="py-3.5 px-4 sm:px-6 whitespace-nowrap min-w-[130px]">Date</th>
+                  <th className="py-3.5 px-4 sm:px-6 whitespace-nowrap min-w-[130px]">Status</th>
+                  <th className="py-3.5 px-4 sm:px-6 text-right whitespace-nowrap min-w-[170px]">Actions</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-100 dark:divide-zinc-800/60">
@@ -321,32 +524,32 @@ export const AdminInquiriesPage: React.FC = () => {
                       }`}
                     >
                       {/* Name & Reference ID */}
-                      <td className="py-4 px-6">
+                      <td className="py-4 px-4 sm:px-6 whitespace-nowrap">
                         <div className="flex items-center gap-2">
-                          <span className="font-mono font-bold text-vexo-red text-[11px]">
+                          <span className="font-mono font-bold text-vexo-red text-[11px] whitespace-nowrap">
                             {inq.referenceId}
                           </span>
                           {isNew && (
-                            <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[9px] font-mono font-bold bg-red-100 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300">
+                            <span className="inline-flex items-center px-1.5 py-0.2 rounded text-[9px] font-mono font-bold bg-red-100 dark:bg-red-950 border border-red-200 dark:border-red-800 text-red-700 dark:text-red-300 whitespace-nowrap">
                               NEW
                             </span>
                           )}
                         </div>
-                        <p className="font-bold text-slate-900 dark:text-white text-xs mt-0.5">{inq.name}</p>
+                        <p className="font-bold text-slate-900 dark:text-white text-xs mt-0.5 whitespace-nowrap">{inq.name}</p>
                         {inq.company && (
-                          <p className="text-[11px] text-slate-500 dark:text-zinc-400 flex items-center gap-1 mt-0.5">
-                            <Building2 className="w-3 h-3 text-slate-400 dark:text-zinc-500" />
-                            <span>{inq.company}</span>
+                          <p className="text-[11px] text-slate-500 dark:text-zinc-400 flex items-center gap-1 mt-0.5 whitespace-nowrap">
+                            <Building2 className="w-3 h-3 text-slate-400 dark:text-zinc-500 shrink-0" />
+                            <span className="whitespace-nowrap">{inq.company}</span>
                           </p>
                         )}
                       </td>
 
                       {/* Email & Phone */}
-                      <td className="py-4 px-6">
+                      <td className="py-4 px-4 sm:px-6 whitespace-nowrap">
                         <a
                           href={`mailto:${inq.email}`}
                           onClick={(e) => e.stopPropagation()}
-                          className="font-mono text-slate-800 dark:text-zinc-200 hover:text-vexo-red transition-colors block"
+                          className="font-mono text-slate-800 dark:text-zinc-200 hover:text-vexo-red transition-colors block whitespace-nowrap"
                         >
                           {inq.email}
                         </a>
@@ -354,25 +557,25 @@ export const AdminInquiriesPage: React.FC = () => {
                           <a
                             href={`tel:${inq.phone}`}
                             onClick={(e) => e.stopPropagation()}
-                            className="text-[11px] font-mono text-zinc-500 hover:text-zinc-300 transition-colors flex items-center gap-1 mt-0.5"
+                            className="text-[11px] font-mono text-zinc-500 hover:text-zinc-300 transition-colors flex items-center gap-1 mt-0.5 whitespace-nowrap"
                           >
-                            <Phone className="w-3 h-3" />
-                            <span>{inq.phone}</span>
+                            <Phone className="w-3 h-3 shrink-0" />
+                            <span className="whitespace-nowrap">{inq.phone}</span>
                           </a>
                         )}
                       </td>
 
                       {/* Service */}
-                      <td className="py-4 px-6">
-                        <span className="inline-block px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-[11px] font-mono font-medium text-slate-700 dark:text-zinc-300">
+                      <td className="py-4 px-4 sm:px-6 whitespace-nowrap">
+                        <span className="inline-block px-2.5 py-1 rounded-lg bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-[11px] font-mono font-medium text-slate-700 dark:text-zinc-300 whitespace-nowrap">
                           {inq.service}
                         </span>
                       </td>
 
                       {/* Date */}
-                      <td className="py-4 px-6 font-mono text-[11px] text-slate-500 dark:text-zinc-400 whitespace-nowrap">
-                        <div className="flex items-center gap-1.5">
-                          <Clock className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500" />
+                      <td className="py-4 px-4 sm:px-6 font-mono text-[11px] text-slate-500 dark:text-zinc-400 whitespace-nowrap">
+                        <div className="flex items-center gap-1.5 whitespace-nowrap">
+                          <Clock className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-500 shrink-0" />
                           <span>
                             {new Date(inq.createdAt).toLocaleDateString('en-GB', {
                               day: 'numeric',
@@ -381,15 +584,15 @@ export const AdminInquiriesPage: React.FC = () => {
                             })}
                           </span>
                         </div>
-                        <span className="text-[10px] text-slate-400 dark:text-zinc-500 block mt-0.5">
+                        <span className="text-[10px] text-slate-400 dark:text-zinc-500 block mt-0.5 whitespace-nowrap">
                           {new Date(inq.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                         </span>
                       </td>
 
                       {/* Status */}
-                      <td className="py-4 px-6 whitespace-nowrap">
+                      <td className="py-4 px-4 sm:px-6 whitespace-nowrap">
                         <span
-                          className={`text-[10px] font-mono font-bold uppercase px-3 py-1 rounded-full inline-flex items-center gap-1.5 ${
+                          className={`text-[10px] font-mono font-bold uppercase px-3 py-1 rounded-full inline-flex items-center gap-1.5 whitespace-nowrap ${
                             isNew
                               ? 'bg-red-50 text-red-700 border border-red-200 dark:bg-red-950 dark:border-red-800 dark:text-red-300'
                               : isContacted
@@ -398,7 +601,7 @@ export const AdminInquiriesPage: React.FC = () => {
                           }`}
                         >
                           <span
-                            className={`w-1.5 h-1.5 rounded-full ${
+                            className={`w-1.5 h-1.5 rounded-full shrink-0 ${
                               isNew
                                 ? 'bg-vexo-red animate-pulse'
                                 : isContacted
@@ -411,14 +614,14 @@ export const AdminInquiriesPage: React.FC = () => {
                       </td>
 
                       {/* Quick Actions */}
-                      <td className="py-4 px-6 text-right whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
+                      <td className="py-4 px-4 sm:px-6 text-right whitespace-nowrap" onClick={(e) => e.stopPropagation()}>
                         <div className="flex items-center justify-end gap-1.5">
                           {/* 1-Click Mark as Contacted */}
                           {inq.status === 'NEW' && (
                             <button
                               type="button"
                               onClick={() => handleUpdateStatus(inq.id, 'CONTACTED')}
-                              className="px-2.5 py-1.5 rounded-lg bg-sky-50 hover:bg-sky-100 border border-sky-200 text-sky-700 dark:bg-sky-950/60 dark:hover:bg-sky-900/80 dark:border-sky-800/60 dark:text-sky-300 text-[11px] font-mono font-semibold transition-colors cursor-pointer flex items-center gap-1 shadow-2xs"
+                              className="px-2.5 py-1.5 rounded-lg bg-sky-50 hover:bg-sky-100 border border-sky-200 text-sky-700 dark:bg-sky-950/60 dark:hover:bg-sky-900/80 dark:border-sky-800/60 dark:text-sky-300 text-[11px] font-mono font-semibold transition-colors cursor-pointer flex items-center gap-1 shadow-2xs whitespace-nowrap"
                               title="Mark as Contacted"
                             >
                               <PhoneCall className="w-3 h-3" />
@@ -431,7 +634,7 @@ export const AdminInquiriesPage: React.FC = () => {
                             <button
                               type="button"
                               onClick={() => handleUpdateStatus(inq.id, 'CLOSED')}
-                              className="px-2.5 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 dark:bg-emerald-950/60 dark:hover:bg-emerald-900/80 dark:border-emerald-800/60 dark:text-emerald-300 text-[11px] font-mono font-semibold transition-colors cursor-pointer flex items-center gap-1 shadow-2xs"
+                              className="px-2.5 py-1.5 rounded-lg bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 dark:bg-emerald-950/60 dark:hover:bg-emerald-900/80 dark:border-emerald-800/60 dark:text-emerald-300 text-[11px] font-mono font-semibold transition-colors cursor-pointer flex items-center gap-1 shadow-2xs whitespace-nowrap"
                               title="Mark as Closed"
                             >
                               <Check className="w-3 h-3" />
@@ -443,7 +646,7 @@ export const AdminInquiriesPage: React.FC = () => {
                           <button
                             type="button"
                             onClick={() => handleOpenDetail(inq)}
-                            className="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 hover:text-slate-950 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-800 dark:text-zinc-300 dark:hover:text-white text-[11px] font-semibold transition-colors cursor-pointer flex items-center gap-1 shadow-2xs"
+                            className="px-2.5 py-1.5 rounded-lg bg-slate-100 hover:bg-slate-200 border border-slate-200 text-slate-700 hover:text-slate-950 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-800 dark:text-zinc-300 dark:hover:text-white text-[11px] font-semibold transition-colors cursor-pointer flex items-center gap-1 shadow-2xs whitespace-nowrap"
                             title="View Full Dossier"
                           >
                             <Eye className="w-3.5 h-3.5" />
@@ -454,7 +657,7 @@ export const AdminInquiriesPage: React.FC = () => {
                           <button
                             type="button"
                             onClick={() => setDeleteTarget({ id: inq.id, refId: inq.referenceId })}
-                            className="p-1.5 rounded-lg bg-slate-100 hover:bg-red-50 border border-slate-200 hover:border-red-200 text-slate-500 hover:text-red-600 dark:bg-red-950/30 dark:hover:bg-red-900/60 dark:border-red-900/40 dark:text-red-400 dark:hover:text-red-200 transition-colors cursor-pointer"
+                            className="p-1.5 rounded-lg bg-slate-100 hover:bg-red-50 border border-slate-200 hover:border-red-200 text-slate-500 hover:text-red-600 dark:bg-red-950/30 dark:hover:bg-red-900/60 dark:border-red-900/40 dark:text-red-400 dark:hover:text-red-200 transition-colors cursor-pointer shrink-0"
                             title="Delete Enquiry"
                           >
                             <Trash2 className="w-3.5 h-3.5" />
@@ -467,7 +670,10 @@ export const AdminInquiriesPage: React.FC = () => {
               </tbody>
             </table>
           </div>
-        )}
+          {/* Interactive Draggable Slider for Inquiries Table */}
+          <TableScrollSlider scrollRef={inquiriesScrollRef} />
+        </div>
+      )}
       </div>
 
       {/* 4. Full Detail Dossier Modal */}

@@ -27,7 +27,12 @@ export const AdminVideosPage: React.FC = () => {
   const [categoryFilter, setCategoryFilter] = useState('all');
   const [featuredFilter, setFeaturedFilter] = useState('all');
   const [statusFilter, setStatusFilter] = useState('all');
-  const [viewMode, setViewMode] = useState<'table' | 'grid'>('table');
+  const [viewMode, setViewMode] = useState<'table' | 'grid'>(() => {
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      return 'grid';
+    }
+    return 'table';
+  });
 
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
@@ -156,7 +161,7 @@ export const AdminVideosPage: React.FC = () => {
   const featuredCount = videos.filter((v) => v.featured).length;
 
   return (
-    <div className="space-y-6">
+    <div className="w-full max-w-full min-w-0 space-y-6">
       {/* Top Header Banner */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-slate-200 dark:border-zinc-800/60">
         <div className="space-y-1">

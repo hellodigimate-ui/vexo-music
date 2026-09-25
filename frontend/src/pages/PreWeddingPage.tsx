@@ -154,7 +154,7 @@ export const PreWeddingPage: React.FC = () => {
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       transition={{ duration: 0.6 }}
-      className="cinematic-dark bg-[#050505] text-white min-h-screen relative overflow-hidden"
+      className="cinematic-dark bg-[#050505] text-white min-h-screen relative overflow-hidden w-full max-w-full overflow-x-hidden"
     >
       {/* Ambient Lighting Atmosphere (Static hardware-accelerated radial gradients - zero scroll jank) */}
       <div className="absolute top-[12%] -left-40 w-[600px] h-[600px] bg-[radial-gradient(circle,rgba(220,38,38,0.08)_0%,transparent_70%)] pointer-events-none" />

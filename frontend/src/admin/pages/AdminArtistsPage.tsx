@@ -27,7 +27,12 @@ export const AdminArtistsPage: React.FC = () => {
   const [selectedGenre, setSelectedGenre] = useState('ALL');
   const [selectedStatus, setSelectedStatus] = useState('ALL');
   const [selectedFeatured, setSelectedFeatured] = useState('ALL');
-  const [viewMode, setViewMode] = useState<'table' | 'grid'>('table');
+  const [viewMode, setViewMode] = useState<'table' | 'grid'>(() => {
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      return 'grid';
+    }
+    return 'table';
+  });
 
   // Pagination States
   const [currentPage, setCurrentPage] = useState(1);
@@ -177,7 +182,7 @@ export const AdminArtistsPage: React.FC = () => {
   }, [artists]);
 
   return (
-    <div className="space-y-6 pb-12">
+    <div className="w-full max-w-full min-w-0 space-y-6 pb-12">
       {/* 1. Header & Metrics Bar */}
       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-6 border-b border-slate-200 dark:border-zinc-800/80">
         <div className="space-y-1">
@@ -306,14 +311,14 @@ export const AdminArtistsPage: React.FC = () => {
 
       {/* 5. Pagination Bar */}
       {!isLoading && filteredArtists.length > 0 && (
-        <div className="bg-[#0e0e13] border border-zinc-800/80 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-zinc-400">
-          <div className="flex items-center gap-3">
+        <div className="w-full bg-[#0e0e13] border border-zinc-800/80 rounded-2xl p-4 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-zinc-400">
+          <div className="flex flex-wrap items-center justify-center sm:justify-start gap-2 sm:gap-3 text-center sm:text-left">
             <span>
               Showing {Math.min((currentPage - 1) * pageSize + 1, filteredArtists.length)} to{' '}
               {Math.min(currentPage * pageSize, filteredArtists.length)} of {filteredArtists.length} artists
             </span>
 
-            <span className="text-zinc-600">|</span>
+            <span className="hidden sm:inline text-zinc-600">|</span>
 
             <div className="flex items-center gap-1.5">
               <span>Per page:</span>
@@ -323,7 +328,7 @@ export const AdminArtistsPage: React.FC = () => {
                   setPageSize(Number(e.target.value));
                   setCurrentPage(1);
                 }}
-                className="bg-zinc-900 border border-zinc-800 rounded-lg px-2 py-1 text-xs text-white focus:outline-none"
+                className="bg-zinc-900 border border-zinc-800 rounded-lg px-2 py-1 text-xs text-white focus:outline-none cursor-pointer"
               >
                 <option value={5}>5</option>
                 <option value={10}>10</option>
@@ -333,7 +338,7 @@ export const AdminArtistsPage: React.FC = () => {
             </div>
           </div>
 
-          <div className="flex items-center gap-1.5">
+          <div className="flex items-center gap-1.5 flex-wrap justify-center">
             <button
               onClick={() => setCurrentPage((p) => Math.max(p - 1, 1))}
               disabled={currentPage === 1}

@@ -159,7 +159,7 @@ export const ContactPage: React.FC = () => {
   };
 
   return (
-    <div className="pt-20 min-h-screen bg-[#f8fafc] dark:bg-[#050505] text-slate-900 dark:text-white pb-24 transition-colors duration-300">
+    <div className="pt-20 min-h-screen bg-[#f8fafc] dark:bg-[#050505] text-slate-900 dark:text-white pb-24 transition-colors duration-300 w-full max-w-full overflow-x-hidden">
       {/* 1. HERO HEADER SECTION (Adaptive for Light & Dark Mode) */}
       <div className="relative pt-16 pb-20 border-b border-slate-200 dark:border-white/10 overflow-hidden bg-white dark:bg-[#07070a] transition-colors duration-300">
         {/* Subtle Ambient Red Glow */}
@@ -170,7 +170,7 @@ export const ContactPage: React.FC = () => {
             <Disc3 className="w-3.5 h-3.5 text-vexo-red" /> INITIATE PROJECT / INQUIRIES
           </div>
 
-          <h1 className="text-4xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight text-slate-950 dark:text-white mb-5 leading-none select-none">
+          <h1 className="text-3xl sm:text-6xl md:text-7xl font-black uppercase tracking-tight text-slate-950 dark:text-white mb-5 leading-none select-none">
             BOOK A <span className="text-vexo-red">PROJECT</span>
           </h1>
 

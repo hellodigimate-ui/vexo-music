@@ -81,7 +81,7 @@ export const MusicPage: React.FC = () => {
   };
 
   return (
-    <div className="pt-24 min-h-screen bg-vexo-bg">
+    <div className="pt-24 min-h-screen bg-vexo-bg w-full max-w-full overflow-x-hidden">
       {/* Header Banner Section */}
       <PageSection variant="bg" padding="md">
         <SectionHeading

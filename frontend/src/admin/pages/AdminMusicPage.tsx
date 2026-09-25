@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useState, useEffect, useCallback, useRef } from 'react';
 import { useSearchParams, useParams, NavLink } from 'react-router-dom';
 import {
   Disc3,
@@ -13,6 +13,8 @@ import {
   Headphones,
   Check,
   ArrowLeft,
+  LayoutGrid,
+  List,
 } from 'lucide-react';
 
 const YoutubeIcon: React.FC<{ className?: string }> = ({ className = 'w-3.5 h-3.5' }) => (
@@ -27,6 +29,7 @@ import { AdminConfirmModal } from '../components/AdminConfirmModal';
 import { TrackModal, type TrackFormData } from '../components/tracks/TrackModal';
 import { AlbumDetailView } from '../components/music/AlbumDetailView';
 import { MediaInput } from '../components/media/MediaInput';
+import { TableScrollSlider } from '../components/TableScrollSlider';
 import { formatTime } from '../../lib/utils';
 
 export const AdminMusicPage: React.FC = () => {
@@ -36,6 +39,16 @@ export const AdminMusicPage: React.FC = () => {
   const [activeTab, setActiveTab] = useState<'albums' | 'tracks'>(
     searchParams.get('tab') === 'tracks' ? 'tracks' : 'albums'
   );
+  const [viewMode, setViewMode] = useState<'grid' | 'table'>(() => {
+    if (typeof window !== 'undefined' && window.innerWidth < 1024) {
+      return 'grid';
+    }
+    return 'table';
+  });
+
+  const albumsScrollRef = useRef<HTMLDivElement>(null);
+  const tracksScrollRef = useRef<HTMLDivElement>(null);
+
   const [albums, setAlbums] = useState<any[]>([]);
   const [tracks, setTracks] = useState<any[]>([]);
   const [artists, setArtists] = useState<any[]>([]);
@@ -287,7 +300,7 @@ export const AdminMusicPage: React.FC = () => {
   }
 
   return (
-    <div className="space-y-6">
+    <div className="w-full max-w-full min-w-0 space-y-6">
       {/* Top Bar: Tabs & Actions */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         {/* Left Side: Back to Dashboard & Switcher */}
@@ -328,34 +341,64 @@ export const AdminMusicPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Right side search & create */}
-        <div className="flex items-center gap-3">
-          <div className="relative">
+        {/* Right side: View Mode Toggle, Search & Create */}
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-2.5 sm:gap-3 w-full sm:w-auto">
+          {/* View Mode Switcher: Cards vs Table */}
+          <div className="flex items-center p-1 rounded-xl bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800 shadow-2xs shrink-0">
+            <button
+              type="button"
+              onClick={() => setViewMode('grid')}
+              title="Card View (Mobile Optimized)"
+              aria-label="Card View"
+              className={`p-1.5 rounded-lg transition-all cursor-pointer ${
+                viewMode === 'grid'
+                  ? 'bg-vexo-red text-white shadow-xs'
+                  : 'text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              <LayoutGrid className="w-4 h-4" />
+            </button>
+            <button
+              type="button"
+              onClick={() => setViewMode('table')}
+              title="Table View (Slide / Scrollable)"
+              aria-label="Table View"
+              className={`p-1.5 rounded-lg transition-all cursor-pointer ${
+                viewMode === 'table'
+                  ? 'bg-vexo-red text-white shadow-xs'
+                  : 'text-slate-500 dark:text-zinc-400 hover:text-slate-900 dark:hover:text-white'
+              }`}
+            >
+              <List className="w-4 h-4" />
+            </button>
+          </div>
+
+          <div className="relative flex-1 sm:flex-initial">
             <Search className="w-4 h-4 text-slate-400 dark:text-zinc-500 absolute left-3.5 top-1/2 -translate-y-1/2" />
             <input
               type="text"
               value={searchQuery}
               onChange={(e) => setSearchQuery(e.target.value)}
               placeholder={`Search ${activeTab}...`}
-              className="pl-10 pr-4 py-2 rounded-xl bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:border-vexo-red focus:outline-none focus:ring-1 focus:ring-vexo-red"
+              className="w-full sm:w-52 pl-10 pr-4 py-2 rounded-xl bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white placeholder-slate-400 dark:placeholder-zinc-500 focus:border-vexo-red focus:outline-none focus:ring-1 focus:ring-vexo-red shadow-2xs"
             />
           </div>
 
           {activeTab === 'albums' ? (
             <button
               onClick={openCreateAlbum}
-              className="px-4 py-2.5 rounded-xl bg-vexo-red hover:bg-[#c50000] active:scale-[0.98] text-xs font-semibold text-white shadow-xs hover:shadow-md hover:shadow-red-500/20 flex items-center gap-2 transition-all cursor-pointer"
+              className="shrink-0 px-4 py-2 rounded-xl bg-vexo-red hover:bg-[#c50000] active:scale-[0.98] text-xs font-semibold text-white shadow-xs hover:shadow-md hover:shadow-red-500/20 flex items-center gap-2 transition-all cursor-pointer"
             >
               <Plus className="w-4 h-4" />
-              <span>Add Album</span>
+              <span className="whitespace-nowrap">Add Album</span>
             </button>
           ) : (
             <button
               onClick={() => openCreateTrack()}
-              className="px-4 py-2.5 rounded-xl bg-vexo-red hover:bg-[#c50000] active:scale-[0.98] text-xs font-semibold text-white shadow-xs hover:shadow-md hover:shadow-red-500/20 flex items-center gap-2 transition-all cursor-pointer"
+              className="shrink-0 px-4 py-2 rounded-xl bg-vexo-red hover:bg-[#c50000] active:scale-[0.98] text-xs font-semibold text-white shadow-xs hover:shadow-md hover:shadow-red-500/20 flex items-center gap-2 transition-all cursor-pointer"
             >
               <Plus className="w-4 h-4" />
-              <span>Add Track</span>
+              <span className="whitespace-nowrap">Add Track</span>
             </button>
           )}
         </div>
@@ -363,281 +406,538 @@ export const AdminMusicPage: React.FC = () => {
 
       {/* Main Tab Content */}
       {activeTab === 'albums' ? (
-        <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl overflow-hidden shadow-xs">
+        <div className="w-full max-w-full min-w-0">
           {isLoading ? (
-            <div className="py-20 text-center text-xs font-mono text-slate-400 dark:text-zinc-500 animate-pulse">
+            <div className="py-20 text-center text-xs font-mono text-slate-400 dark:text-zinc-500 animate-pulse bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl">
               LOADING DISCOGRAPHY...
             </div>
           ) : filteredAlbums.length === 0 ? (
-            <div className="py-20 text-center text-xs text-slate-400 dark:text-zinc-500">No albums found.</div>
-          ) : (
-            <div className="overflow-x-auto scrollbar-thin">
-              <table className="w-full min-w-[760px] text-left text-xs">
-                <thead className="bg-slate-50 dark:bg-[#121218] border-b border-slate-200 dark:border-zinc-800/80 text-[10px] font-mono uppercase tracking-widest text-slate-600 dark:text-zinc-400">
-                  <tr>
-                    <th className="py-3.5 px-6">Release Title</th>
-                    <th className="py-3.5 px-6">Primary Artist</th>
-                    <th className="py-3.5 px-6">Genre & Year</th>
-                    <th className="py-3.5 px-6">Album Tracklist</th>
-                    <th className="py-3.5 px-6">Streaming DSPs</th>
-                    <th className="py-3.5 px-6 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-zinc-800/60">
-                  {filteredAlbums.map((album) => {
-                    const albumTracksCount = tracks.filter((t) => t.albumId === album.id).length;
-                    return (
-                      <tr key={album.id} className="hover:bg-slate-50/80 dark:hover:bg-zinc-900/40 transition-colors group">
-                        <td className="py-4 px-6">
-                          <div className="flex items-center gap-3">
-                            <div className="w-11 h-11 rounded-lg overflow-hidden bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700/80 shrink-0">
-                              {album.coverUrl ? (
-                                <img
-                                  src={album.coverUrl}
-                                  alt={album.title}
-                                  className="w-full h-full object-cover"
-                                />
-                              ) : (
-                                <div className="w-full h-full flex items-center justify-center text-slate-400 dark:text-zinc-600">
-                                  <Disc3 className="w-5 h-5" />
-                                </div>
-                              )}
-                            </div>
-                            <div>
-                              <button
-                                onClick={() => selectAlbum(album.id)}
-                                className="font-bold text-slate-900 dark:text-white text-xs hover:text-vexo-red transition-colors text-left flex items-center gap-1.5 cursor-pointer"
-                              >
-                                <span>{album.title}</span>
-                                <ChevronRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-vexo-red" />
-                              </button>
-                              <p className="text-[10px] font-mono text-slate-400 dark:text-zinc-500">
-                                Released: {album.releaseDate || album.year || '2026'}
-                              </p>
-                            </div>
+            <div className="py-20 text-center text-xs text-slate-400 dark:text-zinc-500 bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl">
+              No albums found.
+            </div>
+          ) : viewMode === 'grid' ? (
+            /* Responsive Card Grid View for Albums */
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+              {filteredAlbums.map((album) => {
+                const albumTracksCount = tracks.filter((t) => t.albumId === album.id).length;
+                const cleanDate = album.releaseDate
+                  ? album.releaseDate.includes('T')
+                    ? album.releaseDate.split('T')[0]
+                    : album.releaseDate
+                  : String(album.year || '2026');
+
+                return (
+                  <div
+                    key={album.id}
+                    className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-4 shadow-xs hover:border-red-500/40 transition-all flex flex-col justify-between gap-4 group"
+                  >
+                    <div className="flex items-start gap-3.5">
+                      <div className="w-16 h-16 rounded-xl overflow-hidden bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700/80 shrink-0 shadow-2xs">
+                        {album.coverUrl ? (
+                          <img
+                            src={album.coverUrl}
+                            alt={album.title}
+                            className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                          />
+                        ) : (
+                          <div className="w-full h-full flex items-center justify-center text-slate-400 dark:text-zinc-600">
+                            <Disc3 className="w-6 h-6" />
                           </div>
-                        </td>
-
-                        <td className="py-4 px-6 font-semibold text-slate-800 dark:text-zinc-200">{album.artistName}</td>
-
-                        <td className="py-4 px-6">
-                          <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-zinc-800 text-[10px] font-mono text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-transparent">
+                        )}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <button
+                          onClick={() => selectAlbum(album.id)}
+                          className="font-bold text-slate-900 dark:text-white text-sm hover:text-vexo-red transition-colors text-left truncate block w-full cursor-pointer"
+                        >
+                          {album.title}
+                        </button>
+                        <p className="text-xs font-semibold text-slate-700 dark:text-zinc-300 truncate mt-0.5">
+                          {album.artistName}
+                        </p>
+                        <div className="flex items-center gap-2 mt-2 flex-wrap">
+                          <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-zinc-800 text-[10px] font-mono text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-zinc-700">
                             {album.genre} &bull; {album.year}
                           </span>
-                        </td>
+                          <span className="text-[10px] font-mono text-slate-400 dark:text-zinc-500">
+                            {cleanDate}
+                          </span>
+                        </div>
+                      </div>
+                    </div>
 
-                        <td className="py-4 px-6">
-                          <button
-                            onClick={() => selectAlbum(album.id)}
-                            className="inline-flex items-center gap-2 px-3 py-1 rounded-xl bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 hover:border-red-300 dark:hover:border-vexo-red/40 hover:bg-red-50 dark:hover:bg-vexo-red/10 text-xs font-mono text-slate-700 dark:text-zinc-300 hover:text-vexo-red transition-all cursor-pointer"
+                    {/* Card Footer: Track Count & Quick Actions */}
+                    <div className="pt-3 border-t border-slate-100 dark:border-zinc-800/60 flex items-center justify-between gap-2">
+                      <button
+                        onClick={() => selectAlbum(album.id)}
+                        className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 hover:border-red-300 dark:hover:border-vexo-red/40 hover:bg-red-50 dark:hover:bg-vexo-red/10 text-xs font-mono text-slate-700 dark:text-zinc-300 hover:text-vexo-red transition-all cursor-pointer shrink-0"
+                      >
+                        <Layers className="w-3.5 h-3.5 text-vexo-red shrink-0" />
+                        <span>{albumTracksCount} {albumTracksCount === 1 ? 'Track' : 'Tracks'}</span>
+                        <span className="text-[10px] text-slate-400 dark:text-zinc-500">→</span>
+                      </button>
+
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        {album.spotifyUrl && (
+                          <a
+                            href={album.spotifyUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="p-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800/60 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100"
+                            title="Spotify"
                           >
-                            <Layers className="w-3.5 h-3.5 text-vexo-red" />
-                            <span>
-                              {albumTracksCount} {albumTracksCount === 1 ? 'Track' : 'Tracks'}
+                            <Headphones className="w-3.5 h-3.5" />
+                          </a>
+                        )}
+                        {album.youtubeUrl && (
+                          <a
+                            href={album.youtubeUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="p-1.5 rounded-lg bg-red-50 dark:bg-red-950/60 border border-red-200 dark:border-red-800/60 text-red-600 dark:text-red-400 hover:bg-red-100"
+                            title="YouTube"
+                          >
+                            <YoutubeIcon className="w-3.5 h-3.5" />
+                          </a>
+                        )}
+                        <button
+                          onClick={() => openEditAlbum(album)}
+                          title="Edit Album"
+                          className="p-1.5 rounded-lg bg-slate-100 dark:bg-zinc-800/60 hover:bg-slate-200 dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white border border-slate-200 dark:border-transparent transition-colors cursor-pointer"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() =>
+                            setDeleteTarget({ type: 'album', id: album.id, title: album.title })
+                          }
+                          title="Delete Album"
+                          className="p-1.5 rounded-lg bg-slate-100 dark:bg-red-950/40 hover:bg-red-50 dark:hover:bg-red-900/60 text-slate-400 dark:text-red-400 hover:text-red-600 dark:hover:text-red-200 border border-slate-200 dark:border-transparent transition-colors cursor-pointer"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            /* Table View with Interactive Touch Slider */
+            <div className="w-full max-w-full min-w-0 bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl overflow-hidden shadow-xs">
+              <div
+                ref={albumsScrollRef}
+                className="w-full max-w-full overflow-x-auto scrollbar-thin touch-pan-x overscroll-x-contain"
+                style={{ WebkitOverflowScrolling: 'touch' }}
+              >
+                <table className="w-full min-w-[780px] text-left text-xs">
+                  <thead className="bg-slate-50 dark:bg-[#121218] border-b border-slate-200 dark:border-zinc-800/80 text-[10px] font-mono uppercase tracking-widest text-slate-600 dark:text-zinc-400">
+                    <tr>
+                      <th className="py-3.5 px-4 sm:px-6 whitespace-nowrap min-w-[220px]">Release Title</th>
+                      <th className="py-3.5 px-4 sm:px-6 whitespace-nowrap min-w-[150px]">Primary Artist</th>
+                      <th className="py-3.5 px-4 sm:px-6 whitespace-nowrap min-w-[130px]">Genre & Year</th>
+                      <th className="py-3.5 px-4 sm:px-6 whitespace-nowrap min-w-[140px]">Album Tracklist</th>
+                      <th className="py-3.5 px-4 sm:px-6 whitespace-nowrap min-w-[120px]">Streaming DSPs</th>
+                      <th className="py-3.5 px-4 sm:px-6 text-right whitespace-nowrap min-w-[110px]">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-zinc-800/60">
+                    {filteredAlbums.map((album) => {
+                      const albumTracksCount = tracks.filter((t) => t.albumId === album.id).length;
+                      const cleanDate = album.releaseDate
+                        ? album.releaseDate.includes('T')
+                          ? album.releaseDate.split('T')[0]
+                          : album.releaseDate
+                        : String(album.year || '2026');
+
+                      return (
+                        <tr key={album.id} className="hover:bg-slate-50/80 dark:hover:bg-zinc-900/40 transition-colors group">
+                          {/* Release Title */}
+                          <td className="py-4 px-4 sm:px-6 whitespace-nowrap">
+                            <div className="flex items-center gap-3">
+                              <div className="w-11 h-11 rounded-lg overflow-hidden bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700/80 shrink-0">
+                                {album.coverUrl ? (
+                                  <img
+                                    src={album.coverUrl}
+                                    alt={album.title}
+                                    className="w-full h-full object-cover"
+                                  />
+                                ) : (
+                                  <div className="w-full h-full flex items-center justify-center text-slate-400 dark:text-zinc-600">
+                                    <Disc3 className="w-5 h-5" />
+                                  </div>
+                                )}
+                              </div>
+                              <div className="min-w-0 max-w-[200px]">
+                                <button
+                                  onClick={() => selectAlbum(album.id)}
+                                  className="font-bold text-slate-900 dark:text-white text-xs hover:text-vexo-red transition-colors text-left flex items-center gap-1.5 cursor-pointer truncate"
+                                >
+                                  <span className="truncate">{album.title}</span>
+                                  <ChevronRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-vexo-red shrink-0" />
+                                </button>
+                                <p className="text-[10px] font-mono text-slate-400 dark:text-zinc-500 whitespace-nowrap truncate">
+                                  Released: {cleanDate}
+                                </p>
+                              </div>
+                            </div>
+                          </td>
+
+                          {/* Primary Artist */}
+                          <td className="py-4 px-4 sm:px-6 font-semibold text-slate-800 dark:text-zinc-200 whitespace-nowrap">
+                            {album.artistName}
+                          </td>
+
+                          {/* Genre & Year */}
+                          <td className="py-4 px-4 sm:px-6 whitespace-nowrap">
+                            <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-zinc-800 text-[10px] font-mono text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-transparent whitespace-nowrap">
+                              {album.genre} &bull; {album.year}
                             </span>
-                            <span className="text-[10px] text-slate-400 dark:text-zinc-500">→ Manage</span>
-                          </button>
-                        </td>
+                          </td>
 
-                        <td className="py-4 px-6">
-                          <div className="flex items-center gap-2">
-                            {album.spotifyUrl && (
-                              <a
-                                href={album.spotifyUrl}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="p-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800/60 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900 transition-colors"
-                              >
-                                <Headphones className="w-3.5 h-3.5" />
-                              </a>
-                            )}
-                            {album.youtubeUrl && (
-                              <a
-                                href={album.youtubeUrl}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="p-1.5 rounded-lg bg-red-50 dark:bg-red-950/60 border border-red-200 dark:border-red-800/60 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900 transition-colors"
-                              >
-                                <YoutubeIcon className="w-3.5 h-3.5" />
-                              </a>
-                            )}
-                          </div>
-                        </td>
-
-                        <td className="py-4 px-6 text-right">
-                          <div className="flex items-center justify-end gap-2">
+                          {/* Album Tracklist */}
+                          <td className="py-4 px-4 sm:px-6 whitespace-nowrap">
                             <button
                               onClick={() => selectAlbum(album.id)}
-                              title="Manage Tracks in Album"
-                              className="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-zinc-800/80 hover:bg-slate-200 dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-200 text-xs font-mono flex items-center gap-1 border border-slate-200 dark:border-transparent transition-colors cursor-pointer"
+                              className="inline-flex items-center gap-1.5 px-3 py-1 rounded-xl bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 hover:border-red-300 dark:hover:border-vexo-red/40 hover:bg-red-50 dark:hover:bg-vexo-red/10 text-xs font-mono text-slate-700 dark:text-zinc-300 hover:text-vexo-red transition-all cursor-pointer whitespace-nowrap"
                             >
-                              <Music className="w-3 h-3 text-vexo-red" />
-                              <span>Tracks</span>
+                              <Layers className="w-3.5 h-3.5 text-vexo-red shrink-0" />
+                              <span>
+                                {albumTracksCount} {albumTracksCount === 1 ? 'Track' : 'Tracks'}
+                              </span>
+                              <span className="text-[10px] text-slate-400 dark:text-zinc-500">→</span>
                             </button>
-                            <button
-                              onClick={() => openEditAlbum(album)}
-                              title="Edit Album"
-                              className="p-2 rounded-lg bg-slate-100 dark:bg-zinc-800/60 hover:bg-slate-200 dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white border border-slate-200 dark:border-transparent transition-colors cursor-pointer"
-                            >
-                              <Edit2 className="w-3.5 h-3.5" />
-                            </button>
-                            <button
-                              onClick={() =>
-                                setDeleteTarget({ type: 'album', id: album.id, title: album.title })
-                              }
-                              title="Delete Album"
-                              className="p-2 rounded-lg bg-slate-100 dark:bg-red-950/40 hover:bg-red-50 dark:hover:bg-red-900/60 text-slate-400 dark:text-red-400 hover:text-red-600 dark:hover:text-red-200 border border-slate-200 dark:border-transparent transition-colors cursor-pointer"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                          </td>
+
+                          {/* DSPs */}
+                          <td className="py-4 px-4 sm:px-6 whitespace-nowrap">
+                            <div className="flex items-center gap-2">
+                              {album.spotifyUrl && (
+                                <a
+                                  href={album.spotifyUrl}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="p-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800/60 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900 transition-colors"
+                                  title="Spotify"
+                                >
+                                  <Headphones className="w-3.5 h-3.5" />
+                                </a>
+                              )}
+                              {album.youtubeUrl && (
+                                <a
+                                  href={album.youtubeUrl}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="p-1.5 rounded-lg bg-red-50 dark:bg-red-950/60 border border-red-200 dark:border-red-800/60 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900 transition-colors"
+                                  title="YouTube"
+                                >
+                                  <YoutubeIcon className="w-3.5 h-3.5" />
+                                </a>
+                              )}
+                            </div>
+                          </td>
+
+                          {/* Actions */}
+                          <td className="py-4 px-4 sm:px-6 text-right whitespace-nowrap">
+                            <div className="flex items-center justify-end gap-1.5 shrink-0">
+                              <button
+                                onClick={() => selectAlbum(album.id)}
+                                title="Manage Tracks in Album"
+                                className="px-2.5 py-1.5 rounded-lg bg-slate-100 dark:bg-zinc-800/80 hover:bg-slate-200 dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-200 text-xs font-mono flex items-center gap-1 border border-slate-200 dark:border-transparent transition-colors cursor-pointer shrink-0"
+                              >
+                                <Music className="w-3 h-3 text-vexo-red shrink-0" />
+                                <span>Tracks</span>
+                              </button>
+                              <button
+                                onClick={() => openEditAlbum(album)}
+                                title="Edit Album"
+                                className="p-2 rounded-lg bg-slate-100 dark:bg-zinc-800/60 hover:bg-slate-200 dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white border border-slate-200 dark:border-transparent transition-colors cursor-pointer shrink-0"
+                              >
+                                <Edit2 className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                onClick={() =>
+                                  setDeleteTarget({ type: 'album', id: album.id, title: album.title })
+                                }
+                                title="Delete Album"
+                                className="p-2 rounded-lg bg-slate-100 dark:bg-red-950/40 hover:bg-red-50 dark:hover:bg-red-900/60 text-slate-400 dark:text-red-400 hover:text-red-600 dark:hover:text-red-200 border border-slate-200 dark:border-transparent transition-colors cursor-pointer shrink-0"
+                              >
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              {/* Interactive Draggable Slider Bar */}
+              <TableScrollSlider scrollRef={albumsScrollRef} />
             </div>
           )}
         </div>
       ) : (
         /* Tracks Tab */
-        <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl overflow-hidden shadow-xs">
+        <div className="w-full max-w-full min-w-0">
           {isLoading ? (
-            <div className="py-20 text-center text-xs font-mono text-slate-400 dark:text-zinc-500 animate-pulse">
+            <div className="py-20 text-center text-xs font-mono text-slate-400 dark:text-zinc-500 animate-pulse bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl">
               LOADING TRACKS...
             </div>
           ) : filteredTracks.length === 0 ? (
-            <div className="py-20 text-center text-xs text-slate-400 dark:text-zinc-500">No tracks found.</div>
-          ) : (
-            <div className="overflow-x-auto scrollbar-thin">
-              <table className="w-full min-w-[840px] text-left text-xs">
-                <thead className="bg-slate-50 dark:bg-[#121218] border-b border-slate-200 dark:border-zinc-800/80 text-[10px] font-mono uppercase tracking-widest text-slate-600 dark:text-zinc-400">
-                  <tr>
-                    <th className="py-3.5 px-6">Track # / Title</th>
-                    <th className="py-3.5 px-6">Album</th>
-                    <th className="py-3.5 px-6">Artist</th>
-                    <th className="py-3.5 px-6">Duration</th>
-                    <th className="py-3.5 px-6">Visibility</th>
-                    <th className="py-3.5 px-6">DSP Links</th>
-                    <th className="py-3.5 px-6 text-right">Actions</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-slate-100 dark:divide-zinc-800/60">
-                  {filteredTracks.map((track) => {
-                    const parentAlbum = albums.find((a) => a.id === track.albumId);
-                    const isPublished = track.published !== false;
+            <div className="py-20 text-center text-xs text-slate-400 dark:text-zinc-500 bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl">
+              No tracks found.
+            </div>
+          ) : viewMode === 'grid' ? (
+            /* Responsive Card Grid View for Tracks */
+            <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-4">
+              {filteredTracks.map((track) => {
+                const parentAlbum = albums.find((a) => a.id === track.albumId);
+                const isPublished = track.published !== false;
 
-                    return (
-                      <tr key={track.id} className="hover:bg-slate-50/80 dark:hover:bg-zinc-900/40 transition-colors group">
-                        <td className="py-4 px-6">
-                          <div className="flex items-center gap-3">
-                            <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 flex items-center justify-center font-mono font-bold text-slate-700 dark:text-zinc-400 text-xs shrink-0">
-                              {String(track.order || 1).padStart(2, '0')}
-                            </div>
-                            <div>
-                              <p className="font-bold text-slate-900 dark:text-white text-xs flex items-center gap-2">
-                                {track.title}
-                                {track.isPopular && (
-                                  <span className="px-1.5 py-0.5 rounded bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 text-[9px] font-mono text-amber-700 dark:text-amber-400">
-                                    POPULAR
-                                  </span>
-                                )}
-                              </p>
-                              <p className="text-[10px] font-mono text-slate-400 dark:text-zinc-500">ID: {track.id}</p>
-                            </div>
-                          </div>
-                        </td>
-
-                        <td className="py-4 px-6">
+                return (
+                  <div
+                    key={track.id}
+                    className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-4 shadow-xs hover:border-red-500/40 transition-all flex flex-col justify-between gap-4 group"
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className="w-10 h-10 rounded-xl bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 flex items-center justify-center font-mono font-bold text-slate-700 dark:text-zinc-400 text-xs shrink-0 shadow-2xs">
+                        {String(track.order || 1).padStart(2, '0')}
+                      </div>
+                      <div className="min-w-0 flex-1">
+                        <p className="font-bold text-slate-900 dark:text-white text-sm truncate flex items-center gap-2">
+                          <span className="truncate">{track.title}</span>
+                          {track.isPopular && (
+                            <span className="px-1.5 py-0.5 rounded bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 text-[9px] font-mono text-amber-700 dark:text-amber-400 shrink-0">
+                              POPULAR
+                            </span>
+                          )}
+                        </p>
+                        <p className="text-xs font-semibold text-slate-700 dark:text-zinc-300 truncate mt-0.5">
+                          {track.artistName}
+                        </p>
+                        <div className="flex items-center gap-2 mt-2 text-[11px] font-mono text-slate-500 dark:text-zinc-400">
                           {parentAlbum ? (
                             <button
                               onClick={() => selectAlbum(parentAlbum.id)}
-                              className="font-medium text-slate-700 dark:text-zinc-300 hover:text-vexo-red transition-colors text-left"
+                              className="hover:text-vexo-red truncate text-left max-w-[150px] cursor-pointer"
+                              title={parentAlbum.title}
                             >
-                              {parentAlbum.title}
+                              Album: {parentAlbum.title}
                             </button>
                           ) : (
-                            <span className="text-slate-400 dark:text-zinc-500 font-mono text-[11px]">
-                              Single / Unassigned
-                            </span>
+                            <span>Single / Unassigned</span>
                           )}
-                        </td>
+                          <span>&bull;</span>
+                          <span className="shrink-0">{formatTime(track.duration || 210)}</span>
+                        </div>
+                      </div>
+                    </div>
 
-                        <td className="py-4 px-6 font-semibold text-slate-800 dark:text-zinc-200">{track.artistName}</td>
+                    {/* Track Card Footer */}
+                    <div className="pt-3 border-t border-slate-100 dark:border-zinc-800/60 flex items-center justify-between gap-2">
+                      <button
+                        type="button"
+                        onClick={() => handleToggleTrackPublish(track)}
+                        className={`px-2.5 py-1 rounded-lg text-[10px] font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+                          isPublished
+                            ? 'bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30'
+                            : 'bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400 border border-slate-200 dark:border-zinc-700'
+                        }`}
+                      >
+                        {isPublished ? <Check className="w-3 h-3 shrink-0" /> : <Clock className="w-3 h-3 shrink-0" />}
+                        <span>{isPublished ? 'Published' : 'Draft'}</span>
+                      </button>
 
-                        <td className="py-4 px-6 font-mono text-slate-500 dark:text-zinc-400">
-                          {formatTime(track.duration || 210)}
-                        </td>
-
-                        <td className="py-4 px-6">
-                          <button
-                            type="button"
-                            onClick={() => handleToggleTrackPublish(track)}
-                            className={`px-2.5 py-1 rounded-lg text-[11px] font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer ${
-                              isPublished
-                                ? 'bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30'
-                                : 'bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400 border border-slate-200 dark:border-zinc-700'
-                            }`}
+                      <div className="flex items-center gap-1.5 shrink-0">
+                        {track.spotifyUrl && (
+                          <a
+                            href={track.spotifyUrl}
+                            target="_blank"
+                            rel="noreferrer"
+                            className="p-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800/60 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100"
+                            title="Spotify"
                           >
-                            {isPublished ? <Check className="w-3 h-3" /> : <Clock className="w-3 h-3" />}
-                            <span>{isPublished ? 'Published' : 'Draft'}</span>
-                          </button>
-                        </td>
+                            <Headphones className="w-3.5 h-3.5" />
+                          </a>
+                        )}
+                        {track.youtubeUrl && (
+                          <a
+                            href={
+                              track.youtubeUrl.startsWith('http')
+                                ? track.youtubeUrl
+                                : `https://youtu.be/${track.youtubeUrl}`
+                            }
+                            target="_blank"
+                            rel="noreferrer"
+                            className="p-1.5 rounded-lg bg-red-50 dark:bg-red-950/60 border border-red-200 dark:border-red-800/60 text-red-600 dark:text-red-400 hover:bg-red-100"
+                            title="YouTube"
+                          >
+                            <YoutubeIcon className="w-3.5 h-3.5" />
+                          </a>
+                        )}
+                        <button
+                          onClick={() => openEditTrack(track)}
+                          className="p-1.5 rounded-lg bg-slate-100 dark:bg-zinc-800/60 hover:bg-slate-200 dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white border border-slate-200 dark:border-transparent transition-colors cursor-pointer"
+                          title="Edit Track"
+                        >
+                          <Edit2 className="w-3.5 h-3.5" />
+                        </button>
+                        <button
+                          onClick={() =>
+                            setDeleteTarget({ type: 'track', id: track.id, title: track.title })
+                          }
+                          title="Delete Track"
+                          className="p-1.5 rounded-lg bg-slate-100 dark:bg-red-950/40 hover:bg-red-50 dark:hover:bg-red-900/60 text-slate-400 dark:text-red-400 hover:text-red-600 dark:hover:text-red-200 border border-slate-200 dark:border-transparent transition-colors cursor-pointer"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+          ) : (
+            /* Table View with Interactive Touch Slider for Tracks */
+            <div className="w-full max-w-full min-w-0 bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl overflow-hidden shadow-xs">
+              <div
+                ref={tracksScrollRef}
+                className="w-full max-w-full overflow-x-auto scrollbar-thin touch-pan-x overscroll-x-contain"
+                style={{ WebkitOverflowScrolling: 'touch' }}
+              >
+                <table className="w-full min-w-[840px] text-left text-xs">
+                  <thead className="bg-slate-50 dark:bg-[#121218] border-b border-slate-200 dark:border-zinc-800/80 text-[10px] font-mono uppercase tracking-widest text-slate-600 dark:text-zinc-400">
+                    <tr>
+                      <th className="py-3.5 px-4 sm:px-6 whitespace-nowrap min-w-[220px]">Track # / Title</th>
+                      <th className="py-3.5 px-4 sm:px-6 whitespace-nowrap min-w-[150px]">Album</th>
+                      <th className="py-3.5 px-4 sm:px-6 whitespace-nowrap min-w-[130px]">Artist</th>
+                      <th className="py-3.5 px-4 sm:px-6 whitespace-nowrap min-w-[90px]">Duration</th>
+                      <th className="py-3.5 px-4 sm:px-6 whitespace-nowrap min-w-[110px]">Visibility</th>
+                      <th className="py-3.5 px-4 sm:px-6 whitespace-nowrap min-w-[100px]">DSP Links</th>
+                      <th className="py-3.5 px-4 sm:px-6 text-right whitespace-nowrap min-w-[90px]">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-slate-100 dark:divide-zinc-800/60">
+                    {filteredTracks.map((track) => {
+                      const parentAlbum = albums.find((a) => a.id === track.albumId);
+                      const isPublished = track.published !== false;
 
-                        <td className="py-4 px-6">
-                          <div className="flex items-center gap-1.5">
-                            {track.spotifyUrl && (
-                              <a
-                                href={track.spotifyUrl}
-                                target="_blank"
-                                rel="noreferrer"
-                                className="p-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800/60 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900"
+                      return (
+                        <tr key={track.id} className="hover:bg-slate-50/80 dark:hover:bg-zinc-900/40 transition-colors group">
+                          <td className="py-4 px-4 sm:px-6 whitespace-nowrap">
+                            <div className="flex items-center gap-3">
+                              <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 flex items-center justify-center font-mono font-bold text-slate-700 dark:text-zinc-400 text-xs shrink-0">
+                                {String(track.order || 1).padStart(2, '0')}
+                              </div>
+                              <div className="min-w-0 max-w-[200px]">
+                                <p className="font-bold text-slate-900 dark:text-white text-xs flex items-center gap-2 truncate">
+                                  <span className="truncate">{track.title}</span>
+                                  {track.isPopular && (
+                                    <span className="px-1.5 py-0.5 rounded bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 text-[9px] font-mono text-amber-700 dark:text-amber-400 shrink-0">
+                                      POPULAR
+                                    </span>
+                                  )}
+                                </p>
+                                <p className="text-[10px] font-mono text-slate-400 dark:text-zinc-500 truncate">ID: {track.id}</p>
+                              </div>
+                            </div>
+                          </td>
+
+                          <td className="py-4 px-4 sm:px-6 whitespace-nowrap">
+                            {parentAlbum ? (
+                              <button
+                                onClick={() => selectAlbum(parentAlbum.id)}
+                                className="font-medium text-slate-700 dark:text-zinc-300 hover:text-vexo-red transition-colors text-left truncate max-w-[150px] cursor-pointer"
                               >
-                                <Headphones className="w-3.5 h-3.5" />
-                              </a>
+                                {parentAlbum.title}
+                              </button>
+                            ) : (
+                              <span className="text-slate-400 dark:text-zinc-500 font-mono text-[11px]">
+                                Single / Unassigned
+                              </span>
                             )}
-                            {track.youtubeUrl && (
-                              <a
-                                href={
-                                  track.youtubeUrl.startsWith('http')
-                                    ? track.youtubeUrl
-                                    : `https://youtu.be/${track.youtubeUrl}`
+                          </td>
+
+                          <td className="py-4 px-4 sm:px-6 whitespace-nowrap font-semibold text-slate-800 dark:text-zinc-200">
+                            {track.artistName}
+                          </td>
+
+                          <td className="py-4 px-4 sm:px-6 whitespace-nowrap font-mono text-slate-500 dark:text-zinc-400">
+                            {formatTime(track.duration || 210)}
+                          </td>
+
+                          <td className="py-4 px-4 sm:px-6 whitespace-nowrap">
+                            <button
+                              type="button"
+                              onClick={() => handleToggleTrackPublish(track)}
+                              className={`px-2.5 py-1 rounded-lg text-[11px] font-mono font-bold flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap ${
+                                isPublished
+                                  ? 'bg-emerald-50 dark:bg-emerald-500/15 text-emerald-700 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-500/30'
+                                  : 'bg-slate-100 dark:bg-zinc-800 text-slate-600 dark:text-zinc-400 border border-slate-200 dark:border-zinc-700'
+                              }`}
+                            >
+                              {isPublished ? <Check className="w-3 h-3 shrink-0" /> : <Clock className="w-3 h-3 shrink-0" />}
+                              <span>{isPublished ? 'Published' : 'Draft'}</span>
+                            </button>
+                          </td>
+
+                          <td className="py-4 px-4 sm:px-6 whitespace-nowrap">
+                            <div className="flex items-center gap-1.5">
+                              {track.spotifyUrl && (
+                                <a
+                                  href={track.spotifyUrl}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="p-1.5 rounded-lg bg-emerald-50 dark:bg-emerald-950/60 border border-emerald-200 dark:border-emerald-800/60 text-emerald-700 dark:text-emerald-400 hover:bg-emerald-100 dark:hover:bg-emerald-900"
+                                >
+                                  <Headphones className="w-3.5 h-3.5" />
+                                </a>
+                              )}
+                              {track.youtubeUrl && (
+                                <a
+                                  href={
+                                    track.youtubeUrl.startsWith('http')
+                                      ? track.youtubeUrl
+                                      : `https://youtu.be/${track.youtubeUrl}`
+                                  }
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="p-1.5 rounded-lg bg-red-50 dark:bg-red-950/60 border border-red-200 dark:border-red-800/60 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900"
+                                >
+                                  <YoutubeIcon className="w-3.5 h-3.5" />
+                                </a>
+                              )}
+                            </div>
+                          </td>
+
+                          <td className="py-4 px-4 sm:px-6 text-right whitespace-nowrap">
+                            <div className="flex items-center justify-end gap-2 shrink-0">
+                              <button
+                                onClick={() => openEditTrack(track)}
+                                className="p-2 rounded-lg bg-slate-100 dark:bg-zinc-800/60 hover:bg-slate-200 dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white border border-slate-200 dark:border-transparent transition-colors cursor-pointer shrink-0"
+                              >
+                                <Edit2 className="w-3.5 h-3.5" />
+                              </button>
+                              <button
+                                onClick={() =>
+                                  setDeleteTarget({ type: 'track', id: track.id, title: track.title })
                                 }
-                                target="_blank"
-                                rel="noreferrer"
-                                className="p-1.5 rounded-lg bg-red-50 dark:bg-red-950/60 border border-red-200 dark:border-red-800/60 text-red-600 dark:text-red-400 hover:bg-red-100 dark:hover:bg-red-900"
+                                title="Delete Track"
+                                className="p-2 rounded-lg bg-slate-100 dark:bg-red-950/40 hover:bg-red-50 dark:hover:bg-red-900/60 text-slate-400 dark:text-red-400 hover:text-red-600 dark:hover:text-red-200 border border-slate-200 dark:border-transparent transition-colors cursor-pointer shrink-0"
                               >
-                                <YoutubeIcon className="w-3.5 h-3.5" />
-                              </a>
-                            )}
-                          </div>
-                        </td>
-
-                        <td className="py-4 px-6 text-right">
-                          <div className="flex items-center justify-end gap-2">
-                            <button
-                              onClick={() => openEditTrack(track)}
-                              className="p-2 rounded-lg bg-slate-100 dark:bg-zinc-800/60 hover:bg-slate-200 dark:hover:bg-zinc-700 text-slate-700 dark:text-zinc-300 hover:text-slate-950 dark:hover:text-white border border-slate-200 dark:border-transparent transition-colors cursor-pointer"
-                            >
-                              <Edit2 className="w-3.5 h-3.5" />
-                            </button>
-                            <button
-                              onClick={() =>
-                                setDeleteTarget({ type: 'track', id: track.id, title: track.title })
-                              }
-                              title="Delete Track"
-                              className="p-2 rounded-lg bg-slate-100 dark:bg-red-950/40 hover:bg-red-50 dark:hover:bg-red-900/60 text-slate-400 dark:text-red-400 hover:text-red-600 dark:hover:text-red-200 border border-slate-200 dark:border-transparent transition-colors cursor-pointer"
-                            >
-                              <Trash2 className="w-3.5 h-3.5" />
-                            </button>
-                          </div>
-                        </td>
-                      </tr>
-                    );
-                  })}
-                </tbody>
-              </table>
+                                <Trash2 className="w-3.5 h-3.5" />
+                              </button>
+                            </div>
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+              {/* Interactive Draggable Slider Bar for Tracks */}
+              <TableScrollSlider scrollRef={tracksScrollRef} />
             </div>
           )}
         </div>

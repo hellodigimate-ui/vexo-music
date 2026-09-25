@@ -917,9 +917,9 @@ export const AdminPreWeddingPage: React.FC = () => {
   } = data;
 
   return (
-    <div className="max-w-6xl mx-auto space-y-6 pb-20">
+    <div className="w-full max-w-6xl mx-auto min-w-0 space-y-6 pb-20">
       {/* Top Header Bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-[#0a0a0d] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-6 shadow-sm dark:shadow-xl transition-colors">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 bg-white dark:bg-[#0a0a0d] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-4 sm:p-6 shadow-sm dark:shadow-xl transition-colors">
         <div>
           <div className="flex items-center gap-2 mb-1">
             <span className="px-2 py-0.5 rounded bg-vexo-red/10 border border-vexo-red/30 text-vexo-red text-[10px] font-mono font-bold uppercase tracking-wider">
@@ -931,7 +931,7 @@ export const AdminPreWeddingPage: React.FC = () => {
               </span>
             )}
           </div>
-          <h1 className="text-2xl font-black uppercase text-slate-900 dark:text-white tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-black uppercase text-slate-900 dark:text-white tracking-tight">
             Pre-Wedding Studio Management
           </h1>
           <p className="text-xs text-slate-500 dark:text-zinc-400">
@@ -939,12 +939,12 @@ export const AdminPreWeddingPage: React.FC = () => {
           </p>
         </div>
 
-        <div className="flex items-center gap-3">
+        <div className="flex flex-wrap sm:flex-nowrap items-center gap-3 w-full sm:w-auto">
           <a
             href="/pre-wedding"
             target="_blank"
             rel="noopener noreferrer"
-            className="px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 hover:text-slate-900 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-700/80 dark:text-zinc-200 text-xs font-semibold transition-all flex items-center gap-1.5 shadow-xs"
+            className="flex-1 sm:flex-initial px-3.5 py-2 rounded-xl bg-white hover:bg-slate-50 border border-slate-200 text-slate-700 hover:text-slate-900 dark:bg-zinc-900 dark:hover:bg-zinc-800 dark:border-zinc-700/80 dark:text-zinc-200 text-xs font-semibold transition-all flex items-center justify-center gap-1.5 shadow-xs"
           >
             <span>Preview Page</span>
             <ExternalLink className="w-3.5 h-3.5 text-slate-400 dark:text-zinc-400" />
@@ -954,7 +954,7 @@ export const AdminPreWeddingPage: React.FC = () => {
             type="button"
             onClick={() => handleSave()}
             disabled={isSaving}
-            className="px-5 py-2 rounded-xl bg-vexo-red hover:bg-red-600 text-white text-xs font-bold transition-all flex items-center gap-2 shadow-md shadow-red-500/20 dark:shadow-red-900/30 disabled:opacity-50 cursor-pointer"
+            className="flex-1 sm:flex-initial px-5 py-2 rounded-xl bg-vexo-red hover:bg-red-600 text-white text-xs font-bold transition-all flex items-center justify-center gap-2 shadow-md shadow-red-500/20 dark:shadow-red-900/30 disabled:opacity-50 cursor-pointer"
           >
             {isSaving ? (
               <>

@@ -700,24 +700,6 @@ class DatabaseStore {
       update: async (updates: Partial<Homepage>) => {
         const current = this.homepage.get() || ({ id: 'homepage-singleton' } as Homepage);
         const updated: Homepage = {
-<<<<<<< HEAD
-          ...current,
-          ...updates,
-          updatedAt: new Date().toISOString(),
-        };
-        await syncHomepageToPostgres(updated);
-        this.data.homepage = updated;
-        return updated;
-      },
-    };
-  }
-
-  // --- Site Settings ---
-  public get siteSettings() {
-    return {
-      get: () => this.data.siteSettings,
-      update: async (updates: Partial<SiteSettings>) => {
-=======
           ...current,
           ...updates,
           updatedAt: new Date().toISOString(),
@@ -758,7 +740,6 @@ class DatabaseStore {
         return this.data.siteSettings;
       },
       update: async (updates: Partial<SiteSettings>) => {
->>>>>>> 6c6f775 (Initial commit)
         const current = this.siteSettings.get() || ({ id: 'site-settings-singleton' } as SiteSettings);
         const updated: SiteSettings = {
           ...current,

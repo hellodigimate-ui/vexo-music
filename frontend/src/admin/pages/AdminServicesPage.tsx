@@ -534,11 +534,11 @@ export const AdminServicesPage: React.FC = () => {
   const SelectedIcon = getIconComponent(formData.icon);
 
   return (
-    <div className="space-y-6">
+    <div className="w-full max-w-full min-w-0 space-y-6">
       {/* Header Bar */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
-          <h1 className="text-2xl font-black uppercase tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
+          <h1 className="text-xl sm:text-2xl font-black uppercase tracking-tight text-slate-900 dark:text-white flex items-center gap-2">
             <span>Studio Services & Pricing CMS</span>
           </h1>
           <p className="text-xs text-slate-500 dark:text-zinc-400 mt-1">
@@ -548,7 +548,7 @@ export const AdminServicesPage: React.FC = () => {
 
         <button
           onClick={openCreateModal}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl bg-vexo-red hover:bg-[#c50000] active:scale-[0.98] text-xs font-bold font-mono uppercase tracking-wider text-white shadow-xs hover:shadow-md hover:shadow-red-500/20 transition-all cursor-pointer"
+          className="inline-flex items-center justify-center gap-2 px-5 py-2.5 rounded-xl bg-vexo-red hover:bg-[#c50000] active:scale-[0.98] text-xs font-bold font-mono uppercase tracking-wider text-white shadow-xs hover:shadow-md hover:shadow-red-500/20 transition-all cursor-pointer shrink-0"
         >
           <Plus className="w-4 h-4" />
           <span>New Studio Service</span>
@@ -632,7 +632,7 @@ export const AdminServicesPage: React.FC = () => {
       </div>
 
       {/* Services Table */}
-      <div className="rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-[#0c0c10] overflow-hidden shadow-xs">
+      <div className="w-full max-w-full min-w-0 rounded-2xl border border-slate-200 dark:border-zinc-800 bg-white dark:bg-[#0c0c10] overflow-hidden shadow-xs">
         {isLoading ? (
           <div className="py-16 text-center text-xs sm:text-sm font-mono text-slate-500 dark:text-zinc-400">
             LOADING SERVICES...
@@ -643,9 +643,9 @@ export const AdminServicesPage: React.FC = () => {
           </div>
         ) : (
           <>
-            {/* 1. Mobile Cards View (shown on mobile when auto, or forced when viewPreference is 'cards') */}
+            {/* 1. Mobile & Tablet Cards View (shown on mobile/tablet <lg when auto, or forced when viewPreference is 'cards') */}
             {(viewPreference === 'cards' || viewPreference === 'auto') && (
-              <div className={`divide-y divide-slate-100 dark:divide-zinc-800/70 ${viewPreference === 'auto' ? 'block md:hidden' : 'block'}`}>
+              <div className={`divide-y divide-slate-100 dark:divide-zinc-800/70 ${viewPreference === 'auto' ? 'block lg:hidden' : 'block'}`}>
                 {filteredServices.map((service, index) => {
                   const IconComp = getIconComponent(service.icon);
                   const isFirst = index === 0;
@@ -763,18 +763,18 @@ export const AdminServicesPage: React.FC = () => {
               </div>
             )}
 
-            {/* 2. Desktop/Tablet Table View (shown on md+ when auto, or forced when viewPreference is 'table') */}
+            {/* 2. Desktop Table View (shown on lg+ when auto, or forced when viewPreference is 'table') */}
             {(viewPreference === 'table' || viewPreference === 'auto') && (
-              <div className={`overflow-x-auto scrollbar-thin ${viewPreference === 'auto' ? 'hidden md:block' : 'block'}`}>
-                <table className="w-full min-w-[880px] text-left text-xs sm:text-sm text-slate-800 dark:text-zinc-200">
+              <div className={`w-full max-w-full overflow-x-auto scrollbar-thin ${viewPreference === 'auto' ? 'hidden lg:block' : 'block'}`}>
+                <table className="w-full min-w-[760px] text-left text-xs sm:text-sm text-slate-800 dark:text-zinc-200">
                   <thead className="bg-slate-50 dark:bg-zinc-900/90 border-b border-slate-200 dark:border-zinc-800 text-slate-600 dark:text-zinc-400 font-mono text-[11px] uppercase tracking-wider font-semibold">
                     <tr>
-                      <th className="py-3 px-3.5 w-16 text-center">Seq</th>
-                      <th className="py-3 px-5 min-w-[280px]">Capability & Cover</th>
-                      <th className="py-3 px-3.5 min-w-[130px]">Category</th>
-                      <th className="py-3 px-5 min-w-[170px]">3 Plans Pricing</th>
-                      <th className="py-3 px-3.5 text-center min-w-[100px]">Status</th>
-                      <th className="py-3 px-5 text-right min-w-[140px]">Actions</th>
+                      <th className="py-3 px-3 w-14 text-center">Seq</th>
+                      <th className="py-3 px-4 min-w-[220px]">Capability & Cover</th>
+                      <th className="py-3 px-3 min-w-[110px]">Category</th>
+                      <th className="py-3 px-4 min-w-[150px]">3 Plans Pricing</th>
+                      <th className="py-3 px-3 text-center min-w-[90px]">Status</th>
+                      <th className="py-3 px-4 text-right min-w-[130px]">Actions</th>
                     </tr>
                   </thead>
                   <tbody className="divide-y divide-slate-100 dark:divide-zinc-800/70 font-sans">
@@ -786,7 +786,7 @@ export const AdminServicesPage: React.FC = () => {
                       return (
                         <tr key={service.id} className="hover:bg-slate-50/80 dark:hover:bg-zinc-900/40 transition-colors">
                           {/* Reorder Buttons */}
-                          <td className="py-3.5 px-3.5 text-center">
+                          <td className="py-3.5 px-3 text-center">
                             <div className="flex flex-col items-center gap-0.5">
                               <button
                                 type="button"
@@ -813,7 +813,7 @@ export const AdminServicesPage: React.FC = () => {
                           </td>
 
                           {/* Service Info */}
-                          <td className="py-3.5 px-5 min-w-[280px]">
+                          <td className="py-3.5 px-4 min-w-[220px]">
                             <div className="flex items-center gap-3.5">
                               <div className="relative w-16 h-11 rounded-lg overflow-hidden border border-slate-200 dark:border-zinc-700/80 bg-slate-100 dark:bg-zinc-900 shrink-0 shadow-xs">
                                 {service.imageUrl ? (
@@ -840,14 +840,14 @@ export const AdminServicesPage: React.FC = () => {
                           </td>
 
                           {/* Category */}
-                          <td className="py-3.5 px-3.5 font-mono text-xs min-w-[130px]">
+                          <td className="py-3.5 px-3 font-mono text-xs min-w-[110px]">
                             <span className="inline-block px-2.5 py-1 rounded-md bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700/70 text-[11px] uppercase font-semibold text-slate-700 dark:text-zinc-200 whitespace-nowrap shadow-xs">
                               {service.category || 'Production'}
                             </span>
                           </td>
 
                           {/* Pricing Range */}
-                          <td className="py-3.5 px-5 min-w-[170px]">
+                          <td className="py-3.5 px-4 min-w-[150px]">
                             <div className="flex flex-col whitespace-nowrap">
                               <span className="text-slate-900 dark:text-white text-sm font-bold tracking-tight">
                                 {service.pricingRange || 'Tiered Milestone Pricing'}
@@ -859,7 +859,7 @@ export const AdminServicesPage: React.FC = () => {
                           </td>
 
                           {/* Status Toggle */}
-                          <td className="py-3.5 px-3.5 text-center min-w-[100px]">
+                          <td className="py-3.5 px-3 text-center min-w-[90px]">
                             <button
                               type="button"
                               onClick={() => handleTogglePublish(service)}
@@ -884,7 +884,7 @@ export const AdminServicesPage: React.FC = () => {
                           </td>
 
                           {/* Actions */}
-                          <td className="py-3.5 px-5 text-right min-w-[140px]">
+                          <td className="py-3.5 px-4 text-right min-w-[130px]">
                             <div className="flex items-center justify-end gap-2 whitespace-nowrap">
                               <button
                                 onClick={() => openEditModal(service)}

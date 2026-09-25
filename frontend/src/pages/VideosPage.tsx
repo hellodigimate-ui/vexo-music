@@ -56,7 +56,7 @@ export const VideosPage: React.FC = () => {
   });
 
   return (
-    <div className="pt-20 min-h-screen bg-[#f8fafc] dark:bg-[#050505] text-slate-900 dark:text-white pb-24 transition-colors duration-300">
+    <div className="pt-20 min-h-screen bg-[#f8fafc] dark:bg-[#050505] text-slate-900 dark:text-white pb-24 transition-colors duration-300 w-full max-w-full overflow-x-hidden">
       {/* 1. FEATURED VIDEO HERO SECTION */}
       <PageSection variant="bg" padding="md" className="border-b border-slate-200 dark:border-white/10">
         <Container>

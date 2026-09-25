@@ -163,7 +163,7 @@ export const AdminDashboardPage: React.FC = () => {
   ];
 
   return (
-    <div className="space-y-6 sm:space-y-8">
+    <div className="w-full max-w-full min-w-0 space-y-6 sm:space-y-8">
       {/* Top Banner / Platform Summary */}
       <div className="relative overflow-hidden rounded-2xl sm:rounded-3xl bg-white dark:bg-gradient-to-r dark:from-[#14141c] dark:via-[#101017] dark:to-[#0a0a0f] border border-slate-200 dark:border-zinc-800/80 p-5 sm:p-6 lg:p-8 shadow-xs">
         <div className="absolute right-0 top-0 bottom-0 w-1/3 bg-radial from-vexo-red/10 to-transparent pointer-events-none" />

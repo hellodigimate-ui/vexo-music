@@ -72,7 +72,7 @@ export const AdminUsersPage: React.FC = () => {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="w-full max-w-full min-w-0 space-y-6">
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
         <div>
           <h2 className="text-sm font-bold text-slate-900 dark:text-white tracking-wide flex items-center gap-2">
@@ -87,32 +87,32 @@ export const AdminUsersPage: React.FC = () => {
             setFormData({ email: '', name: '', password: '', role: 'ADMIN' });
             setIsModalOpen(true);
           }}
-          className="px-4 py-2.5 rounded-xl bg-vexo-red hover:bg-red-600 text-xs font-semibold text-white shadow-lg shadow-red-950/40 flex items-center justify-center gap-2 transition-colors cursor-pointer"
+          className="self-start sm:self-auto px-4 py-2.5 rounded-xl bg-vexo-red hover:bg-red-600 text-xs font-semibold text-white shadow-lg shadow-red-950/40 flex items-center justify-center gap-2 transition-colors cursor-pointer"
         >
           <Plus className="w-4 h-4" />
           <span>Add Administrator</span>
         </button>
       </div>
 
-      <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl overflow-hidden shadow-sm dark:shadow-none">
+      <div className="w-full max-w-full min-w-0 bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl overflow-hidden shadow-sm dark:shadow-none">
         {isLoading ? (
           <div className="py-20 text-center text-xs font-mono text-slate-400 dark:text-zinc-500">LOADING USERS...</div>
         ) : (
-          <div className="overflow-x-auto scrollbar-thin">
+          <div className="w-full max-w-full overflow-x-auto scrollbar-thin">
             <table className="w-full min-w-[700px] text-left text-xs">
               <thead className="bg-slate-50 dark:bg-[#121218] border-b border-slate-200 dark:border-zinc-800/80 text-[10px] font-mono uppercase tracking-widest text-slate-500 dark:text-zinc-400">
                 <tr>
-                  <th className="py-3.5 px-6">Admin Name & Email</th>
-                  <th className="py-3.5 px-6">Role</th>
-                  <th className="py-3.5 px-6">Status</th>
-                  <th className="py-3.5 px-6">Last Login</th>
-                  <th className="py-3.5 px-6 text-right">Access Control</th>
+                  <th className="py-3.5 px-4 sm:px-6 whitespace-nowrap min-w-[200px]">Admin Name & Email</th>
+                  <th className="py-3.5 px-4 sm:px-6 whitespace-nowrap min-w-[120px]">Role</th>
+                  <th className="py-3.5 px-4 sm:px-6 whitespace-nowrap min-w-[120px]">Status</th>
+                  <th className="py-3.5 px-4 sm:px-6 whitespace-nowrap min-w-[150px]">Last Login</th>
+                  <th className="py-3.5 px-4 sm:px-6 text-right whitespace-nowrap min-w-[110px]">Access Control</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200 dark:divide-zinc-800/60">
                 {users.map((user) => (
                   <tr key={user.id} className="hover:bg-slate-50/80 dark:hover:bg-zinc-900/40 transition-colors">
-                    <td className="py-4 px-6">
+                    <td className="py-4 px-4 sm:px-6 whitespace-nowrap">
                       <div className="flex items-center gap-3">
                         <div className="w-9 h-9 rounded-xl bg-slate-100 dark:bg-zinc-800 border border-slate-200 dark:border-zinc-700 font-bold font-mono text-xs flex items-center justify-center text-slate-900 dark:text-white">
                           {user.name?.[0] || 'A'}
@@ -124,7 +124,7 @@ export const AdminUsersPage: React.FC = () => {
                       </div>
                     </td>
 
-                    <td className="py-4 px-6">
+                    <td className="py-4 px-4 sm:px-6 whitespace-nowrap">
                       <span
                         className={`px-2.5 py-1 rounded-md text-[10px] font-mono font-bold uppercase ${
                           user.role === 'SUPER_ADMIN'
@@ -138,7 +138,7 @@ export const AdminUsersPage: React.FC = () => {
                       </span>
                     </td>
 
-                    <td className="py-4 px-6">
+                    <td className="py-4 px-4 sm:px-6 whitespace-nowrap">
                       <span
                         className={`text-[10px] font-mono font-bold uppercase px-2 py-0.5 rounded-full ${
                           user.isActive
@@ -150,7 +150,7 @@ export const AdminUsersPage: React.FC = () => {
                       </span>
                     </td>
 
-                    <td className="py-4 px-6 font-mono text-slate-500 dark:text-zinc-400 text-[11px]">
+                    <td className="py-4 px-4 sm:px-6 whitespace-nowrap font-mono text-slate-500 dark:text-zinc-400 text-[11px]">
                       {user.lastLoginAt
                         ? new Date(user.lastLoginAt).toLocaleDateString('en-GB', {
                             day: 'numeric',
@@ -162,7 +162,7 @@ export const AdminUsersPage: React.FC = () => {
                         : 'Never logged in'}
                     </td>
 
-                    <td className="py-4 px-6 text-right">
+                    <td className="py-4 px-4 sm:px-6 text-right whitespace-nowrap">
                       {user.role !== 'SUPER_ADMIN' && (
                         <button
                           onClick={() => setStatusTarget({ id: user.id, name: user.name, active: user.isActive })}

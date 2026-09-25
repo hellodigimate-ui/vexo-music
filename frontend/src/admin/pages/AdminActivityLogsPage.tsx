@@ -38,7 +38,7 @@ export const AdminActivityLogsPage: React.FC = () => {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="w-full max-w-full min-w-0 space-y-6">
       {/* Search & Actions Filter Bar */}
       <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-4 shadow-sm flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="relative flex-1">
@@ -61,28 +61,28 @@ export const AdminActivityLogsPage: React.FC = () => {
         </button>
       </div>
 
-      <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl overflow-hidden shadow-sm dark:shadow-none">
+      <div className="w-full max-w-full min-w-0 bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl overflow-hidden shadow-sm dark:shadow-none">
         {isLoading ? (
           <div className="py-20 text-center text-xs font-mono text-slate-400 dark:text-zinc-500">FETCHING AUDIT TRAIL...</div>
         ) : filteredLogs.length === 0 ? (
           <div className="py-20 text-center text-xs text-slate-400 dark:text-zinc-500">No activity logs recorded.</div>
         ) : (
-          <div className="overflow-x-auto scrollbar-thin">
+          <div className="w-full max-w-full overflow-x-auto scrollbar-thin">
             <table className="w-full min-w-[760px] text-left text-xs">
               <thead className="bg-slate-50 dark:bg-[#121218] border-b border-slate-200 dark:border-zinc-800/80 text-[10px] font-mono uppercase tracking-widest text-slate-500 dark:text-zinc-400">
                 <tr>
-                  <th className="py-3.5 px-6">Timestamp</th>
-                  <th className="py-3.5 px-6">Action Triggered</th>
-                  <th className="py-3.5 px-6">Entity Target</th>
-                  <th className="py-3.5 px-6">Administrator</th>
-                  <th className="py-3.5 px-6">IP Address</th>
-                  <th className="py-3.5 px-6 text-right">Details</th>
+                  <th className="py-3.5 px-4 sm:px-6 whitespace-nowrap min-w-[150px]">Timestamp</th>
+                  <th className="py-3.5 px-4 sm:px-6 whitespace-nowrap min-w-[160px]">Action Triggered</th>
+                  <th className="py-3.5 px-4 sm:px-6 whitespace-nowrap min-w-[140px]">Entity Target</th>
+                  <th className="py-3.5 px-4 sm:px-6 whitespace-nowrap min-w-[140px]">Administrator</th>
+                  <th className="py-3.5 px-4 sm:px-6 whitespace-nowrap min-w-[110px]">IP Address</th>
+                  <th className="py-3.5 px-4 sm:px-6 text-right whitespace-nowrap min-w-[110px]">Details</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-slate-200 dark:divide-zinc-800/60">
                 {filteredLogs.map((log) => (
                   <tr key={log.id} className="hover:bg-slate-50/80 dark:hover:bg-zinc-900/40 transition-colors">
-                    <td className="py-4 px-6 font-mono text-slate-500 dark:text-zinc-400 text-[11px] whitespace-nowrap">
+                    <td className="py-4 px-4 sm:px-6 font-mono text-slate-500 dark:text-zinc-400 text-[11px] whitespace-nowrap">
                       {new Date(log.createdAt).toLocaleDateString('en-GB', {
                         day: 'numeric',
                         month: 'short',
@@ -93,29 +93,29 @@ export const AdminActivityLogsPage: React.FC = () => {
                       })}
                     </td>
 
-                    <td className="py-4 px-6">
+                    <td className="py-4 px-4 sm:px-6 whitespace-nowrap">
                       <span className="font-mono font-bold text-xs text-slate-900 dark:text-white">
                         {log.action}
                       </span>
                     </td>
 
-                    <td className="py-4 px-6">
+                    <td className="py-4 px-4 sm:px-6 whitespace-nowrap">
                       <span className="px-2 py-0.5 rounded bg-slate-100 text-slate-700 border border-slate-200 dark:bg-zinc-800 dark:text-zinc-300 dark:border-transparent text-[10px] font-mono">
                         {log.entityType} {log.entityId ? `#${log.entityId}` : ''}
                       </span>
                     </td>
 
-                    <td className="py-4 px-6">
+                    <td className="py-4 px-4 sm:px-6 whitespace-nowrap">
                       <span className="font-semibold text-slate-900 dark:text-zinc-200">
                         {log.adminUserName || 'System / Automated'}
                       </span>
                     </td>
 
-                    <td className="py-4 px-6 font-mono text-[10px] text-slate-400 dark:text-zinc-500">
+                    <td className="py-4 px-4 sm:px-6 whitespace-nowrap font-mono text-[10px] text-slate-400 dark:text-zinc-500">
                       {log.ipAddress || '127.0.0.1'}
                     </td>
 
-                    <td className="py-4 px-6 text-right">
+                    <td className="py-4 px-4 sm:px-6 text-right whitespace-nowrap">
                       {log.details ? (
                         <button
                           onClick={() => setSelectedLog(log)}

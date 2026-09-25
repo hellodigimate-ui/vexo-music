@@ -211,7 +211,7 @@ export const AdminSidebar: React.FC<SidebarProps> = ({
       <aside
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
-        className={`admin-sidebar fixed lg:static lg:sticky lg:top-0 lg:h-screen inset-y-0 left-0 z-50 lg:z-30 bg-white dark:bg-[#08080a] border-r border-slate-200 dark:border-zinc-800/80 flex flex-col transition-all duration-300 ease-in-out select-none overflow-x-hidden shrink-0 ${
+        className={`admin-sidebar fixed inset-y-0 left-0 top-0 bottom-0 h-screen z-40 bg-white dark:bg-[#08080a] border-r border-slate-200 dark:border-zinc-800/80 flex flex-col transition-all duration-300 ease-in-out select-none overflow-x-hidden ${
           isOpen ? 'translate-x-0 w-64' : '-translate-x-full lg:translate-x-0'
         } ${
           isExpanded

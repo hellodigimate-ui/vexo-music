@@ -71,7 +71,7 @@ export const AdminLayout: React.FC = () => {
   const meta = getPageMeta(location.pathname);
 
   return (
-    <div className="admin-root min-h-screen bg-slate-100 dark:bg-[#08080a] text-slate-900 dark:text-zinc-100 flex selection:bg-vexo-red selection:text-white font-sans antialiased transition-colors duration-300">
+    <div className="admin-root min-h-screen w-full max-w-full bg-slate-100 dark:bg-[#08080a] text-slate-900 dark:text-zinc-100 flex selection:bg-vexo-red selection:text-white font-sans antialiased transition-colors duration-300">
       {/* Desktop & Mobile Sidebar Drawer */}
       <AdminSidebar
         isOpen={sidebarOpen}
@@ -80,8 +80,16 @@ export const AdminLayout: React.FC = () => {
         onTogglePin={handleTogglePin}
       />
 
+      {/* Desktop Fixed Sidebar Spacer - Preserves layout flow so content never shifts */}
+      <div
+        aria-hidden="true"
+        className={`hidden lg:block shrink-0 transition-all duration-300 ease-in-out ${
+          isSidebarPinned ? 'w-64' : 'w-[72px]'
+        }`}
+      />
+
       {/* Main Content Area - Fluid flex child that naturally occupies 100% of remaining space */}
-      <div className="flex-1 flex flex-col min-w-0 pb-16 lg:pb-0 transition-all duration-300">
+      <div className="flex-1 flex flex-col min-w-0 max-w-full pb-16 lg:pb-0 transition-all duration-300">
         {/* Topbar Header */}
         <AdminTopbar
           onToggleSidebar={handleToggleSidebar}
@@ -91,8 +99,8 @@ export const AdminLayout: React.FC = () => {
         />
 
         {/* Dashboard Shell Canvas - Outer section expands fluidly across the canvas */}
-        <main className="flex-1 w-full p-4 sm:p-6 lg:p-8 overflow-y-auto bg-slate-100 dark:bg-[#08080a] transition-colors duration-300">
-          <div className="w-full max-w-[1600px] mx-auto space-y-6 sm:space-y-8">
+        <main className="flex-1 w-full min-w-0 max-w-full p-4 sm:p-6 lg:p-8 bg-slate-100 dark:bg-[#08080a] transition-colors duration-300">
+          <div className="w-full max-w-[1600px] mx-auto min-w-0 space-y-6 sm:space-y-8">
             <Outlet />
           </div>
         </main>

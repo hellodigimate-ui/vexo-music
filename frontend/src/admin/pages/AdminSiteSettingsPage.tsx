@@ -68,7 +68,7 @@ export const AdminSiteSettingsPage: React.FC = () => {
   }
 
   return (
-    <div className="max-w-4xl mx-auto space-y-6">
+    <div className="w-full max-w-4xl mx-auto min-w-0 space-y-6">
       <form onSubmit={handleSubmit} className="space-y-8">
         {/* Branding & SEO */}
         <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-6 space-y-5 shadow-sm dark:shadow-none">
@@ -260,7 +260,7 @@ export const AdminSiteSettingsPage: React.FC = () => {
           <button
             type="submit"
             disabled={isSaving}
-            className="px-8 py-3.5 rounded-xl bg-vexo-red hover:bg-red-600 text-white font-semibold text-xs tracking-wide shadow-lg shadow-red-950/40 flex items-center gap-2 transition-all cursor-pointer disabled:opacity-50"
+            className="w-full sm:w-auto px-8 py-3.5 rounded-xl bg-vexo-red hover:bg-red-600 text-white font-semibold text-xs tracking-wide shadow-lg shadow-red-950/40 flex items-center justify-center gap-2 transition-all cursor-pointer disabled:opacity-50"
           >
             <Save className="w-4 h-4" />
             <span>{isSaving ? 'Saving Settings...' : 'Update Global Settings'}</span>

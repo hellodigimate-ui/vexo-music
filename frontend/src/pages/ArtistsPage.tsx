@@ -44,7 +44,7 @@ export const ArtistsPage: React.FC = () => {
   });
 
   return (
-    <div className="pt-24 min-h-screen bg-vexo-bg">
+    <div className="pt-24 min-h-screen bg-vexo-bg w-full max-w-full overflow-x-hidden">
       <PageSection variant="bg" padding="md">
         <SectionHeading
           badge="VEXO Roster"

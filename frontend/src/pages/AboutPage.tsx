@@ -58,7 +58,7 @@ export const AboutPage: React.FC = () => {
   ];
 
   return (
-    <div className="pt-20 min-h-screen bg-[#f8fafc] dark:bg-[#050505] text-slate-900 dark:text-white pb-20 transition-colors duration-300">
+    <div className="pt-20 min-h-screen bg-[#f8fafc] dark:bg-[#050505] text-slate-900 dark:text-white pb-20 transition-colors duration-300 w-full max-w-full overflow-x-hidden">
       {/* 1. WHO WE ARE */}
       <PageSection variant="bg" padding="md">
         <Container>
