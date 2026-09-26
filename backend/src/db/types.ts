@@ -214,6 +214,16 @@ export interface Homepage {
   heroSecondaryCtaText?: string | null;
   heroSecondaryCtaUrl?: string | null;
 
+  // Featured Single / Video Spotlight Banner
+  featuredVideoLikes?: string | null;
+  featuredVideoViews?: string | null;
+  featuredVideoReleaseDate?: string | null;
+  featuredVideoBadge?: string | null;
+  featuredVideoTitle?: string | null;
+  featuredVideoArtist?: string | null;
+  featuredVideoDescription?: string | null;
+  featuredVideoTags?: string | string[] | null;
+
   // Latest Releases Section
   releasesHeading?: string | null;
   releasesSubtitle?: string | null;

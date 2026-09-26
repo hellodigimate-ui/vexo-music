@@ -21,6 +21,8 @@ import {
   Plus,
   Quote,
   MessageSquareQuote,
+  Film,
+  ThumbsUp,
 } from 'lucide-react';
 import {
   adminHomepageApi,
@@ -35,6 +37,7 @@ import { Link } from 'react-router-dom';
 
 type TabKey =
   | 'hero'
+  | 'featuredSingle'
   | 'releases'
   | 'artists'
   | 'events'
@@ -133,6 +136,16 @@ export const AdminHomepagePage: React.FC = () => {
     heroSecondaryCtaUrl: '',
     marqueeText: '',
 
+    // Featured Single / Video Spotlight
+    featuredVideoLikes: '0',
+    featuredVideoViews: '553',
+    featuredVideoReleaseDate: '24 Aug 2026',
+    featuredVideoBadge: '(Official Music Video)',
+    featuredVideoTitle: 'BHARTAR',
+    featuredVideoArtist: 'R Beer & Rashmi Nishad',
+    featuredVideoDescription: '',
+    featuredVideoTags: '#VexoMusic, #OfficialVideo',
+
     // Latest Releases
     releasesHeading: 'LATEST RELEASES',
     releasesSubtitle: 'Explore the newest original tracks, singles, and full albums from VEXO Music Entertainment.',
@@ -213,6 +226,15 @@ export const AdminHomepagePage: React.FC = () => {
           heroSecondaryCtaText: d.heroSecondaryCtaText || '',
           heroSecondaryCtaUrl: d.heroSecondaryCtaUrl || '',
           marqueeText: d.marqueeText || '',
+
+          featuredVideoLikes: d.featuredVideoLikes !== undefined && d.featuredVideoLikes !== null ? String(d.featuredVideoLikes) : '0',
+          featuredVideoViews: d.featuredVideoViews !== undefined && d.featuredVideoViews !== null ? String(d.featuredVideoViews) : '553',
+          featuredVideoReleaseDate: d.featuredVideoReleaseDate !== undefined && d.featuredVideoReleaseDate !== null ? String(d.featuredVideoReleaseDate) : '24 Aug 2026',
+          featuredVideoBadge: d.featuredVideoBadge || '(Official Music Video)',
+          featuredVideoTitle: d.featuredVideoTitle || 'BHARTAR',
+          featuredVideoArtist: d.featuredVideoArtist || 'R Beer & Rashmi Nishad',
+          featuredVideoDescription: d.featuredVideoDescription || '',
+          featuredVideoTags: d.featuredVideoTags || '#VexoMusic, #OfficialVideo, #NewRajasthaniSong',
 
           releasesHeading: d.releasesHeading || 'LATEST RELEASES',
           releasesSubtitle: d.releasesSubtitle || 'Explore the newest original tracks, singles, and full albums from VEXO Music Entertainment.',
@@ -380,6 +402,7 @@ export const AdminHomepagePage: React.FC = () => {
 
   const tabs: { id: TabKey; label: string; icon: React.ComponentType<{ className?: string }> }[] = [
     { id: 'hero', label: 'Hero Banner', icon: Disc3 },
+    { id: 'featuredSingle', label: 'Featured Single Spotlight', icon: Film },
     { id: 'releases', label: 'Latest Releases', icon: Music },
     { id: 'artists', label: 'Featured Artists', icon: Users },
     { id: 'events', label: 'Featured Events', icon: Calendar },
@@ -654,7 +677,260 @@ export const AdminHomepagePage: React.FC = () => {
           </div>
         )}
 
-        {/* 2. LATEST RELEASES TAB */}
+        {/* 2. FEATURED SINGLE / VIDEO SPOTLIGHT BANNER TAB */}
+        {activeTab === 'featuredSingle' && (
+          <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-6 space-y-6 shadow-sm transition-colors">
+            <div className="border-b border-slate-200 dark:border-zinc-800/80 pb-4 flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <h3 className="text-sm font-bold text-slate-900 dark:text-white tracking-wide flex items-center gap-2">
+                  <Film className="w-4 h-4 text-vexo-red" />
+                  <span>Featured Single Spotlight Banner</span>
+                </h3>
+                <p className="text-xs text-slate-500 dark:text-zinc-500">
+                  Configure the high-impact spotlight banner directly beneath the Hero (Likes, Views, Date, Video & Details).
+                </p>
+              </div>
+              <span className="text-[10px] font-mono px-2.5 py-1 rounded-full bg-vexo-red/10 border border-vexo-red/30 text-vexo-red-bright uppercase font-bold shrink-0 self-start sm:self-auto">
+                Homepage Section #2
+              </span>
+            </div>
+
+            {/* Quick Pick from Video Library */}
+            <div className="p-4 rounded-xl bg-slate-50 dark:bg-zinc-900/60 border border-slate-200 dark:border-zinc-800 space-y-3">
+              <label className="text-xs font-mono font-bold text-slate-700 dark:text-zinc-300 flex items-center justify-between">
+                <span>SELECT FROM VIDEO LIBRARY (OR ENTER CUSTOM YOUTUBE ID BELOW):</span>
+              </label>
+              <select
+                value={formData.featuredVideoId || ''}
+                onChange={(e) => {
+                  const selectedId = e.target.value;
+                  const foundVid = allVideos.find((v) => v.youtubeId === selectedId || v.id === selectedId);
+                  if (foundVid) {
+                    setFormData({
+                      ...formData,
+                      featuredVideoId: foundVid.youtubeId || selectedId,
+                      featuredVideoTitle: foundVid.title || formData.featuredVideoTitle,
+                      featuredVideoArtist: foundVid.artist || formData.featuredVideoArtist,
+                      featuredVideoViews: foundVid.views ? String(foundVid.views) : formData.featuredVideoViews,
+                      featuredVideoReleaseDate: foundVid.publishedAt || formData.featuredVideoReleaseDate,
+                      featuredVideoDescription: foundVid.description || formData.featuredVideoDescription,
+                      featuredVideoTags: Array.isArray(foundVid.tags) ? foundVid.tags.join(', ') : (foundVid.tags || formData.featuredVideoTags),
+                    });
+                  } else {
+                    setFormData({ ...formData, featuredVideoId: selectedId });
+                  }
+                }}
+                className="w-full px-3.5 py-2.5 rounded-xl bg-white dark:bg-zinc-950 border border-slate-300 dark:border-zinc-800 text-xs text-slate-900 dark:text-white focus:border-vexo-red focus:outline-none cursor-pointer"
+              >
+                <option value="">-- Choose a video to auto-populate fields --</option>
+                {allVideos.map((vid) => (
+                  <option key={vid.id} value={vid.youtubeId || vid.id}>
+                    {vid.title} ({vid.artist || 'VEXO'}) — YT: {vid.youtubeId}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* The 3 Core Numbers Highlighted */}
+            <div className="p-5 rounded-2xl bg-gradient-to-br from-red-500/5 via-zinc-900/40 to-transparent border border-vexo-red/30 space-y-4">
+              <div className="flex items-center gap-2">
+                <Sparkles className="w-4 h-4 text-vexo-red" />
+                <h4 className="text-xs font-mono font-bold uppercase tracking-wider text-slate-900 dark:text-white">
+                  Spotlight Stat Counters (Likes, Views, Date Badges)
+                </h4>
+              </div>
+              <p className="text-xs text-slate-500 dark:text-zinc-400">
+                These numbers display prominently inside the 3 stat pill badges on the live website homepage. You can edit them freely with raw numbers (e.g. <code>553</code>) or formatted metrics (e.g. <code>125K</code>, <code>2.4M</code>).
+              </p>
+
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                {/* 1. Likes */}
+                <div className="p-4 rounded-xl bg-white dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800/80 space-y-2 focus-within:border-vexo-red transition-colors shadow-2xs">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-mono font-bold text-slate-700 dark:text-zinc-300 flex items-center gap-1.5">
+                      <ThumbsUp className="w-3.5 h-3.5 text-vexo-red" /> LIKES COUNT
+                    </label>
+                    <span className="text-[10px] font-mono text-zinc-500">Live Metric</span>
+                  </div>
+                  <input
+                    type="text"
+                    value={formData.featuredVideoLikes ?? '0'}
+                    onChange={(e) => setFormData({ ...formData, featuredVideoLikes: e.target.value })}
+                    placeholder="e.g. 0, 12K, 50,000"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-sm font-mono font-bold text-slate-900 dark:text-white focus:border-vexo-red focus:outline-none"
+                  />
+                  <p className="text-[11px] text-slate-500 dark:text-zinc-500 font-sans">
+                    Displays under the "Likes" badge.
+                  </p>
+                </div>
+
+                {/* 2. Views */}
+                <div className="p-4 rounded-xl bg-white dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800/80 space-y-2 focus-within:border-vexo-red transition-colors shadow-2xs">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-mono font-bold text-slate-700 dark:text-zinc-300 flex items-center gap-1.5">
+                      <Eye className="w-3.5 h-3.5 text-vexo-red" /> VIEWS COUNT
+                    </label>
+                    <span className="text-[10px] font-mono text-zinc-500">Live Metric</span>
+                  </div>
+                  <input
+                    type="text"
+                    value={formData.featuredVideoViews ?? '553'}
+                    onChange={(e) => setFormData({ ...formData, featuredVideoViews: e.target.value })}
+                    placeholder="e.g. 553, 2.4M, 185,000"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-sm font-mono font-bold text-slate-900 dark:text-white focus:border-vexo-red focus:outline-none"
+                  />
+                  <p className="text-[11px] text-slate-500 dark:text-zinc-500 font-sans">
+                    Displays under the "Views" badge.
+                  </p>
+                </div>
+
+                {/* 3. Release Date */}
+                <div className="p-4 rounded-xl bg-white dark:bg-zinc-950 border border-slate-200 dark:border-zinc-800/80 space-y-2 focus-within:border-vexo-red transition-colors shadow-2xs">
+                  <div className="flex items-center justify-between">
+                    <label className="text-xs font-mono font-bold text-slate-700 dark:text-zinc-300 flex items-center gap-1.5">
+                      <Calendar className="w-3.5 h-3.5 text-vexo-red" /> RELEASE DATE
+                    </label>
+                    <span className="text-[10px] font-mono text-zinc-500">Live Metric</span>
+                  </div>
+                  <input
+                    type="text"
+                    value={formData.featuredVideoReleaseDate ?? '24 Aug 2026'}
+                    onChange={(e) => setFormData({ ...formData, featuredVideoReleaseDate: e.target.value })}
+                    placeholder="e.g. 24 Aug 2026"
+                    className="w-full px-3 py-2 rounded-lg bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-sm font-mono font-bold text-slate-900 dark:text-white focus:border-vexo-red focus:outline-none"
+                  />
+                  <p className="text-[11px] text-slate-500 dark:text-zinc-500 font-sans">
+                    Displays under the "Date" badge.
+                  </p>
+                </div>
+              </div>
+
+              {/* Live Preview of the 3 Badges */}
+              <div className="mt-3 pt-3 border-t border-slate-200 dark:border-zinc-800/60">
+                <span className="text-[10px] font-mono uppercase tracking-wider text-zinc-400 block mb-2 font-bold">
+                  LIVE BADGE PREVIEW (MATCHING HOMEPAGE DESIGN):
+                </span>
+                <div className="grid grid-cols-3 gap-3 max-w-md mx-auto sm:mx-0">
+                  <div className="flex flex-col items-center justify-center p-3 rounded-xl bg-zinc-900 border border-zinc-800 shadow-inner">
+                    <div className="flex items-center gap-1 text-[11px] text-zinc-400 mb-0.5 font-mono">
+                      <ThumbsUp className="w-3 h-3 text-vexo-red" /> Likes
+                    </div>
+                    <span className="text-lg font-black text-white font-mono">{formData.featuredVideoLikes || '0'}</span>
+                  </div>
+                  <div className="flex flex-col items-center justify-center p-3 rounded-xl bg-zinc-900 border border-zinc-800 shadow-inner">
+                    <div className="flex items-center gap-1 text-[11px] text-zinc-400 mb-0.5 font-mono">
+                      <Eye className="w-3 h-3 text-vexo-red" /> Views
+                    </div>
+                    <span className="text-lg font-black text-white font-mono">{formData.featuredVideoViews || '0'}</span>
+                  </div>
+                  <div className="flex flex-col items-center justify-center p-3 rounded-xl bg-zinc-900 border border-zinc-800 shadow-inner">
+                    <div className="flex items-center gap-1 text-[11px] text-zinc-400 mb-0.5 font-mono">
+                      <Calendar className="w-3 h-3 text-vexo-red" /> Date
+                    </div>
+                    <span className="text-xs font-extrabold text-white font-mono truncate max-w-full px-1">{formData.featuredVideoReleaseDate || 'Date'}</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Video Identity & Content Details */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">
+                  SPOTLIGHT YOUTUBE VIDEO ID *
+                </label>
+                <input
+                  type="text"
+                  value={formData.featuredVideoId || ''}
+                  onChange={(e) => setFormData({ ...formData, featuredVideoId: e.target.value })}
+                  placeholder="e.g. PsmXAUKjR5Y"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs font-mono text-slate-900 dark:text-white focus:border-vexo-red focus:outline-none"
+                />
+                {formData.featuredVideoId && (
+                  <div className="mt-2 h-24 rounded-xl overflow-hidden border border-zinc-800 bg-zinc-950 flex items-center justify-center">
+                    <img
+                      src={`https://img.youtube.com/vi/${formData.featuredVideoId}/mqdefault.jpg`}
+                      alt="Thumbnail preview"
+                      className="w-full h-full object-cover"
+                    />
+                  </div>
+                )}
+              </div>
+
+              <div className="space-y-4">
+                <div className="space-y-1.5">
+                  <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">
+                    BADGE / SUB-TAGLINE
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.featuredVideoBadge || ''}
+                    onChange={(e) => setFormData({ ...formData, featuredVideoBadge: e.target.value })}
+                    placeholder="(Official Music Video)"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white focus:border-vexo-red focus:outline-none"
+                  />
+                </div>
+
+                <div className="space-y-1.5">
+                  <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">
+                    SONG / VIDEO TITLE
+                  </label>
+                  <input
+                    type="text"
+                    value={formData.featuredVideoTitle || ''}
+                    onChange={(e) => setFormData({ ...formData, featuredVideoTitle: e.target.value })}
+                    placeholder="BHARTAR"
+                    className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs font-bold text-slate-900 dark:text-white focus:border-vexo-red focus:outline-none"
+                  />
+                </div>
+              </div>
+            </div>
+
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              <div className="space-y-1.5">
+                <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">
+                  CREATOR / ARTIST CREDITS
+                </label>
+                <input
+                  type="text"
+                  value={formData.featuredVideoArtist || ''}
+                  onChange={(e) => setFormData({ ...formData, featuredVideoArtist: e.target.value })}
+                  placeholder="R Beer & Rashmi Nishad"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white focus:border-vexo-red focus:outline-none"
+                />
+              </div>
+
+              <div className="space-y-1.5">
+                <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">
+                  HASHTAGS (COMMA SEPARATED)
+                </label>
+                <input
+                  type="text"
+                  value={formData.featuredVideoTags || ''}
+                  onChange={(e) => setFormData({ ...formData, featuredVideoTags: e.target.value })}
+                  placeholder="#VexoMusic, #OfficialVideo, #NewRajasthaniSong"
+                  className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs font-mono text-slate-900 dark:text-white focus:border-vexo-red focus:outline-none"
+                />
+              </div>
+            </div>
+
+            {/* Description Text */}
+            <div className="space-y-1.5">
+              <label className="text-xs font-mono font-medium text-slate-700 dark:text-zinc-300">
+                OFFICIAL DESCRIPTION PANEL TEXT
+              </label>
+              <textarea
+                rows={3}
+                value={formData.featuredVideoDescription || ''}
+                onChange={(e) => setFormData({ ...formData, featuredVideoDescription: e.target.value })}
+                placeholder="Presenting 'BHARTAR' by Vexo Entertainment Pvt. Ltd. Starring..."
+                className="w-full px-3.5 py-2.5 rounded-xl bg-slate-50 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 text-xs text-slate-900 dark:text-white focus:border-vexo-red focus:outline-none resize-none leading-relaxed"
+              />
+            </div>
+          </div>
+        )}
+
+        {/* 3. LATEST RELEASES TAB */}
         {activeTab === 'releases' && (
           <div className="bg-white dark:bg-[#0e0e13] border border-slate-200 dark:border-zinc-800/80 rounded-2xl p-6 space-y-6 shadow-sm transition-colors">
             <div className="border-b border-zinc-800/80 pb-4">

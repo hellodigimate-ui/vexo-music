@@ -2,10 +2,11 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { PageSection } from '../components/ui/PageSection';
 import { SectionHeading } from '../components/ui/SectionHeading';
 import { AlbumCard } from '../components/music/AlbumCard';
+import { TrackCard } from '../components/music/TrackCard';
 import { albumsApi } from '../lib/api';
 import type { Album, Track } from '../types';
-import { Search, Play, X, Music2 } from 'lucide-react';
-import { formatTime } from '../lib/utils';
+import { Search, Play, X, Music2, Disc3, Layers } from 'lucide-react';
+import { formatTime, getMediaUrl, isTrackRepresentedInAlbums } from '../lib/utils';
 import { Skeleton } from '../components/ui/Skeleton';
 
 export const MusicPage: React.FC = () => {
@@ -13,6 +14,7 @@ export const MusicPage: React.FC = () => {
   const [tracks, setTracks] = useState<Track[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
+  const [activeCatalogTab, setActiveCatalogTab] = useState<'all' | 'albums' | 'tracks'>('all');
   const [selectedGenre, setSelectedGenre] = useState('All');
   const [searchQuery, setSearchQuery] = useState('');
   const [activeTrackVideo, setActiveTrackVideo] = useState<{ title: string; artist: string; id: string } | null>(null);
@@ -49,8 +51,16 @@ export const MusicPage: React.FC = () => {
         });
       }
     });
+    tracks.forEach((t) => {
+      if (t.genre) {
+        t.genre.split('/').forEach((g) => {
+          const trimmed = g.trim();
+          if (trimmed) set.add(trimmed);
+        });
+      }
+    });
     return ['All', ...Array.from(set)];
-  }, [albums]);
+  }, [albums, tracks]);
 
   const filteredAlbums = albums.filter((album) => {
     const genreStr = (album.genre || '').toLowerCase();
@@ -60,6 +70,21 @@ export const MusicPage: React.FC = () => {
     const query = searchQuery.toLowerCase();
     const matchesSearch = !query || titleStr.includes(query) || artistStr.includes(query);
     return matchesGenre && matchesSearch;
+  });
+
+  const filteredTracks = tracks.filter((track) => {
+    const genreStr = (track.genre || '').toLowerCase();
+    const matchesGenre = selectedGenre === 'All' || genreStr.includes(selectedGenre.toLowerCase());
+    const titleStr = (track.title || '').toLowerCase();
+    const artistStr = (track.artist || '').toLowerCase();
+    const query = searchQuery.toLowerCase();
+    const matchesSearch = !query || titleStr.includes(query) || artistStr.includes(query);
+    return matchesGenre && matchesSearch;
+  });
+
+  // Standalone tracks that aren't already represented as albums
+  const standaloneFilteredTracks = filteredTracks.filter((t) => {
+    return !isTrackRepresentedInAlbums(t, filteredAlbums);
   });
 
   const handlePlayTrack = (track: Track) => {
@@ -90,7 +115,46 @@ export const MusicPage: React.FC = () => {
           subtitle="Explore official albums, singles, EPs, and original soundscapes from VEXO Music Entertainment."
         />
 
-        {/* Filters & Search Bar */}
+        {/* Release Type Filter Tabs */}
+        <div className="flex items-center gap-2 mb-6 overflow-x-auto pb-1 scrollbar-none">
+          <button
+            onClick={() => setActiveCatalogTab('all')}
+            className={`px-4 py-2 rounded-full text-xs font-bold transition-all duration-300 flex items-center gap-2 cursor-pointer ${
+              activeCatalogTab === 'all'
+                ? 'bg-vexo-red text-white shadow-lg shadow-vexo-red/30'
+                : 'bg-white/5 text-vexo-muted hover:text-white hover:bg-white/10'
+            }`}
+          >
+            <Layers className="w-3.5 h-3.5" />
+            All Releases ({filteredAlbums.length + standaloneFilteredTracks.length})
+          </button>
+
+          <button
+            onClick={() => setActiveCatalogTab('albums')}
+            className={`px-4 py-2 rounded-full text-xs font-bold transition-all duration-300 flex items-center gap-2 cursor-pointer ${
+              activeCatalogTab === 'albums'
+                ? 'bg-vexo-red text-white shadow-lg shadow-vexo-red/30'
+                : 'bg-white/5 text-vexo-muted hover:text-white hover:bg-white/10'
+            }`}
+          >
+            <Disc3 className="w-3.5 h-3.5" />
+            Albums & EPs ({filteredAlbums.length})
+          </button>
+
+          <button
+            onClick={() => setActiveCatalogTab('tracks')}
+            className={`px-4 py-2 rounded-full text-xs font-bold transition-all duration-300 flex items-center gap-2 cursor-pointer ${
+              activeCatalogTab === 'tracks'
+                ? 'bg-vexo-red text-white shadow-lg shadow-vexo-red/30'
+                : 'bg-white/5 text-vexo-muted hover:text-white hover:bg-white/10'
+            }`}
+          >
+            <Music2 className="w-3.5 h-3.5" />
+            Tracks & Singles ({filteredTracks.length})
+          </button>
+        </div>
+
+        {/* Genre Pills & Search Bar */}
         <div className="flex flex-col md:flex-row items-center justify-between gap-4 mb-10">
           {/* Genre Pills */}
           <div className="flex items-center gap-2 overflow-x-auto w-full md:w-auto pb-2 md:pb-0 scrollbar-none">
@@ -100,7 +164,7 @@ export const MusicPage: React.FC = () => {
                 onClick={() => setSelectedGenre(genre)}
                 className={`px-4 py-2 rounded-full text-xs font-bold transition-all duration-300 whitespace-nowrap cursor-pointer ${
                   selectedGenre === genre
-                    ? 'bg-vexo-red text-white shadow-lg shadow-vexo-red/30'
+                    ? 'bg-white/15 text-white border border-white/20'
                     : 'bg-white/5 text-vexo-muted hover:text-white hover:bg-white/10'
                 }`}
               >
@@ -122,12 +186,12 @@ export const MusicPage: React.FC = () => {
           </div>
         </div>
 
-        {/* Albums Grid */}
+        {/* Releases Grid */}
         {isLoading ? (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl">
             {Array.from({ length: 4 }).map((_, i) => (
               <div key={i} className="glass-card rounded-2xl overflow-hidden p-3 border border-white/10 flex flex-col gap-3">
-                <Skeleton className="aspect-square w-full rounded-xl" />
+                <Skeleton className="aspect-[16/10] w-full rounded-xl" />
                 <div className="space-y-2 px-1 pb-1">
                   <Skeleton className="h-4 w-3/4" />
                   <Skeleton className="h-3 w-1/2" />
@@ -135,8 +199,10 @@ export const MusicPage: React.FC = () => {
               </div>
             ))}
           </div>
-        ) : filteredAlbums.length === 0 ? (
-          <div className="py-20 flex flex-col items-center justify-center gap-3 text-center border border-dashed border-white/10 rounded-2xl p-8">
+        ) : (activeCatalogTab === 'all' && filteredAlbums.length === 0 && standaloneFilteredTracks.length === 0) ||
+            (activeCatalogTab === 'albums' && filteredAlbums.length === 0) ||
+            (activeCatalogTab === 'tracks' && filteredTracks.length === 0) ? (
+          <div className="py-20 flex flex-col items-center justify-center gap-3 text-center border border-dashed border-white/10 rounded-2xl p-8 max-w-md mx-auto">
             <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400">
               <Music2 className="w-6 h-6" />
             </div>
@@ -148,10 +214,25 @@ export const MusicPage: React.FC = () => {
             </p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {filteredAlbums.map((album) => (
-              <AlbumCard key={album.id} album={album} />
-            ))}
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl">
+            {activeCatalogTab === 'all' ? (
+              <>
+                {filteredAlbums.map((album) => (
+                  <AlbumCard key={album.id} album={album} />
+                ))}
+                {standaloneFilteredTracks.map((track) => (
+                  <TrackCard key={track.id} track={track} onPlay={handlePlayTrack} />
+                ))}
+              </>
+            ) : activeCatalogTab === 'albums' ? (
+              filteredAlbums.map((album) => (
+                <AlbumCard key={album.id} album={album} />
+              ))
+            ) : (
+              filteredTracks.map((track) => (
+                <TrackCard key={track.id} track={track} onPlay={handlePlayTrack} />
+              ))
+            )}
           </div>
         )}
       </PageSection>
@@ -164,7 +245,7 @@ export const MusicPage: React.FC = () => {
           subtitle="Top played tracks and original productions across streaming platforms."
         />
 
-        <div className="flex flex-col gap-3">
+        <div className="flex flex-col gap-3 max-w-7xl mx-auto">
           {isLoading ? (
             Array.from({ length: 5 }).map((_, idx) => (
               <div
@@ -185,52 +266,65 @@ export const MusicPage: React.FC = () => {
                 </div>
               </div>
             ))
-          ) : tracks.map((track, idx) => (
-            <div
-              key={track.id}
-              onClick={() => handlePlayTrack(track)}
-              className="glass-card p-3 sm:p-4 rounded-2xl flex items-center justify-between gap-3 border border-white/10 hover:border-vexo-red/40 transition-all duration-300 overflow-hidden cursor-pointer group"
-            >
-              <div className="flex items-center gap-2 sm:gap-4 min-w-0">
-                <span className="text-sm font-mono font-bold text-vexo-muted w-5 shrink-0 group-hover:text-vexo-red-bright">
-                  0{idx + 1}
-                </span>
+          ) : tracks.map((track, idx) => {
+            const trackCover =
+              getMediaUrl(track.coverUrl) ||
+              (track.title.toLowerCase().includes('bhartar')
+                ? 'https://img.youtube.com/vi/PsmXAUKjR5Y/hqdefault.jpg'
+                : (track.title.toLowerCase().includes('satane')
+                  ? 'https://img.youtube.com/vi/HcEcM5AtEZ8/hqdefault.jpg'
+                  : 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80'));
 
-                <img
-                  src={track.coverUrl}
-                  alt={track.title}
-                  className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl object-cover shrink-0 group-hover:scale-105 transition-transform"
-                />
+            return (
+              <div
+                key={track.id}
+                onClick={() => handlePlayTrack(track)}
+                className="glass-card p-3 sm:p-4 rounded-2xl flex items-center justify-between gap-3 border border-white/10 hover:border-vexo-red/40 transition-all duration-300 overflow-hidden cursor-pointer group"
+              >
+                <div className="flex items-center gap-2 sm:gap-4 min-w-0">
+                  <span className="text-sm font-mono font-bold text-vexo-muted w-5 shrink-0 group-hover:text-vexo-red-bright">
+                    0{idx + 1}
+                  </span>
 
-                <div className="min-w-0">
-                  <h4 className="font-bold text-sm text-white group-hover:text-vexo-red-bright transition-colors truncate">
-                    {track.title}
-                  </h4>
-                  <p className="text-xs text-vexo-muted truncate">{track.artist}</p>
+                  <img
+                    src={trackCover}
+                    alt={track.title}
+                    onError={(e) => {
+                      (e.target as HTMLImageElement).src = 'https://img.youtube.com/vi/PsmXAUKjR5Y/hqdefault.jpg';
+                    }}
+                    className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl object-cover shrink-0 group-hover:scale-105 transition-transform bg-neutral-900 border border-white/10"
+                  />
+
+                  <div className="min-w-0">
+                    <h4 className="font-bold text-sm text-white group-hover:text-vexo-red-bright transition-colors truncate">
+                      {track.title}
+                    </h4>
+                    <p className="text-xs text-vexo-muted truncate">{track.artist}</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2 sm:gap-6 shrink-0">
+                  <span className="hidden md:inline-block px-3 py-1 rounded-full text-[10px] font-mono uppercase bg-white/5 text-vexo-muted border border-white/10">
+                    {track.genre || 'Single'}
+                  </span>
+
+                  <span className="text-xs font-mono text-vexo-muted">
+                    {formatTime(track.duration)}
+                  </span>
+
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handlePlayTrack(track);
+                    }}
+                    className="p-2.5 rounded-full bg-vexo-red/10 text-vexo-red-bright hover:bg-vexo-red hover:text-white transition-colors cursor-pointer"
+                  >
+                    <Play className="w-4 h-4 fill-current" />
+                  </button>
                 </div>
               </div>
-
-              <div className="flex items-center gap-2 sm:gap-6 shrink-0">
-                <span className="hidden md:inline-block px-3 py-1 rounded-full text-[10px] font-mono uppercase bg-white/5 text-vexo-muted border border-white/10">
-                  {track.genre}
-                </span>
-
-                <span className="text-xs font-mono text-vexo-muted">
-                  {formatTime(track.duration)}
-                </span>
-
-                <button
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    handlePlayTrack(track);
-                  }}
-                  className="p-2.5 rounded-full bg-vexo-red/10 text-vexo-red-bright hover:bg-vexo-red hover:text-white transition-colors cursor-pointer"
-                >
-                  <Play className="w-4 h-4 fill-current" />
-                </button>
-              </div>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </PageSection>
 
@@ -251,16 +345,16 @@ export const MusicPage: React.FC = () => {
               </div>
               <button
                 onClick={() => setActiveTrackVideo(null)}
-                className="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-white flex items-center justify-center transition-colors cursor-pointer"
+                className="p-1 rounded-full hover:bg-white/10 text-vexo-muted hover:text-white transition-colors cursor-pointer"
               >
-                <X className="w-4 h-4" />
+                <X className="w-5 h-5" />
               </button>
             </div>
-            <div className="relative aspect-video w-full">
+            <div className="aspect-video w-full">
               <iframe
-                src={`https://www.youtube-nocookie.com/embed/${activeTrackVideo.id}?autoplay=1&rel=0`}
+                src={`https://www.youtube.com/embed/${activeTrackVideo.id}?autoplay=1&rel=0`}
                 title={activeTrackVideo.title}
-                className="w-full h-full"
+                className="w-full h-full border-none"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
               />

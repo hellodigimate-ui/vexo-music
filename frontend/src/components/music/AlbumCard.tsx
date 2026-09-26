@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { Album, Track } from '../../types';
 import { Play, Music2, X, Disc3, Clock, Headphones, ListMusic } from 'lucide-react';
-import { cn, formatTime } from '../../lib/utils';
+import { cn, formatTime, getMediaUrl } from '../../lib/utils';
 import { albumsApi } from '../../lib/api';
 
 const YoutubeIcon: React.FC<{ className?: string }> = ({ className = 'w-4 h-4' }) => (
@@ -32,14 +32,40 @@ export const AlbumCard: React.FC<AlbumCardProps> = ({ album, className }) => {
     getYoutubeId(album.youtubeUrl) ||
     (album.id === 'alb-bhartar' || album.title?.toLowerCase().includes('bhartar')
       ? 'PsmXAUKjR5Y'
-      : (album.id === 'alb-2' || album.title?.toLowerCase().includes('satane') ? 'HcEcM5AtEZ8' : null));
+      : (album.id === 'alb-2' || album.id === 'alb-1' || album.title?.toLowerCase().includes('satane') ? 'HcEcM5AtEZ8' : null));
+
+  const fallbackCover = defaultYoutubeId
+    ? `https://img.youtube.com/vi/${defaultYoutubeId}/hqdefault.jpg`
+    : (album.title?.toLowerCase().includes('satane')
+      ? 'https://img.youtube.com/vi/HcEcM5AtEZ8/hqdefault.jpg'
+      : (album.title?.toLowerCase().includes('bhartar')
+        ? 'https://img.youtube.com/vi/PsmXAUKjR5Y/hqdefault.jpg'
+        : 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800&q=80'));
+
+  const [coverSrc, setCoverSrc] = useState<string>(
+    getMediaUrl(album.coverUrl) || fallbackCover
+  );
+
+  useEffect(() => {
+    setCoverSrc(getMediaUrl(album.coverUrl) || fallbackCover);
+  }, [album.coverUrl, fallbackCover]);
 
   const fetchTracks = async () => {
     try {
       setIsLoadingTracks(true);
       const res = await albumsApi.getTracks();
       if (res.data) {
-        const filtered = res.data.filter((t: any) => t.album === album.id || t.albumId === album.id);
+        const filtered = res.data.filter((t: any) =>
+          t.album === album.id ||
+          t.albumId === album.id ||
+          (album.id === 'alb-2' && (t.albumId === 'alb-1' || t.album === 'alb-1')) ||
+          (album.id === 'alb-1' && (t.albumId === 'alb-2' || t.album === 'alb-2')) ||
+          (t.artist && album.artist && t.artist.toLowerCase() === album.artist.toLowerCase()) ||
+          (t.title && album.title && (
+            t.title.toLowerCase().includes(album.title.toLowerCase()) ||
+            album.title.toLowerCase().includes(t.title.toLowerCase())
+          ))
+        );
         if (filtered.length > 0) {
           setAlbumTracks(filtered);
         } else {
@@ -49,7 +75,7 @@ export const AlbumCard: React.FC<AlbumCardProps> = ({ album, className }) => {
               title: album.title,
               artist: album.artist,
               album: album.id,
-              coverUrl: album.coverUrl,
+              coverUrl: coverSrc,
               duration: 210,
               genre: album.genre,
               audioUrl: (album as any).audioUrl || album.youtubeUrl || '',
@@ -86,17 +112,22 @@ export const AlbumCard: React.FC<AlbumCardProps> = ({ album, className }) => {
     <>
       <div
         className={cn(
-          'group relative bg-vexo-card border border-white/10 rounded-2xl overflow-hidden transition-all duration-500 hover:border-vexo-red/50 hover:shadow-[0_0_35px_rgba(224,0,0,0.35)] flex flex-col cursor-pointer',
+          'group relative bg-vexo-card border border-white/10 rounded-2xl overflow-hidden transition-all duration-500 hover:border-vexo-red/50 hover:shadow-[0_0_35px_rgba(224,0,0,0.35)] flex flex-col cursor-pointer w-full',
           className
         )}
         onClick={handleOpenAlbum}
       >
-        {/* Artwork Container */}
-        <div className="relative aspect-square overflow-hidden bg-neutral-900">
+        {/* Artwork Container - 16:10 aspect ratio ensures widescreen YouTube thumbnails fit properly without aggressive cropping, and reduces image height */}
+        <div className="relative aspect-[16/10] overflow-hidden bg-neutral-900">
           <img
-            src={album.coverUrl}
+            src={coverSrc}
             alt={album.title}
-            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-110"
+            onError={() => {
+              if (coverSrc !== fallbackCover) {
+                setCoverSrc(fallbackCover);
+              }
+            }}
+            className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
           />
 
           {/* Hover Dark Backdrop & Glass Blur */}
@@ -104,15 +135,15 @@ export const AlbumCard: React.FC<AlbumCardProps> = ({ album, className }) => {
             {/* Centered Play / View Tracks Button */}
             <button
               onClick={handleOpenAlbum}
-              className="w-14 h-14 rounded-full bg-gradient-to-tr from-vexo-red to-vexo-red-bright text-white flex items-center justify-center shadow-[0_0_25px_rgba(224,0,0,0.7)] transform translate-y-4 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 delay-75 hover:scale-110 cursor-pointer"
+              className="w-12 h-12 rounded-full bg-gradient-to-tr from-vexo-red to-vexo-red-bright text-white flex items-center justify-center shadow-[0_0_25px_rgba(224,0,0,0.7)] transform translate-y-3 opacity-0 group-hover:translate-y-0 group-hover:opacity-100 transition-all duration-300 delay-75 hover:scale-110 cursor-pointer"
               aria-label={`View ${album.title} tracklist`}
             >
-              <Play className="w-6 h-6 fill-current translate-x-0.5" />
+              <Play className="w-5 h-5 fill-current translate-x-0.5" />
             </button>
           </div>
 
           {/* Top Floating Badge */}
-          <div className="absolute top-3 left-3 bg-black/60 backdrop-blur-md px-2.5 py-1 rounded-full text-[11px] font-mono text-vexo-muted border border-white/10">
+          <div className="absolute top-2.5 left-2.5 bg-black/70 backdrop-blur-md px-2.5 py-0.5 rounded-full text-[10px] font-mono text-vexo-muted border border-white/10">
             {album.year}
           </div>
 
@@ -183,8 +214,9 @@ export const AlbumCard: React.FC<AlbumCardProps> = ({ album, className }) => {
             <div className="p-6 border-b border-white/10 bg-gradient-to-b from-white/[0.04] to-transparent flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div className="flex items-center gap-4">
                 <img
-                  src={album.coverUrl}
+                  src={coverSrc}
                   alt={album.title}
+                  onError={() => setCoverSrc(fallbackCover)}
                   className="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover border border-white/10 shadow-xl shrink-0"
                 />
                 <div>

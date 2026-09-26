@@ -10,6 +10,7 @@ import {
   Check,
 } from 'lucide-react';
 import { MediaInput } from '../media/MediaInput';
+import { adminAlbumsApi } from '../../services/adminApiClient';
 
 export interface TrackFormData {
   id?: string;
@@ -71,6 +72,16 @@ export const TrackModal: React.FC<TrackModalProps> = ({
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState('');
 
+  // Quick Album Creation States
+  const [albumList, setAlbumList] = useState(albums);
+  const [isCreatingNewAlbum, setIsCreatingNewAlbum] = useState(false);
+  const [newAlbumTitle, setNewAlbumTitle] = useState('');
+  const [isSubmittingAlbum, setIsSubmittingAlbum] = useState(false);
+
+  useEffect(() => {
+    setAlbumList(albums);
+  }, [albums]);
+
   // Sync initialData or defaults
   useEffect(() => {
     if (initialData) {
@@ -84,7 +95,7 @@ export const TrackModal: React.FC<TrackModalProps> = ({
         title: '',
         artistName: selectedAlbum?.artistName || artists[0]?.name || 'VEXO Artist',
         artistId: artists.find((art) => art.name === selectedAlbum?.artistName)?.id || artists[0]?.id || '',
-        albumId: defaultAlbumId || albums[0]?.id || '',
+        albumId: defaultAlbumId || '',
         duration: 210,
         coverUrl: selectedAlbum?.coverUrl || '',
         audioUrl: '',
@@ -99,11 +110,11 @@ export const TrackModal: React.FC<TrackModalProps> = ({
       setDurationInput('3:30');
     }
     setError('');
-  }, [initialData, defaultAlbumId, nextTrackNumber, isOpen]);
+  }, [initialData, defaultAlbumId, nextTrackNumber, isOpen, albums, artists]);
 
   // When album changes, auto-populate cover and artist if empty
   const handleAlbumChange = (albumId: string) => {
-    const album = albums.find((a) => a.id === albumId);
+    const album = albumList.find((a) => a.id === albumId);
     setFormData((prev) => ({
       ...prev,
       albumId,
@@ -111,6 +122,37 @@ export const TrackModal: React.FC<TrackModalProps> = ({
       artistName: prev.artistName || album?.artistName || '',
       genre: prev.genre || album?.genre || 'Electronic',
     }));
+  };
+
+  const handleQuickCreateAlbum = async () => {
+    if (!newAlbumTitle.trim()) return;
+    setIsSubmittingAlbum(true);
+    try {
+      const payload = {
+        title: newAlbumTitle.trim(),
+        artistName: formData.artistName || 'VEXO Recording Artist',
+        year: new Date().getFullYear(),
+        genre: formData.genre || 'Rajasthani Folk',
+        coverUrl: formData.coverUrl || '',
+      };
+      const res = await adminAlbumsApi.create(payload);
+      const created = res.data || {
+        id: `alb-${Date.now()}`,
+        ...payload,
+      };
+
+      setAlbumList((prev) => [created, ...prev]);
+      setFormData((prev) => ({
+        ...prev,
+        albumId: created.id,
+      }));
+      setIsCreatingNewAlbum(false);
+      setNewAlbumTitle('');
+    } catch (err: any) {
+      setError(err.message || 'Failed to create new album.');
+    } finally {
+      setIsSubmittingAlbum(false);
+    }
   };
 
   // Convert mm:ss or number to seconds
@@ -134,9 +176,26 @@ export const TrackModal: React.FC<TrackModalProps> = ({
     try {
       setIsSubmitting(true);
       setError('');
+
+      let currentAlbumId = formData.albumId;
+      if (isCreatingNewAlbum && newAlbumTitle.trim()) {
+        const payload = {
+          title: newAlbumTitle.trim(),
+          artistName: formData.artistName || 'VEXO Recording Artist',
+          year: new Date().getFullYear(),
+          genre: formData.genre || 'Rajasthani Folk',
+          coverUrl: formData.coverUrl || '',
+        };
+        const res = await adminAlbumsApi.create(payload);
+        if (res.data?.id) {
+          currentAlbumId = res.data.id;
+        }
+      }
+
       const calculatedDuration = parseDuration(durationInput);
       await onSave({
         ...formData,
+        albumId: currentAlbumId,
         duration: calculatedDuration,
       });
       onClose();
@@ -160,12 +219,12 @@ export const TrackModal: React.FC<TrackModalProps> = ({
             </div>
             <div>
               <h3 className="text-base font-bold text-white uppercase tracking-wider">
-                {initialData?.id ? 'Edit Track' : 'Add Track to Album'}
+                {initialData?.id ? 'Edit Track' : 'Add Track / Single'}
               </h3>
               <p className="text-xs text-zinc-400 font-mono">
                 {formData.albumId
-                  ? `Target: ${albums.find((a) => a.id === formData.albumId)?.title || 'Selected Album'}`
-                  : 'Assign track metadata and audio streaming'}
+                  ? `Album: ${albumList.find((a) => a.id === formData.albumId)?.title || 'Selected Album'}`
+                  : 'Independent Single Release (No Album)'}
               </p>
             </div>
           </div>
@@ -232,21 +291,90 @@ export const TrackModal: React.FC<TrackModalProps> = ({
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               {/* Parent Album */}
               <div className="space-y-1.5">
-                <label className="text-xs font-mono font-bold uppercase text-zinc-300">
-                  Belongs to Album <span className="text-vexo-red">*</span>
-                </label>
-                <select
-                  value={formData.albumId}
-                  onChange={(e) => handleAlbumChange(e.target.value)}
-                  className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-sm text-white focus:outline-none focus:border-vexo-red/50"
-                >
-                  <option value="">-- Standalone / Unassigned --</option>
-                  {albums.map((alb) => (
-                    <option key={alb.id} value={alb.id}>
-                      {alb.title} ({alb.artistName})
-                    </option>
-                  ))}
-                </select>
+                <div className="flex items-center justify-between">
+                  <label className="text-xs font-mono font-bold uppercase text-zinc-300">
+                    Belongs to Album <span className="text-[10px] text-zinc-500 font-normal lowercase">(optional)</span>
+                  </label>
+                  {!isCreatingNewAlbum && (
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setIsCreatingNewAlbum(true);
+                        setNewAlbumTitle('');
+                      }}
+                      className="text-[11px] font-mono text-vexo-red-bright hover:underline flex items-center gap-1 cursor-pointer"
+                    >
+                      + Add New Album
+                    </button>
+                  )}
+                </div>
+
+                {!isCreatingNewAlbum ? (
+                  <>
+                    <select
+                      value={formData.albumId}
+                      onChange={(e) => {
+                        if (e.target.value === '__NEW_ALBUM__') {
+                          setIsCreatingNewAlbum(true);
+                          setNewAlbumTitle('');
+                        } else {
+                          handleAlbumChange(e.target.value);
+                        }
+                      }}
+                      className="w-full px-3.5 py-2.5 rounded-xl bg-zinc-950 border border-zinc-800 text-sm text-white focus:outline-none focus:border-vexo-red/50"
+                    >
+                      <option value="">-- Standalone Single (No Album) --</option>
+                      {albumList.map((alb) => (
+                        <option key={alb.id} value={alb.id}>
+                          {alb.title} ({alb.artistName})
+                        </option>
+                      ))}
+                      <option value="__NEW_ALBUM__">+ Create New Album...</option>
+                    </select>
+                    <p className="text-[11px] text-zinc-500 font-sans">
+                      {formData.albumId
+                        ? 'Track is linked to this album and its tracklist.'
+                        : 'Track will be released as an independent single.'}
+                    </p>
+                  </>
+                ) : (
+                  <div className="p-3 rounded-xl bg-zinc-900/90 border border-vexo-red/30 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="text-xs font-bold text-white flex items-center gap-1.5">
+                        <Disc3 className="w-3.5 h-3.5 text-vexo-red-bright" />
+                        Create & Assign to New Album
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setIsCreatingNewAlbum(false);
+                          setNewAlbumTitle('');
+                        }}
+                        className="text-xs text-zinc-400 hover:text-white cursor-pointer"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                    <div className="flex gap-2">
+                      <input
+                        type="text"
+                        placeholder="Enter new album or EP name..."
+                        value={newAlbumTitle}
+                        onChange={(e) => setNewAlbumTitle(e.target.value)}
+                        className="flex-1 px-3 py-2 rounded-lg bg-zinc-950 border border-zinc-700 text-sm text-white placeholder-zinc-500 focus:outline-none focus:border-vexo-red/50"
+                        autoFocus
+                      />
+                      <button
+                        type="button"
+                        disabled={!newAlbumTitle.trim() || isSubmittingAlbum}
+                        onClick={handleQuickCreateAlbum}
+                        className="px-3.5 py-2 rounded-lg bg-vexo-red text-white text-xs font-bold hover:bg-vexo-red-bright disabled:opacity-50 disabled:cursor-not-allowed transition-colors cursor-pointer"
+                      >
+                        {isSubmittingAlbum ? 'Creating...' : 'Create'}
+                      </button>
+                    </div>
+                  </div>
+                )}
               </div>
 
               {/* Artist Name */}

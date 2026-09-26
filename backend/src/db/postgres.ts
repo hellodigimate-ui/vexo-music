@@ -306,6 +306,16 @@ export async function syncHomepageToPostgres(homepage: Homepage): Promise<boolea
     heroCtaUrl: homepage.heroCtaUrl ?? null,
     heroSecondaryCtaText: homepage.heroSecondaryCtaText ?? null,
     heroSecondaryCtaUrl: homepage.heroSecondaryCtaUrl ?? null,
+    featuredVideoLikes: homepage.featuredVideoLikes ?? null,
+    featuredVideoViews: homepage.featuredVideoViews ?? null,
+    featuredVideoReleaseDate: homepage.featuredVideoReleaseDate ?? null,
+    featuredVideoBadge: homepage.featuredVideoBadge ?? null,
+    featuredVideoTitle: homepage.featuredVideoTitle ?? null,
+    featuredVideoArtist: homepage.featuredVideoArtist ?? null,
+    featuredVideoDescription: homepage.featuredVideoDescription ?? null,
+    featuredVideoTags: Array.isArray(homepage.featuredVideoTags)
+      ? homepage.featuredVideoTags.join(', ')
+      : homepage.featuredVideoTags ?? null,
     releasesHeading: homepage.releasesHeading ?? null,
     releasesSubtitle: homepage.releasesSubtitle ?? null,
     selectedAlbumIds: Array.isArray(homepage.selectedAlbumIds)
@@ -377,6 +387,14 @@ export async function loadHomepageFromPostgres(): Promise<Homepage | null> {
       heroCtaUrl: r.heroCtaUrl ?? null,
       heroSecondaryCtaText: r.heroSecondaryCtaText ?? null,
       heroSecondaryCtaUrl: r.heroSecondaryCtaUrl ?? null,
+      featuredVideoLikes: r.featuredVideoLikes ?? null,
+      featuredVideoViews: r.featuredVideoViews ?? null,
+      featuredVideoReleaseDate: r.featuredVideoReleaseDate ?? null,
+      featuredVideoBadge: r.featuredVideoBadge ?? null,
+      featuredVideoTitle: r.featuredVideoTitle ?? null,
+      featuredVideoArtist: r.featuredVideoArtist ?? null,
+      featuredVideoDescription: r.featuredVideoDescription ?? null,
+      featuredVideoTags: r.featuredVideoTags ?? null,
       releasesHeading: r.releasesHeading ?? null,
       releasesSubtitle: r.releasesSubtitle ?? null,
       selectedAlbumIds: parseJsonSafely(r.selectedAlbumIds, []),
@@ -928,8 +946,15 @@ export async function syncTrackToPostgres(track: Track): Promise<boolean> {
 
   let validAlbumId = track.albumId || null;
   if (validAlbumId) {
-    const albCheck = await client.query('SELECT id FROM public.albums WHERE id = $1', [validAlbumId]);
-    if (albCheck.rows.length === 0) validAlbumId = null;
+    let albCheck = await client.query('SELECT id FROM public.albums WHERE id = $1', [validAlbumId]);
+    if (albCheck.rows.length === 0) {
+      if (validAlbumId === 'alb-1' || validAlbumId === 'alb-2') {
+        const altCheck = await client.query("SELECT id FROM public.albums WHERE id = 'alb-2' OR id = 'alb-1' LIMIT 1");
+        validAlbumId = altCheck.rows[0]?.id || null;
+      } else {
+        validAlbumId = null;
+      }
+    }
   }
 
   const dataObj: Record<string, any> = {

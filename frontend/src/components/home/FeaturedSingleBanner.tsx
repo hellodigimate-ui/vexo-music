@@ -35,6 +35,7 @@ export const FeaturedSingleBanner: React.FC = () => {
     title: string;
     artists: string;
     label: string;
+    badge?: string;
     youtubeId: string;
     youtubeUrl: string;
     thumbnailUrl: string;
@@ -63,20 +64,44 @@ export const FeaturedSingleBanner: React.FC = () => {
       }
 
       if (featured) {
+        const customLikes = homeData?.featuredVideoLikes !== undefined && homeData?.featuredVideoLikes !== null && homeData?.featuredVideoLikes !== ''
+          ? String(homeData.featuredVideoLikes)
+          : String(featured.likes ?? '0');
+        const customViews = homeData?.featuredVideoViews !== undefined && homeData?.featuredVideoViews !== null && homeData?.featuredVideoViews !== ''
+          ? String(homeData.featuredVideoViews)
+          : String(featured.views ?? '553');
+        const customDate = homeData?.featuredVideoReleaseDate !== undefined && homeData?.featuredVideoReleaseDate !== null && homeData?.featuredVideoReleaseDate !== ''
+          ? String(homeData.featuredVideoReleaseDate)
+          : (featured.publishedAt || '24 Aug 2026');
+        const customTitle = homeData?.featuredVideoTitle || featured.title;
+        const customArtist = homeData?.featuredVideoArtist || featured.artist || 'VEXO Recording Artist';
+        const customBadge = homeData?.featuredVideoBadge || '(Official Music Video)';
+        const customDesc = homeData?.featuredVideoDescription || featured.description || 'Presenting the Official Song by Vexo Entertainment Pvt. Ltd.';
+
+        let hashtags = ['#VexoMusic', '#OfficialVideo'];
+        if (homeData?.featuredVideoTags) {
+          hashtags = typeof homeData.featuredVideoTags === 'string'
+            ? homeData.featuredVideoTags.split(',').map((s: string) => s.trim()).filter(Boolean)
+            : homeData.featuredVideoTags;
+        } else if (featured.tags && featured.tags.length > 0) {
+          hashtags = featured.tags;
+        }
+
         setVideoDetails({
-          title: featured.title,
-          artists: featured.artist || 'VEXO Recording Artist',
+          title: customTitle,
+          artists: customArtist,
           label: 'Vexo Entertainment Pvt. Ltd.',
+          badge: customBadge,
           youtubeId: featured.youtubeId || 'PsmXAUKjR5Y',
           youtubeUrl: `https://youtu.be/${featured.youtubeId || 'PsmXAUKjR5Y'}`,
           thumbnailUrl: featured.thumbnailUrl || `https://img.youtube.com/vi/${featured.youtubeId || 'PsmXAUKjR5Y'}/maxresdefault.jpg`,
           fallbackThumbnail: `https://img.youtube.com/vi/${featured.youtubeId || 'PsmXAUKjR5Y'}/hqdefault.jpg`,
-          likes: String(featured.likes || '0'),
-          views: String(featured.views || '0'),
-          releaseDate: featured.publishedAt || '',
-          hashtags: featured.tags && featured.tags.length > 0 ? featured.tags : ['#VexoMusic', '#OfficialVideo'],
-          descriptionHeader: `🎵 ${featured.title}`,
-          descriptionText: featured.description || 'Presenting the Official Song by Vexo Entertainment Pvt. Ltd.',
+          likes: customLikes,
+          views: customViews,
+          releaseDate: customDate,
+          hashtags,
+          descriptionHeader: `🎵 ${customTitle}`,
+          descriptionText: customDesc,
         });
       }
     });
@@ -311,7 +336,7 @@ export const FeaturedSingleBanner: React.FC = () => {
                 )}
               </h2>
               <p className="text-sm font-semibold text-zinc-400 mt-1 tracking-wide">
-                (Official Music Video)
+                {videoDetails.badge || '(Official Music Video)'}
               </p>
             </div>
 
@@ -498,7 +523,7 @@ export const FeaturedSingleBanner: React.FC = () => {
               animate={{ rotateX, rotateY }}
               transition={{ type: 'spring', stiffness: 300, damping: 25 }}
               style={{ transformStyle: 'preserve-3d' }}
-              className="relative w-full max-w-md aspect-video sm:aspect-[4/3] lg:aspect-square rounded-3xl overflow-hidden border border-white/15 bg-neutral-900 shadow-[0_25px_60px_rgba(0,0,0,0.9)] group hover:border-vexo-red/60 transition-colors duration-500 cursor-pointer"
+              className="relative w-full max-w-md aspect-video rounded-2xl sm:rounded-3xl overflow-hidden border border-white/15 bg-neutral-900 shadow-[0_20px_50px_rgba(0,0,0,0.8)] group hover:border-vexo-red/60 transition-colors duration-500 cursor-pointer"
               onClick={() => setIsVideoModalOpen(true)}
             >
               {/* YouTube Thumbnail Artwork */}
@@ -515,7 +540,7 @@ export const FeaturedSingleBanner: React.FC = () => {
               {isPlayingAudio && (
                 <div className="absolute inset-0 pointer-events-none">
                   <motion.div
-                    className="absolute inset-0 rounded-3xl border-2 border-vexo-red"
+                    className="absolute inset-0 rounded-2xl sm:rounded-3xl border-2 border-vexo-red"
                     animate={{ opacity: [0.6, 0, 0.6] }}
                     transition={{ duration: 1.5, repeat: Infinity, ease: 'easeInOut' }}
                   />
@@ -524,10 +549,10 @@ export const FeaturedSingleBanner: React.FC = () => {
 
               {/* Dynamic Interactive Play Overlay */}
               <div className="absolute inset-0 bg-black/40 opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col items-center justify-center backdrop-blur-[2px]">
-                <div className="w-16 h-16 rounded-full bg-gradient-to-tr from-vexo-red to-vexo-red-bright text-white flex items-center justify-center shadow-[0_0_35px_rgba(224,0,0,0.9)] scale-90 group-hover:scale-100 transition-transform duration-300 border border-white/20">
-                  <Play className="w-7 h-7 fill-white ml-1" />
+                <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-full bg-gradient-to-tr from-vexo-red to-vexo-red-bright text-white flex items-center justify-center shadow-[0_0_35px_rgba(224,0,0,0.9)] scale-90 group-hover:scale-100 transition-transform duration-300 border border-white/20">
+                  <Play className="w-5 h-5 sm:w-6 sm:h-6 fill-white ml-0.5" />
                 </div>
-                <span className="mt-3 text-xs font-mono font-bold tracking-widest text-white uppercase bg-black/60 px-3 py-1 rounded-full border border-white/10">
+                <span className="mt-2 text-[10px] font-mono font-bold tracking-widest text-white uppercase bg-black/70 px-2.5 py-0.5 rounded-full border border-white/10">
                   PLAY YOUTUBE VIDEO
                 </span>
               </div>
@@ -535,24 +560,24 @@ export const FeaturedSingleBanner: React.FC = () => {
               {/* Glassmorphic Live Details Footer Overlay */}
               <div
                 style={{ transform: 'translateZ(30px)' }}
-                className="absolute inset-x-4 bottom-4 p-4 sm:p-5 rounded-2xl bg-[#050505]/90 backdrop-blur-xl border border-white/10 flex items-center justify-between shadow-2xl"
+                className="absolute inset-x-3 bottom-3 p-2.5 sm:p-3.5 rounded-xl bg-[#050505]/90 backdrop-blur-xl border border-white/10 flex items-center justify-between shadow-2xl"
               >
-                <div className="flex items-center gap-3 overflow-hidden">
-                  <div className={`w-10 h-10 rounded-xl border flex items-center justify-center shrink-0 transition-all duration-300 ${isPlayingAudio
+                <div className="flex items-center gap-2.5 overflow-hidden">
+                  <div className={`w-8 h-8 sm:w-9 sm:h-9 rounded-lg border flex items-center justify-center shrink-0 transition-all duration-300 ${isPlayingAudio
                     ? 'bg-vexo-red border-vexo-red-bright text-white shadow-[0_0_15px_rgba(224,0,0,0.8)]'
                     : 'bg-vexo-red/20 border-vexo-red/40 text-vexo-red-bright'
                     }`}>
-                    <Disc className={`w-5 h-5 ${isPlayingAudio ? 'animate-spin' : 'animate-spin-slow'}`} />
+                    <Disc className={`w-4 h-4 ${isPlayingAudio ? 'animate-spin' : 'animate-spin-slow'}`} />
                   </div>
                   <div className="min-w-0">
                     <h4 className="text-xs sm:text-sm font-bold text-white tracking-wide truncate">
                       {videoDetails.title}
                     </h4>
-                    <p className="text-[11px] text-vexo-muted truncate">{videoDetails.artists}</p>
+                    <p className="text-[10px] sm:text-[11px] text-vexo-muted truncate">{videoDetails.artists}</p>
                   </div>
                 </div>
 
-                <span className="text-[10px] font-mono font-bold uppercase tracking-wider px-2.5 py-1 rounded-full bg-vexo-red/20 text-vexo-red-bright border border-vexo-red/30 shrink-0 ml-2">
+                <span className="text-[9px] sm:text-[10px] font-mono font-bold uppercase tracking-wider px-2 py-0.5 rounded-full bg-vexo-red/20 text-vexo-red-bright border border-vexo-red/30 shrink-0 ml-2">
                   {isPlayingAudio ? '▶ LIVE' : '4K OFFICIAL'}
                 </span>
               </div>

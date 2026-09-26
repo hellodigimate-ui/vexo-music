@@ -2,7 +2,7 @@ import type { Album } from '../types';
 
 export const mockAlbums: Album[] = [
   {
-    id: 'alb-1',
+    id: 'alb-2',
     title: 'Satane Lage Ho',
     artist: 'Rashmi Nishad & Sonu Charan Bhatt',
     year: 2026,
@@ -10,7 +10,7 @@ export const mockAlbums: Album[] = [
     genre: 'Rajasthani Traditional / Modern Folk',
     spotifyUrl: 'https://spotify.com',
     youtubeUrl: 'https://youtu.be/HcEcM5AtEZ8?si=cJi8p33qsdjoBI02',
-    trackCount: 1,
+    trackCount: 2,
   },
   {
     id: 'alb-bhartar',
