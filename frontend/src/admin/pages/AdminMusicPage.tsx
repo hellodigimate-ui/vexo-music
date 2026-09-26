@@ -29,7 +29,9 @@ import { TrackModal, type TrackFormData } from '../components/tracks/TrackModal'
 import { AlbumDetailView } from '../components/music/AlbumDetailView';
 import { MediaInput } from '../components/media/MediaInput';
 import { TableScrollSlider } from '../components/TableScrollSlider';
-import { formatTime } from '../../lib/utils';
+import { formatTime, getMediaUrl } from '../../lib/utils';
+
+const DEFAULT_FALLBACK_COVER = 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=300&q=80';
 
 export const AdminMusicPage: React.FC = () => {
   const toast = useAdminToast();
@@ -434,9 +436,13 @@ export const AdminMusicPage: React.FC = () => {
                       <div className="w-16 h-16 rounded-xl overflow-hidden bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700/80 shrink-0 shadow-2xs">
                         {album.coverUrl ? (
                           <img
-                            src={album.coverUrl}
+                            src={getMediaUrl(album.coverUrl)}
                             alt={album.title}
                             className="w-full h-full object-cover group-hover:scale-105 transition-transform"
+                            onError={(e) => {
+                              e.currentTarget.onerror = null;
+                              e.currentTarget.src = DEFAULT_FALLBACK_COVER;
+                            }}
                           />
                         ) : (
                           <div className="w-full h-full flex items-center justify-center text-slate-400 dark:text-zinc-600">
@@ -557,9 +563,13 @@ export const AdminMusicPage: React.FC = () => {
                               <div className="w-11 h-11 rounded-lg overflow-hidden bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700/80 shrink-0">
                                 {album.coverUrl ? (
                                   <img
-                                    src={album.coverUrl}
+                                    src={getMediaUrl(album.coverUrl)}
                                     alt={album.title}
                                     className="w-full h-full object-cover"
+                                    onError={(e) => {
+                                      e.currentTarget.onerror = null;
+                                      e.currentTarget.src = DEFAULT_FALLBACK_COVER;
+                                    }}
                                   />
                                 ) : (
                                   <div className="w-full h-full flex items-center justify-center text-slate-400 dark:text-zinc-600">

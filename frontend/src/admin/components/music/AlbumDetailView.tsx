@@ -14,7 +14,7 @@ import { TrackModal, type TrackFormData } from '../tracks/TrackModal';
 import { AdminConfirmModal } from '../AdminConfirmModal';
 import { adminTracksApi, adminAlbumsApi } from '../../services/adminApiClient';
 import { useAdminToast } from '../../context/AdminToastContext';
-import { formatTime } from '../../../lib/utils';
+import { formatTime, getMediaUrl } from '../../../lib/utils';
 import { albumsApi } from '../../../lib/api';
 
 const YoutubeIcon: React.FC<{ className?: string }> = ({ className = 'w-3.5 h-3.5' }) => (
@@ -242,9 +242,13 @@ export const AlbumDetailView: React.FC<AlbumDetailViewProps> = ({
             <div className="w-36 h-36 sm:w-44 sm:h-44 rounded-2xl overflow-hidden bg-zinc-900 border border-zinc-800 shadow-2xl">
               {album.coverUrl ? (
                 <img
-                  src={album.coverUrl}
+                  src={getMediaUrl(album.coverUrl)}
                   alt={album.title}
                   className="w-full h-full object-cover"
+                  onError={(e) => {
+                    e.currentTarget.onerror = null;
+                    e.currentTarget.src = 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=600&q=80';
+                  }}
                 />
               ) : (
                 <div className="w-full h-full flex flex-col items-center justify-center bg-zinc-950 text-zinc-600 gap-2">

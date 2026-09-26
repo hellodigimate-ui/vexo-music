@@ -34,6 +34,7 @@ import {
 import { useAdminToast } from '../context/AdminToastContext';
 import { MediaInput } from '../components/media/MediaInput';
 import { Link } from 'react-router-dom';
+import { getMediaUrl } from '../../lib/utils';
 
 type TabKey =
   | 'hero'
@@ -995,9 +996,13 @@ export const AdminHomepagePage: React.FC = () => {
                           </span>
                           {album?.coverUrl ? (
                             <img
-                              src={album.coverUrl}
+                              src={getMediaUrl(album.coverUrl)}
                               alt={album.title}
                               className="w-10 h-10 rounded-lg object-cover border border-slate-200 dark:border-zinc-800 shrink-0"
+                              onError={(e) => {
+                                e.currentTarget.onerror = null;
+                                e.currentTarget.src = 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=300&q=80';
+                              }}
                             />
                           ) : (
                             <div className="w-10 h-10 rounded-lg bg-slate-200 dark:bg-zinc-800 flex items-center justify-center text-slate-500 dark:text-zinc-600 shrink-0 text-[10px]">
@@ -1069,9 +1074,13 @@ export const AdminHomepagePage: React.FC = () => {
                       }`}
                     >
                       <img
-                        src={album.coverUrl}
+                        src={getMediaUrl(album.coverUrl)}
                         alt={album.title}
                         className="w-10 h-10 rounded-lg object-cover shrink-0 border border-slate-200 dark:border-zinc-800"
+                        onError={(e) => {
+                          e.currentTarget.onerror = null;
+                          e.currentTarget.src = 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=300&q=80';
+                        }}
                       />
                       <div className="min-w-0 flex-1">
                         <p className="font-bold text-xs truncate text-slate-900 dark:text-white">{album.title}</p>

@@ -1,6 +1,6 @@
 import React from 'react';
 import type { Artist } from '../../types';
-import { cn, formatNumber } from '../../lib/utils';
+import { cn, formatNumber, getMediaUrl } from '../../lib/utils';
 import { SocialLinks } from '../ui/SocialLinks';
 import { Music, Disc3, Mic2, Radio } from 'lucide-react';
 
@@ -55,7 +55,7 @@ export const ArtistCard: React.FC<ArtistCardProps> = ({ artist, className }) => 
       {/* Optional Background Cover Artwork */}
       {artist.coverUrl && (
         <img
-          src={artist.coverUrl}
+          src={getMediaUrl(artist.coverUrl)}
           alt={artist.name}
           className="absolute inset-0 w-full h-full object-cover opacity-20 group-hover:opacity-35 transition-opacity duration-700 pointer-events-none"
         />
