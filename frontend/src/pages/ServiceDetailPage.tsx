@@ -9,7 +9,6 @@ import {
   ArrowLeft,
   ArrowRight,
   CheckCircle2,
-  Clock,
   Disc3,
   Sliders,
   HelpCircle,
@@ -224,11 +223,6 @@ export const ServiceDetailPage: React.FC = () => {
                         <span className="text-[10px] font-mono font-bold uppercase tracking-wider text-slate-500 dark:text-zinc-400">
                           {plan.badge || 'TIER'}
                         </span>
-                        {plan.duration && (
-                          <span className="inline-flex items-center gap-1 text-[10px] font-mono text-slate-500 dark:text-zinc-400">
-                            <Clock className="w-3 h-3 text-vexo-red" /> {plan.duration}
-                          </span>
-                        )}
                       </div>
 
                       <h3 className="text-xl font-black uppercase tracking-tight text-slate-950 dark:text-white mb-2">
@@ -244,7 +238,11 @@ export const ServiceDetailPage: React.FC = () => {
                             / project
                           </span>
                         </div>
-                        {plan.revisions && (
+                        {plan.revisions &&
+                         !service?.title?.toLowerCase().includes('rental') &&
+                         !service?.title?.toLowerCase().includes('camera') &&
+                         !service?.category?.toLowerCase().includes('rental') &&
+                         !service?.category?.toLowerCase().includes('equipment') && (
                           <span className="text-[11px] font-mono text-vexo-red mt-1 font-semibold">
                             ✓ {plan.revisions}
                           </span>

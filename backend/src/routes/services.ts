@@ -13,9 +13,27 @@ onServicesChange(() => {
   invalidateServicesCache();
 });
 
+function cleanServicePlans(plans: any[], serviceTitle?: string, serviceCategory?: string) {
+  if (!Array.isArray(plans)) return [];
+  const isRentalOrGear =
+    (serviceTitle && (serviceTitle.toLowerCase().includes('rental') || serviceTitle.toLowerCase().includes('camera'))) ||
+    (serviceCategory && (serviceCategory.toLowerCase().includes('equipment') || serviceCategory.toLowerCase().includes('rental')));
+
+  return plans.map((p: any) => ({
+    ...p,
+    duration: p.duration && typeof p.duration === 'string' && p.duration.toLowerCase().includes('turnaround')
+      ? ''
+      : (p.duration || ''),
+    revisions: isRentalOrGear || (p.revisions && typeof p.revisions === 'string' && p.revisions.toLowerCase().includes('mix'))
+      ? ''
+      : (p.revisions || ''),
+  }));
+}
+
 export const serviceRoutes: FastifyPluginAsync = async (fastify) => {
   // GET /api/services
   fastify.get('/services', async () => {
+    await (db.services as any).reloadFromPostgres?.();
     const list = db.services.findMany().filter((s) => s.isActive);
     const formatted: ServiceItem[] = list.map((s, idx) => ({
       id: s.id,
@@ -30,7 +48,7 @@ export const serviceRoutes: FastifyPluginAsync = async (fastify) => {
       features: s.features || [],
       ctaText: s.ctaText || undefined,
       pricingRange: s.pricingRange || undefined,
-      plans: (s as any).plans || [],
+      plans: cleanServicePlans((s as any).plans, s.title, s.category),
       specs: (s as any).specs || (s as any).specifications || [],
       processSteps: (s as any).processSteps || [],
       deliverables: (s as any).deliverables || [],
@@ -77,7 +95,7 @@ export const serviceRoutes: FastifyPluginAsync = async (fastify) => {
       specifications: s.specifications,
       equipmentList: s.equipmentList,
       pricingRange: s.pricingRange || undefined,
-      plans: (s as any).plans || [],
+      plans: cleanServicePlans((s as any).plans, s.title, s.category),
       specs: (s as any).specs || (s as any).specifications || [],
       processSteps: (s as any).processSteps || [],
       deliverables: (s as any).deliverables || [],
@@ -132,7 +150,7 @@ export const serviceRoutes: FastifyPluginAsync = async (fastify) => {
       features: s.features || [],
       ctaText: s.ctaText || undefined,
       pricingRange: s.pricingRange || undefined,
-      plans: (s as any).plans || [],
+      plans: cleanServicePlans((s as any).plans, s.title, s.category),
       specs: (s as any).specs || (s as any).specifications || [],
       processSteps: (s as any).processSteps || [],
       deliverables: (s as any).deliverables || [],

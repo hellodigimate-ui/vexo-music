@@ -8,6 +8,7 @@ export interface Album {
   spotifyUrl: string;
   youtubeUrl: string;
   trackCount?: number;
+  slug?: string;
 }
 
 export interface Track {
@@ -15,6 +16,7 @@ export interface Track {
   title: string;
   artist: string;
   album?: string;
+  albumId?: string;
   coverUrl: string;
   duration: number; // in seconds
   audioUrl?: string;

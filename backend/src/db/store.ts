@@ -23,6 +23,7 @@ import {
   syncSiteSettingsToPostgres,
   syncServiceToPostgres,
   deleteServiceFromPostgres,
+  loadServicesFromPostgres,
   syncContactRequestToPostgres,
   deleteContactRequestFromPostgres,
   syncArtistToPostgres,
@@ -531,6 +532,14 @@ class DatabaseStore {
       findMany: () => [...this.data.services].sort((a, b) => (a.order || 0) - (b.order || 0)),
       findById: (id: string) => this.data.services.find((s) => s.id === id) || null,
       findBySlug: (slug: string) => this.data.services.find((s) => s.slug === slug || s.id === slug) || null,
+      reloadFromPostgres: async () => {
+        const loaded = await loadServicesFromPostgres();
+        if (loaded && loaded.length > 0) {
+          this.data.services = loaded;
+          notifyServicesChanged();
+        }
+        return this.data.services;
+      },
       create: async (item: Omit<Service, 'id' | 'createdAt' | 'updatedAt'>) => {
         const now = new Date().toISOString();
         const service: Service = {

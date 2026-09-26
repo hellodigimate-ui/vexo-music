@@ -9,7 +9,6 @@ import {
   ChevronRight,
   ChevronDown,
   Sparkles,
-  Clock,
   Disc3,
   Sliders,
   FileCheck,
@@ -299,11 +298,6 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                               <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold uppercase tracking-wider bg-slate-100 dark:bg-white/5 text-slate-700 dark:text-zinc-400 border border-slate-200 dark:border-white/10">
                                 {plan.badge || 'TIER'}
                               </span>
-                              {plan.duration && (
-                                <span className="inline-flex items-center gap-1 text-[10px] font-mono text-slate-500 dark:text-zinc-400">
-                                  <Clock className="w-2.5 h-2.5 text-vexo-red" /> {plan.duration}
-                                </span>
-                              )}
                             </div>
 
                             {/* Plan Name */}
@@ -319,7 +313,11 @@ export const ServiceDetailModal: React.FC<ServiceDetailModalProps> = ({
                                 </span>
                                 <span className="text-[11px] font-mono text-slate-500 dark:text-zinc-400">/ project</span>
                               </div>
-                              {plan.revisions && (
+                              {plan.revisions &&
+                               !service?.title?.toLowerCase().includes('rental') &&
+                               !service?.title?.toLowerCase().includes('camera') &&
+                               !service?.category?.toLowerCase().includes('rental') &&
+                               !service?.category?.toLowerCase().includes('equipment') && (
                                 <span className="text-[10px] font-mono text-vexo-red mt-1 font-semibold">
                                   ✓ {plan.revisions}
                                 </span>

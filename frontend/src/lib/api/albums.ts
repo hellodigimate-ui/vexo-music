@@ -23,6 +23,7 @@ function mapStoreTrackToPublic(t: any): Track {
     title: t.title,
     artist: t.artistName || t.artist || 'VEXO Artist',
     album: t.albumId || t.album || '',
+    albumId: t.albumId || t.album || '',
     coverUrl: t.coverUrl,
     duration: t.duration || 210,
     audioUrl: t.audioUrl,
@@ -100,9 +101,9 @@ export async function getAlbumById(id: string): Promise<ApiResponse<Album | null
   }
 }
 
-export async function getTracks(): Promise<ApiResponse<Track[]>> {
+export async function getTracks(albumId?: string): Promise<ApiResponse<Track[]>> {
   if (USE_MOCK_DATA) {
-    const raw = adminMockStore.getTracks().data || [];
+    const raw = adminMockStore.getTracks(albumId).data || [];
     return {
       success: true,
       data: raw.map(mapStoreTrackToPublic),
@@ -110,11 +111,12 @@ export async function getTracks(): Promise<ApiResponse<Track[]>> {
   }
 
   try {
-    const res = await apiFetch<Track[]>('/tracks');
+    const endpoint = albumId ? `/tracks?albumId=${encodeURIComponent(albumId)}` : '/tracks';
+    const res = await apiFetch<Track[]>(endpoint);
     if (res && res.success && Array.isArray(res.data)) {
       return res;
     }
-    const raw = adminMockStore.getTracks().data || [];
+    const raw = adminMockStore.getTracks(albumId).data || [];
     return {
       success: true,
       data: raw.map(mapStoreTrackToPublic),
@@ -122,7 +124,7 @@ export async function getTracks(): Promise<ApiResponse<Track[]>> {
     };
   } catch (err: any) {
     console.warn('[API] Could not fetch tracks from backend, using client store:', err.message);
-    const raw = adminMockStore.getTracks().data || [];
+    const raw = adminMockStore.getTracks(albumId).data || [];
     return {
       success: true,
       data: raw.map(mapStoreTrackToPublic),

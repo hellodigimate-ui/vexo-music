@@ -28,11 +28,7 @@ export const albumRoutes: FastifyPluginAsync = async (fastify) => {
     results.sort((a: any, b: any) => (a.order ?? 99) - (b.order ?? 99));
 
     const formatted = results.map((a) => {
-      const albumTracks = db.tracks.findMany().filter((t) =>
-        t.albumId === a.id ||
-        (a.id === 'alb-2' && t.albumId === 'alb-1') ||
-        (a.id === 'alb-1' && t.albumId === 'alb-2')
-      );
+      const albumTracks = db.tracks.findMany().filter((t) => t.albumId === a.id);
       return {
         id: a.id,
         title: a.title,
@@ -42,7 +38,7 @@ export const albumRoutes: FastifyPluginAsync = async (fastify) => {
         releaseDate: a.releaseDate,
         year: a.year,
         genre: a.genre,
-        trackCount: Math.max(a.trackCount || 1, albumTracks.length),
+        trackCount: albumTracks.length > 0 ? albumTracks.length : (a.trackCount || 1),
         spotifyUrl: a.spotifyUrl || undefined,
         youtubeUrl: a.youtubeUrl || undefined,
         appleMusicUrl: a.appleMusicUrl || undefined,
@@ -132,11 +128,12 @@ export const albumRoutes: FastifyPluginAsync = async (fastify) => {
       title: t.title,
       artist: t.artistName,
       albumId: t.albumId || undefined,
+      album: t.albumId || undefined,
       duration: t.duration,
       coverUrl: t.coverUrl,
       audioUrl: t.audioUrl || undefined,
       spotifyUrl: t.spotifyUrl || undefined,
-      youtubeUrl: t.youtubeUrl || undefined,
+      youtubeUrl: t.youtubeUrl || t.audioUrl || undefined,
       genre: t.genre,
     }));
 

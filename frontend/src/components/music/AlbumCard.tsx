@@ -32,7 +32,11 @@ export const AlbumCard: React.FC<AlbumCardProps> = ({ album, className }) => {
     getYoutubeId(album.youtubeUrl) ||
     (album.id === 'alb-bhartar' || album.title?.toLowerCase().includes('bhartar')
       ? 'PsmXAUKjR5Y'
-      : (album.id === 'alb-2' || album.id === 'alb-1' || album.title?.toLowerCase().includes('satane') ? 'HcEcM5AtEZ8' : null));
+      : (album.title?.toLowerCase().includes('satane')
+        ? 'HcEcM5AtEZ8'
+        : (album.title?.toLowerCase().includes('aaya sajan') || album.title?.toLowerCase().includes('saajan')
+          ? '7GJy_1S0-c0'
+          : null)));
 
   const fallbackCover = defaultYoutubeId
     ? `https://img.youtube.com/vi/${defaultYoutubeId}/hqdefault.jpg`
@@ -53,37 +57,73 @@ export const AlbumCard: React.FC<AlbumCardProps> = ({ album, className }) => {
   const fetchTracks = async () => {
     try {
       setIsLoadingTracks(true);
-      const res = await albumsApi.getTracks();
+      const res = await albumsApi.getTracks(album.id);
       if (res.data) {
-        const filtered = res.data.filter((t: any) =>
+        // 1. Strict primary matching: Match tracks directly assigned to this album
+        let filtered = res.data.filter((t: any) =>
           t.album === album.id ||
           t.albumId === album.id ||
-          (album.id === 'alb-2' && (t.albumId === 'alb-1' || t.album === 'alb-1')) ||
-          (album.id === 'alb-1' && (t.albumId === 'alb-2' || t.album === 'alb-2')) ||
-          (t.artist && album.artist && t.artist.toLowerCase() === album.artist.toLowerCase()) ||
-          (t.title && album.title && (
-            t.title.toLowerCase().includes(album.title.toLowerCase()) ||
-            album.title.toLowerCase().includes(t.title.toLowerCase())
-          ))
+          (album.slug && (t.albumId === album.slug || t.album === album.slug))
         );
-        if (filtered.length > 0) {
-          setAlbumTracks(filtered);
-        } else {
-          setAlbumTracks([
+
+        // 2. Strict Fallback: ONLY if no direct albumId match exists,
+        // match by exact YouTube ID or exact title — NEVER by artist alone!
+        if (filtered.length === 0) {
+          const albumYt = getYoutubeId(album.youtubeUrl);
+          const albumCleanTitle = (album.title || '').trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+
+          filtered = res.data.filter((t: any) => {
+            if (albumYt) {
+              const trackYt = getYoutubeId((t as any).youtubeUrl || t.audioUrl);
+              if (trackYt && trackYt === albumYt) return true;
+            }
+            if (albumCleanTitle) {
+              const trackCleanTitle = (t.title || '').trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+              if (trackCleanTitle && trackCleanTitle === albumCleanTitle && (!t.albumId || t.albumId === album.id)) {
+                return true;
+              }
+            }
+            return false;
+          });
+        }
+
+        // 3. Fallback single track for album if still nothing in DB
+        if (filtered.length === 0) {
+          filtered = [
             {
               id: `${album.id}-trk-1`,
               title: album.title,
               artist: album.artist,
               album: album.id,
+              albumId: album.id,
               coverUrl: coverSrc,
               duration: 210,
               genre: album.genre,
               audioUrl: (album as any).audioUrl || album.youtubeUrl || '',
+              youtubeUrl: (album as any).youtubeUrl || (album as any).audioUrl || '',
               plays: 1250,
               likes: 95,
               isPopular: true,
             },
-          ]);
+          ];
+        }
+
+        // 4. Strict Single Release Enforcement: If this album is a single release (trackCount <= 1 or not a multi-track album),
+        // enforce strictly 1 track so multiple tracks can NEVER be shown!
+        if (filtered.length > 1 && (album.trackCount === 1 || !album.trackCount)) {
+          const albumClean = (album.title || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+          const exactTrack = filtered.find((t) => {
+            const trackClean = (t.title || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+            return trackClean === albumClean || trackClean.includes(albumClean) || albumClean.includes(trackClean);
+          });
+          filtered = exactTrack ? [exactTrack] : [filtered[0]];
+        }
+
+        setAlbumTracks(filtered);
+
+        // Auto-select the first track so player is ready
+        if (!activePlayTrack && filtered.length > 0) {
+          setActivePlayTrack(filtered[0]);
         }
       }
     } catch {
@@ -95,8 +135,16 @@ export const AlbumCard: React.FC<AlbumCardProps> = ({ album, className }) => {
 
   const handleOpenAlbum = (e: React.MouseEvent) => {
     e.stopPropagation();
+    setAlbumTracks([]);
+    setActivePlayTrack(null);
     fetchTracks();
     setIsOpenModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsOpenModal(false);
+    setActivePlayTrack(null);
+    setAlbumTracks([]);
   };
 
   const handlePlayTrack = (track: Track, e: React.MouseEvent) => {
@@ -105,7 +153,8 @@ export const AlbumCard: React.FC<AlbumCardProps> = ({ album, className }) => {
   };
 
   const currentYoutubeId =
-    getYoutubeId(activePlayTrack?.audioUrl || (activePlayTrack as any)?.youtubeUrl) ||
+    getYoutubeId(activePlayTrack?.youtubeUrl || (activePlayTrack as any)?.audioUrl) ||
+    getYoutubeId(albumTracks[0]?.youtubeUrl || (albumTracks[0] as any)?.audioUrl) ||
     defaultYoutubeId;
 
   return (
@@ -201,10 +250,7 @@ export const AlbumCard: React.FC<AlbumCardProps> = ({ album, className }) => {
       {isOpenModal && (
         <div
           className="fixed inset-0 z-50 bg-black/90 backdrop-blur-md flex items-center justify-center p-4 animate-in fade-in duration-300"
-          onClick={() => {
-            setIsOpenModal(false);
-            setActivePlayTrack(null);
-          }}
+          onClick={handleCloseModal}
         >
           <div
             className="cinematic-dark relative w-full max-w-3xl bg-[#0b0b10] border border-white/15 rounded-3xl overflow-hidden shadow-2xl flex flex-col max-h-[90vh]"
@@ -257,10 +303,7 @@ export const AlbumCard: React.FC<AlbumCardProps> = ({ album, className }) => {
                   </a>
                 )}
                 <button
-                  onClick={() => {
-                    setIsOpenModal(false);
-                    setActivePlayTrack(null);
-                  }}
+                  onClick={handleCloseModal}
                   className="p-2 rounded-xl bg-white/10 hover:bg-white/20 text-white transition-colors cursor-pointer"
                 >
                   <X className="w-4 h-4" />

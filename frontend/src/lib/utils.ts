@@ -49,6 +49,7 @@ export function isTrackRepresentedInAlbums(
     id?: string;
     title?: string;
     albumId?: string | null;
+    album?: string | null;
     youtubeUrl?: string | null;
     audioUrl?: string | null;
     coverUrl?: string | null;
@@ -99,7 +100,7 @@ export function isTrackRepresentedInAlbums(
     }
 
     // 3. Album ID match for single-track releases
-    if (track.albumId && track.albumId === album.id && (album.trackCount === 1 || !album.trackCount)) {
+    if ((track.albumId === album.id || track.album === album.id) && (album.trackCount === 1 || !album.trackCount)) {
       return true;
     }
 

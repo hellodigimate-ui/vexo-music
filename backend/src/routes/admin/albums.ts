@@ -46,9 +46,7 @@ export const adminAlbumRoutes: FastifyPluginAsync = async (fastify) => {
       }
 
       const albumTracks = db.tracks.findMany().filter((t) =>
-        t.albumId === album!.id ||
-        (album!.id === 'alb-2' && t.albumId === 'alb-1') ||
-        (album!.id === 'alb-1' && t.albumId === 'alb-2')
+        t.albumId === album!.id
       );
 
       return reply.send({
