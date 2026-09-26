@@ -9,7 +9,6 @@ import {
   Trash2,
   Clock,
   Layers,
-  ChevronRight,
   Headphones,
   Check,
   ArrowLeft,
@@ -553,8 +552,8 @@ export const AdminMusicPage: React.FC = () => {
                       return (
                         <tr key={album.id} className="hover:bg-slate-50/80 dark:hover:bg-zinc-900/40 transition-colors group">
                           {/* Release Title */}
-                          <td className="py-4 px-4 sm:px-6 whitespace-nowrap">
-                            <div className="flex items-center gap-3">
+                          <td className="py-4 px-4 sm:px-6 max-w-[260px] sm:max-w-[320px]">
+                            <div className="flex items-center gap-3 min-w-0 w-full overflow-hidden">
                               <div className="w-11 h-11 rounded-lg overflow-hidden bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-700/80 shrink-0">
                                 {album.coverUrl ? (
                                   <img
@@ -568,15 +567,15 @@ export const AdminMusicPage: React.FC = () => {
                                   </div>
                                 )}
                               </div>
-                              <div className="min-w-0 max-w-[200px]">
+                              <div className="min-w-0 flex-1 overflow-hidden">
                                 <button
                                   onClick={() => selectAlbum(album.id)}
-                                  className="font-bold text-slate-900 dark:text-white text-xs hover:text-vexo-red transition-colors text-left flex items-center gap-1.5 cursor-pointer truncate"
+                                  title={album.title}
+                                  className="w-full text-left font-bold text-slate-900 dark:text-white text-xs hover:text-vexo-red transition-colors block truncate cursor-pointer"
                                 >
-                                  <span className="truncate">{album.title}</span>
-                                  <ChevronRight className="w-3.5 h-3.5 opacity-0 group-hover:opacity-100 transition-opacity text-vexo-red shrink-0" />
+                                  {album.title}
                                 </button>
-                                <p className="text-[10px] font-mono text-slate-400 dark:text-zinc-500 whitespace-nowrap truncate">
+                                <p className="text-[10px] font-mono text-slate-400 dark:text-zinc-500 whitespace-nowrap truncate mt-0.5">
                                   Released: {cleanDate}
                                 </p>
                               </div>
@@ -584,13 +583,18 @@ export const AdminMusicPage: React.FC = () => {
                           </td>
 
                           {/* Primary Artist */}
-                          <td className="py-4 px-4 sm:px-6 font-semibold text-slate-800 dark:text-zinc-200 whitespace-nowrap">
-                            {album.artistName}
+                          <td className="py-4 px-4 sm:px-6 font-semibold text-slate-800 dark:text-zinc-200 max-w-[180px]">
+                            <p className="truncate" title={album.artistName}>
+                              {album.artistName}
+                            </p>
                           </td>
 
                           {/* Genre & Year */}
-                          <td className="py-4 px-4 sm:px-6 whitespace-nowrap">
-                            <span className="px-2 py-0.5 rounded bg-slate-100 dark:bg-zinc-800 text-[10px] font-mono text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-transparent whitespace-nowrap">
+                          <td className="py-4 px-4 sm:px-6 max-w-[160px]">
+                            <span
+                              className="px-2 py-0.5 rounded bg-slate-100 dark:bg-zinc-800 text-[10px] font-mono text-slate-700 dark:text-zinc-300 border border-slate-200 dark:border-transparent truncate block"
+                              title={`${album.genre} • ${album.year}`}
+                            >
                               {album.genre} &bull; {album.year}
                             </span>
                           </td>
@@ -825,21 +829,23 @@ export const AdminMusicPage: React.FC = () => {
 
                       return (
                         <tr key={track.id} className="hover:bg-slate-50/80 dark:hover:bg-zinc-900/40 transition-colors group">
-                          <td className="py-4 px-4 sm:px-6 whitespace-nowrap">
-                            <div className="flex items-center gap-3">
+                          <td className="py-4 px-4 sm:px-6 max-w-[260px] sm:max-w-[320px]">
+                            <div className="flex items-center gap-3 min-w-0 w-full overflow-hidden">
                               <div className="w-8 h-8 rounded-lg bg-slate-100 dark:bg-zinc-900 border border-slate-200 dark:border-zinc-800 flex items-center justify-center font-mono font-bold text-slate-700 dark:text-zinc-400 text-xs shrink-0">
                                 {String(track.order || 1).padStart(2, '0')}
                               </div>
-                              <div className="min-w-0 max-w-[200px]">
-                                <p className="font-bold text-slate-900 dark:text-white text-xs flex items-center gap-2 truncate">
-                                  <span className="truncate">{track.title}</span>
+                              <div className="min-w-0 flex-1 overflow-hidden">
+                                <div className="flex items-center gap-1.5 min-w-0">
+                                  <p className="font-bold text-slate-900 dark:text-white text-xs truncate flex-1 min-w-0" title={track.title}>
+                                    {track.title}
+                                  </p>
                                   {track.isPopular && (
                                     <span className="px-1.5 py-0.5 rounded bg-amber-50 dark:bg-amber-950 border border-amber-200 dark:border-amber-800 text-[9px] font-mono text-amber-700 dark:text-amber-400 shrink-0">
                                       POPULAR
                                     </span>
                                   )}
-                                </p>
-                                <p className="text-[10px] font-mono text-slate-400 dark:text-zinc-500 truncate">ID: {track.id}</p>
+                                </div>
+                                <p className="text-[10px] font-mono text-slate-400 dark:text-zinc-500 truncate mt-0.5">ID: {track.id}</p>
                               </div>
                             </div>
                           </td>

@@ -15,6 +15,7 @@ import { AdminConfirmModal } from '../AdminConfirmModal';
 import { adminTracksApi, adminAlbumsApi } from '../../services/adminApiClient';
 import { useAdminToast } from '../../context/AdminToastContext';
 import { formatTime } from '../../../lib/utils';
+import { albumsApi } from '../../../lib/api';
 
 const YoutubeIcon: React.FC<{ className?: string }> = ({ className = 'w-3.5 h-3.5' }) => (
   <svg className={className} fill="currentColor" viewBox="0 0 24 24">
@@ -53,9 +54,23 @@ export const AlbumDetailView: React.FC<AlbumDetailViewProps> = ({
   const fetchAlbumData = useCallback(async () => {
     try {
       setIsLoading(true);
+
+      // 1. Immediate fallback from parent albumsList
+      const localAlbum = albumsList.find((a) => a.id === albumId);
+      if (localAlbum) {
+        setAlbum(localAlbum);
+      }
+
+      // 2. Fetch fresh details from admin API
       const albumRes = await adminAlbumsApi.getById(albumId);
       if (albumRes.success && albumRes.data) {
         setAlbum(albumRes.data);
+      } else if (!localAlbum) {
+        // 3. Fallback to public albums API
+        const pubRes = await albumsApi.getAlbumById(albumId).catch(() => null);
+        if (pubRes && (pubRes as any).data) {
+          setAlbum((pubRes as any).data);
+        }
       }
 
       const tracksRes = await adminTracksApi.listByAlbum(albumId);
@@ -67,7 +82,7 @@ export const AlbumDetailView: React.FC<AlbumDetailViewProps> = ({
     } finally {
       setIsLoading(false);
     }
-  }, [albumId, toast]);
+  }, [albumId, albumsList, toast]);
 
   useEffect(() => {
     fetchAlbumData();
