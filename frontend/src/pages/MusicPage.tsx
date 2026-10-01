@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useMemo } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { PageSection } from '../components/ui/PageSection';
 import { SectionHeading } from '../components/ui/SectionHeading';
 import { AlbumCard } from '../components/music/AlbumCard';
@@ -10,14 +11,38 @@ import { formatTime, getMediaUrl, isTrackRepresentedInAlbums } from '../lib/util
 import { Skeleton } from '../components/ui/Skeleton';
 
 export const MusicPage: React.FC = () => {
+  const [searchParams, setSearchParams] = useSearchParams();
+  const urlSearch = searchParams.get('search') || '';
+
   const [albums, setAlbums] = useState<Album[]>([]);
   const [tracks, setTracks] = useState<Track[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   const [activeCatalogTab, setActiveCatalogTab] = useState<'all' | 'albums' | 'tracks'>('all');
   const [selectedGenre, setSelectedGenre] = useState('All');
-  const [searchQuery, setSearchQuery] = useState('');
+  const [searchQuery, setSearchQuery] = useState(urlSearch);
   const [activeTrackVideo, setActiveTrackVideo] = useState<{ title: string; artist: string; id: string } | null>(null);
+
+  // Synchronize searchQuery when URL search param changes
+  useEffect(() => {
+    setSearchQuery(urlSearch);
+  }, [urlSearch]);
+
+  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const val = e.target.value;
+    setSearchQuery(val);
+    const trimmed = val.trim();
+    if (trimmed) {
+      setSearchParams({ search: trimmed }, { replace: true });
+    } else {
+      setSearchParams({}, { replace: true });
+    }
+  };
+
+  const handleClearSearch = () => {
+    setSearchQuery('');
+    setSearchParams({}, { replace: true });
+  };
 
   useEffect(() => {
     let isMounted = true;
@@ -62,13 +87,14 @@ export const MusicPage: React.FC = () => {
     return ['All', ...Array.from(set)];
   }, [albums, tracks]);
 
+  const normalizedQuery = searchQuery.trim().toLowerCase();
+
   const filteredAlbums = albums.filter((album) => {
     const genreStr = (album.genre || '').toLowerCase();
     const matchesGenre = selectedGenre === 'All' || genreStr.includes(selectedGenre.toLowerCase());
     const titleStr = (album.title || '').toLowerCase();
     const artistStr = (album.artist || (album as any).artistName || '').toLowerCase();
-    const query = searchQuery.toLowerCase();
-    const matchesSearch = !query || titleStr.includes(query) || artistStr.includes(query);
+    const matchesSearch = !normalizedQuery || titleStr.includes(normalizedQuery) || artistStr.includes(normalizedQuery);
     return matchesGenre && matchesSearch;
   });
 
@@ -77,8 +103,7 @@ export const MusicPage: React.FC = () => {
     const matchesGenre = selectedGenre === 'All' || genreStr.includes(selectedGenre.toLowerCase());
     const titleStr = (track.title || '').toLowerCase();
     const artistStr = (track.artist || '').toLowerCase();
-    const query = searchQuery.toLowerCase();
-    const matchesSearch = !query || titleStr.includes(query) || artistStr.includes(query);
+    const matchesSearch = !normalizedQuery || titleStr.includes(normalizedQuery) || artistStr.includes(normalizedQuery);
     return matchesGenre && matchesSearch;
   });
 
@@ -180,11 +205,43 @@ export const MusicPage: React.FC = () => {
               type="text"
               placeholder="Search albums or tracks..."
               value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              className="w-full bg-vexo-surface border border-white/10 rounded-full pl-10 pr-4 py-2 text-xs text-white placeholder-vexo-muted outline-none focus:border-vexo-red/50 transition-colors"
+              onChange={handleSearchInputChange}
+              className="w-full bg-vexo-surface border border-white/10 rounded-full pl-10 pr-9 py-2 text-xs text-white placeholder-vexo-muted outline-none focus:border-vexo-red/50 transition-colors"
             />
+            {searchQuery && (
+              <button
+                type="button"
+                onClick={handleClearSearch}
+                aria-label="Clear search"
+                className="absolute right-3 top-1/2 -translate-y-1/2 text-zinc-400 hover:text-white p-0.5 cursor-pointer transition-colors"
+              >
+                <X className="w-3.5 h-3.5" />
+              </button>
+            )}
           </div>
         </div>
+
+        {/* Active Search Results Indicator */}
+        {normalizedQuery && (
+          <div className="mb-6 flex items-center justify-between text-xs text-zinc-400 border-b border-white/10 pb-3">
+            <span>
+              Showing music matching <strong className="text-white">"{searchQuery.trim()}"</strong> (
+              {activeCatalogTab === 'all'
+                ? filteredAlbums.length + standaloneFilteredTracks.length
+                : activeCatalogTab === 'albums'
+                ? filteredAlbums.length
+                : filteredTracks.length}{' '}
+              found)
+            </span>
+            <button
+              type="button"
+              onClick={handleClearSearch}
+              className="text-vexo-red hover:underline font-semibold cursor-pointer"
+            >
+              Clear filter
+            </button>
+          </div>
+        )}
 
         {/* Releases Grid */}
         {isLoading ? (
@@ -203,15 +260,24 @@ export const MusicPage: React.FC = () => {
             (activeCatalogTab === 'albums' && filteredAlbums.length === 0) ||
             (activeCatalogTab === 'tracks' && filteredTracks.length === 0) ? (
           <div className="py-20 flex flex-col items-center justify-center gap-3 text-center border border-dashed border-white/10 rounded-2xl p-8 max-w-md mx-auto">
-            <div className="w-12 h-12 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400">
-              <Music2 className="w-6 h-6" />
+            <div className="w-14 h-14 rounded-2xl bg-white/5 border border-white/10 flex items-center justify-center text-zinc-400">
+              <Music2 className="w-7 h-7 text-vexo-red" />
             </div>
-            <p className="text-sm font-bold text-white uppercase tracking-wider">No Releases Found</p>
+            <h3 className="text-xl font-black text-white uppercase tracking-wider">Music Not Found</h3>
             <p className="text-xs text-zinc-400 max-w-sm">
-              {searchQuery
-                ? `No releases match "${searchQuery}".`
+              {normalizedQuery
+                ? `No music releases or tracks match "${searchQuery.trim()}".`
                 : 'No releases available for this selection.'}
             </p>
+            {normalizedQuery && (
+              <button
+                type="button"
+                onClick={handleClearSearch}
+                className="mt-2 px-5 py-2 rounded-full text-xs font-bold bg-vexo-red text-white hover:bg-red-700 transition-all cursor-pointer shadow-md active:scale-95"
+              >
+                Clear Search & Show All Music
+              </button>
+            )}
           </div>
         ) : (
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 max-w-7xl">
@@ -237,11 +303,12 @@ export const MusicPage: React.FC = () => {
         )}
       </PageSection>
 
-      {/* Featured Tracks List */}
-      <PageSection variant="surface" padding="lg">
-        <SectionHeading
-          badge="Popular Tracks"
-          title="STREAMING TOP CHARTS"
+      {/* Featured Tracks List (Hidden during search so user ONLY sees their searched music) */}
+      {!normalizedQuery && (
+        <PageSection variant="surface" padding="lg">
+          <SectionHeading
+            badge="Popular Tracks"
+            title="STREAMING TOP CHARTS"
           subtitle="Top played tracks and original productions across streaming platforms."
         />
 
@@ -327,6 +394,7 @@ export const MusicPage: React.FC = () => {
           })}
         </div>
       </PageSection>
+      )}
 
       {/* Track Player Modal */}
       {activeTrackVideo && (

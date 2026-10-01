@@ -429,17 +429,6 @@ export const Footer: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-4">
-            {settings.footerAdminLinkEnabled !== false && (
-              <Link
-                to="/admin"
-                className="text-[11px] font-mono text-slate-400 hover:text-vexo-red dark:text-zinc-500 dark:hover:text-vexo-red transition-colors flex items-center gap-1.5"
-                title="VEXO Studio Admin & CMS Panel"
-              >
-                <span className="w-1.5 h-1.5 rounded-full bg-vexo-red" />
-                <span>Admin CMS</span>
-              </Link>
-            )}
-
             {settings.footerBackToTopEnabled !== false && (
               <button
                 type="button"

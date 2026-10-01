@@ -21,23 +21,79 @@ function mapStoreVideoToPublic(v: any): Video {
   };
 }
 
-export async function getVideos(): Promise<ApiResponse<Video[]>> {
+export async function getVideos(params?: {
+  search?: string;
+  category?: string;
+  limit?: number;
+  offset?: number;
+}): Promise<ApiResponse<Video[]>> {
+  const queryParts: string[] = [];
+  if (params?.search && params.search.trim()) {
+    queryParts.push(`search=${encodeURIComponent(params.search.trim())}`);
+  }
+  if (params?.category && params.category !== 'All') {
+    queryParts.push(`category=${encodeURIComponent(params.category.trim())}`);
+  }
+  if (typeof params?.limit === 'number') {
+    queryParts.push(`limit=${params.limit}`);
+  }
+  if (typeof params?.offset === 'number') {
+    queryParts.push(`offset=${params.offset}`);
+  }
+  const queryString = queryParts.length > 0 ? `?${queryParts.join('&')}` : '';
+
   if (USE_MOCK_DATA) {
-    const raw = (adminMockStore.getVideos().data || []).filter((v: any) => v.published !== false);
+    let raw = (adminMockStore.getVideos().data || []).filter((v: any) => v.published !== false);
+    if (params?.category && params.category !== 'All') {
+      const cat = params.category.trim().toLowerCase();
+      raw = raw.filter((v: any) => v.category?.toLowerCase() === cat);
+    }
+    if (params?.search && params.search.trim()) {
+      const q = params.search.trim().toLowerCase();
+      raw = raw.filter((v: any) => {
+        const matchTitle = v.title?.toLowerCase().includes(q);
+        const matchArtist = v.artist?.toLowerCase().includes(q);
+        const matchDesc = v.description?.toLowerCase().includes(q);
+        const matchCat = v.category?.toLowerCase().includes(q);
+        const matchTags = Array.isArray(v.tags)
+          ? v.tags.some((t: string) => t.toLowerCase().includes(q))
+          : typeof v.tags === 'string' && v.tags.toLowerCase().includes(q);
+        return matchTitle || matchArtist || matchDesc || matchCat || matchTags;
+      });
+    }
     return {
       success: true,
       data: raw.map(mapStoreVideoToPublic),
+      total: raw.length,
       timestamp: new Date().toISOString(),
     };
   }
 
   try {
-    return await apiFetch<Video[]>('/videos');
+    return await apiFetch<Video[]>(`/videos${queryString}`);
   } catch {
-    const raw = (adminMockStore.getVideos().data || []).filter((v: any) => v.published !== false);
+    let raw = (adminMockStore.getVideos().data || []).filter((v: any) => v.published !== false);
+    if (params?.category && params.category !== 'All') {
+      const cat = params.category.trim().toLowerCase();
+      raw = raw.filter((v: any) => v.category?.toLowerCase() === cat);
+    }
+    if (params?.search && params.search.trim()) {
+      const q = params.search.trim().toLowerCase();
+      raw = raw.filter((v: any) => {
+        const matchTitle = v.title?.toLowerCase().includes(q);
+        const matchArtist = v.artist?.toLowerCase().includes(q);
+        const matchDesc = v.description?.toLowerCase().includes(q);
+        const matchCat = v.category?.toLowerCase().includes(q);
+        const matchTags = Array.isArray(v.tags)
+          ? v.tags.some((t: string) => t.toLowerCase().includes(q))
+          : typeof v.tags === 'string' && v.tags.toLowerCase().includes(q);
+        return matchTitle || matchArtist || matchDesc || matchCat || matchTags;
+      });
+    }
     return {
       success: true,
       data: raw.map(mapStoreVideoToPublic),
+      total: raw.length,
       timestamp: new Date().toISOString(),
     };
   }
@@ -132,3 +188,39 @@ export async function getVideoById(id: string): Promise<ApiResponse<Video | null
     };
   }
 }
+
+export async function incrementVideoView(
+  id: string
+): Promise<ApiResponse<{ id: string; views: number; viewCount: number }>> {
+  if (USE_MOCK_DATA) {
+    const raw = adminMockStore.getVideos().data || [];
+    const vid = raw.find((v: any) => v.id === id || v.youtubeId === id);
+    const newViews = vid ? (Number(vid.views) || 0) + 1 : 1;
+    if (vid) vid.views = newViews;
+    return {
+      success: true,
+      data: { id, views: newViews, viewCount: newViews },
+      message: 'View registered successfully.',
+    };
+  }
+
+  try {
+    return await apiFetch<{ id: string; views: number; viewCount: number }>(
+      `/videos/${encodeURIComponent(id)}/view`,
+      {
+        method: 'POST',
+      }
+    );
+  } catch {
+    const raw = adminMockStore.getVideos().data || [];
+    const vid = raw.find((v: any) => v.id === id || v.youtubeId === id);
+    const newViews = vid ? (Number(vid.views) || 0) + 1 : 1;
+    if (vid) vid.views = newViews;
+    return {
+      success: true,
+      data: { id, views: newViews, viewCount: newViews },
+      message: 'View registered successfully.',
+    };
+  }
+}
+

@@ -7,4 +7,5 @@ export * as servicesApi from './services';
 export * as videosApi from './videos';
 export * as contactApi from './contact';
 export * as homepageApi from './homepage';
-
+export * as searchApi from './search';
+export * from './search';

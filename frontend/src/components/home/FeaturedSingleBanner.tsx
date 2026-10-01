@@ -32,6 +32,7 @@ declare global {
 export const FeaturedSingleBanner: React.FC = () => {
   // Video Details from YouTube link & synced store
   const [videoDetails, setVideoDetails] = useState<{
+    id?: string;
     title: string;
     artists: string;
     label: string;
@@ -88,6 +89,7 @@ export const FeaturedSingleBanner: React.FC = () => {
         }
 
         setVideoDetails({
+          id: featured.id,
           title: customTitle,
           artists: customArtist,
           label: 'Vexo Entertainment Pvt. Ltd.',
@@ -116,6 +118,46 @@ export const FeaturedSingleBanner: React.FC = () => {
   const [isVideoModalOpen, setIsVideoModalOpen] = useState(false);
   const [showShareModal, setShowShareModal] = useState(false);
   const [ytReady, setYtReady] = useState(false);
+  const viewedBannerSession = useRef(false);
+
+  // Open video modal and register atomic view count increment
+  const handleOpenVideoModal = () => {
+    setIsVideoModalOpen(true);
+    if (!viewedBannerSession.current && videoDetails?.id) {
+      viewedBannerSession.current = true;
+      videosApi
+        .incrementVideoView(videoDetails.id)
+        .then((res) => {
+          if (res.success && res.data && typeof res.data.views === 'number') {
+            const newViews = String(res.data.views);
+            setVideoDetails((prev) => (prev ? { ...prev, views: newViews } : prev));
+            window.dispatchEvent(
+              new CustomEvent('video-view-updated', {
+                detail: { id: videoDetails.id, views: res.data.views },
+              })
+            );
+          }
+        })
+        .catch(() => {});
+    }
+  };
+
+  // Listen for view count updates from other components
+  useEffect(() => {
+    const handleViewUpdated = (e: any) => {
+      const detail = e.detail;
+      if (detail && detail.id && typeof detail.views === 'number') {
+        if (
+          videoDetails &&
+          (videoDetails.id === detail.id || videoDetails.youtubeId === detail.id)
+        ) {
+          setVideoDetails((prev) => (prev ? { ...prev, views: String(detail.views) } : prev));
+        }
+      }
+    };
+    window.addEventListener('video-view-updated', handleViewUpdated);
+    return () => window.removeEventListener('video-view-updated', handleViewUpdated);
+  }, [videoDetails]);
 
   // 3D Parallax Mouse Tracking State
   const [rotateX, setRotateX] = useState(0);
@@ -442,7 +484,7 @@ export const FeaturedSingleBanner: React.FC = () => {
               <Button
                 variant="primary"
                 size="lg"
-                onClick={() => setIsVideoModalOpen(true)}
+                onClick={handleOpenVideoModal}
                 className="w-full sm:w-auto shadow-[0_0_30px_rgba(224,0,0,0.6)] group relative overflow-hidden font-extrabold tracking-wider justify-center"
               >
                 <Play className="w-4 h-4 fill-white group-hover:scale-110 transition-transform" />
@@ -524,7 +566,7 @@ export const FeaturedSingleBanner: React.FC = () => {
               transition={{ type: 'spring', stiffness: 300, damping: 25 }}
               style={{ transformStyle: 'preserve-3d' }}
               className="relative w-full max-w-md aspect-video rounded-2xl sm:rounded-3xl overflow-hidden border border-white/15 bg-neutral-900 shadow-[0_20px_50px_rgba(0,0,0,0.8)] group hover:border-vexo-red/60 transition-colors duration-500 cursor-pointer"
-              onClick={() => setIsVideoModalOpen(true)}
+              onClick={handleOpenVideoModal}
             >
               {/* YouTube Thumbnail Artwork */}
               <img

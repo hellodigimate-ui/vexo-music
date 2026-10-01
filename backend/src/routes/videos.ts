@@ -5,26 +5,22 @@ import type { ApiResponse, Video } from '../types/index.js';
 export const videoRoutes: FastifyPluginAsync = async (fastify) => {
   // GET /api/videos
   fastify.get<{
-    Querystring: { category?: string; search?: string };
+    Querystring: { category?: string; search?: string; limit?: string; offset?: string };
   }>('/videos', async (request) => {
-    const { category, search } = request.query;
-    let results = db.videos.findMany();
+    const { category, search, limit, offset } = request.query;
+    const cleanSearch = search ? search.trim() : '';
+    const cleanCategory = category && category !== 'All' ? category.trim() : undefined;
+    const parsedLimit = limit ? parseInt(limit, 10) : undefined;
+    const parsedOffset = offset ? parseInt(offset, 10) : undefined;
 
-    if (category && category !== 'All') {
-      results = results.filter((v) => v.category.toLowerCase() === category.toLowerCase());
-    }
+    const { videos, total } = await db.videos.search({
+      search: cleanSearch,
+      category: cleanCategory,
+      limit: parsedLimit,
+      offset: parsedOffset,
+    });
 
-    if (search) {
-      const q = search.toLowerCase();
-      results = results.filter(
-        (v) =>
-          v.title.toLowerCase().includes(q) ||
-          v.artist.toLowerCase().includes(q) ||
-          (v.description && v.description.toLowerCase().includes(q))
-      );
-    }
-
-    const formatted: Video[] = results.map((v) => ({
+    const formatted: Video[] = videos.map((v) => ({
       id: v.id,
       title: v.title,
       artist: v.artist,
@@ -41,7 +37,7 @@ export const videoRoutes: FastifyPluginAsync = async (fastify) => {
     const response: ApiResponse<Video[]> = {
       success: true,
       data: formatted,
-      total: formatted.length,
+      total,
     };
     return response;
   });
@@ -139,5 +135,44 @@ export const videoRoutes: FastifyPluginAsync = async (fastify) => {
       data: formatted,
     };
     return response;
+  });
+
+  // POST /api/videos/:id/view - Public atomic view increment endpoint
+  fastify.post<{
+    Params: { id: string };
+  }>('/videos/:id/view', async (request, reply) => {
+    const { id } = request.params;
+    if (!id || typeof id !== 'string' || !id.trim()) {
+      return reply.code(400).send({
+        success: false,
+        message: 'A valid Video ID is required.',
+      });
+    }
+
+    try {
+      const updatedViews = await db.videos.incrementViews(id.trim());
+      if (updatedViews === null) {
+        return reply.code(404).send({
+          success: false,
+          message: `Video with id '${id}' not found.`,
+        });
+      }
+
+      return reply.code(200).send({
+        success: true,
+        data: {
+          id: id.trim(),
+          views: updatedViews,
+          viewCount: updatedViews,
+        },
+        message: 'View registered successfully.',
+      });
+    } catch (err: any) {
+      request.log.error(err);
+      return reply.code(500).send({
+        success: false,
+        message: 'Failed to record video view.',
+      });
+    }
   });
 };

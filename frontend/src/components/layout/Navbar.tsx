@@ -4,8 +4,11 @@ import { motion, AnimatePresence } from 'framer-motion';
 import { Button } from '../ui/Button';
 import { VexoLogo } from '../ui/VexoLogo';
 import { cn } from '../../lib/utils';
-import { Search, Menu, X, ArrowUpRight, Music, Sparkles } from 'lucide-react';
+import { Search, Menu, X, ArrowUpRight } from 'lucide-react';
 import { MusicThemeToggle } from '../theme';
+import { useDebounce } from '../../hooks/useDebounce';
+import { searchApi, type SearchSuggestionItem } from '../../lib/api';
+import { SearchSuggestionsDropdown } from './SearchSuggestionsDropdown';
 
 import { navItems, type NavItem } from './navData';
 import { API_BASE_URL } from '../../lib/api/client';
@@ -18,7 +21,12 @@ export const Navbar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const debouncedQuery = useDebounce(searchQuery, 280);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
+  const [suggestions, setSuggestions] = useState<SearchSuggestionItem[]>([]);
+  const [isSuggestionsLoading, setIsSuggestionsLoading] = useState(false);
+  const [selectedIndex, setSelectedIndex] = useState<number>(-1);
+  const blurTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const [hoveredPath, setHoveredPath] = useState<string | null>(null);
 
   // Dynamic social media profile links from backend site-settings
@@ -142,15 +150,137 @@ export const Navbar: React.FC = () => {
   useEffect(() => {
     setIsMobileMenuOpen(false);
     setIsMobileSearchOpen(false);
+    setIsSearchFocused(false);
   }, [location.pathname]);
 
-  const handleSearchSubmit = (e?: React.FormEvent) => {
-    if (e) e.preventDefault();
-    if (searchQuery.trim()) {
-      navigate(`/music?search=${encodeURIComponent(searchQuery.trim())}`);
+  // Synchronize header search input with URL search param
+  useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const urlQuery = params.get('search') || '';
+    if (urlQuery !== searchQuery) {
+      setSearchQuery(urlQuery);
+    }
+  }, [location.pathname, location.search]);
+
+  // When user types in header on /music or /videos, dynamically sync the URL so the page filters in real time
+  useEffect(() => {
+    if (location.pathname === '/music' || location.pathname === '/videos') {
+      const params = new URLSearchParams(location.search);
+      const currentParam = params.get('search') || '';
+      const trimmed = debouncedQuery.trim();
+      if (trimmed !== currentParam) {
+        if (trimmed) {
+          navigate(`${location.pathname}?search=${encodeURIComponent(trimmed)}`, { replace: true });
+        } else if (currentParam) {
+          navigate(location.pathname, { replace: true });
+        }
+      }
+    }
+  }, [debouncedQuery, location.pathname, location.search, navigate]);
+
+  const isSearchActive = isSearchFocused || isMobileSearchOpen;
+  const isPendingDebounce = searchQuery !== debouncedQuery;
+  const isAutocompleteLoading = isSuggestionsLoading || (isPendingDebounce && isSearchActive);
+
+  // Debounced live suggestions query against backend across Music & Videos
+  useEffect(() => {
+    let isMounted = true;
+    if (!isSearchActive) {
+      return;
+    }
+
+    setIsSuggestionsLoading(true);
+    const query = debouncedQuery.trim();
+
+    searchApi.unifiedSearch(query, 6)
+      .then((res) => {
+        if (!isMounted) return;
+        setSuggestions(res.data?.items || []);
+        setSelectedIndex(-1);
+      })
+      .catch((err) => {
+        console.warn('Error fetching search suggestions:', err);
+        if (isMounted) setSuggestions([]);
+      })
+      .finally(() => {
+        if (isMounted) setIsSuggestionsLoading(false);
+      });
+
+    return () => {
+      isMounted = false;
+    };
+  }, [debouncedQuery, isSearchActive]);
+
+  const handleSelectSuggestion = (item: SearchSuggestionItem) => {
+    setSearchQuery(item.title);
+    navigate(item.url);
+    setIsSearchFocused(false);
+    setIsMobileSearchOpen(false);
+    setIsMobileMenuOpen(false);
+  };
+
+  const handleSearchKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'ArrowDown') {
+      e.preventDefault();
+      setSelectedIndex((prev) => {
+        if (suggestions.length === 0) return -1;
+        return prev < suggestions.length - 1 ? prev + 1 : 0;
+      });
+    } else if (e.key === 'ArrowUp') {
+      e.preventDefault();
+      setSelectedIndex((prev) => {
+        if (suggestions.length === 0) return -1;
+        return prev > 0 ? prev - 1 : suggestions.length - 1;
+      });
+    } else if (e.key === 'Escape') {
       setIsSearchFocused(false);
       setIsMobileSearchOpen(false);
+      searchInputRef.current?.blur();
+    } else if (e.key === 'Enter') {
+      if (selectedIndex >= 0 && suggestions[selectedIndex]) {
+        e.preventDefault();
+        handleSelectSuggestion(suggestions[selectedIndex]);
+      }
     }
+  };
+
+  const handleSearchSubmit = (e?: React.FormEvent, target?: 'music' | 'videos') => {
+    if (e) e.preventDefault();
+    if (selectedIndex >= 0 && suggestions[selectedIndex]) {
+      handleSelectSuggestion(suggestions[selectedIndex]);
+      return;
+    }
+    const query = searchQuery.trim();
+    if (!query) {
+      if (location.pathname === '/videos') navigate('/videos');
+      else navigate('/music');
+      setIsSearchFocused(false);
+      setIsMobileSearchOpen(false);
+      setIsMobileMenuOpen(false);
+      return;
+    }
+
+    if (target === 'music') {
+      navigate(`/music?search=${encodeURIComponent(query)}`);
+    } else if (target === 'videos') {
+      navigate(`/videos?search=${encodeURIComponent(query)}`);
+    } else {
+      if (location.pathname === '/videos') {
+        navigate(`/videos?search=${encodeURIComponent(query)}`);
+      } else if (location.pathname === '/music') {
+        navigate(`/music?search=${encodeURIComponent(query)}`);
+      } else {
+        const topItem = suggestions[0];
+        if (topItem && topItem.type === 'video') {
+          navigate(`/videos?search=${encodeURIComponent(query)}`);
+        } else {
+          navigate(`/music?search=${encodeURIComponent(query)}`);
+        }
+      }
+    }
+    setIsSearchFocused(false);
+    setIsMobileSearchOpen(false);
+    setIsMobileMenuOpen(false);
   };
 
   return (
@@ -233,20 +363,34 @@ export const Navbar: React.FC = () => {
                 )}
                 onClick={() => searchInputRef.current?.focus()}
               >
-                <Search
-                  className={cn(
-                    'w-3.5 h-3.5 shrink-0 transition-colors duration-200',
-                    isSearchFocused ? 'text-vexo-red' : 'text-slate-600 dark:text-zinc-400 group-hover:text-vexo-red'
-                  )}
-                />
+                <button
+                  type="submit"
+                  aria-label="Search videos"
+                  className="bg-transparent border-none p-0 cursor-pointer flex items-center justify-center shrink-0"
+                >
+                  <Search
+                    className={cn(
+                      'w-3.5 h-3.5 shrink-0 transition-colors duration-200',
+                      isSearchFocused ? 'text-vexo-red' : 'text-slate-600 dark:text-zinc-400 group-hover:text-vexo-red'
+                    )}
+                  />
+                </button>
                 <input
                   ref={searchInputRef}
                   type="text"
-                  placeholder="Search music..."
+                  placeholder="Search music, videos, songs..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  onFocus={() => setIsSearchFocused(true)}
-                  onBlur={() => setTimeout(() => setIsSearchFocused(false), 220)}
+                  onFocus={() => {
+                    if (blurTimeoutRef.current) clearTimeout(blurTimeoutRef.current);
+                    setIsSearchFocused(true);
+                  }}
+                  onBlur={() => {
+                    blurTimeoutRef.current = setTimeout(() => {
+                      setIsSearchFocused(false);
+                    }, 240);
+                  }}
+                  onKeyDown={handleSearchKeyDown}
                   className="apple-search-input bg-transparent border-none outline-none text-xs w-full text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-zinc-400 font-medium"
                 />
 
@@ -271,52 +415,25 @@ export const Navbar: React.FC = () => {
                 )}
               </form>
 
-              {/* Apple-Style Live Spotlight Dropdown */}
+              {/* Apple-Style Live Debounced Spotlight Dropdown */}
               <AnimatePresence>
                 {isSearchFocused && (
                   <motion.div
                     initial={{ opacity: 0, y: 8, scale: 0.98 }}
                     animate={{ opacity: 1, y: 0, scale: 1 }}
                     exit={{ opacity: 0, y: 4, scale: 0.98 }}
-                    transition={{ duration: 0.22, ease: [0.16, 1, 0.3, 1] }}
-                    className="absolute top-11 right-0 w-64 sm:w-72 p-3.5 rounded-2xl apple-glass-card shadow-2xl border z-50 text-xs select-none"
+                    transition={{ duration: 0.2, ease: [0.16, 1, 0.3, 1] }}
+                    className="absolute top-11 right-0 w-80 sm:w-96 p-3 rounded-2xl apple-glass-card shadow-2xl border border-slate-200 dark:border-white/10 z-50 text-xs select-none backdrop-blur-2xl bg-white/95 dark:bg-[#0c0c10]/95"
                   >
-                    <div className="flex items-center justify-between text-[10px] font-mono uppercase tracking-wider text-slate-400 dark:text-zinc-400 mb-2.5 pb-1.5 border-b border-black/5 dark:border-white/10">
-                      <span className="flex items-center gap-1 font-bold">
-                        <Sparkles className="w-3 h-3 text-vexo-red" /> Trending Releases
-                      </span>
-                      <span>Press ↵</span>
-                    </div>
-
-                    <div className="space-y-1.5">
-                      {[
-                        { title: 'Satane Lage Ho', sub: 'Official Release • Rashmi Nishad' },
-                        { title: 'Rashmi Nishad', sub: 'Featured Artist' },
-                        { title: 'Music Production', sub: 'Studio Service' },
-                      ].map((item) => (
-                        <div
-                          key={item.title}
-                          onMouseDown={() => {
-                            navigate(`/music?search=${encodeURIComponent(item.title)}`);
-                            setSearchQuery(item.title);
-                            setIsSearchFocused(false);
-                          }}
-                          className="flex items-center gap-2.5 p-2 rounded-xl hover:bg-black/5 dark:hover:bg-white/5 cursor-pointer transition-colors group"
-                        >
-                          <div className="w-7 h-7 rounded-lg bg-vexo-red/10 text-vexo-red flex items-center justify-center shrink-0 group-hover:bg-vexo-red group-hover:text-white transition-colors">
-                            <Music className="w-3.5 h-3.5" />
-                          </div>
-                          <div className="flex flex-col min-w-0">
-                            <span className="text-xs font-bold text-slate-900 dark:text-white truncate">
-                              {item.title}
-                            </span>
-                            <span className="text-[10px] text-slate-500 dark:text-zinc-400 truncate">
-                              {item.sub}
-                            </span>
-                          </div>
-                        </div>
-                      ))}
-                    </div>
+                    <SearchSuggestionsDropdown
+                      suggestions={suggestions}
+                      isLoading={isAutocompleteLoading}
+                      searchQuery={searchQuery}
+                      debouncedQuery={debouncedQuery}
+                      selectedIndex={selectedIndex}
+                      onSelect={handleSelectSuggestion}
+                      onViewAll={(target) => handleSearchSubmit(undefined, target)}
+                    />
                   </motion.div>
                 )}
               </AnimatePresence>
@@ -439,12 +556,19 @@ export const Navbar: React.FC = () => {
             className="fixed top-16 sm:top-20 left-0 right-0 z-40 p-3 apple-glass-header border-b md:hidden"
           >
             <form onSubmit={handleSearchSubmit} className="flex items-center gap-2 px-3.5 py-2 rounded-full border border-slate-300 dark:border-white/15 apple-glass-card shadow-sm">
-              <Search className="w-4 h-4 text-vexo-red shrink-0" />
+              <button
+                type="submit"
+                aria-label="Submit search"
+                className="bg-transparent border-none p-0 cursor-pointer flex items-center justify-center shrink-0"
+              >
+                <Search className="w-4 h-4 text-vexo-red shrink-0" />
+              </button>
               <input
                 type="text"
-                placeholder="Search tracks, artists..."
+                placeholder="Search music, videos, songs..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
+                onKeyDown={handleSearchKeyDown}
                 autoFocus
                 className="apple-search-input bg-transparent border-none outline-none text-xs w-full text-slate-900 dark:text-white placeholder:text-slate-400 dark:placeholder:text-zinc-400"
               />
@@ -457,6 +581,19 @@ export const Navbar: React.FC = () => {
                 <X className="w-4 h-4" />
               </button>
             </form>
+
+            {/* Mobile Debounced Suggestions List */}
+            <div className="mt-2.5 max-h-[60vh] overflow-y-auto rounded-2xl apple-glass-card border border-slate-200 dark:border-white/10 p-3 shadow-xl bg-white/95 dark:bg-[#0c0c10]/95 backdrop-blur-2xl">
+              <SearchSuggestionsDropdown
+                suggestions={suggestions}
+                isLoading={isAutocompleteLoading}
+                searchQuery={searchQuery}
+                debouncedQuery={debouncedQuery}
+                selectedIndex={selectedIndex}
+                onSelect={handleSelectSuggestion}
+                onViewAll={(target) => handleSearchSubmit(undefined, target)}
+              />
+            </div>
           </motion.div>
         )}
       </AnimatePresence>

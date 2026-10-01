@@ -34,6 +34,9 @@ import {
   deleteTrackFromPostgres,
   syncVideoToPostgres,
   deleteVideoFromPostgres,
+  searchVideosInPostgres,
+  incrementVideoViewsInPostgres,
+  isPostgresConnected,
   syncEventToPostgres,
   deleteEventFromPostgres,
   syncMediaToPostgres,
@@ -491,7 +494,79 @@ class DatabaseStore {
   public get videos() {
     return {
       findMany: () => this.data.videos,
-      findById: (id: string) => this.data.videos.find((v) => v.id === id) || null,
+      findById: (id: string) => this.data.videos.find((v) => v.id === id || v.youtubeId === id) || null,
+      search: async (options?: {
+        search?: string;
+        category?: string;
+        limit?: number;
+        offset?: number;
+      }) => {
+        try {
+          if (isPostgresConnected()) {
+            const pgResult = await searchVideosInPostgres(options);
+            return pgResult;
+          }
+        } catch (err: any) {
+          console.warn('[DatabaseStore] PostgreSQL search error, falling back to cache:', err.message);
+        }
+
+        // Cache fallback
+        const cleanSearch = options?.search ? options.search.trim().toLowerCase() : '';
+        const cleanCategory =
+          options?.category && options.category !== 'All'
+            ? options.category.trim().toLowerCase()
+            : '';
+
+        let results = [...this.data.videos];
+        if (cleanCategory) {
+          results = results.filter((v) => v.category.toLowerCase() === cleanCategory);
+        }
+        if (cleanSearch) {
+          results = results.filter((v) => {
+            const matchTitle = v.title?.toLowerCase().includes(cleanSearch);
+            const matchArtist = v.artist?.toLowerCase().includes(cleanSearch);
+            const matchDesc = v.description?.toLowerCase().includes(cleanSearch);
+            const matchCat = v.category?.toLowerCase().includes(cleanSearch);
+            const matchTags = Array.isArray(v.tags)
+              ? v.tags.some((t) => t.toLowerCase().includes(cleanSearch))
+              : typeof v.tags === 'string' &&
+                (v.tags as string).toLowerCase().includes(cleanSearch);
+            return matchTitle || matchArtist || matchDesc || matchCat || matchTags;
+          });
+        }
+
+        const total = results.length;
+        if (typeof options?.offset === 'number' && options.offset >= 0) {
+          results = results.slice(options.offset);
+        }
+        if (typeof options?.limit === 'number' && options.limit > 0) {
+          results = results.slice(0, options.limit);
+        }
+
+        return { videos: results, total };
+      },
+      incrementViews: async (id: string): Promise<number | null> => {
+        let updatedViews: number | null = null;
+        try {
+          if (isPostgresConnected()) {
+            updatedViews = await incrementVideoViewsInPostgres(id);
+          }
+        } catch (err: any) {
+          console.warn('[DatabaseStore] PostgreSQL increment error, falling back to cache:', err.message);
+        }
+
+        const video = this.data.videos.find((v) => v.id === id || v.youtubeId === id);
+        if (video) {
+          if (updatedViews !== null) {
+            video.views = updatedViews;
+          } else {
+            video.views = (video.views || 0) + 1;
+            updatedViews = video.views;
+          }
+        }
+
+        return updatedViews;
+      },
       create: async (item: Omit<Video, 'id' | 'createdAt' | 'updatedAt'>) => {
         const now = new Date().toISOString();
         const video: Video = {

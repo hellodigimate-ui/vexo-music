@@ -1088,6 +1088,114 @@ export async function loadVideosFromPostgres(): Promise<Video[]> {
   }
 }
 
+export async function searchVideosInPostgres(options?: {
+  search?: string;
+  category?: string;
+  limit?: number;
+  offset?: number;
+}): Promise<{ videos: Video[]; total: number }> {
+  const client = getPostgresPool();
+  if (!client || !isConnected) {
+    return { videos: [], total: 0 };
+  }
+
+  try {
+    const clauses: string[] = [];
+    const values: any[] = [];
+
+    const cleanSearch = options?.search ? options.search.trim() : '';
+    const cleanCategory =
+      options?.category && options.category !== 'All' ? options.category.trim() : '';
+
+    if (cleanCategory) {
+      values.push(cleanCategory);
+      clauses.push(`"category" ILIKE $${values.length}`);
+    }
+
+    if (cleanSearch) {
+      values.push(`%${cleanSearch}%`);
+      const pIdx = values.length;
+      clauses.push(`(
+        "title" ILIKE $${pIdx} OR
+        "artist" ILIKE $${pIdx} OR
+        "description" ILIKE $${pIdx} OR
+        "category" ILIKE $${pIdx} OR
+        "tags" ILIKE $${pIdx}
+      )`);
+    }
+
+    const whereClause = clauses.length > 0 ? `WHERE ${clauses.join(' AND ')}` : '';
+
+    // Count query with same filter conditions
+    const countQuery = `SELECT COUNT(*)::int AS count FROM public.videos ${whereClause};`;
+    const countRes = await client.query(countQuery, values);
+    const total = countRes.rows[0]?.count ?? 0;
+
+    // Data query with ordering and optional pagination
+    let dataQuery = `SELECT * FROM public.videos ${whereClause} ORDER BY "order" ASC, "createdAt" ASC`;
+    const dataValues = [...values];
+
+    if (typeof options?.limit === 'number' && options.limit > 0) {
+      dataValues.push(options.limit);
+      dataQuery += ` LIMIT $${dataValues.length}`;
+    }
+
+    if (typeof options?.offset === 'number' && options.offset >= 0) {
+      dataValues.push(options.offset);
+      dataQuery += ` OFFSET $${dataValues.length}`;
+    }
+
+    dataQuery += ';';
+    const dataRes = await client.query(dataQuery, dataValues);
+
+    const videos: Video[] = dataRes.rows.map((r: any, idx: number) => ({
+      id: r.id,
+      title: r.title,
+      artist: r.artist,
+      youtubeId: r.youtubeId,
+      thumbnailUrl: r.thumbnailUrl,
+      duration: r.duration || '3:30',
+      views: typeof r.views === 'number' ? r.views : 0,
+      publishedAt: r.publishedAt || new Date().toISOString().split('T')[0],
+      category: r.category || 'Official Music Videos',
+      featured: Boolean(r.featured),
+      description: r.description || null,
+      tags: parseJsonSafely(r.tags, []),
+      order: typeof r.order === 'number' ? r.order : idx + 1,
+      createdAt: formatDateToIso(r.createdAt),
+      updatedAt: formatDateToIso(r.updatedAt),
+    }));
+
+    return { videos, total };
+  } catch (err: any) {
+    console.warn('[PostgreSQL Search Videos Error]:', err.message);
+    throw err;
+  }
+}
+
+export async function incrementVideoViewsInPostgres(id: string): Promise<number | null> {
+  const client = getPostgresPool();
+  if (!client) {
+    throw new Error('[PostgreSQL] Database pool is unavailable. Cannot increment video views.');
+  }
+
+  const query = `
+    UPDATE public.videos
+    SET "views" = COALESCE("views", 0) + 1,
+        "updatedAt" = NOW()
+    WHERE "id" = $1 OR "youtubeId" = $1
+    RETURNING "id", "views";
+  `;
+
+  const res = await client.query(query, [id]);
+  if (!res || res.rows.length === 0) {
+    return null;
+  }
+
+  const updatedViews = res.rows[0].views;
+  return typeof updatedViews === 'number' ? updatedViews : Number(updatedViews);
+}
+
 // ==========================================
 // 9. EVENTS & EVENT ARTISTS SYNC & LOAD
 // ==========================================
