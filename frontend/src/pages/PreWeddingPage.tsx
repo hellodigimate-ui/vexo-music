@@ -333,6 +333,7 @@ export const PreWeddingPage: React.FC = () => {
           initialNotes={initialNotes}
           badgeText="RESERVE PRE-WEDDING DATE"
           serviceTypeLabel="Pre-Wedding Romance Shoots | 4K Cinematic Highlights | Destination Sessions"
+          hideLocationField={true}
         />
       </motion.div>
     </motion.div>

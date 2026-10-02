@@ -3,13 +3,30 @@ import type { ApiResponse } from './types';
 /**
  * Base configuration and HTTP client for Fastify REST API endpoints.
  * Production API: https://vexo-music.onrender.com/api
- * Local Development: http://localhost:4000/api
+ * Local Development: Uses Vite proxy (/api -> http://127.0.0.1:4000)
  */
 
 function resolveApiBaseUrl(): string {
-  // If running in browser on localhost / 127.0.0.1, always connect to local backend on port 4000
-  if (typeof window !== 'undefined' && (window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1')) {
-    return 'http://localhost:4000/api';
+  // In local development, always use relative '/api' which leverages the Vite proxy
+  if (import.meta.env.DEV) {
+    return '/api';
+  }
+
+  // If running in browser on localhost or local network, always use relative '/api'
+  if (typeof window !== 'undefined') {
+    const host = window.location.hostname;
+    const isLocal =
+      host === 'localhost' ||
+      host === '127.0.0.1' ||
+      host === '::1' ||
+      host === '[::1]' ||
+      host.startsWith('192.168.') ||
+      host.startsWith('10.') ||
+      host.startsWith('172.');
+
+    if (isLocal) {
+      return '/api';
+    }
   }
 
   // Use ONE consistent production API source: import.meta.env.VITE_API_URL
@@ -24,9 +41,8 @@ function resolveApiBaseUrl(): string {
       base = 'https://vexo-music.onrender.com/api';
     }
   } else {
-    // Local development fallback
     if (!base) {
-      base = 'http://localhost:4000/api';
+      base = '/api';
     }
   }
 
@@ -48,6 +64,17 @@ export const USE_MOCK_DATA = import.meta.env.VITE_USE_MOCK_API === 'true';
 
 export function buildApiUrl(endpoint: string): string {
   const cleanEndpoint = endpoint.startsWith('/') ? endpoint : `/${endpoint}`;
+
+  if (API_BASE_URL === '/api') {
+    if (cleanEndpoint.startsWith('/api/')) {
+      return cleanEndpoint;
+    }
+    if (cleanEndpoint === '/api') {
+      return '/api';
+    }
+    return `/api${cleanEndpoint}`;
+  }
+
   // Prevent duplicate /api in path
   if (cleanEndpoint.startsWith('/api/')) {
     return `${API_BASE_URL}${cleanEndpoint.slice(4)}`;
@@ -67,10 +94,13 @@ export async function apiFetch<T>(
   const defaultHeaders: HeadersInit = {
     'Content-Type': 'application/json',
     Accept: 'application/json',
+    'Cache-Control': 'no-cache, no-store, must-revalidate',
+    Pragma: 'no-cache',
   };
 
   try {
     const response = await fetch(url, {
+      cache: 'no-store',
       ...options,
       headers: {
         ...defaultHeaders,
@@ -86,7 +116,7 @@ export async function apiFetch<T>(
     const data: ApiResponse<T> = await response.json();
     return data;
   } catch (error: any) {
-    console.warn(`[API Client] Fetch failed for ${endpoint}. Falling back to mock handler if available.`, error.message);
+    console.warn(`[API Client] Fetch failed for ${endpoint}:`, error.message);
     throw error;
   }
 }

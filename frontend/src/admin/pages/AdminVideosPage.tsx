@@ -58,6 +58,10 @@ export const AdminVideosPage: React.FC = () => {
 
   useEffect(() => {
     fetchVideosData();
+    const interval = setInterval(() => {
+      fetchVideosData();
+    }, 30000);
+    return () => clearInterval(interval);
   }, [fetchVideosData]);
 
   // Quick Toggle Featured

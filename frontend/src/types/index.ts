@@ -88,7 +88,7 @@ export interface Video {
   thumbnailUrl: string;
   videoUrl?: string;
   youtubeId: string;
-  category: 'Official Music Videos' | 'Live Performances' | 'Behind The Scenes' | 'Visualizers';
+  category: 'Official Music Videos' | 'Live Performances' | 'Behind The Scenes' | 'Visualizers' | string;
   description?: string;
   featured?: boolean;
   duration: string;
@@ -96,6 +96,15 @@ export interface Video {
   likes?: number;
   publishedAt: string;
   tags?: string[];
+  order?: number;
+  youtubeUrl?: string | null;
+  youtubeTitle?: string | null;
+  youtubeViewCount?: number | null;
+  youtubeLikeCount?: number | null;
+  youtubeCommentCount?: number | null;
+  youtubePublishedAt?: string | null;
+  youtubeLastSyncedAt?: string | null;
+  youtubeSyncStatus?: 'SYNCED' | 'FAILED' | 'PENDING' | string | null;
 }
 
 export interface ContactFormData {

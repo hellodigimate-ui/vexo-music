@@ -18,6 +18,14 @@ function mapStoreVideoToPublic(v: any): Video {
     likes: v.likes || Math.floor((v.views || 1000) * 0.07),
     publishedAt: v.publishedAt || '2026',
     tags: Array.isArray(v.tags) ? v.tags : [],
+    youtubeUrl: v.youtubeUrl || (v.youtubeId ? `https://www.youtube.com/watch?v=${v.youtubeId}` : null),
+    youtubeTitle: v.youtubeTitle || null,
+    youtubeViewCount: v.youtubeViewCount !== undefined && v.youtubeViewCount !== null ? Number(v.youtubeViewCount) : null,
+    youtubeLikeCount: v.youtubeLikeCount !== undefined && v.youtubeLikeCount !== null ? Number(v.youtubeLikeCount) : null,
+    youtubeCommentCount: v.youtubeCommentCount !== undefined && v.youtubeCommentCount !== null ? Number(v.youtubeCommentCount) : null,
+    youtubePublishedAt: v.youtubePublishedAt || null,
+    youtubeLastSyncedAt: v.youtubeLastSyncedAt || null,
+    youtubeSyncStatus: v.youtubeSyncStatus || 'PENDING',
   };
 }
 
@@ -224,3 +232,26 @@ export async function incrementVideoView(
   }
 }
 
+export async function getYoutubeVideoDetails(
+  videoIdOrUrl: string
+): Promise<ApiResponse<{
+  videoId: string;
+  title: string;
+  description: string;
+  thumbnail: string;
+  publishedAt: string;
+  views: number;
+  likes: number;
+  comments: number;
+}>> {
+  return await apiFetch<{
+    videoId: string;
+    title: string;
+    description: string;
+    thumbnail: string;
+    publishedAt: string;
+    views: number;
+    likes: number;
+    comments: number;
+  }>(`/youtube/video/${encodeURIComponent(videoIdOrUrl)}`);
+}

@@ -8,6 +8,7 @@ import { apiRoutes } from './routes/index.js';
 import { getStorageProvider, LocalStorageProvider } from './services/storage/index.js';
 
 import { db } from './db/index.js';
+import { startYouTubeSyncScheduler } from './services/youtubeScheduler.js';
 
 dotenv.config();
 
@@ -39,6 +40,10 @@ async function start() {
           cleanOrigin === CORS_ORIGIN ||
           cleanOrigin.startsWith('http://localhost:') ||
           cleanOrigin.startsWith('http://127.0.0.1:') ||
+          cleanOrigin.startsWith('http://[::1]') ||
+          cleanOrigin.startsWith('http://192.168.') ||
+          cleanOrigin.startsWith('http://10.') ||
+          cleanOrigin.startsWith('http://172.') ||
           cleanOrigin === 'http://localhost' ||
           cleanOrigin === 'http://127.0.0.1' ||
           cleanOrigin.endsWith('.vercel.app') ||
@@ -154,6 +159,9 @@ async function start() {
 
     await server.listen({ port: PORT, host: HOST });
     server.log.info(`VEXO API Server running on http://${HOST}:${PORT}`);
+
+    // Initialize background YouTube synchronization scheduler
+    startYouTubeSyncScheduler();
   } catch (err) {
     server.log.error(err);
     process.exit(1);

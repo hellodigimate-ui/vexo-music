@@ -18,7 +18,9 @@ import {
   VolumeX,
 } from 'lucide-react';
 
-import { homepageApi, videosApi } from '../../lib/api';
+import { albumsApi, videosApi } from '../../lib/api';
+import { getMediaUrl } from '../../lib/utils';
+import type { Album, Track, Video } from '../../types';
 import { Skeleton } from '../ui/Skeleton';
 
 // YouTube IFrame Player type shim
@@ -30,7 +32,7 @@ declare global {
 }
 
 export const FeaturedSingleBanner: React.FC = () => {
-  // Video Details from YouTube link & synced store
+  // Video & Music details dynamically synced with the Music Catalog
   const [videoDetails, setVideoDetails] = useState<{
     id?: string;
     title: string;
@@ -49,69 +51,320 @@ export const FeaturedSingleBanner: React.FC = () => {
     descriptionText: string;
   } | null>(null);
 
-  useEffect(() => {
-    let isMounted = true;
-    Promise.all([homepageApi.getHomepage(), videosApi.getVideos()]).then(([homeRes, vidRes]) => {
-      if (!isMounted) return;
-      const homeData = homeRes.data;
-      const vids = vidRes.data || [];
+  const loadBannerData = useCallback(async () => {
+    try {
+      const [albRes, trkRes, vidRes] = await Promise.all([
+        albumsApi.getAlbums(),
+        albumsApi.getTracks(),
+        videosApi.getVideos(),
+      ]);
 
-      let featured = null;
-      if (homeData && homeData.featuredVideoId) {
-        featured = vids.find((v: any) => v.youtubeId === homeData.featuredVideoId || v.id === homeData.featuredVideoId);
-      }
-      if (!featured) {
-        featured = vids.find((v: any) => v.youtubeId === 'PsmXAUKjR5Y') || vids.find((v: any) => v.featured) || vids[0];
-      }
+      const albums: Album[] = albRes.data || [];
+      const tracks: Track[] = trkRes.data || [];
+      const videos: Video[] = vidRes.data || [];
 
-      if (featured) {
-        const customLikes = homeData?.featuredVideoLikes !== undefined && homeData?.featuredVideoLikes !== null && homeData?.featuredVideoLikes !== ''
-          ? String(homeData.featuredVideoLikes)
-          : String(featured.likes ?? '0');
-        const customViews = homeData?.featuredVideoViews !== undefined && homeData?.featuredVideoViews !== null && homeData?.featuredVideoViews !== ''
-          ? String(homeData.featuredVideoViews)
-          : String(featured.views ?? '553');
-        const customDate = homeData?.featuredVideoReleaseDate !== undefined && homeData?.featuredVideoReleaseDate !== null && homeData?.featuredVideoReleaseDate !== ''
-          ? String(homeData.featuredVideoReleaseDate)
-          : (featured.publishedAt || '24 Aug 2026');
-        const customTitle = homeData?.featuredVideoTitle || featured.title;
-        const customArtist = homeData?.featuredVideoArtist || featured.artist || 'VEXO Recording Artist';
-        const customBadge = homeData?.featuredVideoBadge || '(Official Music Video)';
-        const customDesc = homeData?.featuredVideoDescription || featured.description || 'Presenting the Official Song by Vexo Entertainment Pvt. Ltd.';
+      // Collect all candidate music releases from the Music Page catalog
+      type MusicCandidate = {
+        id: string;
+        title: string;
+        artist: string;
+        coverUrl?: string;
+        releaseDate?: string;
+        year?: number;
+        genre?: string;
+        youtubeUrl?: string;
+        audioUrl?: string;
+        plays?: number;
+        index: number;
+      };
 
-        let hashtags = ['#VexoMusic', '#OfficialVideo'];
-        if (homeData?.featuredVideoTags) {
-          hashtags = typeof homeData.featuredVideoTags === 'string'
-            ? homeData.featuredVideoTags.split(',').map((s: string) => s.trim()).filter(Boolean)
-            : homeData.featuredVideoTags;
-        } else if (featured.tags && featured.tags.length > 0) {
-          hashtags = featured.tags;
+      const candidates: MusicCandidate[] = [];
+
+      // 1. Add all albums from music catalog
+      albums.forEach((album, idx) => {
+        // Find matching track if available for audio/youtube
+        const matchingTrack = tracks.find((t) => {
+          if (t.albumId && t.albumId === album.id) return true;
+          const tT = (t.title || '').toLowerCase().trim();
+          const aT = (album.title || '').toLowerCase().trim();
+          return tT && aT && (tT.includes(aT) || aT.includes(tT));
+        });
+
+        // Also search matching video in videos
+        const aT = (album.title || '').toLowerCase().trim();
+        const matchingVideo = videos.find((v) => {
+          if (album.youtubeUrl && (v.youtubeId === album.youtubeUrl || (v.youtubeUrl && v.youtubeUrl.includes(album.youtubeUrl)))) return true;
+          const vT = (v.title || '').toLowerCase();
+          const vYt = (v.youtubeTitle || '').toLowerCase();
+          if (vT && (vT.includes(aT) || aT.includes(vT))) return true;
+          if (vYt && (vYt.includes(aT) || aT.includes(vYt))) return true;
+          if ((aT.includes('sajan') || aT.includes('साजन')) && (vT.includes('sajan') || vT.includes('साजन') || vYt.includes('sajan') || vYt.includes('साजन') || v.youtubeId === '7GJy_1S0-c0')) {
+            return true;
+          }
+          const words = aT.split(/[\s\|-]+/).filter((w) => w.length > 2);
+          const hits = words.filter((w) => vT.includes(w) || vYt.includes(w));
+          return hits.length >= 2;
+        });
+
+        const albumAny = album as any;
+        const parsedYear = typeof album.year === 'number' ? album.year : (parseInt(String(album.year), 10) || undefined);
+        const resolvedYtUrl =
+          album.youtubeUrl ||
+          matchingTrack?.youtubeUrl ||
+          matchingVideo?.youtubeUrl ||
+          (matchingVideo?.youtubeId ? `https://www.youtube.com/watch?v=${matchingVideo.youtubeId}` : undefined);
+
+        const resolvedReleaseDate =
+          albumAny.releaseDate ||
+          matchingVideo?.youtubePublishedAt ||
+          matchingVideo?.publishedAt ||
+          (album.year ? `${album.year}-01-01` : undefined);
+
+        candidates.push({
+          id: album.id,
+          title: album.title,
+          artist: album.artist || albumAny.artistName || 'VEXO Recording Artist',
+          coverUrl: album.coverUrl || matchingTrack?.coverUrl || matchingVideo?.thumbnailUrl,
+          releaseDate: resolvedReleaseDate,
+          year: parsedYear,
+          genre: album.genre || matchingTrack?.genre || matchingVideo?.category,
+          youtubeUrl: resolvedYtUrl,
+          audioUrl: matchingTrack?.audioUrl,
+          plays: matchingTrack?.plays || matchingVideo?.views || 0,
+          index: idx,
+        });
+      });
+
+      // 2. Add standalone tracks not represented in albums
+      tracks.forEach((track, idx) => {
+        const isRepresented = albums.some(
+          (a) =>
+            track.albumId === a.id ||
+            (track.title &&
+              a.title &&
+              track.title.toLowerCase().trim() === a.title.toLowerCase().trim())
+        );
+        if (!isRepresented) {
+          candidates.push({
+            id: track.id,
+            title: track.title,
+            artist: track.artist || 'VEXO Recording Artist',
+            coverUrl: track.coverUrl,
+            releaseDate: (track as any).releaseDate || (track as any).createdAt,
+            genre: track.genre,
+            youtubeUrl: (track as any).youtubeUrl || track.audioUrl,
+            audioUrl: track.audioUrl,
+            plays: (track as any).plays || 0,
+            index: 100 + idx,
+          });
+        }
+      });
+
+      // Sort candidate releases by release date descending to pick the newest release
+      const parseDate = (dStr?: string) => {
+        if (!dStr) return 0;
+        const parsed = Date.parse(dStr);
+        if (!isNaN(parsed)) return parsed;
+        const match = dStr.match(/(\d{4})/);
+        if (match) return new Date(`${match[1]}-01-01`).getTime();
+        return 0;
+      };
+
+      candidates.sort((a, b) => {
+        const timeA = parseDate(a.releaseDate);
+        const timeB = parseDate(b.releaseDate);
+        if (timeB !== timeA) return timeB - timeA;
+        return a.index - b.index;
+      });
+
+      const latest = candidates[0];
+
+      if (latest) {
+        // Clean title & artist
+        const rawTitle = latest.title || 'Official Release';
+        const cleanTitle = rawTitle.replace(/^[\s\|]+|[\s\|]+$/g, '').trim();
+        const rawArtist = latest.artist || 'VEXO Recording Artist';
+        const cleanArtist = rawArtist.replace(/^[\s\|]+|[\s\|]+$/g, '').trim();
+
+        // Extract YouTube ID from youtubeUrl or find matching video
+        let youtubeId = '';
+        if (latest.youtubeUrl) {
+          const match = latest.youtubeUrl.match(
+            /(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/
+          );
+          if (match) youtubeId = match[1];
         }
 
-        setVideoDetails({
-          id: featured.id,
-          title: customTitle,
-          artists: customArtist,
-          label: 'Vexo Entertainment Pvt. Ltd.',
-          badge: customBadge,
-          youtubeId: featured.youtubeId || 'PsmXAUKjR5Y',
-          youtubeUrl: `https://youtu.be/${featured.youtubeId || 'PsmXAUKjR5Y'}`,
-          thumbnailUrl: featured.thumbnailUrl || `https://img.youtube.com/vi/${featured.youtubeId || 'PsmXAUKjR5Y'}/maxresdefault.jpg`,
-          fallbackThumbnail: `https://img.youtube.com/vi/${featured.youtubeId || 'PsmXAUKjR5Y'}/hqdefault.jpg`,
-          likes: customLikes,
-          views: customViews,
-          releaseDate: customDate,
-          hashtags,
-          descriptionHeader: `🎵 ${customTitle}`,
-          descriptionText: customDesc,
+        // Robust video matching
+        const sTitle = cleanTitle.toLowerCase();
+        let matchingVid = videos.find((v: any) => {
+          if (youtubeId && (v.youtubeId === youtubeId || (v.youtubeUrl && v.youtubeUrl.includes(youtubeId)))) return true;
+          const vTitle = (v.title || '').toLowerCase();
+          const vYtTitle = (v.youtubeTitle || '').toLowerCase();
+          if (vTitle && (vTitle.includes(sTitle) || sTitle.includes(vTitle))) return true;
+          if (vYtTitle && (vYtTitle.includes(sTitle) || sTitle.includes(vYtTitle))) return true;
+          if ((sTitle.includes('sajan') || sTitle.includes('साजन')) && (vTitle.includes('sajan') || vTitle.includes('साजन') || vYtTitle.includes('sajan') || vYtTitle.includes('साजन') || v.youtubeId === '7GJy_1S0-c0')) {
+            return true;
+          }
+          const tokens = sTitle.split(/[\s\|-]+/).filter((w) => w.length > 2);
+          const hits = tokens.filter((t) => vTitle.includes(t) || vYtTitle.includes(t));
+          return hits.length >= 2;
         });
+
+        if (!youtubeId && matchingVid) {
+          youtubeId = matchingVid.youtubeId || '';
+        }
+
+        if (!youtubeId && (cleanTitle.toLowerCase().includes('sajan') || cleanTitle.includes('साजन'))) {
+          youtubeId = '7GJy_1S0-c0';
+        }
+
+        if (!youtubeId) {
+          youtubeId = 'PsmXAUKjR5Y';
+        }
+
+        // Thumbnail resolution
+        const coverImg = matchingVid?.thumbnailUrl
+          ? getMediaUrl(matchingVid.thumbnailUrl)
+          : latest.coverUrl
+          ? getMediaUrl(latest.coverUrl)
+          : `https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`;
+        const fallbackImg = `https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`;
+
+        // Format release date (from YouTube or release metadata)
+        let formattedDate = 'Latest Release';
+        const rawDate =
+          matchingVid?.youtubePublishedAt ||
+          latest.releaseDate ||
+          matchingVid?.publishedAt;
+
+        if (rawDate) {
+          try {
+            const d = new Date(rawDate);
+            if (!isNaN(d.getTime())) {
+              formattedDate = d.toLocaleDateString('en-GB', {
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric',
+              });
+            } else {
+              formattedDate = rawDate;
+            }
+          } catch {
+            formattedDate = rawDate;
+          }
+        } else {
+          formattedDate = '—';
+        }
+
+        // Format views (YouTube views prioritized; fallback to native views if sync in flight)
+        let viewsStr = '—';
+        if (matchingVid?.youtubeViewCount !== undefined && matchingVid?.youtubeViewCount !== null) {
+          const num = Number(matchingVid.youtubeViewCount);
+          if (!isNaN(num)) {
+            viewsStr =
+              num >= 1_000_000
+                ? `${(num / 1_000_000).toFixed(1).replace(/\.0$/, '')}M`
+                : num >= 10_000
+                ? `${(num / 1_000).toFixed(0)}K`
+                : num >= 1_000
+                ? `${(num / 1_000).toFixed(1).replace(/\.0$/, '')}K`
+                : String(num);
+          }
+        } else if (matchingVid?.views !== undefined && matchingVid?.views !== null && matchingVid.views > 0) {
+          const num = Number(matchingVid.views);
+          viewsStr = !isNaN(num) && num >= 1000 ? `${(num / 1000).toFixed(0)}K` : String(matchingVid.views);
+        } else if (typeof latest.plays === 'number' && latest.plays > 0) {
+          viewsStr = latest.plays >= 1000 ? `${(latest.plays / 1000).toFixed(0)}K` : String(latest.plays);
+        }
+
+        // Format likes (YouTube likes prioritized; fallback to native likes)
+        let likesStr = '—';
+        if (matchingVid?.youtubeLikeCount !== undefined && matchingVid?.youtubeLikeCount !== null) {
+          const num = Number(matchingVid.youtubeLikeCount);
+          if (!isNaN(num)) {
+            likesStr =
+              num >= 1_000_000
+                ? `${(num / 1_000_000).toFixed(1).replace(/\.0$/, '')}M`
+                : num >= 10_000
+                ? `${(num / 1_000).toFixed(0)}K`
+                : num >= 1_000
+                ? `${(num / 1_000).toFixed(1).replace(/\.0$/, '')}K`
+                : String(num);
+          }
+        } else if (matchingVid?.likes !== undefined && matchingVid?.likes !== null && matchingVid.likes > 0) {
+          const num = Number(matchingVid.likes);
+          likesStr = !isNaN(num) && num >= 1000 ? `${(num / 1000).toFixed(0)}K` : String(matchingVid.likes);
+        }
+
+        // Hashtags
+        const genreClean = latest.genre
+          ? latest.genre.split('/')[0].trim().replace(/[^a-zA-Z0-9]/g, '')
+          : 'RajasthaniSong';
+        const hashtags = [
+          '#VexoMusic',
+          '#OfficialVideo',
+          genreClean ? `#${genreClean}` : '#NewSong',
+          '#NewRelease',
+        ];
+
+        // Description
+        const descHeader = `🎵 ${cleanTitle}`;
+        const descText =
+          matchingVid?.description ||
+          `Presenting "${cleanTitle}" by Vexo Entertainment Pvt. Ltd. Starring and performed by ${cleanArtist}. Featuring rich traditional melodies, authentic folk roots, and modern studio production — streaming now worldwide on all major platforms.`;
+
+        const badgeText = latest.genre
+          ? `(Official ${latest.genre.split('/')[0].trim()} Release)`
+          : '(Official Music Video)';
+
+        setVideoDetails({
+          id: latest.id,
+          title: cleanTitle,
+          artists: cleanArtist,
+          label: 'Vexo Entertainment Pvt. Ltd.',
+          badge: badgeText,
+          youtubeId,
+          youtubeUrl: `https://youtu.be/${youtubeId}`,
+          thumbnailUrl: coverImg,
+          fallbackThumbnail: fallbackImg,
+          likes: likesStr,
+          views: viewsStr,
+          releaseDate: formattedDate,
+          hashtags,
+          descriptionHeader: descHeader,
+          descriptionText: descText,
+        });
+      }
+    } catch (err) {
+      console.warn('[FeaturedSingleBanner] Error loading synced music release:', err);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadBannerData();
+
+    // Poll backend every 30 seconds to fetch refreshed YouTube statistics
+    const pollInterval = setInterval(() => {
+      loadBannerData();
+    }, 30000);
+
+    // Listen for custom catalog updates or storage changes across tabs
+    const handleUpdate = () => {
+      loadBannerData();
+    };
+    window.addEventListener('vexo-music-catalog-updated', handleUpdate);
+    window.addEventListener('storage', (e) => {
+      if (e.key === 'vexo_music_updated') {
+        loadBannerData();
       }
     });
 
     return () => {
-      isMounted = false;
+      clearInterval(pollInterval);
+      window.removeEventListener('vexo-music-catalog-updated', handleUpdate);
     };
-  }, []);
+  }, [loadBannerData]);
 
   // Interactive States
   const [isPlayingAudio, setIsPlayingAudio] = useState(false);
@@ -312,7 +565,7 @@ export const FeaturedSingleBanner: React.FC = () => {
   }
 
   return (
-    <section className="cinematic-dark relative py-16 sm:py-24 bg-[#050505] overflow-hidden border-y border-white/10 select-none">
+    <section className="cinematic-dark relative py-10 sm:py-16 bg-[#050505] overflow-hidden border-y border-white/10 select-none">
       {/* Hidden YouTube IFrame Audio Player */}
       <div
         style={{ position: 'absolute', width: 1, height: 1, overflow: 'hidden', opacity: 0, pointerEvents: 'none', zIndex: -1 }}
@@ -345,29 +598,35 @@ export const FeaturedSingleBanner: React.FC = () => {
       </div>
 
       <Container className="relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center">
           {/* Left Column: Video Meta & Description Details */}
           <motion.div
             initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.8, ease: [0.16, 1, 0.3, 1] }}
-            className="lg:col-span-7 flex flex-col items-start gap-6"
+            className="lg:col-span-7 flex flex-col items-start gap-4 sm:gap-5"
           >
             {/* Badge */}
-            <div className="flex flex-wrap items-center gap-3">
-              <div className="inline-flex items-center gap-2 px-3.5 py-1 rounded-full text-xs font-mono font-bold uppercase tracking-wider bg-vexo-red/10 text-vexo-red border border-vexo-red/30">
-                <Radio className="w-3.5 h-3.5 text-vexo-red animate-pulse" />
+            <div className="flex flex-wrap items-center gap-2">
+              <div className="inline-flex items-center gap-1.5 px-3 py-0.5 rounded-full text-[11px] font-mono font-bold uppercase tracking-wider bg-vexo-red/10 text-vexo-red border border-vexo-red/30">
+                <Radio className="w-3 h-3 text-vexo-red animate-pulse" />
                 FEATURED OFFICIAL BANNER / OUT NOW
               </div>
             </div>
 
             {/* Editorial Main Title & Creator Subtitle */}
-            <div>
-              <span className="block text-xs uppercase font-mono tracking-[0.25em] text-zinc-400 mb-1 flex items-center gap-2">
-                <Music2 className="w-3.5 h-3.5 text-vexo-red" /> {videoDetails.artists} • {videoDetails.label}
+            <div className="w-full max-w-2xl">
+              <span className="block text-[11px] sm:text-xs uppercase font-mono tracking-[0.15em] text-zinc-400 mb-1 flex items-center gap-1.5">
+                <Music2 className="w-3 h-3 text-vexo-red" /> {videoDetails.artists} • {videoDetails.label}
               </span>
-              <h2 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-black uppercase tracking-tight text-white leading-tight">
+              <h2 className={`font-extrabold uppercase tracking-tight text-white leading-tight ${
+                videoDetails.title.length > 55
+                  ? 'text-lg sm:text-xl md:text-2xl lg:text-3xl'
+                  : videoDetails.title.length > 25
+                  ? 'text-xl sm:text-2xl md:text-3xl lg:text-4xl'
+                  : 'text-2xl sm:text-3xl md:text-4xl lg:text-5xl'
+              }`}>
                 {videoDetails.title.includes(' ') ? (
                   <>
                     {videoDetails.title.substring(0, videoDetails.title.lastIndexOf(' '))}{' '}
@@ -377,41 +636,41 @@ export const FeaturedSingleBanner: React.FC = () => {
                   <span className="text-vexo-red">{videoDetails.title}</span>
                 )}
               </h2>
-              <p className="text-sm font-semibold text-zinc-400 mt-1 tracking-wide">
+              <p className="text-xs sm:text-sm font-medium text-zinc-400 mt-1 tracking-wide">
                 {videoDetails.badge || '(Official Music Video)'}
               </p>
             </div>
 
             {/* Exact YouTube Metrics Pill Badges */}
-            <div className="grid grid-cols-3 gap-3 sm:gap-4 w-full max-w-lg">
-              <div className="flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-vexo-red/40 transition-all">
-                <div className="flex items-center gap-1.5 text-xs text-zinc-400 mb-1 font-mono">
-                  <ThumbsUp className="w-3.5 h-3.5 text-vexo-red" /> Likes
+            <div className="grid grid-cols-3 gap-2.5 sm:gap-3 w-full max-w-md">
+              <div className="flex flex-col items-center justify-center p-2.5 sm:p-3 rounded-xl bg-white/5 border border-white/10 hover:border-vexo-red/40 transition-all">
+                <div className="flex items-center gap-1 text-[11px] text-zinc-400 mb-0.5 font-mono">
+                  <ThumbsUp className="w-3 h-3 text-vexo-red" /> Likes
                 </div>
-                <span className="text-xl sm:text-2xl font-black text-white font-mono">{videoDetails.likes}</span>
+                <span className="text-base sm:text-lg font-bold text-white font-mono">{videoDetails.likes}</span>
               </div>
 
-              <div className="flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-vexo-red/40 transition-all">
-                <div className="flex items-center gap-1.5 text-xs text-zinc-400 mb-1 font-mono">
-                  <Eye className="w-3.5 h-3.5 text-vexo-red" /> Views
+              <div className="flex flex-col items-center justify-center p-2.5 sm:p-3 rounded-xl bg-white/5 border border-white/10 hover:border-vexo-red/40 transition-all">
+                <div className="flex items-center gap-1 text-[11px] text-zinc-400 mb-0.5 font-mono">
+                  <Eye className="w-3 h-3 text-vexo-red" /> Views
                 </div>
-                <span className="text-xl sm:text-2xl font-black text-white font-mono">{videoDetails.views}</span>
+                <span className="text-base sm:text-lg font-bold text-white font-mono">{videoDetails.views}</span>
               </div>
 
-              <div className="flex flex-col items-center justify-center p-3 sm:p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-vexo-red/40 transition-all">
-                <div className="flex items-center gap-1.5 text-xs text-zinc-400 mb-1 font-mono">
-                  <Calendar className="w-3.5 h-3.5 text-vexo-red" /> Date
+              <div className="flex flex-col items-center justify-center p-2.5 sm:p-3 rounded-xl bg-white/5 border border-white/10 hover:border-vexo-red/40 transition-all">
+                <div className="flex items-center gap-1 text-[11px] text-zinc-400 mb-0.5 font-mono">
+                  <Calendar className="w-3 h-3 text-vexo-red" /> Date
                 </div>
-                <span className="text-sm sm:text-base font-extrabold text-white font-mono">{videoDetails.releaseDate}</span>
+                <span className="text-xs sm:text-sm font-bold text-white font-mono">{videoDetails.releaseDate}</span>
               </div>
             </div>
 
             {/* Hashtag Badges */}
-            <div className="flex flex-wrap items-center gap-2">
+            <div className="flex flex-wrap items-center gap-1.5">
               {videoDetails.hashtags.map((tag) => (
                 <span
                   key={tag}
-                  className="px-3 py-1 rounded-full text-xs font-mono font-medium bg-white/5 border border-white/10 text-zinc-400 hover:text-white hover:border-vexo-red/40 transition-colors"
+                  className="px-2.5 py-0.5 rounded-full text-[10px] sm:text-[11px] font-mono font-medium bg-white/5 border border-white/10 text-zinc-400 hover:text-white hover:border-vexo-red/40 transition-colors"
                 >
                   {tag}
                 </span>
@@ -419,30 +678,30 @@ export const FeaturedSingleBanner: React.FC = () => {
             </div>
 
             {/* Exact YouTube Description Box Panel */}
-            <div className="w-full max-w-xl p-5 sm:p-6 rounded-2xl bg-[#0e0e13]/90 border border-white/10 shadow-xl space-y-3 relative overflow-hidden">
+            <div className="w-full max-w-xl p-3.5 sm:p-4 rounded-xl bg-[#0e0e13]/90 border border-white/10 shadow-xl space-y-2 relative overflow-hidden">
               <div className="absolute top-0 left-0 w-1 h-full bg-vexo-red" />
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Music2 className="w-4 h-4 text-vexo-red animate-pulse" />
-                  <h3 className="text-sm font-extrabold text-white tracking-wide">
+                <div className="flex items-center gap-1.5">
+                  <Music2 className="w-3.5 h-3.5 text-vexo-red animate-pulse" />
+                  <h3 className="text-xs sm:text-sm font-bold text-white tracking-wide">
                     Description
                   </h3>
                 </div>
-                <span className="text-[10px] font-mono text-zinc-400 uppercase tracking-widest px-2 py-0.5 rounded bg-white/5 border border-white/10">
+                <span className="text-[9px] font-mono text-zinc-400 uppercase tracking-widest px-1.5 py-0.5 rounded bg-white/5 border border-white/10">
                   Official Details
                 </span>
               </div>
 
-              <div className="space-y-2 pt-1 border-t border-white/10">
-                <p className="text-xs font-bold text-vexo-red flex items-center gap-1.5">
+              <div className="space-y-1.5 pt-1 border-t border-white/10">
+                <p className="text-[11px] sm:text-xs font-semibold text-vexo-red flex items-center gap-1.5">
                   {videoDetails.descriptionHeader}
                 </p>
-                <p className="text-xs sm:text-sm text-neutral-300 leading-relaxed font-normal whitespace-pre-line">
+                <p className="text-[11px] sm:text-xs text-neutral-300 leading-relaxed font-normal whitespace-pre-line line-clamp-3 sm:line-clamp-none">
                   {videoDetails.descriptionText}
                 </p>
               </div>
 
-              <div className="pt-2 flex items-center justify-between text-[11px] font-mono text-zinc-400 border-t border-white/5">
+              <div className="pt-1.5 flex items-center justify-between text-[10px] sm:text-[11px] font-mono text-zinc-400 border-t border-white/5">
                 <span>Vexo Entertainment Pvt. Ltd.</span>
                 <a
                   href={videoDetails.youtubeUrl}
@@ -457,12 +716,12 @@ export const FeaturedSingleBanner: React.FC = () => {
 
             {/* Real-time Audio Equalizer Visualizer when preview is playing */}
             {isPlayingAudio && (
-              <div className="flex items-center gap-3 px-5 py-3 rounded-2xl bg-vexo-red/10 border border-vexo-red/30 backdrop-blur-md">
-                <Volume2 className="w-5 h-5 text-vexo-red-bright animate-bounce shrink-0" />
-                <span className="text-xs font-mono font-bold text-white uppercase tracking-wider shrink-0">
+              <div className="flex items-center gap-2.5 px-4 py-2 rounded-xl bg-vexo-red/10 border border-vexo-red/30 backdrop-blur-md">
+                <Volume2 className="w-4 h-4 text-vexo-red-bright animate-bounce shrink-0" />
+                <span className="text-[11px] font-mono font-bold text-white uppercase tracking-wider shrink-0">
                   NOW PLAYING AUDIO
                 </span>
-                <div className="flex items-end gap-1 h-6 ml-2">
+                <div className="flex items-end gap-1 h-5 ml-1.5">
                   {[40, 90, 60, 100, 70, 45, 85, 95, 50, 80, 65, 90].map((h, i) => (
                     <motion.div
                       key={i}
@@ -472,7 +731,7 @@ export const FeaturedSingleBanner: React.FC = () => {
                         duration: 0.5 + (i % 4) * 0.12,
                         ease: 'easeInOut',
                       }}
-                      className="w-1 rounded-full bg-vexo-red-bright"
+                      className="w-0.5 rounded-full bg-vexo-red-bright"
                     />
                   ))}
                 </div>
@@ -480,31 +739,31 @@ export const FeaturedSingleBanner: React.FC = () => {
             )}
 
             {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-3 pt-2 w-full">
+            <div className="flex flex-col sm:flex-row flex-wrap items-stretch sm:items-center gap-2.5 pt-1 w-full">
               <Button
                 variant="primary"
-                size="lg"
+                size="md"
                 onClick={handleOpenVideoModal}
-                className="w-full sm:w-auto shadow-[0_0_30px_rgba(224,0,0,0.6)] group relative overflow-hidden font-extrabold tracking-wider justify-center"
+                className="w-full sm:w-auto shadow-[0_0_20px_rgba(224,0,0,0.5)] group relative overflow-hidden font-bold text-xs sm:text-sm tracking-wider justify-center px-5 py-2.5"
               >
-                <Play className="w-4 h-4 fill-white group-hover:scale-110 transition-transform" />
+                <Play className="w-3.5 h-3.5 fill-white group-hover:scale-110 transition-transform" />
                 WATCH OFFICIAL VIDEO
               </Button>
 
               <Button
                 variant="outline"
-                size="lg"
+                size="md"
                 onClick={toggleAudioPreview}
-                className="w-full sm:w-auto border-white/20 hover:border-vexo-red/60 text-white backdrop-blur-md justify-center"
+                className="w-full sm:w-auto border-white/20 hover:border-vexo-red/60 text-white backdrop-blur-md justify-center text-xs sm:text-sm px-5 py-2.5 font-medium"
               >
                 {isPlayingAudio ? (
                   <>
-                    <VolumeX className="w-4 h-4 text-vexo-red-bright" />
+                    <VolumeX className="w-3.5 h-3.5 text-vexo-red-bright" />
                     STOP AUDIO
                   </>
                 ) : (
                   <>
-                    <Film className="w-4 h-4 text-vexo-red-bright" />
+                    <Film className="w-3.5 h-3.5 text-vexo-red-bright" />
                     PREVIEW AUDIO
                   </>
                 )}
@@ -512,10 +771,10 @@ export const FeaturedSingleBanner: React.FC = () => {
 
               <button
                 onClick={() => setShowShareModal(!showShareModal)}
-                className="self-center sm:self-auto p-3.5 rounded-full bg-white/5 border border-white/10 hover:border-vexo-red/50 text-vexo-muted hover:text-white transition-all backdrop-blur-md shadow-lg"
+                className="self-center sm:self-auto p-2.5 rounded-full bg-white/5 border border-white/10 hover:border-vexo-red/50 text-vexo-muted hover:text-white transition-all backdrop-blur-md shadow-lg"
                 title="Share & Watch on Platforms"
               >
-                <Share2 className="w-4 h-4" />
+                <Share2 className="w-3.5 h-3.5" />
               </button>
             </div>
 

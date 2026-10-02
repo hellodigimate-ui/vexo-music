@@ -30,6 +30,7 @@ export const AdminVideoFormPage: React.FC = () => {
           if (videoRes.success && videoRes.data) {
             const vid = videoRes.data;
             setInitialData({
+              id: vid.id,
               title: vid.title || '',
               artist: vid.artist || '',
               youtubeId: vid.youtubeId || '',
@@ -44,6 +45,12 @@ export const AdminVideoFormPage: React.FC = () => {
               description: vid.description || '',
               tags: Array.isArray(vid.tags) ? vid.tags.join(', ') : vid.tags || '',
               order: vid.order || 0,
+              youtubeTitle: vid.youtubeTitle || null,
+              youtubeViewCount: vid.youtubeViewCount !== undefined && vid.youtubeViewCount !== null ? Number(vid.youtubeViewCount) : null,
+              youtubeLikeCount: vid.youtubeLikeCount !== undefined && vid.youtubeLikeCount !== null ? Number(vid.youtubeLikeCount) : null,
+              youtubePublishedAt: vid.youtubePublishedAt || null,
+              youtubeLastSyncedAt: vid.youtubeLastSyncedAt || null,
+              youtubeSyncStatus: vid.youtubeSyncStatus || 'PENDING',
             });
           } else {
             toast.error('Video not found', `Could not find video with ID '${id}'`);

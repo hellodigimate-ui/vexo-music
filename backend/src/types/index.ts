@@ -95,6 +95,14 @@ export interface Video {
   title: string;
   artist: string;
   youtubeId: string;
+  youtubeUrl?: string | null;
+  youtubeTitle?: string | null;
+  youtubeViewCount?: number | null;
+  youtubeLikeCount?: number | null;
+  youtubeCommentCount?: number | null;
+  youtubePublishedAt?: string | null;
+  youtubeLastSyncedAt?: string | null;
+  youtubeSyncStatus?: 'PENDING' | 'SYNCED' | 'FAILED' | string | null;
   thumbnailUrl: string;
   duration: string;
   views: number;
@@ -102,6 +110,8 @@ export interface Video {
   category: string;
   featured?: boolean;
   description?: string;
+  tags?: string[];
+  order?: number;
 }
 
 export interface ContactFormData {

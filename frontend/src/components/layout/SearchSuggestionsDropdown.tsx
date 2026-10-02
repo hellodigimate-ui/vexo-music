@@ -14,7 +14,7 @@ interface SearchSuggestionsDropdownProps {
   className?: string;
 }
 
-export const SearchSuggestionsDropdown: React.FC<SearchSuggestionsDropdownProps> = ({
+export const SearchSuggestionsDropdown: React.FC<SearchSuggestionsDropdownProps> = React.memo(({
   suggestions,
   isLoading,
   searchQuery,
@@ -265,4 +265,4 @@ export const SearchSuggestionsDropdown: React.FC<SearchSuggestionsDropdownProps>
       )}
     </div>
   );
-};
+});

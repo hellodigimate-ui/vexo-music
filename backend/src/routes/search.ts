@@ -63,9 +63,9 @@ export const searchRoutes: FastifyPluginAsync = async (fastify) => {
     let matchedTracks = allTracks;
     if (q) {
       matchedTracks = allTracks.filter((t) => {
-        const titleMatch = t.title?.toLowerCase().includes(q);
-        const artistMatch = t.artistName?.toLowerCase().includes(q);
-        const genreMatch = t.genre?.toLowerCase().includes(q);
+        const titleMatch = (t.title || '').toLowerCase().includes(q);
+        const artistMatch = (t.artistName || (t as any).artist || '').toLowerCase().includes(q);
+        const genreMatch = (t.genre || '').toLowerCase().includes(q);
         return titleMatch || artistMatch || genreMatch;
       });
     } else {
@@ -75,7 +75,7 @@ export const searchRoutes: FastifyPluginAsync = async (fastify) => {
     const trackItems: UnifiedSearchItem[] = matchedTracks.slice(0, limit).map((t) => ({
       id: t.id,
       title: t.title,
-      subtitle: t.artistName || 'VEXO Artist',
+      subtitle: t.artistName || (t as any).artist || 'VEXO Artist',
       type: 'track',
       category: t.genre ? `${t.genre.trim()} Track` : 'Music Track',
       imageUrl: t.coverUrl || '',
@@ -88,9 +88,9 @@ export const searchRoutes: FastifyPluginAsync = async (fastify) => {
     let matchedAlbums = allAlbums;
     if (q) {
       matchedAlbums = allAlbums.filter((a) => {
-        const titleMatch = a.title?.toLowerCase().includes(q);
-        const artistMatch = a.artistName?.toLowerCase().includes(q);
-        const genreMatch = a.genre?.toLowerCase().includes(q);
+        const titleMatch = (a.title || '').toLowerCase().includes(q);
+        const artistMatch = (a.artistName || (a as any).artist || '').toLowerCase().includes(q);
+        const genreMatch = (a.genre || '').toLowerCase().includes(q);
         return titleMatch || artistMatch || genreMatch;
       });
     } else {
@@ -100,7 +100,7 @@ export const searchRoutes: FastifyPluginAsync = async (fastify) => {
     const albumItems: UnifiedSearchItem[] = matchedAlbums.slice(0, limit).map((a) => ({
       id: a.id,
       title: a.title,
-      subtitle: a.artistName || 'VEXO Release',
+      subtitle: a.artistName || (a as any).artist || 'VEXO Release',
       type: 'album',
       category: 'Album Release',
       imageUrl: a.coverUrl || '',

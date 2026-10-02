@@ -419,6 +419,28 @@ export const adminVideosApi = {
       return adminMockStore.deleteVideo(id);
     }
   },
+  syncYouTube: async (id: string) => {
+    return await adminFetch<any>(`/admin/videos/${id}/youtube-sync`, {
+      method: 'POST',
+    });
+  },
+  syncAllYouTube: async () => {
+    return await adminFetch<any>('/admin/videos/youtube-sync-all', {
+      method: 'POST',
+    });
+  },
+  getYoutubeVideoDetails: async (videoIdOrUrl: string) => {
+    return await adminFetch<{
+      videoId: string;
+      title: string;
+      description: string;
+      thumbnail: string;
+      publishedAt: string;
+      views: number;
+      likes: number;
+      comments: number;
+    }>(`/youtube/video/${encodeURIComponent(videoIdOrUrl)}`);
+  },
 };
 
 // Services

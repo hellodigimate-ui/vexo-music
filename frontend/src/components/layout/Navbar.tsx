@@ -21,12 +21,15 @@ export const Navbar: React.FC = () => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isMobileSearchOpen, setIsMobileSearchOpen] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
-  const debouncedQuery = useDebounce(searchQuery, 280);
+  const debouncedQuery = useDebounce(searchQuery, 350);
   const [isSearchFocused, setIsSearchFocused] = useState(false);
   const [suggestions, setSuggestions] = useState<SearchSuggestionItem[]>([]);
   const [isSuggestionsLoading, setIsSuggestionsLoading] = useState(false);
   const [selectedIndex, setSelectedIndex] = useState<number>(-1);
   const blurTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const searchCacheRef = useRef<Map<string, SearchSuggestionItem[]>>(new Map());
+  const abortControllerRef = useRef<AbortController | null>(null);
+  const latestQueryRef = useRef<string>('');
   const [hoveredPath, setHoveredPath] = useState<string | null>(null);
 
   // Dynamic social media profile links from backend site-settings
@@ -146,68 +149,108 @@ export const Navbar: React.FC = () => {
     }
   }, [isMobileMenuOpen]);
 
-  // Close mobile menus on route change
+  // Close mobile menus and abort any active search request on route change
   useEffect(() => {
     setIsMobileMenuOpen(false);
     setIsMobileSearchOpen(false);
     setIsSearchFocused(false);
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+      abortControllerRef.current = null;
+    }
   }, [location.pathname]);
 
-  // Synchronize header search input with URL search param
+  // Synchronize header search input with URL search param only when user is NOT actively typing
   useEffect(() => {
-    const params = new URLSearchParams(location.search);
-    const urlQuery = params.get('search') || '';
-    if (urlQuery !== searchQuery) {
-      setSearchQuery(urlQuery);
-    }
-  }, [location.pathname, location.search]);
-
-  // When user types in header on /music or /videos, dynamically sync the URL so the page filters in real time
-  useEffect(() => {
-    if (location.pathname === '/music' || location.pathname === '/videos') {
+    if (!isSearchFocused && !isMobileSearchOpen) {
       const params = new URLSearchParams(location.search);
-      const currentParam = params.get('search') || '';
-      const trimmed = debouncedQuery.trim();
-      if (trimmed !== currentParam) {
-        if (trimmed) {
-          navigate(`${location.pathname}?search=${encodeURIComponent(trimmed)}`, { replace: true });
-        } else if (currentParam) {
-          navigate(location.pathname, { replace: true });
-        }
+      const urlQuery = params.get('search') || '';
+      if (urlQuery !== searchQuery) {
+        setSearchQuery(urlQuery);
       }
     }
-  }, [debouncedQuery, location.pathname, location.search, navigate]);
+  }, [location.pathname, location.search, isSearchFocused, isMobileSearchOpen]);
 
   const isSearchActive = isSearchFocused || isMobileSearchOpen;
   const isPendingDebounce = searchQuery !== debouncedQuery;
   const isAutocompleteLoading = isSuggestionsLoading || (isPendingDebounce && isSearchActive);
 
-  // Debounced live suggestions query against backend across Music & Videos
+  // Debounced live suggestions query with request cancellation (AbortController) and in-memory caching
   useEffect(() => {
-    let isMounted = true;
     if (!isSearchActive) {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+        abortControllerRef.current = null;
+      }
       return;
     }
 
-    setIsSuggestionsLoading(true);
     const query = debouncedQuery.trim();
+    latestQueryRef.current = query;
 
-    searchApi.unifiedSearch(query, 6)
+    // Critical Rule #7: Handle empty / short query
+    // 1 character: do not make backend API requests
+    if (query.length === 1) {
+      setSuggestions([]);
+      setIsSuggestionsLoading(false);
+      return;
+    }
+
+    const cacheKey = query || '__trending__';
+
+    // Critical Rule #8: Cache recent searches in memory
+    if (searchCacheRef.current.has(cacheKey)) {
+      setSuggestions(searchCacheRef.current.get(cacheKey)!);
+      setIsSuggestionsLoading(false);
+      setSelectedIndex(-1);
+      return;
+    }
+
+    // Critical Rule #2: Cancel old requests
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
+    setIsSuggestionsLoading(true);
+
+    searchApi
+      .unifiedSearch(query, 6, controller.signal)
       .then((res) => {
-        if (!isMounted) return;
-        setSuggestions(res.data?.items || []);
+        // Critical Rule #13: Prevent stale results from overwriting UI
+        if (latestQueryRef.current !== query) {
+          return;
+        }
+        const items = res.data?.items || [];
+
+        // Limit in-memory cache to 15 entries
+        if (searchCacheRef.current.size >= 15) {
+          const firstKey = searchCacheRef.current.keys().next().value;
+          if (firstKey) searchCacheRef.current.delete(firstKey);
+        }
+        searchCacheRef.current.set(cacheKey, items);
+
+        setSuggestions(items);
         setSelectedIndex(-1);
       })
       .catch((err) => {
+        if (err?.name === 'AbortError') {
+          return; // Request was aborted cleanly, ignore
+        }
         console.warn('Error fetching search suggestions:', err);
-        if (isMounted) setSuggestions([]);
+        if (latestQueryRef.current === query) {
+          setSuggestions([]);
+        }
       })
       .finally(() => {
-        if (isMounted) setIsSuggestionsLoading(false);
+        if (latestQueryRef.current === query) {
+          setIsSuggestionsLoading(false);
+        }
       });
 
     return () => {
-      isMounted = false;
+      controller.abort();
     };
   }, [debouncedQuery, isSearchActive]);
 
@@ -358,8 +401,8 @@ export const Navbar: React.FC = () => {
                 className={cn(
                   'group flex items-center gap-2 px-3 py-1.5 h-9 rounded-full transition-all duration-300 border cursor-text',
                   isSearchFocused
-                    ? 'w-44 lg:w-48 xl:w-60 border-vexo-red/60 bg-white dark:bg-zinc-900/95 shadow-md ring-2 ring-vexo-red/20'
-                    : 'w-32 lg:w-36 xl:w-44 bg-white/80 dark:bg-white/[0.06] border-slate-300 dark:border-white/[0.12] hover:border-slate-400 dark:hover:border-white/25 shadow-2xs'
+                    ? 'w-48 sm:w-56 lg:w-64 xl:w-72 border-vexo-red/60 bg-white dark:bg-zinc-900/95 shadow-md ring-2 ring-vexo-red/20'
+                    : 'w-36 sm:w-40 lg:w-48 xl:w-56 bg-white/80 dark:bg-white/[0.06] border-slate-300 dark:border-white/[0.12] hover:border-slate-400 dark:hover:border-white/25 shadow-2xs'
                 )}
                 onClick={() => searchInputRef.current?.focus()}
               >
@@ -378,7 +421,7 @@ export const Navbar: React.FC = () => {
                 <input
                   ref={searchInputRef}
                   type="text"
-                  placeholder="Search music, videos, songs..."
+                  placeholder="Search music..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   onFocus={() => {
@@ -391,7 +434,7 @@ export const Navbar: React.FC = () => {
                     }, 240);
                   }}
                   onKeyDown={handleSearchKeyDown}
-                  className="apple-search-input bg-transparent border-none outline-none text-xs w-full text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-zinc-400 font-medium"
+                  className="apple-search-input bg-transparent border-none outline-none text-xs flex-1 min-w-0 text-slate-900 dark:text-white placeholder:text-slate-500 dark:placeholder:text-zinc-400 font-medium truncate"
                 />
 
                 {/* Clear or ⌘K Shortcut Chip */}

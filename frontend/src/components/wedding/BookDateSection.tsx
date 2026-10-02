@@ -29,6 +29,7 @@ interface BookDateSectionProps {
   addOns?: AddOnService[];
   badgeText?: string;
   serviceTypeLabel?: string;
+  hideLocationField?: boolean;
 }
 
 export const BookDateSection: React.FC<BookDateSectionProps> = ({
@@ -40,6 +41,7 @@ export const BookDateSection: React.FC<BookDateSectionProps> = ({
   addOns = ADD_ON_SERVICES,
   badgeText = 'BOOK YOUR DATE',
   serviceTypeLabel = 'Wedding Photography | Cinematography | Pre-Wedding | Wedding Films',
+  hideLocationField = false,
 }) => {
   const [coupleNames, setCoupleNames] = useState<string>('');
   const [phone, setPhone] = useState<string>('');
@@ -104,7 +106,7 @@ export const BookDateSection: React.FC<BookDateSectionProps> = ({
       `• *Couple:* ${coupleNames || 'Not specified'}\n` +
       `• *Selected Package:* ✦ ${basePackage?.name || 'Custom'} (${basePackage?.priceDisplay || ''})\n` +
       `• *Event/Shoot Date:* ${eventDate || 'To be discussed'}\n` +
-      `• *Location:* ${location}\n` +
+      (!hideLocationField ? `• *Location:* ${location}\n` : '') +
       `• *Add-Ons:* ${selectedAddonTitles || 'None'}\n` +
       `• *Estimated Investment:* ₹${totalEstimate.toLocaleString('en-IN')}\n` +
       `• *Phone:* ${phone}\n` +
@@ -231,7 +233,7 @@ export const BookDateSection: React.FC<BookDateSectionProps> = ({
                 </div>
 
                 {/* Date & Location */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                <div className={hideLocationField ? 'space-y-4' : 'grid grid-cols-1 sm:grid-cols-2 gap-4'}>
                   <div>
                     <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-300 mb-2 font-mono">
                       Estimated Date *
@@ -245,19 +247,21 @@ export const BookDateSection: React.FC<BookDateSectionProps> = ({
                     />
                   </div>
 
-                  <div>
-                    <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-300 mb-2 font-mono">
-                      Shoot Location / City *
-                    </label>
-                    <input
-                      type="text"
-                      required
-                      placeholder="e.g. Jaipur, Udaipur, Goa..."
-                      value={location}
-                      onChange={(e) => setLocation(e.target.value)}
-                      className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/10 focus:border-vexo-red focus:ring-1 focus:ring-vexo-red text-white text-sm outline-none transition-all placeholder:text-zinc-600"
-                    />
-                  </div>
+                  {!hideLocationField && (
+                    <div>
+                      <label className="block text-xs font-semibold uppercase tracking-wider text-zinc-300 mb-2 font-mono">
+                        Shoot Location / City *
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        placeholder="e.g. Jaipur, Udaipur, Goa..."
+                        value={location}
+                        onChange={(e) => setLocation(e.target.value)}
+                        className="w-full px-4 py-3 rounded-xl bg-black/50 border border-white/10 focus:border-vexo-red focus:ring-1 focus:ring-vexo-red text-white text-sm outline-none transition-all placeholder:text-zinc-600"
+                      />
+                    </div>
+                  )}
                 </div>
 
                 {/* Package Selection Radio Buttons */}

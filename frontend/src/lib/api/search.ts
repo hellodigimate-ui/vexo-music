@@ -20,7 +20,11 @@ export interface UnifiedSearchResult {
   items: SearchSuggestionItem[];
 }
 
-export async function unifiedSearch(query?: string, limit?: number): Promise<ApiResponse<UnifiedSearchResult>> {
+export async function unifiedSearch(
+  query?: string,
+  limit?: number,
+  signal?: AbortSignal
+): Promise<ApiResponse<UnifiedSearchResult>> {
   const params: string[] = [];
   if (query && query.trim()) {
     params.push(`q=${encodeURIComponent(query.trim())}`);
@@ -31,8 +35,11 @@ export async function unifiedSearch(query?: string, limit?: number): Promise<Api
   const qs = params.length > 0 ? `?${params.join('&')}` : '';
 
   try {
-    return await apiFetch<UnifiedSearchResult>(`/search${qs}`);
+    return await apiFetch<UnifiedSearchResult>(`/search${qs}`, { signal });
   } catch (err: any) {
+    if (err.name === 'AbortError') {
+      throw err;
+    }
     console.warn('[searchApi] Unified search error:', err.message);
     return {
       success: false,

@@ -14,7 +14,7 @@ import {
   DEFAULT_WEDDING_DAY_STORIES,
 } from '../../data/weddingData';
 
-const STORAGE_KEY = 'vexo_admin_mock_db_v14';
+const STORAGE_KEY = 'vexo_admin_mock_db_v15';
 
 function getInitialMockDb() {
   const now = new Date().toISOString();
@@ -101,6 +101,60 @@ function getInitialMockDb() {
     ],
     albums: [
       {
+        id: 'alb-12334e6e10b1b2b0',
+        title: 'आया साजन | Aaya Sajan |',
+        slug: 'aaya-sajan',
+        artistName: 'Rashmi Nishad & Sonu Charan Bhatt Sagar Chouhan & Radha Kanwar',
+        artistId: 'art-2a3bc82d0525e14b',
+        coverUrl: '/uploads/image/vexo-1790417631762-whatsapp-image-2026-09-26-at-3-35-00-pm-4eb37357.jpeg',
+        releaseDate: '2026-09-26',
+        year: 2026,
+        genre: 'rajasthani',
+        trackCount: 1,
+        spotifyUrl: '',
+        youtubeUrl: 'https://youtu.be/7GJy_1S0-c0',
+        appleMusicUrl: '',
+        featured: true,
+        order: 1,
+        createdAt: now,
+      },
+      {
+        id: 'alb-92830db3dd96cf4a',
+        title: 'Moriya | मोरिया |',
+        slug: 'moriya-moriya-rashmi-nishad-amande',
+        artistName: 'Rashmi Nishad | Amandeep B & Priya Rajput | Rajasthani Song 2026',
+        artistId: 'art-2a3bc82d0525e14b',
+        coverUrl: '/uploads/image/vexo-1790420615928-hello-38de54cf.avif',
+        releaseDate: '2026-09-26',
+        year: 2026,
+        genre: 'rajasthani',
+        trackCount: 1,
+        spotifyUrl: '',
+        youtubeUrl: 'https://youtu.be/jQhIJQupA0w?si=P3t_MG2XMbejQjae',
+        appleMusicUrl: '',
+        featured: true,
+        order: 2,
+        createdAt: now,
+      },
+      {
+        id: 'alb-0fc2061140ed605a',
+        title: 'Bansa Rajasthani Mashup',
+        slug: 'bansa-rajasthani-mashup',
+        artistName: 'Isha Singh',
+        artistId: 'art-2a3bc82d0525e14b',
+        coverUrl: '/uploads/image/vexo-1790421549734-bansa-eec7adc1.jpeg',
+        releaseDate: '2026-09-26',
+        year: 2026,
+        genre: 'Electronic / Synthwave',
+        trackCount: 1,
+        spotifyUrl: '',
+        youtubeUrl: 'https://youtu.be/FAdVu0YhLGY?si=yrrM3RMwcI6z4erY',
+        appleMusicUrl: '',
+        featured: true,
+        order: 3,
+        createdAt: now,
+      },
+      {
         id: 'alb-2',
         title: 'Satane Lage Ho',
         slug: 'satane-lage-ho',
@@ -115,7 +169,7 @@ function getInitialMockDb() {
         youtubeUrl: 'https://youtu.be/HcEcM5AtEZ8?si=cJi8p33qsdjoBI02',
         appleMusicUrl: 'https://music.apple.com/album/satane-lage-ho',
         featured: true,
-        order: 1,
+        order: 4,
         createdAt: now,
       },
       {
@@ -127,31 +181,79 @@ function getInitialMockDb() {
         coverUrl: 'https://img.youtube.com/vi/PsmXAUKjR5Y/maxresdefault.jpg',
         releaseDate: '2026-08-24',
         year: 2026,
-        genre: 'Rajasthani Traditional / Modern Folk Beat',
+        genre: 'Rajasthani Traditional / Beat Song',
         trackCount: 1,
         spotifyUrl: 'https://open.spotify.com/album/bhartar',
         youtubeUrl: 'https://youtu.be/PsmXAUKjR5Y?si=WpdguDVkiQZkI0j6',
         appleMusicUrl: 'https://music.apple.com/album/bhartar',
         featured: true,
-        order: 2,
+        order: 5,
         createdAt: now,
       },
     ],
     tracks: [
       {
-        id: 'trk-1',
-        title: 'Satane Lage Ho (Official Single)',
+        id: 'trk-3b64e0f83dc71dce',
+        title: 'आया साजन | Aaya Sajan',
+        artistName: 'Rashmi Nishad & Sonu Charan Bhatt Sagar Chouhan & Radha Kanwar',
+        artistId: 'art-2a3bc82d0525e14b',
+        albumId: 'alb-12334e6e10b1b2b0',
+        duration: 210,
+        coverUrl: '/uploads/image/vexo-1790417631762-whatsapp-image-2026-09-26-at-3-35-00-pm-4eb37357.jpeg',
+        genre: 'rajasthani',
+        spotifyUrl: '',
+        youtubeUrl: 'https://youtu.be/7GJy_1S0-c0',
+        plays: 195000,
+        isPopular: true,
+        order: 1,
+        createdAt: now,
+      },
+      {
+        id: 'trk-cda02a3a19f185c7',
+        title: 'मोरिया | Moriya',
+        artistName: 'Rashmi Nishad | Amandeep B & Priya Rajput | Rajasthani Song 2026',
+        artistId: 'art-2a3bc82d0525e14b',
+        albumId: 'alb-92830db3dd96cf4a',
+        duration: 254,
+        coverUrl: '/uploads/image/vexo-1790420615928-hello-38de54cf.avif',
+        genre: 'rajasthani',
+        spotifyUrl: '',
+        youtubeUrl: 'https://youtu.be/jQhIJQupA0w?si=P3t_MG2XMbejQjae',
+        plays: 175000,
+        isPopular: true,
+        order: 2,
+        createdAt: now,
+      },
+      {
+        id: 'trk-ecd893ea782c0e31',
+        title: 'Bansa Rajasthani Mashup',
+        artistName: 'Isha Singh',
+        artistId: 'art-2a3bc82d0525e14b',
+        albumId: 'alb-0fc2061140ed605a',
+        duration: 215,
+        coverUrl: '/uploads/image/vexo-1790421549734-bansa-eec7adc1.jpeg',
+        genre: 'Electronic / Synthwave',
+        spotifyUrl: '',
+        youtubeUrl: 'https://youtu.be/FAdVu0YhLGY?si=yrrM3RMwcI6z4erY',
+        plays: 145000,
+        isPopular: true,
+        order: 3,
+        createdAt: now,
+      },
+      {
+        id: 'trk-681214452d4c6dba',
+        title: 'satane lage ho',
         artistName: 'Rashmi Nishad & Sonu Charan Bhatt',
         artistId: 'art-1',
         albumId: 'alb-2',
         duration: 254,
-        coverUrl: 'https://img.youtube.com/vi/HcEcM5AtEZ8/maxresdefault.jpg',
-        genre: 'Rajasthani Folk / Contemporary',
+        coverUrl: '/uploads/image/vexo-1790418856158-satane-lage-ho-342ff897.jpeg',
+        genre: 'Rajasthani Traditional / Modern Folk',
         spotifyUrl: 'https://open.spotify.com/album/satane-lage-ho',
         youtubeUrl: 'https://youtu.be/HcEcM5AtEZ8?si=cJi8p33qsdjoBI02',
         plays: 185000,
         isPopular: true,
-        order: 1,
+        order: 4,
         createdAt: now,
       },
       {
@@ -167,7 +269,7 @@ function getInitialMockDb() {
         youtubeUrl: 'https://youtu.be/PsmXAUKjR5Y?si=WpdguDVkiQZkI0j6',
         plays: 215000,
         isPopular: true,
-        order: 2,
+        order: 5,
         createdAt: now,
       },
     ],
@@ -688,7 +790,7 @@ class AdminMockStore {
     const initial = getInitialMockDb();
     try {
       // Purge obsolete local storage versions
-      for (let i = 1; i <= 13; i++) {
+      for (let i = 1; i <= 14; i++) {
         localStorage.removeItem(`vexo_admin_mock_db_v${i}`);
       }
 
@@ -714,13 +816,19 @@ class AdminMockStore {
         ]);
         const dummyArtistNames = new Set(['cipher', 'aria thorne', 'echopulse']);
 
-        // Filter out dummy albums
+        // Filter out dummy albums & ensure all database albums are present
         if (Array.isArray(this.db.albums)) {
           this.db.albums = this.db.albums.filter(
             (a: any) =>
               !dummyTitles.has((a.title || '').toLowerCase().trim()) &&
               !['alb-1', 'alb-3', 'alb-4', 'alb-5', 'alb-6'].includes(a.id)
           );
+          initial.albums.forEach((initAlb: any) => {
+            const exists = this.db.albums.some((a: any) => a.id === initAlb.id || a.slug === initAlb.slug);
+            if (!exists) {
+              this.db.albums.push(initAlb);
+            }
+          });
           if (this.db.albums.length === 0) {
             this.db.albums = initial.albums;
           }
@@ -728,13 +836,32 @@ class AdminMockStore {
           this.db.albums = initial.albums;
         }
 
-        // Filter out dummy tracks
+        // Filter out dummy tracks & deduplicate & ensure all database tracks are present
         if (Array.isArray(this.db.tracks)) {
           this.db.tracks = this.db.tracks.filter(
             (t: any) =>
               !dummyTrackTitles.has((t.title || '').toLowerCase().trim()) &&
               !['trk-2', 'trk-3', 'trk-4', 'trk-5'].includes(t.id)
           );
+          const seen = new Set<string>();
+          const deduped: any[] = [];
+          for (const t of this.db.tracks) {
+            const key = (t.title || '').trim().toLowerCase();
+            if (!seen.has(key)) {
+              seen.add(key);
+              deduped.push(t);
+            }
+          }
+          this.db.tracks = deduped;
+
+          initial.tracks.forEach((initTrk: any) => {
+            const exists = this.db.tracks.some(
+              (t: any) => t.id === initTrk.id || (t.title || '').trim().toLowerCase() === (initTrk.title || '').trim().toLowerCase()
+            );
+            if (!exists) {
+              this.db.tracks.push(initTrk);
+            }
+          });
           if (this.db.tracks.length === 0) {
             this.db.tracks = initial.tracks;
           }
@@ -909,6 +1036,48 @@ class AdminMockStore {
       return { success: true, data: { ...album, tracks: albumTracks } };
     }
     return { success: false, message: 'Album not found' };
+  }
+
+  public syncAlbumsFromBackend(backendAlbums: any[]) {
+    if (!Array.isArray(backendAlbums) || backendAlbums.length === 0) return;
+    this.db.albums = backendAlbums.map((a: any, idx: number) => ({
+      id: a.id,
+      title: a.title,
+      slug: a.slug || a.id,
+      artistName: a.artist || a.artistName,
+      artistId: a.artistId || null,
+      coverUrl: a.coverUrl,
+      releaseDate: a.releaseDate,
+      year: a.year,
+      genre: a.genre,
+      trackCount: a.trackCount || 1,
+      spotifyUrl: a.spotifyUrl,
+      youtubeUrl: a.youtubeUrl,
+      appleMusicUrl: a.appleMusicUrl,
+      featured: true,
+      order: a.order || idx + 1,
+    }));
+    this.save();
+  }
+
+  public syncTracksFromBackend(backendTracks: any[]) {
+    if (!Array.isArray(backendTracks) || backendTracks.length === 0) return;
+    this.db.tracks = backendTracks.map((t: any, idx: number) => ({
+      id: t.id,
+      title: t.title,
+      artistName: t.artist || t.artistName,
+      artistId: t.artistId || null,
+      albumId: t.albumId || t.album || null,
+      duration: t.duration || 210,
+      coverUrl: t.coverUrl,
+      genre: t.genre,
+      spotifyUrl: t.spotifyUrl,
+      youtubeUrl: t.youtubeUrl,
+      plays: t.plays || 150000,
+      isPopular: true,
+      order: t.order || idx + 1,
+    }));
+    this.save();
   }
 
   public createAlbum(data: any) {

@@ -15,7 +15,7 @@ export interface TrackCardProps {
   onPlay?: (track: Track) => void;
 }
 
-export const TrackCard: React.FC<TrackCardProps> = ({ track, className, onPlay }) => {
+export const TrackCard: React.FC<TrackCardProps> = React.memo(({ track, className, onPlay }) => {
   const getYoutubeId = (url?: string) => {
     if (!url) return null;
     const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
@@ -28,13 +28,17 @@ export const TrackCard: React.FC<TrackCardProps> = ({ track, className, onPlay }
       ? 'PsmXAUKjR5Y'
       : (track.title?.toLowerCase().includes('satane') || track.id === 'trk-1'
         ? 'HcEcM5AtEZ8'
-        : null));
+        : (track.title?.toLowerCase().includes('sajan') || track.title?.includes('साजन')
+          ? '7GJy_1S0-c0'
+          : (track.title?.toLowerCase().includes('moriya') || track.title?.includes('मोरिया')
+            ? 'jQhIJQupA0w'
+            : (track.title?.toLowerCase().includes('bansa') || track.title?.includes('बांसा')
+              ? 'FAdVu0YhLGY'
+              : null)))));
 
   const fallbackCover = ytId
     ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg`
-    : (track.title?.toLowerCase().includes('satane')
-      ? 'https://img.youtube.com/vi/HcEcM5AtEZ8/hqdefault.jpg'
-      : 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80');
+    : 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80';
 
   const [coverSrc, setCoverSrc] = useState(
     getMediaUrl(track.coverUrl) || fallbackCover
@@ -117,6 +121,6 @@ export const TrackCard: React.FC<TrackCardProps> = ({ track, className, onPlay }
       </div>
     </div>
   );
-};
+});
 
 export default TrackCard;

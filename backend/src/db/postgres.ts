@@ -71,6 +71,18 @@ async function ensureSchemaExtensions(client: pg.PoolClient | pg.Pool): Promise<
     `);
 
     await client.query(`
+      ALTER TABLE public."videos"
+        ADD COLUMN IF NOT EXISTS "youtubeUrl" TEXT,
+        ADD COLUMN IF NOT EXISTS "youtubeTitle" TEXT,
+        ADD COLUMN IF NOT EXISTS "youtubeViewCount" BIGINT,
+        ADD COLUMN IF NOT EXISTS "youtubeLikeCount" BIGINT,
+        ADD COLUMN IF NOT EXISTS "youtubeCommentCount" BIGINT,
+        ADD COLUMN IF NOT EXISTS "youtubePublishedAt" TEXT,
+        ADD COLUMN IF NOT EXISTS "youtubeLastSyncedAt" TEXT,
+        ADD COLUMN IF NOT EXISTS "youtubeSyncStatus" TEXT DEFAULT 'PENDING';
+    `);
+
+    await client.query(`
       CREATE TABLE IF NOT EXISTS public."pre_wedding" (
         "id" TEXT PRIMARY KEY DEFAULT 'pre-wedding-singleton',
         "studioInfo" JSONB,
@@ -1044,6 +1056,14 @@ export async function syncVideoToPostgres(video: Video): Promise<boolean> {
     description: video.description || null,
     tags: Array.isArray(video.tags) ? JSON.stringify(video.tags) : (video.tags || '[]'),
     order: typeof video.order === 'number' ? video.order : 0,
+    youtubeUrl: video.youtubeUrl || null,
+    youtubeTitle: video.youtubeTitle || null,
+    youtubeViewCount: video.youtubeViewCount !== undefined && video.youtubeViewCount !== null ? String(video.youtubeViewCount) : null,
+    youtubeLikeCount: video.youtubeLikeCount !== undefined && video.youtubeLikeCount !== null ? String(video.youtubeLikeCount) : null,
+    youtubeCommentCount: video.youtubeCommentCount !== undefined && video.youtubeCommentCount !== null ? String(video.youtubeCommentCount) : null,
+    youtubePublishedAt: video.youtubePublishedAt || null,
+    youtubeLastSyncedAt: video.youtubeLastSyncedAt || null,
+    youtubeSyncStatus: video.youtubeSyncStatus || 'PENDING',
     createdAt,
     updatedAt,
   };
@@ -1079,6 +1099,14 @@ export async function loadVideosFromPostgres(): Promise<Video[]> {
       description: r.description || null,
       tags: parseJsonSafely(r.tags, []),
       order: typeof r.order === 'number' ? r.order : idx + 1,
+      youtubeUrl: r.youtubeUrl || null,
+      youtubeTitle: r.youtubeTitle || null,
+      youtubeViewCount: r.youtubeViewCount !== null && r.youtubeViewCount !== undefined ? Number(r.youtubeViewCount) : null,
+      youtubeLikeCount: r.youtubeLikeCount !== null && r.youtubeLikeCount !== undefined ? Number(r.youtubeLikeCount) : null,
+      youtubeCommentCount: r.youtubeCommentCount !== null && r.youtubeCommentCount !== undefined ? Number(r.youtubeCommentCount) : null,
+      youtubePublishedAt: r.youtubePublishedAt || null,
+      youtubeLastSyncedAt: r.youtubeLastSyncedAt || null,
+      youtubeSyncStatus: r.youtubeSyncStatus || 'PENDING',
       createdAt: formatDateToIso(r.createdAt),
       updatedAt: formatDateToIso(r.updatedAt),
     }));
@@ -1162,6 +1190,14 @@ export async function searchVideosInPostgres(options?: {
       description: r.description || null,
       tags: parseJsonSafely(r.tags, []),
       order: typeof r.order === 'number' ? r.order : idx + 1,
+      youtubeUrl: r.youtubeUrl || null,
+      youtubeTitle: r.youtubeTitle || null,
+      youtubeViewCount: r.youtubeViewCount !== null && r.youtubeViewCount !== undefined ? Number(r.youtubeViewCount) : null,
+      youtubeLikeCount: r.youtubeLikeCount !== null && r.youtubeLikeCount !== undefined ? Number(r.youtubeLikeCount) : null,
+      youtubeCommentCount: r.youtubeCommentCount !== null && r.youtubeCommentCount !== undefined ? Number(r.youtubeCommentCount) : null,
+      youtubePublishedAt: r.youtubePublishedAt || null,
+      youtubeLastSyncedAt: r.youtubeLastSyncedAt || null,
+      youtubeSyncStatus: r.youtubeSyncStatus || 'PENDING',
       createdAt: formatDateToIso(r.createdAt),
       updatedAt: formatDateToIso(r.updatedAt),
     }));

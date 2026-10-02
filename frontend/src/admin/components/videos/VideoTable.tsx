@@ -27,6 +27,12 @@ export interface VideoItem {
   description?: string;
   tags?: string[] | string;
   order?: number;
+  youtubeTitle?: string | null;
+  youtubeViewCount?: number | null;
+  youtubeLikeCount?: number | null;
+  youtubePublishedAt?: string | null;
+  youtubeLastSyncedAt?: string | null;
+  youtubeSyncStatus?: 'SYNCED' | 'FAILED' | 'PENDING' | string | null;
 }
 
 interface VideoTableProps {
@@ -115,14 +121,41 @@ export const VideoTable: React.FC<VideoTableProps> = ({
                     </span>
                   </td>
 
-                  {/* Duration & Views */}
+                  {/* Duration, YouTube Stats & Views */}
                   <td className="py-4 px-4 sm:px-6 font-mono text-slate-700 dark:text-zinc-300 whitespace-nowrap">
-                    <div className="flex items-center gap-1 text-xs whitespace-nowrap">
+                    <div className="flex items-center gap-1.5 text-xs whitespace-nowrap">
                       <Clock className="w-3 h-3 text-slate-400 dark:text-zinc-500 shrink-0" />
                       <span>{video.duration || '3:30'}</span>
+                      <span
+                        className={`text-[9px] px-1.5 py-0.2 rounded-full font-bold font-mono uppercase ${
+                          video.youtubeSyncStatus === 'SYNCED'
+                            ? 'bg-emerald-500/15 text-emerald-600 dark:text-emerald-400 border border-emerald-500/30'
+                            : video.youtubeSyncStatus === 'FAILED'
+                            ? 'bg-rose-500/15 text-rose-600 dark:text-rose-400 border border-rose-500/30'
+                            : 'bg-amber-500/15 text-amber-600 dark:text-amber-400 border border-amber-500/30'
+                        }`}
+                      >
+                        {video.youtubeSyncStatus === 'SYNCED'
+                          ? '● Synced'
+                          : video.youtubeSyncStatus === 'FAILED'
+                          ? '● Failed'
+                          : '● Pending'}
+                      </span>
                     </div>
-                    <div className="text-[10px] text-slate-500 dark:text-zinc-500 mt-0.5 whitespace-nowrap">
-                      {video.views ? `${video.views.toLocaleString()} views` : '0 views'}
+                    <div className="text-[10px] text-slate-500 dark:text-zinc-400 mt-1 whitespace-nowrap flex items-center gap-2">
+                      {video.youtubeViewCount !== null && video.youtubeViewCount !== undefined ? (
+                        <span className="text-slate-800 dark:text-zinc-200 font-bold">
+                          {Number(video.youtubeViewCount).toLocaleString()} YT views
+                        </span>
+                      ) : (
+                        <span>No YT stats</span>
+                      )}
+                      {video.youtubeLikeCount !== null && video.youtubeLikeCount !== undefined && (
+                        <span>• {Number(video.youtubeLikeCount).toLocaleString()} likes</span>
+                      )}
+                    </div>
+                    <div className="text-[9px] text-slate-400 dark:text-zinc-500 mt-0.5 whitespace-nowrap">
+                      {video.views ? `${video.views.toLocaleString()} site plays` : '0 site plays'}
                     </div>
                   </td>
 

@@ -119,9 +119,17 @@ export interface Video {
   title: string;
   artist: string;
   youtubeId: string;
+  youtubeUrl?: string | null;
+  youtubeTitle?: string | null;
+  youtubeViewCount?: number | null;
+  youtubeLikeCount?: number | null;
+  youtubeCommentCount?: number | null;
+  youtubePublishedAt?: string | null;
+  youtubeLastSyncedAt?: string | null;
+  youtubeSyncStatus?: 'PENDING' | 'SYNCED' | 'FAILED' | string | null;
   thumbnailUrl: string;
   duration: string;
-  views: number;
+  views: number; // VEXO-native view counter
   publishedAt: string;
   category: string;
   featured: boolean;

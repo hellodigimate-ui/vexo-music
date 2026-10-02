@@ -7,7 +7,6 @@ import {
   Camera,
   Video,
   Film,
-  MapPin,
   Calendar,
   Sparkles,
   CheckCircle2,
@@ -304,16 +303,14 @@ export const PreWeddingPackagesSection: React.FC<PreWeddingPackagesSectionProps>
                         )}
 
                         {/* Shoot Logistics */}
-                        <div className="pt-3 border-t border-white/10 flex items-center justify-between gap-2 text-xs font-mono">
-                          <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/10 text-zinc-300">
-                            <Calendar className={`w-3.5 h-3.5 ${isGold ? 'text-red-400' : 'text-zinc-400'}`} />
-                            <span>{pkg.shoot.days}</span>
-                          </span>
-                          <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/10 text-zinc-300">
-                            <MapPin className={`w-3.5 h-3.5 ${isGold ? 'text-red-400' : 'text-zinc-400'}`} />
-                            <span>{pkg.shoot.locations}</span>
-                          </span>
-                        </div>
+                        {pkg.shoot?.days && (
+                          <div className="pt-3 border-t border-white/10 flex items-center justify-start gap-2 text-xs font-mono">
+                            <span className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-white/[0.03] border border-white/10 text-zinc-300">
+                              <Calendar className={`w-3.5 h-3.5 ${isGold ? 'text-red-400' : 'text-zinc-400'}`} />
+                              <span>{pkg.shoot.days}</span>
+                            </span>
+                          </div>
+                        )}
 
                         {/* Bonus items if present */}
                         {pkg.bonus && pkg.bonus.length > 0 && (

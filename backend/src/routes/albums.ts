@@ -27,21 +27,42 @@ export const albumRoutes: FastifyPluginAsync = async (fastify) => {
 
     results.sort((a: any, b: any) => (a.order ?? 99) - (b.order ?? 99));
 
+    const cleanVal = (v?: string | null) => (v && v !== 'null' && v !== 'undefined' ? v.trim() : undefined);
+
     const formatted = results.map((a) => {
       const albumTracks = db.tracks.findMany().filter((t) => t.albumId === a.id);
+      const firstTrackWithYt = albumTracks.find((t) => t.youtubeUrl && t.youtubeUrl !== 'null');
+      const allVideos = db.videos.findMany();
+      const aTitle = (a.title || '').trim().toLowerCase();
+      const matchingVideo = allVideos.find((v) => {
+        const vTitle = (v.title || '').toLowerCase();
+        if ((aTitle.includes('साजन') || aTitle.includes('sajan')) && (vTitle.includes('साजन') || vTitle.includes('sajan'))) return true;
+        if ((aTitle.includes('moriya') || aTitle.includes('मोरिया')) && (vTitle.includes('moriya') || vTitle.includes('मोरिया'))) return true;
+        if ((aTitle.includes('bansa') || aTitle.includes('बांसा')) && (vTitle.includes('bansa') || vTitle.includes('बांसा'))) return true;
+        if (aTitle.includes('bhartar') && vTitle.includes('bhartar')) return true;
+        if (aTitle.includes('satane') && vTitle.includes('satane')) return true;
+        return (aTitle && vTitle.includes(aTitle)) || (vTitle && aTitle.includes(vTitle));
+      });
+
+      const resolvedYt =
+        cleanVal(a.youtubeUrl) ||
+        cleanVal(firstTrackWithYt?.youtubeUrl) ||
+        (matchingVideo?.youtubeId ? `https://youtu.be/${matchingVideo.youtubeId}` : undefined);
+
       return {
         id: a.id,
-        title: a.title,
-        artist: a.artistName,
-        artistId: a.artistId || undefined,
-        coverUrl: a.coverUrl,
+        title: (a.title || '').trim(),
+        artist: (a.artistName || 'VEXO Artist').trim(),
+        artistName: (a.artistName || 'VEXO Artist').trim(),
+        artistId: cleanVal(a.artistId),
+        coverUrl: cleanVal(a.coverUrl) || matchingVideo?.thumbnailUrl || undefined,
         releaseDate: a.releaseDate,
-        year: a.year,
-        genre: a.genre,
+        year: a.year || (a.releaseDate ? new Date(a.releaseDate).getFullYear() : 2026),
+        genre: (a.genre || 'Rajasthani Folk').trim(),
         trackCount: albumTracks.length > 0 ? albumTracks.length : (a.trackCount || 1),
-        spotifyUrl: a.spotifyUrl || undefined,
-        youtubeUrl: a.youtubeUrl || undefined,
-        appleMusicUrl: a.appleMusicUrl || undefined,
+        spotifyUrl: cleanVal(a.spotifyUrl),
+        youtubeUrl: resolvedYt,
+        appleMusicUrl: cleanVal(a.appleMusicUrl),
       };
     });
 
@@ -58,7 +79,14 @@ export const albumRoutes: FastifyPluginAsync = async (fastify) => {
     Params: { id: string };
   }>('/albums/:id', async (request, reply) => {
     const { id } = request.params;
-    const album = db.albums.findById(id);
+    let album = db.albums.findById(id);
+
+    if (!album) {
+      album = db.albums.findMany().find((a) =>
+        a.slug === id ||
+        (a.title && a.title.trim().toLowerCase() === id.trim().toLowerCase())
+      ) || null;
+    }
 
     if (!album) {
       return reply.code(404).send({
@@ -67,31 +95,48 @@ export const albumRoutes: FastifyPluginAsync = async (fastify) => {
       });
     }
 
+    const cleanVal = (v?: string | null) => (v && v !== 'null' && v !== 'undefined' ? v.trim() : undefined);
+    const albumTracks = db.tracks.findMany().filter((t) => t.albumId === album!.id);
+    const allVideos = db.videos.findMany();
+    const aTitle = (album.title || '').trim().toLowerCase();
+    const matchingVideo = allVideos.find((v) => {
+      const vTitle = (v.title || '').toLowerCase();
+      return (aTitle && vTitle.includes(aTitle)) || (vTitle && aTitle.includes(vTitle));
+    });
+
+    const resolvedYt =
+      cleanVal(album.youtubeUrl) ||
+      (albumTracks.find((t) => cleanVal(t.youtubeUrl))?.youtubeUrl) ||
+      (matchingVideo?.youtubeId ? `https://youtu.be/${matchingVideo.youtubeId}` : undefined);
+
     const formatted = {
       id: album.id,
-      title: album.title,
-      artist: album.artistName,
-      artistId: album.artistId || undefined,
-      coverUrl: album.coverUrl,
+      title: (album.title || '').trim(),
+      artist: (album.artistName || 'VEXO Artist').trim(),
+      artistName: (album.artistName || 'VEXO Artist').trim(),
+      artistId: cleanVal(album.artistId),
+      coverUrl: cleanVal(album.coverUrl) || matchingVideo?.thumbnailUrl || undefined,
       releaseDate: album.releaseDate,
       year: album.year,
-      genre: album.genre,
-      trackCount: album.trackCount,
-      tracks: album.tracks?.map((t) => ({
+      genre: (album.genre || 'Rajasthani Folk').trim(),
+      trackCount: Math.max(album.trackCount || 0, albumTracks.length, 1),
+      tracks: albumTracks.map((t) => ({
         id: t.id,
-        title: t.title,
-        artist: t.artistName,
-        albumId: t.albumId || undefined,
-        duration: t.duration,
-        coverUrl: t.coverUrl,
-        audioUrl: t.audioUrl || undefined,
-        spotifyUrl: t.spotifyUrl || undefined,
-        youtubeUrl: t.youtubeUrl || undefined,
-        genre: t.genre,
+        title: (t.title || '').trim(),
+        artist: (t.artistName || album!.artistName || 'VEXO Artist').trim(),
+        artistName: (t.artistName || album!.artistName || 'VEXO Artist').trim(),
+        albumId: t.albumId || album!.id,
+        album: t.albumId || album!.id,
+        duration: t.duration || 210,
+        coverUrl: cleanVal(t.coverUrl) || cleanVal(album!.coverUrl) || matchingVideo?.thumbnailUrl || undefined,
+        audioUrl: cleanVal(t.audioUrl),
+        spotifyUrl: cleanVal(t.spotifyUrl) || cleanVal(album!.spotifyUrl),
+        youtubeUrl: cleanVal(t.youtubeUrl) || cleanVal(t.audioUrl) || resolvedYt,
+        genre: (t.genre || album!.genre || 'Rajasthani Folk').trim(),
       })),
-      spotifyUrl: album.spotifyUrl || undefined,
-      youtubeUrl: album.youtubeUrl || undefined,
-      appleMusicUrl: album.appleMusicUrl || undefined,
+      spotifyUrl: cleanVal(album.spotifyUrl),
+      youtubeUrl: resolvedYt,
+      appleMusicUrl: cleanVal(album.appleMusicUrl),
     };
 
     const response: ApiResponse<Album> = {
@@ -123,19 +168,49 @@ export const albumRoutes: FastifyPluginAsync = async (fastify) => {
 
     results.sort((a: any, b: any) => (a.order ?? 99) - (b.order ?? 99));
 
-    const formatted = results.map((t) => ({
-      id: t.id,
-      title: t.title,
-      artist: t.artistName,
-      albumId: t.albumId || undefined,
-      album: t.albumId || undefined,
-      duration: t.duration,
-      coverUrl: t.coverUrl,
-      audioUrl: t.audioUrl || undefined,
-      spotifyUrl: t.spotifyUrl || undefined,
-      youtubeUrl: t.youtubeUrl || t.audioUrl || undefined,
-      genre: t.genre,
-    }));
+    const cleanVal = (v?: string | null) => (v && v !== 'null' && v !== 'undefined' ? v.trim() : undefined);
+    const allVideos = db.videos.findMany();
+
+    const formatted = results.map((t) => {
+      const album = t.albumId ? db.albums.findById(t.albumId) : null;
+      const tTitle = (t.title || '').trim().toLowerCase();
+      const matchingVideo = allVideos.find((v) => {
+        const vTitle = (v.title || '').toLowerCase();
+        if ((tTitle.includes('साजन') || tTitle.includes('sajan')) && (vTitle.includes('साजन') || vTitle.includes('sajan'))) return true;
+        if ((tTitle.includes('moriya') || tTitle.includes('मोरिया')) && (vTitle.includes('moriya') || vTitle.includes('मोरिया'))) return true;
+        if ((tTitle.includes('bansa') || tTitle.includes('बांसा')) && (vTitle.includes('bansa') || vTitle.includes('बांसा'))) return true;
+        if (tTitle.includes('bhartar') && vTitle.includes('bhartar')) return true;
+        if (tTitle.includes('satane') && vTitle.includes('satane')) return true;
+        return (tTitle && vTitle.includes(tTitle)) || (vTitle && tTitle.includes(vTitle));
+      });
+
+      const rawYt = cleanVal(t.youtubeUrl) || cleanVal(t.audioUrl);
+      const resolvedYt =
+        rawYt ||
+        cleanVal(album?.youtubeUrl) ||
+        (matchingVideo?.youtubeId ? `https://youtu.be/${matchingVideo.youtubeId}` : undefined);
+
+      const resolvedCover =
+        cleanVal(t.coverUrl) ||
+        cleanVal(album?.coverUrl) ||
+        matchingVideo?.thumbnailUrl ||
+        undefined;
+
+      return {
+        id: t.id,
+        title: (t.title || '').trim(),
+        artist: (t.artistName || album?.artistName || 'VEXO Artist').trim(),
+        artistName: (t.artistName || album?.artistName || 'VEXO Artist').trim(),
+        albumId: t.albumId || undefined,
+        album: t.albumId || undefined,
+        duration: t.duration || 210,
+        coverUrl: resolvedCover,
+        audioUrl: cleanVal(t.audioUrl),
+        spotifyUrl: cleanVal(t.spotifyUrl) || cleanVal(album?.spotifyUrl),
+        youtubeUrl: resolvedYt,
+        genre: (t.genre || album?.genre || 'Rajasthani Folk').trim(),
+      };
+    });
 
     const response: ApiResponse<Track[]> = {
       success: true,

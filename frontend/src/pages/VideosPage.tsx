@@ -11,6 +11,17 @@ import { useDebounce } from '../hooks/useDebounce';
 import { Play, Eye, Clock, Film, X, Search, Flame } from 'lucide-react';
 import { formatNumber } from '../lib/utils';
 
+function formatDisplayDate(dateStr?: string | null): string {
+  if (!dateStr) return '';
+  try {
+    const d = new Date(dateStr);
+    if (isNaN(d.getTime())) return dateStr;
+    return d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' });
+  } catch {
+    return dateStr;
+  }
+}
+
 export const VideosPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
   const urlSearch = searchParams.get('search') || '';
@@ -34,7 +45,7 @@ export const VideosPage: React.FC = () => {
     if (currentUrlQuery !== searchQuery) {
       setSearchQuery(currentUrlQuery);
     }
-  }, [searchParams, searchQuery]);
+  }, [searchParams]);
 
   // Synchronize URL search parameter when user finishes typing
   useEffect(() => {
@@ -47,7 +58,7 @@ export const VideosPage: React.FC = () => {
         setSearchParams({}, { replace: true });
       }
     }
-  }, [debouncedSearchQuery, searchParams, setSearchParams]);
+  }, [debouncedSearchQuery]);
 
   // Load initial featured video and latest videos
   useEffect(() => {
@@ -70,32 +81,41 @@ export const VideosPage: React.FC = () => {
     };
   }, []);
 
-  // Fetch videos from backend whenever debouncedSearchQuery or activeCategory changes
+  // Fetch videos from backend whenever debouncedSearchQuery or activeCategory changes, and poll every 30s
   useEffect(() => {
     let isMounted = true;
-    setIsSearching(true);
 
-    videosApi
-      .getVideos({
-        search: debouncedSearchQuery.trim(),
-        category: activeCategory !== 'All' ? activeCategory : undefined,
-      })
-      .then((res) => {
-        if (!isMounted) return;
-        if (res.data) setVideos(res.data);
-      })
-      .catch((err) => {
-        console.warn('Error fetching videos:', err);
-      })
-      .finally(() => {
-        if (isMounted) {
-          setIsSearching(false);
-          setIsLoading(false);
-        }
-      });
+    const loadData = (showSpinner = true) => {
+      if (showSpinner) setIsSearching(true);
+      videosApi
+        .getVideos({
+          search: debouncedSearchQuery.trim(),
+          category: activeCategory !== 'All' ? activeCategory : undefined,
+        })
+        .then((res) => {
+          if (!isMounted) return;
+          if (res.data) setVideos(res.data);
+        })
+        .catch((err) => {
+          console.warn('Error fetching videos:', err);
+        })
+        .finally(() => {
+          if (isMounted) {
+            setIsSearching(false);
+            setIsLoading(false);
+          }
+        });
+    };
+
+    loadData(true);
+
+    const pollInterval = setInterval(() => {
+      loadData(false);
+    }, 30000);
 
     return () => {
       isMounted = false;
+      clearInterval(pollInterval);
     };
   }, [debouncedSearchQuery, activeCategory]);
 
@@ -289,9 +309,15 @@ export const VideosPage: React.FC = () => {
                     <div className="flex items-center gap-4 text-xs font-mono text-slate-500 dark:text-zinc-400">
                       <span className="flex items-center gap-1.5">
                         <Eye className="w-4 h-4 text-vexo-red" />
-                        {formatNumber(featuredVideo.views)} views
+                        {featuredVideo.youtubeViewCount !== null && featuredVideo.youtubeViewCount !== undefined
+                          ? `${formatNumber(featuredVideo.youtubeViewCount)} views`
+                          : `${formatNumber(featuredVideo.views)} views`}
                       </span>
-                      <span>{featuredVideo.publishedAt}</span>
+                      <span>
+                        {featuredVideo.youtubePublishedAt
+                          ? formatDisplayDate(featuredVideo.youtubePublishedAt)
+                          : featuredVideo.publishedAt}
+                      </span>
                     </div>
 
                     <Button
@@ -374,8 +400,16 @@ export const VideosPage: React.FC = () => {
                         </p>
                       </div>
                       <div className="flex items-center justify-between mt-3 pt-2 border-t border-slate-100 dark:border-white/5 text-[11px] font-mono text-slate-400 dark:text-zinc-500">
-                        <span>{formatNumber(video.views)} views</span>
-                        <span>{video.publishedAt}</span>
+                        <span>
+                          {video.youtubeViewCount !== null && video.youtubeViewCount !== undefined
+                            ? `${formatNumber(video.youtubeViewCount)} views`
+                            : `${formatNumber(video.views)} views`}
+                        </span>
+                        <span>
+                          {video.youtubePublishedAt
+                            ? formatDisplayDate(video.youtubePublishedAt)
+                            : video.publishedAt}
+                        </span>
                       </div>
                     </div>
                   </div>
@@ -527,9 +561,15 @@ export const VideosPage: React.FC = () => {
                     <div className="flex items-center justify-between mt-4 pt-3 border-t border-slate-100 dark:border-white/10 text-xs font-mono text-slate-400 dark:text-zinc-500">
                       <span className="flex items-center gap-1">
                         <Eye className="w-3.5 h-3.5 text-vexo-red" />
-                        {formatNumber(video.views)} views
+                        {video.youtubeViewCount !== null && video.youtubeViewCount !== undefined
+                          ? `${formatNumber(video.youtubeViewCount)} views`
+                          : `${formatNumber(video.views)} views`}
                       </span>
-                      <span>{video.publishedAt}</span>
+                      <span>
+                        {video.youtubePublishedAt
+                          ? formatDisplayDate(video.youtubePublishedAt)
+                          : video.publishedAt}
+                      </span>
                     </div>
                   </div>
                 </div>
@@ -575,9 +615,17 @@ export const VideosPage: React.FC = () => {
                 <p className="text-xs text-neutral-400 leading-relaxed max-w-2xl">
                   {selectedVideo.description}
                 </p>
-                <div className="text-xs font-mono text-neutral-400 shrink-0">
-                  <span className="font-bold text-white">{formatNumber(selectedVideo.views)} Views</span> •{' '}
-                  <span>{selectedVideo.duration}</span>
+                <div className="text-xs font-mono text-neutral-400 shrink-0 flex items-center gap-2">
+                  <span className="font-bold text-white">
+                    {formatNumber(selectedVideo.youtubeViewCount ?? selectedVideo.views)} Views
+                  </span>
+                  {selectedVideo.youtubeLikeCount !== null && selectedVideo.youtubeLikeCount !== undefined && (
+                    <span>• <span className="font-bold text-white">{formatNumber(selectedVideo.youtubeLikeCount)} Likes</span></span>
+                  )}
+                  {selectedVideo.youtubeCommentCount !== null && selectedVideo.youtubeCommentCount !== undefined && (
+                    <span>• <span className="font-bold text-white">{formatNumber(selectedVideo.youtubeCommentCount)} Comments</span></span>
+                  )}
+                  <span>• {selectedVideo.duration}</span>
                 </div>
               </div>
             )}

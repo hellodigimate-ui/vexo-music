@@ -35,6 +35,13 @@ export function getMediaUrl(url?: string | null): string {
   ) {
     return url;
   }
+
+  // If in browser development mode with relative /api, /uploads is proxied directly by Vite
+  if (typeof window !== 'undefined' && (API_BASE_URL === '/api' || API_BASE_URL.startsWith('/'))) {
+    if (url.startsWith('/uploads/')) return url;
+    if (url.startsWith('uploads/')) return `/${url}`;
+  }
+
   if (url.startsWith('/uploads/')) {
     return `${BACKEND_HOST}${url}`;
   }
@@ -77,31 +84,34 @@ export function isTrackRepresentedInAlbums(
       .replace(/\[official\s*(single|video|audio|music\s*video)?\]/gi, '')
       .replace(/\(single\)/gi, '')
       .replace(/\(video\)/gi, '')
-      .replace(/[^a-z0-9]/gi, '')
+      .replace(/[^\p{L}\p{N}]/gu, '')
       .trim();
 
   const trackYt = extractYtId(track.youtubeUrl || track.audioUrl || track.coverUrl);
   const trackCleanTitle = clean(track.title);
 
   return albums.some((album) => {
-    // 1. Exact YouTube video ID match
+    // 1. Direct album ID match
+    if (track.albumId && (track.albumId === album.id || (album as any).slug === track.albumId)) {
+      return true;
+    }
+    if (track.album && (track.album === album.id || (album as any).slug === track.album)) {
+      return true;
+    }
+
+    // 2. Exact YouTube video ID match
     const albumYt = extractYtId(album.youtubeUrl || album.coverUrl);
     if (trackYt && albumYt && trackYt === albumYt) {
       return true;
     }
 
-    // 2. Normalized Title match
+    // 3. Normalized Title match
     const albumCleanTitle = clean(album.title);
     if (trackCleanTitle && albumCleanTitle) {
       if (trackCleanTitle === albumCleanTitle) return true;
       if (trackCleanTitle.startsWith(albumCleanTitle) || albumCleanTitle.startsWith(trackCleanTitle)) {
         return true;
       }
-    }
-
-    // 3. Album ID match for single-track releases
-    if ((track.albumId === album.id || track.album === album.id) && (album.trackCount === 1 || !album.trackCount)) {
-      return true;
     }
 
     return false;

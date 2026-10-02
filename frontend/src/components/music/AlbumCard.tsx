@@ -15,7 +15,7 @@ export interface AlbumCardProps {
   className?: string;
 }
 
-export const AlbumCard: React.FC<AlbumCardProps> = ({ album, className }) => {
+export const AlbumCard: React.FC<AlbumCardProps> = React.memo(({ album, className }) => {
   const [isOpenModal, setIsOpenModal] = useState(false);
   const [albumTracks, setAlbumTracks] = useState<Track[]>([]);
   const [activePlayTrack, setActivePlayTrack] = useState<Track | null>(null);
@@ -34,17 +34,17 @@ export const AlbumCard: React.FC<AlbumCardProps> = ({ album, className }) => {
       ? 'PsmXAUKjR5Y'
       : (album.title?.toLowerCase().includes('satane')
         ? 'HcEcM5AtEZ8'
-        : (album.title?.toLowerCase().includes('aaya sajan') || album.title?.toLowerCase().includes('saajan')
+        : (album.title?.toLowerCase().includes('sajan') || album.title?.includes('साजन')
           ? '7GJy_1S0-c0'
-          : null)));
+          : (album.title?.toLowerCase().includes('moriya') || album.title?.includes('मोरिया')
+            ? 'jQhIJQupA0w'
+            : (album.title?.toLowerCase().includes('bansa') || album.title?.includes('बांसा')
+              ? 'FAdVu0YhLGY'
+              : null)))));
 
   const fallbackCover = defaultYoutubeId
     ? `https://img.youtube.com/vi/${defaultYoutubeId}/hqdefault.jpg`
-    : (album.title?.toLowerCase().includes('satane')
-      ? 'https://img.youtube.com/vi/HcEcM5AtEZ8/hqdefault.jpg'
-      : (album.title?.toLowerCase().includes('bhartar')
-        ? 'https://img.youtube.com/vi/PsmXAUKjR5Y/hqdefault.jpg'
-        : 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800&q=80'));
+    : 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?auto=format&fit=crop&w=800&q=80';
 
   const [coverSrc, setCoverSrc] = useState<string>(
     getMediaUrl(album.coverUrl) || fallbackCover
@@ -70,7 +70,7 @@ export const AlbumCard: React.FC<AlbumCardProps> = ({ album, className }) => {
         // match by exact YouTube ID or exact title — NEVER by artist alone!
         if (filtered.length === 0) {
           const albumYt = getYoutubeId(album.youtubeUrl);
-          const albumCleanTitle = (album.title || '').trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+          const albumCleanTitle = (album.title || '').trim().toLowerCase().replace(/[^\p{L}\p{N}]/gu, '');
 
           filtered = res.data.filter((t: any) => {
             if (albumYt) {
@@ -78,7 +78,7 @@ export const AlbumCard: React.FC<AlbumCardProps> = ({ album, className }) => {
               if (trackYt && trackYt === albumYt) return true;
             }
             if (albumCleanTitle) {
-              const trackCleanTitle = (t.title || '').trim().toLowerCase().replace(/[^a-z0-9]/g, '');
+              const trackCleanTitle = (t.title || '').trim().toLowerCase().replace(/[^\p{L}\p{N}]/gu, '');
               if (trackCleanTitle && trackCleanTitle === albumCleanTitle && (!t.albumId || t.albumId === album.id)) {
                 return true;
               }
@@ -111,9 +111,9 @@ export const AlbumCard: React.FC<AlbumCardProps> = ({ album, className }) => {
         // 4. Strict Single Release Enforcement: If this album is a single release (trackCount <= 1 or not a multi-track album),
         // enforce strictly 1 track so multiple tracks can NEVER be shown!
         if (filtered.length > 1 && (album.trackCount === 1 || !album.trackCount)) {
-          const albumClean = (album.title || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+          const albumClean = (album.title || '').toLowerCase().replace(/[^\p{L}\p{N}]/gu, '');
           const exactTrack = filtered.find((t) => {
-            const trackClean = (t.title || '').toLowerCase().replace(/[^a-z0-9]/g, '');
+            const trackClean = (t.title || '').toLowerCase().replace(/[^\p{L}\p{N}]/gu, '');
             return trackClean === albumClean || trackClean.includes(albumClean) || albumClean.includes(trackClean);
           });
           filtered = exactTrack ? [exactTrack] : [filtered[0]];
@@ -437,6 +437,6 @@ export const AlbumCard: React.FC<AlbumCardProps> = ({ album, className }) => {
       )}
     </>
   );
-};
+});
 
 export default AlbumCard;

@@ -2,11 +2,39 @@ import type { FastifyPluginAsync } from 'fastify';
 import { db } from '../db/index.js';
 import type { ApiResponse, Video } from '../types/index.js';
 
+function formatVideoResponse(v: any): Video {
+  return {
+    id: v.id,
+    title: v.title,
+    artist: v.artist,
+    youtubeId: v.youtubeId,
+    thumbnailUrl: v.thumbnailUrl,
+    duration: v.duration,
+    views: v.views,
+    publishedAt: v.publishedAt,
+    category: v.category,
+    featured: v.featured,
+    description: v.description || undefined,
+    youtubeUrl: v.youtubeUrl || (v.youtubeId ? `https://www.youtube.com/watch?v=${v.youtubeId}` : null),
+    youtubeTitle: v.youtubeTitle || null,
+    youtubeViewCount: v.youtubeViewCount !== undefined && v.youtubeViewCount !== null ? Number(v.youtubeViewCount) : null,
+    youtubeLikeCount: v.youtubeLikeCount !== undefined && v.youtubeLikeCount !== null ? Number(v.youtubeLikeCount) : null,
+    youtubeCommentCount: v.youtubeCommentCount !== undefined && v.youtubeCommentCount !== null ? Number(v.youtubeCommentCount) : null,
+    youtubePublishedAt: v.youtubePublishedAt || null,
+    youtubeLastSyncedAt: v.youtubeLastSyncedAt || null,
+    youtubeSyncStatus: v.youtubeSyncStatus || 'PENDING',
+  };
+}
+
 export const videoRoutes: FastifyPluginAsync = async (fastify) => {
   // GET /api/videos
   fastify.get<{
     Querystring: { category?: string; search?: string; limit?: string; offset?: string };
-  }>('/videos', async (request) => {
+  }>('/videos', async (request, reply) => {
+    reply.header('Cache-Control', 'no-cache, no-store, must-revalidate');
+    reply.header('Pragma', 'no-cache');
+    reply.header('Expires', '0');
+
     const { category, search, limit, offset } = request.query;
     const cleanSearch = search ? search.trim() : '';
     const cleanCategory = category && category !== 'All' ? category.trim() : undefined;
@@ -20,19 +48,7 @@ export const videoRoutes: FastifyPluginAsync = async (fastify) => {
       offset: parsedOffset,
     });
 
-    const formatted: Video[] = videos.map((v) => ({
-      id: v.id,
-      title: v.title,
-      artist: v.artist,
-      youtubeId: v.youtubeId,
-      thumbnailUrl: v.thumbnailUrl,
-      duration: v.duration,
-      views: v.views,
-      publishedAt: v.publishedAt,
-      category: v.category,
-      featured: v.featured,
-      description: v.description || undefined,
-    }));
+    const formatted: Video[] = videos.map(formatVideoResponse);
 
     const response: ApiResponse<Video[]> = {
       success: true,
@@ -43,7 +59,11 @@ export const videoRoutes: FastifyPluginAsync = async (fastify) => {
   });
 
   // GET /api/videos/featured
-  fastify.get('/videos/featured', async () => {
+  fastify.get('/videos/featured', async (request, reply) => {
+    reply.header('Cache-Control', 'no-cache, no-store, must-revalidate');
+    reply.header('Pragma', 'no-cache');
+    reply.header('Expires', '0');
+
     const homepage = db.homepage.get();
     const list = db.videos.findMany();
     let featured = null;
@@ -53,19 +73,7 @@ export const videoRoutes: FastifyPluginAsync = async (fastify) => {
     if (!featured) {
       featured = list.find((v) => v.youtubeId === 'PsmXAUKjR5Y') || list.find((v) => v.featured) || list[0];
     }
-    const formatted: Video = {
-      id: featured.id,
-      title: featured.title,
-      artist: featured.artist,
-      youtubeId: featured.youtubeId,
-      thumbnailUrl: featured.thumbnailUrl,
-      duration: featured.duration,
-      views: featured.views,
-      publishedAt: featured.publishedAt,
-      category: featured.category,
-      featured: true,
-      description: featured.description || undefined,
-    };
+    const formatted: Video = formatVideoResponse(featured);
 
     const response: ApiResponse<Video> = {
       success: true,
@@ -77,22 +85,14 @@ export const videoRoutes: FastifyPluginAsync = async (fastify) => {
   // GET /api/videos/latest
   fastify.get<{
     Querystring: { limit?: string };
-  }>('/videos/latest', async (request) => {
+  }>('/videos/latest', async (request, reply) => {
+    reply.header('Cache-Control', 'no-cache, no-store, must-revalidate');
+    reply.header('Pragma', 'no-cache');
+    reply.header('Expires', '0');
+
     const limit = request.query.limit ? parseInt(request.query.limit, 10) : 3;
     const latest = db.videos.findMany().slice(0, limit);
-    const formatted: Video[] = latest.map((v) => ({
-      id: v.id,
-      title: v.title,
-      artist: v.artist,
-      youtubeId: v.youtubeId,
-      thumbnailUrl: v.thumbnailUrl,
-      duration: v.duration,
-      views: v.views,
-      publishedAt: v.publishedAt,
-      category: v.category,
-      featured: v.featured,
-      description: v.description || undefined,
-    }));
+    const formatted: Video[] = latest.map(formatVideoResponse);
 
     const response: ApiResponse<Video[]> = {
       success: true,
@@ -106,6 +106,10 @@ export const videoRoutes: FastifyPluginAsync = async (fastify) => {
   fastify.get<{
     Params: { id: string };
   }>('/videos/:id', async (request, reply) => {
+    reply.header('Cache-Control', 'no-cache, no-store, must-revalidate');
+    reply.header('Pragma', 'no-cache');
+    reply.header('Expires', '0');
+
     const { id } = request.params;
     const video = db.videos.findById(id);
 
@@ -116,19 +120,7 @@ export const videoRoutes: FastifyPluginAsync = async (fastify) => {
       });
     }
 
-    const formatted: Video = {
-      id: video.id,
-      title: video.title,
-      artist: video.artist,
-      youtubeId: video.youtubeId,
-      thumbnailUrl: video.thumbnailUrl,
-      duration: video.duration,
-      views: video.views,
-      publishedAt: video.publishedAt,
-      category: video.category,
-      featured: video.featured,
-      description: video.description || undefined,
-    };
+    const formatted: Video = formatVideoResponse(video);
 
     const response: ApiResponse<Video> = {
       success: true,

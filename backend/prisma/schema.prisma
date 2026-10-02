@@ -156,21 +156,29 @@ model EventArtist {
 
 // 8. Video Model
 model Video {
-  id           String   @id @default(cuid())
-  title        String
-  artist       String
-  youtubeId    String
-  thumbnailUrl String
-  duration     String
-  views        Int      @default(0)
-  publishedAt  String
-  category     String // Official Music Videos, Live Performances, Behind The Scenes, Visualizers
-  featured     Boolean  @default(false)
-  description  String?
-  tags         String? // JSON string array
-  order        Int      @default(0)
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  id                  String    @id @default(cuid())
+  title               String
+  artist              String
+  youtubeId           String
+  youtubeUrl          String?
+  youtubeTitle        String?
+  youtubeViewCount    BigInt?
+  youtubeLikeCount    BigInt?
+  youtubeCommentCount BigInt?
+  youtubePublishedAt  String?
+  youtubeLastSyncedAt String?
+  youtubeSyncStatus   String?   @default("PENDING")
+  thumbnailUrl        String
+  duration            String
+  views               Int       @default(0) // VEXO-native view counter
+  publishedAt         String
+  category            String    // Official Music Videos, Live Performances, Behind The Scenes, Visualizers
+  featured            Boolean   @default(false)
+  description         String?
+  tags                String?   // JSON string array
+  order               Int       @default(0)
+  createdAt           DateTime  @default(now())
+  updatedAt           DateTime  @updatedAt
 
   @@map("videos")
 }

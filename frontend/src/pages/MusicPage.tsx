@@ -9,6 +9,7 @@ import type { Album, Track } from '../types';
 import { Search, Play, X, Music2, Disc3, Layers } from 'lucide-react';
 import { formatTime, getMediaUrl, isTrackRepresentedInAlbums } from '../lib/utils';
 import { Skeleton } from '../components/ui/Skeleton';
+import { useDebounce } from '../hooks/useDebounce';
 
 export const MusicPage: React.FC = () => {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -21,28 +22,37 @@ export const MusicPage: React.FC = () => {
   const [activeCatalogTab, setActiveCatalogTab] = useState<'all' | 'albums' | 'tracks'>('all');
   const [selectedGenre, setSelectedGenre] = useState('All');
   const [searchQuery, setSearchQuery] = useState(urlSearch);
+  const debouncedSearch = useDebounce(searchQuery, 300);
   const [activeTrackVideo, setActiveTrackVideo] = useState<{ title: string; artist: string; id: string } | null>(null);
 
-  // Synchronize searchQuery when URL search param changes
+  // Synchronize searchQuery when URL search param changes externally (e.g. user pressed enter in header)
   useEffect(() => {
-    setSearchQuery(urlSearch);
+    if (urlSearch !== searchQuery) {
+      setSearchQuery(urlSearch);
+    }
   }, [urlSearch]);
 
-  const handleSearchInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const val = e.target.value;
-    setSearchQuery(val);
-    const trimmed = val.trim();
-    if (trimmed) {
-      setSearchParams({ search: trimmed }, { replace: true });
-    } else {
-      setSearchParams({}, { replace: true });
+  // Synchronize URL search parameter only when debouncedSearch settles
+  useEffect(() => {
+    const trimmed = debouncedSearch.trim();
+    const currentParam = searchParams.get('search') || '';
+    if (trimmed !== currentParam) {
+      if (trimmed) {
+        setSearchParams({ search: trimmed }, { replace: true });
+      } else if (currentParam) {
+        setSearchParams({}, { replace: true });
+      }
     }
-  };
+  }, [debouncedSearch]);
 
-  const handleClearSearch = () => {
+  const handleSearchInputChange = React.useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchQuery(e.target.value);
+  }, []);
+
+  const handleClearSearch = React.useCallback(() => {
     setSearchQuery('');
     setSearchParams({}, { replace: true });
-  };
+  }, [setSearchParams]);
 
   useEffect(() => {
     let isMounted = true;
@@ -70,17 +80,23 @@ export const MusicPage: React.FC = () => {
     const set = new Set<string>();
     albums.forEach((a) => {
       if (a.genre) {
-        a.genre.split('/').forEach((g) => {
+        a.genre.split(/[\/,]/).forEach((g) => {
           const trimmed = g.trim();
-          if (trimmed) set.add(trimmed);
+          if (trimmed) {
+            const normalized = trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+            set.add(normalized);
+          }
         });
       }
     });
     tracks.forEach((t) => {
       if (t.genre) {
-        t.genre.split('/').forEach((g) => {
+        t.genre.split(/[\/,]/).forEach((g) => {
           const trimmed = g.trim();
-          if (trimmed) set.add(trimmed);
+          if (trimmed) {
+            const normalized = trimmed.charAt(0).toUpperCase() + trimmed.slice(1);
+            set.add(normalized);
+          }
         });
       }
     });
@@ -89,30 +105,36 @@ export const MusicPage: React.FC = () => {
 
   const normalizedQuery = searchQuery.trim().toLowerCase();
 
-  const filteredAlbums = albums.filter((album) => {
-    const genreStr = (album.genre || '').toLowerCase();
-    const matchesGenre = selectedGenre === 'All' || genreStr.includes(selectedGenre.toLowerCase());
-    const titleStr = (album.title || '').toLowerCase();
-    const artistStr = (album.artist || (album as any).artistName || '').toLowerCase();
-    const matchesSearch = !normalizedQuery || titleStr.includes(normalizedQuery) || artistStr.includes(normalizedQuery);
-    return matchesGenre && matchesSearch;
-  });
+  const filteredAlbums = useMemo(() => {
+    return albums.filter((album) => {
+      const genreStr = (album.genre || '').toLowerCase().trim();
+      const matchesGenre = selectedGenre === 'All' || genreStr.includes(selectedGenre.toLowerCase().trim());
+      const titleStr = (album.title || '').toLowerCase().trim();
+      const artistStr = (album.artist || (album as any).artistName || '').toLowerCase().trim();
+      const matchesSearch = !normalizedQuery || titleStr.includes(normalizedQuery) || artistStr.includes(normalizedQuery);
+      return matchesGenre && matchesSearch;
+    });
+  }, [albums, selectedGenre, normalizedQuery]);
 
-  const filteredTracks = tracks.filter((track) => {
-    const genreStr = (track.genre || '').toLowerCase();
-    const matchesGenre = selectedGenre === 'All' || genreStr.includes(selectedGenre.toLowerCase());
-    const titleStr = (track.title || '').toLowerCase();
-    const artistStr = (track.artist || '').toLowerCase();
-    const matchesSearch = !normalizedQuery || titleStr.includes(normalizedQuery) || artistStr.includes(normalizedQuery);
-    return matchesGenre && matchesSearch;
-  });
+  const filteredTracks = useMemo(() => {
+    return tracks.filter((track) => {
+      const genreStr = (track.genre || '').toLowerCase().trim();
+      const matchesGenre = selectedGenre === 'All' || genreStr.includes(selectedGenre.toLowerCase().trim());
+      const titleStr = (track.title || '').toLowerCase().trim();
+      const artistStr = (track.artist || (track as any).artistName || '').toLowerCase().trim();
+      const matchesSearch = !normalizedQuery || titleStr.includes(normalizedQuery) || artistStr.includes(normalizedQuery);
+      return matchesGenre && matchesSearch;
+    });
+  }, [tracks, selectedGenre, normalizedQuery]);
 
   // Standalone tracks that aren't already represented as albums
-  const standaloneFilteredTracks = filteredTracks.filter((t) => {
-    return !isTrackRepresentedInAlbums(t, filteredAlbums);
-  });
+  const standaloneFilteredTracks = useMemo(() => {
+    return filteredTracks.filter((t) => {
+      return !isTrackRepresentedInAlbums(t, filteredAlbums);
+    });
+  }, [filteredTracks, filteredAlbums]);
 
-  const handlePlayTrack = (track: Track) => {
+  const handlePlayTrack = React.useCallback((track: Track) => {
     const url = (track as any).youtubeUrl || track.audioUrl || '';
     const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
     const ytId = match
@@ -121,14 +143,20 @@ export const MusicPage: React.FC = () => {
         ? 'PsmXAUKjR5Y'
         : (track.title.toLowerCase().includes('satane') || track.id === 'trk-1'
           ? 'HcEcM5AtEZ8'
-          : 'PsmXAUKjR5Y'));
+          : ((track.title.toLowerCase().includes('sajan') || track.title.includes('साजन'))
+            ? '7GJy_1S0-c0'
+            : ((track.title.toLowerCase().includes('moriya') || track.title.includes('मोरिया'))
+              ? 'jQhIJQupA0w'
+              : ((track.title.toLowerCase().includes('bansa') || track.title.includes('बांसा'))
+                ? 'FAdVu0YhLGY'
+                : 'PsmXAUKjR5Y')))));
 
     setActiveTrackVideo({
       title: track.title,
       artist: track.artist,
       id: ytId,
     });
-  };
+  }, []);
 
   return (
     <div className="pt-24 min-h-screen bg-vexo-bg w-full max-w-full overflow-x-hidden">
@@ -333,14 +361,20 @@ export const MusicPage: React.FC = () => {
                 </div>
               </div>
             ))
-          ) : tracks.map((track, idx) => {
+          ) : filteredTracks.map((track, idx) => {
+            const ytMatch = (track as any).youtubeUrl?.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([\w-]{11})/);
+            const ytId = ytMatch ? ytMatch[1] :
+              (track.title.toLowerCase().includes('bhartar') ? 'PsmXAUKjR5Y' :
+               track.title.toLowerCase().includes('satane') ? 'HcEcM5AtEZ8' :
+               (track.title.toLowerCase().includes('sajan') || track.title.includes('साजन')) ? '7GJy_1S0-c0' :
+               (track.title.toLowerCase().includes('moriya') || track.title.includes('मोरिया')) ? 'jQhIJQupA0w' :
+               (track.title.toLowerCase().includes('bansa') || track.title.includes('बांसा')) ? 'FAdVu0YhLGY' : '');
+
             const trackCover =
               getMediaUrl(track.coverUrl) ||
-              (track.title.toLowerCase().includes('bhartar')
-                ? 'https://img.youtube.com/vi/PsmXAUKjR5Y/hqdefault.jpg'
-                : (track.title.toLowerCase().includes('satane')
-                  ? 'https://img.youtube.com/vi/HcEcM5AtEZ8/hqdefault.jpg'
-                  : 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80'));
+              (ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80');
+
+            const formattedIdx = String(idx + 1).padStart(2, '0');
 
             return (
               <div
@@ -349,15 +383,15 @@ export const MusicPage: React.FC = () => {
                 className="glass-card p-3 sm:p-4 rounded-2xl flex items-center justify-between gap-3 border border-white/10 hover:border-vexo-red/40 transition-all duration-300 overflow-hidden cursor-pointer group"
               >
                 <div className="flex items-center gap-2 sm:gap-4 min-w-0">
-                  <span className="text-sm font-mono font-bold text-vexo-muted w-5 shrink-0 group-hover:text-vexo-red-bright">
-                    0{idx + 1}
+                  <span className="text-sm font-mono font-bold text-vexo-muted w-6 shrink-0 group-hover:text-vexo-red-bright">
+                    {formattedIdx}
                   </span>
 
                   <img
                     src={trackCover}
                     alt={track.title}
                     onError={(e) => {
-                      (e.target as HTMLImageElement).src = 'https://img.youtube.com/vi/PsmXAUKjR5Y/hqdefault.jpg';
+                      (e.target as HTMLImageElement).src = ytId ? `https://img.youtube.com/vi/${ytId}/hqdefault.jpg` : 'https://images.unsplash.com/photo-1511671782779-c97d3d27a1d4?auto=format&fit=crop&w=800&q=80';
                     }}
                     className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl object-cover shrink-0 group-hover:scale-105 transition-transform bg-neutral-900 border border-white/10"
                   />
