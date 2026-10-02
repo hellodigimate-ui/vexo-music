@@ -36,26 +36,28 @@ async function start() {
         if (!origin) return cb(null, true);
         const cleanOrigin = origin.replace(/\/+$/, '');
         if (
-          CORS_ORIGIN === '*' ||
-          cleanOrigin === CORS_ORIGIN ||
+          cleanOrigin === 'https://www.vexomusic.in' ||
+          cleanOrigin === 'https://vexomusic.in' ||
+          cleanOrigin === 'http://localhost:5173' ||
+          cleanOrigin === 'http://localhost:4000' ||
+          cleanOrigin === 'http://127.0.0.1:5173' ||
+          cleanOrigin === 'http://127.0.0.1:4000' ||
+          (CORS_ORIGIN && cleanOrigin === CORS_ORIGIN) ||
           cleanOrigin.startsWith('http://localhost:') ||
           cleanOrigin.startsWith('http://127.0.0.1:') ||
           cleanOrigin.startsWith('http://[::1]') ||
           cleanOrigin.startsWith('http://192.168.') ||
           cleanOrigin.startsWith('http://10.') ||
           cleanOrigin.startsWith('http://172.') ||
-          cleanOrigin === 'http://localhost' ||
-          cleanOrigin === 'http://127.0.0.1' ||
           cleanOrigin.endsWith('.vercel.app') ||
-          cleanOrigin.endsWith('.onrender.com') ||
-          cleanOrigin.startsWith('https://')
+          cleanOrigin.endsWith('.onrender.com')
         ) {
           return cb(null, true);
         }
         return cb(null, false);
       },
       methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE', 'OPTIONS'],
-      allowedHeaders: ['Content-Type', 'Authorization'],
+      allowedHeaders: ['Content-Type', 'Authorization', 'Accept'],
       credentials: true,
     });
 

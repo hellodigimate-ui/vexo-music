@@ -90,13 +90,16 @@ export async function apiFetch<T>(
   options: RequestInit = {}
 ): Promise<ApiResponse<T>> {
   const url = buildApiUrl(endpoint);
+  const method = (options.method || 'GET').toUpperCase();
+  const isBodyless = method === 'GET' || method === 'HEAD';
 
-  const defaultHeaders: HeadersInit = {
-    'Content-Type': 'application/json',
+  const defaultHeaders: Record<string, string> = {
     Accept: 'application/json',
-    'Cache-Control': 'no-cache, no-store, must-revalidate',
-    Pragma: 'no-cache',
   };
+
+  if (!isBodyless) {
+    defaultHeaders['Content-Type'] = 'application/json';
+  }
 
   try {
     const response = await fetch(url, {

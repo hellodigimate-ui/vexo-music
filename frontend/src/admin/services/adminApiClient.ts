@@ -34,10 +34,12 @@ export async function adminFetch<T>(
 ): Promise<AdminApiResponse<T>> {
   const token = getAdminToken();
   const url = buildApiUrl(endpoint);
+  const method = (options.method || 'GET').toUpperCase();
+  const isBodyless = method === 'GET' || method === 'HEAD';
 
   const headers: HeadersInit = {
-    'Content-Type': 'application/json',
     Accept: 'application/json',
+    ...(isBodyless ? {} : { 'Content-Type': 'application/json' }),
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
     ...options.headers,
   };
